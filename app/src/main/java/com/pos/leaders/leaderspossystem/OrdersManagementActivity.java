@@ -88,7 +88,6 @@ import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
  * Editing by KARAM on 10/04/2017.
  */
 public class OrdersManagementActivity extends AppCompatActivity {
-    private static final int DIALOG_FROM_DATE = 825;
     int loadItemOffset = 0;
     int countLoad = 60;
     boolean userScrolled = false;
@@ -106,7 +105,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
     List<Order> _saleList;
     List<OrderDetails> orders;
     List<Check> checks;
-    List<Order> All_orders;
     List<Order>filterOrderList;
     List<BoInvoice>filterBoInvoice;
     public static List<BoInvoice>invoiceList=new ArrayList<>();
@@ -170,10 +168,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, hintForSearchType);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         searchSpinner.setAdapter(adapter1);
-        etSearch.setText("");
-        etSearch.setHint("Search..");
-        etSearch.setFocusable(true);
-        etSearch.requestFocus();
 
         orderDBAdapter = new OrderDBAdapter(this);
 
@@ -200,7 +194,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 }
                 paymentDBAdapter.close();
             }
-            Log.i("log", _saleList.toString());
         }
         /*for (ORDER s : saleList) {
 			if(DateConverter.dateBetweenTwoDates(from, to, s.getOrder_date())) {
@@ -214,7 +207,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
         lvOrders.addHeaderView(header, null, false);
         objectList.addAll(_saleList);
         adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
-
         lvOrders.setAdapter(adapter);
 
         lvOrders.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -229,9 +221,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
                     userScrolled = false;
-                    loadItemOffset+=countLoad;
                     LoadMore();
-                    Log.i("loadmore",loadItemOffset+"");
+                    Log.d("loadmore",loadItemOffset+"");
                 }
             }
         });
@@ -919,7 +910,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         searchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                etSearch.setText("");
+                //etSearch.setText("");
                 if(searchSpinner.getSelectedItem().toString().equals(getString(R.string.date))){
                     new DatePickerDialog(OrdersManagementActivity.this, date, myCalendar
                             .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -948,12 +939,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                etSearch.setFocusable(true);
-            }
-        });
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -968,10 +953,14 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 list=new ArrayList<Object>();
                 filterOrderList = new ArrayList<Order>();
                 final String word = etSearch.getText().toString();
+
                 if (!word.equals("")) {
+                    Log.d("testEtSearch",word+"999");
+
                     // Database query can be a time consuming task ..
                     // so its safe to call database query in another thread
                     // Handler, will handle this stuff
@@ -985,11 +974,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         protected Void doInBackground(String... params) {
                             final String type = searchSpinner.getSelectedItem().toString();
                             filterOrderList = new ArrayList<Order>();
-                            try {
-                                Thread.sleep(200);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                             orderDBAdapter.open();
                             Log.d("teeest",params[0]);
                             if(type!= getString(R.string.invoice)){
@@ -1009,6 +993,14 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                 }else {
                                 filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
                             }
+                                runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        list.addAll(filterOrderList);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
                             }
 
                             //    filterBoInvoice = searchInInvoiceList(params[0]);
@@ -1020,9 +1012,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         protected void onPostExecute(Void aVoid) {
                             super.onPostExecute(aVoid);
                             Log.d("filterOrderList",filterOrderList.toString());
-                            list.addAll(filterOrderList);
-                            //       list.addAll(filterBoInvoice);
-                            SaleManagementListViewAdapter adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, list);
+                             adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, list);
                             lvOrders.setAdapter(adapter);
                         }
                     }.execute(word);
@@ -1031,7 +1021,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     filterBoInvoice=invoiceList;
                     list.addAll(filterOrderList);
                     list.addAll(filterBoInvoice);
-                    SaleManagementListViewAdapter adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, list);
+                    adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, list);
                     lvOrders.setAdapter(adapter);
                 }
 
@@ -1042,7 +1032,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
     }
 
     private void LoadMore(){
-
+        filterOrderList=new ArrayList<>();
+        loadItemOffset += countLoad;
         final ProgressDialog dialog=new ProgressDialog(this);
         dialog.setTitle(getBaseContext().getString(R.string.wait_for_finish));
 
@@ -1057,30 +1048,55 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                adapter.notifyDataSetChanged();
+
+                if(adapter==null){
+                    adapter = new SaleManagementListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_sales_management, objectList);
+                    lvOrders.setAdapter(adapter);
+                    Log.d("objectList",objectList.size()+"lvOrders");
+                }
+
                 dialog.cancel();
+                userScrolled=false;
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                final String type = searchSpinner.getSelectedItem().toString();
-                orderDBAdapter.open();
+                Log.d("testEtSearch",searchWord+"888");
+             //   final String type = searchSpinner.getSelectedItem().toString();
+//                orderDBAdapter.open();
                 if (!searchWord.equals("")) {
-                    _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad, type));
+                    runOnUiThread(new Runnable() {
 
+                        @Override
+                        public void run() {
+                           // _saleList.addAll(orderDBAdapter.search(searchWord, loadItemOffset, countLoad, type));
+                            // Stuff that updates the UI
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    });
                 }
-
                 else {
-                    searchWord = "";
-                    _saleList.addAll(orderDBAdapter.lazyLoad(loadItemOffset, countLoad));
+                    runOnUiThread(new Runnable() {
 
+                        @Override
+                        public void run() {
+                            orderDBAdapter=new OrderDBAdapter(getApplicationContext());
+                            orderDBAdapter.open();
+//                    searchWord = "";
+                            filterOrderList.addAll(orderDBAdapter.lazyLoad(filterOrderList.size()-1, 80));
+                            _saleList =  filterOrderList;
+                            objectList.addAll(_saleList);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
                 }
-                orderDBAdapter.close();
+//                orderDBAdapter.close();
                 return null;
             }
         }.execute();
 
-        adapter.notifyDataSetChanged();
+
     }
 
 
@@ -1159,7 +1175,6 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
                         }
 
                     }
-                    Log.d("objictListTEst",  OrdersManagementActivity.invoiceList.toString()+"");
 
 
                 } catch (Exception e) {

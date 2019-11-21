@@ -13,37 +13,38 @@
         android:orientation="vertical"
 
         >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <com.pos.leaders.leaderspossystem.Elements.CustomEditText
-            android:id="@+id/etSearch"
-            style="@style/AppTheme.EditText_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            <com.pos.leaders.leaderspossystem.Elements.CustomEditText
+                android:id="@+id/etSearch"
+                style="@style/AppTheme.EditText_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
-            android:background="@drawable/edit_text_search"
-            android:hint="@string/search"
-            android:inputType="textPersonName"
-            android:textSize="13dp"
-            app:drawableRightCompat="@drawable/ic_icons_leaders_search"
-            android:layout_weight=".5"
-            />
-        <Spinner
-            android:id="@+id/searchSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:inputType="text"
-            android:padding="8dp" />
-            </LinearLayout>
+                android:layout_weight=".5"
+                android:background="@drawable/edit_text_search"
+                android:hint="@string/search"
+                android:inputType="textPersonName"
+                android:textSize="13dp"
+                app:drawableRightCompat="@drawable/ic_icons_leaders_search" />
+
+            <Spinner
+                android:id="@+id/searchSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:inputType="text"
+                android:padding="8dp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,27 +124,22 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
 
             <ListView
                 android:id="@+id/saleManagement_LVSales"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-
-                tools:layout_constraintLeft_creator="1"
-                tools:layout_constraintRight_creator="1" />
-        </LinearLayout>
-
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:horizontalSpacing="8dp"
+                android:verticalSpacing="8dp"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10.0sp"
+                />
 
     </LinearLayout>
 
