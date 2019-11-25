@@ -641,7 +641,7 @@
     <string name="pull_report">משיכה מקופה</string>
     <string name="view_pull_report">הצגת הפקדות לקופה</string>
     <string name="add_pull_report">הפקת משיכה מקופה חדשה</string>
-    <string name="Pull">הפקדה לקופה</string>
+    <string name="Pull">משיכה מקופה</string>
     <string name="Deposit">משיכה מקופה</string>
     <string name="add_deposit_report">הוספת הפקדה חדשה לקופה</string>
     <string name="view_deposit_report">הצגת משיכות מקופה</string>

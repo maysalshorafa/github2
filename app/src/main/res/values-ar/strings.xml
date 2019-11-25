@@ -652,8 +652,8 @@
     <string name="view_pull_report">عرض تقرير السحب</string>
     <string name="with_serial_no">With Serial No</string>
     <string name="pin_pad">Pin Pad</string>
-    <string name="Pull">سحب</string>
-    <string name="Deposit">ايداع</string>
+    <string name="Pull">سحب من الصندوق</string>
+    <string name="Deposit">ايداع من الصندوق</string>
     <string name="print_cancel_invoice">هل تريد الغاء الفاتور؟</string>
     <string name="this_Operation_just_for_master_employee">هذه العملية ليست من صلاحياتك</string>
     <string name="SelectServer">اختر السيرفر</string>
