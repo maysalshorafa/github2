@@ -2721,7 +2721,7 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
-        if(type.equals("Pull")){
+        if(type.equals(context.getString(R.string.pull_report))){
             insertCell(headingTable, context.getString(R.string.pull_report) , Element.ALIGN_CENTER, 1, font);
 
         }else {
