@@ -3344,6 +3344,42 @@ public class SalesCartActivity extends AppCompatActivity {
                         });
 
             }
+            if(o.getProduct().getUnit().equals(ProductUnit.BARCODEWITHWEIGHT)){
+
+               /* final Dialog productWeightDialog = new Dialog(SalesCartActivity.this);
+                productWeightDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                productWeightDialog.show();
+                productWeightDialog.setContentView(R.layout.product_serial_number);
+                productWeightDialog.show();
+                final TextView productName = (EditText) productWeightDialog.findViewById(R.id.TvProductName);
+                ImageView btn_cancel = (ImageView) productSerialNumberDialog.findViewById(R.id.closeDialog);
+                Button btn_done = (Button) productSerialNumberDialog.findViewById(R.id.productSerialNumberDialog_BTOk);
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        productSerialNumberDialog.dismiss();
+                    }
+                });
+
+                btn_done.setOnClickListener(new View.OnClickListener() {
+
+                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                    public void onClick(View arg0) {
+                        String productSerialNumber="";
+                        if (serialNumber.getText().toString().matches("")) {
+                            productSerialNumber="";
+                        }else {
+                            productSerialNumber=serialNumber.getText().toString();
+                        }
+                        o.setProductSerialNumber(0);
+                        o.setSerialNumber(productSerialNumber);
+                        productSerialNumberDialog.dismiss();
+                        isWithSerialNo=false;
+                    }
+                });*/
+
+            }
 
                 SESSION._ORDER_DETAILES.add(o);
             newOrderDetails=o;
