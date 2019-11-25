@@ -87,7 +87,8 @@ public class Broker {
 
     public synchronized List<BrokerMessage> getAllNotSyncedCommand() {
         List<BrokerMessage> bMessages = new ArrayList<BrokerMessage>();
-
+        try {
+            open();
         Cursor cursor = db.rawQuery("select * from " + BROKER_TABLE_NAME + " where "+BROKER_COLUMN_IS_SYNCED+"=0 order by " + BROKER_COLUMN_ID + " asc ", null);
         cursor.moveToFirst();
 
@@ -95,11 +96,17 @@ public class Broker {
             bMessages.add(makeBrokerMessage(cursor));
             cursor.moveToNext();
         }
+            cursor.close();
+            close();
 
+        } catch (Exception e) {
+
+        }
         return bMessages;
     }
 
     public synchronized int deleteEntry(int id) {
+
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -114,12 +121,19 @@ public class Broker {
     }
 
     public synchronized void Synced(int id) {
+        try {
+            open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(BROKER_COLUMN_IS_SYNCED, 1);
 
         String where = BROKER_COLUMN_ID + " = ?";
         db.update(BROKER_TABLE_NAME, val, where, new String[]{id + ""});
+            close();
+
+        } catch (Exception e) {
+
+        }
     }
 
     private BrokerMessage makeBrokerMessage(Cursor c){

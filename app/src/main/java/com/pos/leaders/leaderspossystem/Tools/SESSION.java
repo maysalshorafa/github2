@@ -24,11 +24,12 @@ public class SESSION {
 	public static OrderDetails _ORDER;
 	public static List<OrderDetails> _ORDER_DETAILES;
 	public static List<OrderDetails> _TEMP_ORDER_DETAILES;
+	public static List<OrderDetails> _TEMP_ORDER_DETAILES_COPY;
 
 
 	public static Order _ORDERS;
 	public static Order _TEMP_ORDERS;
-
+	public static Order _TEMP_ORDERS_COPY;
 	public static ScheduleWorkers _SCHEDULEWORKERS;
 	public static EmployeesPermissions _USERPERMISSIONS;
 	public static CreditCardPayment _TEMP_CREDITCARD_PAYMNET;

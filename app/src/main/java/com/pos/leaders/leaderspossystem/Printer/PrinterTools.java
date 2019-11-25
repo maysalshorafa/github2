@@ -64,6 +64,23 @@ public class PrinterTools {
         }
 
     }
+    public static void printAndOpenCashBoxForCopy(String mainAns, final String mainMer, final String mainCli, int source, Context context, Activity c) {
+        switch (SETTINGS.printer) {
+            case BTP880:
+                printAndOpenCashBoxBTP880ForCopy(mainAns, mainMer, mainCli,context,c);
+                break;
+            case SUNMI_T1:
+                printAndOpenCashBoxSUNMI_T1ForCopy(mainAns, mainMer, mainCli,context,c);
+                break;
+            case HPRT_TP805:
+                printAndOpenCashBoxHPRT_TP805ForCopy(mainAns, mainMer, mainCli,context,c);
+                break;
+            case SM_S230I:
+                printAndOpenCashBoxSM_S230IForCopy(mainAns, mainMer, mainCli,context,c);
+                break;
+        }
+
+    }
     private static void Print_BTB880(Bitmap _bitmap,Context context) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
@@ -110,7 +127,6 @@ public class PrinterTools {
             }
         }.execute();
     }
-
     private static void printAndOpenCashBoxBTP880(final String mainAns, final String mainMer, final String mainCli, final Context context, final Activity activity) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
@@ -165,6 +181,60 @@ public class PrinterTools {
             }
         }.execute();
     }
+    private static void printAndOpenCashBoxBTP880ForCopy(final String mainAns, final String mainMer, final String mainCli, final Context context, final Activity activity) {
+        final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
+        // final UsbPrinter printer = new UsbPrinter(1155, 30016);
+
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+                ////Hebrew 15 Windows-1255
+
+                int i = posInterfaceAPI.OpenDevice();
+                pos = new POSSDK(posInterfaceAPI);
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,"normalInvoice.pdf");
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    Log.d("bitmapsize",context.toString()+"");
+
+                    pdfLoadImages(data,context,mainMer);
+                }
+                catch(Exception ignored)
+                {
+
+                }
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                PdfUA pdfUA = new PdfUA();
+
+                try {
+                    pdfUA.createNormalInvoiceForCopy(context,SESSION._TEMP_ORDER_DETAILES_COPY,SESSION._TEMP_ORDERS_COPY,false,mainMer);
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                return null;
+            }
+        }.execute();
+    }
     private static void printAndOpenCashBoxSUNMI_T1(String mainAns, final String mainMer, final String mainCli,Context context,Activity activity) {
         //AidlUtil.getInstance().connectPrinterService(this);
         if (AidlUtil.getInstance().isConnect()) {
@@ -206,6 +276,54 @@ public class PrinterTools {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                            // finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            //Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+        }
+    }
+    private static void printAndOpenCashBoxSUNMI_T1ForCopy(String mainAns, final String mainMer, final String mainCli,Context context,Activity activity) {
+        //AidlUtil.getInstance().connectPrinterService(this);
+        if (AidlUtil.getInstance().isConnect()) {
+            final ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+
+            dialog.show();
+            PdfUA pdfUA = new PdfUA();
+
+            try {
+                pdfUA.createNormalInvoiceForCopy(context,SESSION._TEMP_ORDER_DETAILES_COPY,SESSION._TEMP_ORDERS_COPY,false,mainMer);
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try
+            {
+                File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                File file = new File(path,"normalInvoice.pdf");
+                RandomAccessFile f = new RandomAccessFile(file, "r");
+                byte[] data = new byte[(int)f.length()];
+                f.readFully(data);
+                Log.d("bitmapsize",context.toString()+"");
+
+                pdfLoadImages(data,context,mainMer);
+            }
+            catch(Exception ignored)
+            {
+
+            }
+
+
+            dialog.cancel();
+        } else {
+            new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                    .setTitle(context.getString(R.string.printer))
+                    .setMessage(context.getString(R.string.please_connect_the_printer))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // finish();
                         }
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -280,6 +398,74 @@ public class PrinterTools {
                 }
             }.execute();
     }
+    private static void printAndOpenCashBoxHPRT_TP805ForCopy(final String mainAns, final String mainMer, final String mainCli, final Context context, final Activity activity) {
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    HPRTPrinterHelper.OpenCashdrawer(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    try {
+                        HPRTPrinterHelper.OpenCashdrawer(1);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                        try {
+                            HPRTPrinterHelper.OpenCashdrawer(2);
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
+                        }
+                    }
+                }
+
+
+                dialog.cancel();
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                PdfUA pdfUA = new PdfUA();
+
+                try {
+                    Log.d("teeesdr",SESSION._TEMP_ORDER_DETAILES_COPY.toString()+"");
+
+                    pdfUA.createNormalInvoiceForCopy(context,SESSION._TEMP_ORDER_DETAILES_COPY,SESSION._TEMP_ORDERS_COPY,false,mainMer);
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,"normalInvoice.pdf");
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    Log.d("bitmapsize",context.toString()+"");
+
+                    pdfLoadImages(data,context,mainMer);
+                }
+                catch(Exception ignored)
+                {
+
+                }
+                return null;
+            }
+        }.execute();
+    }
+
     public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     static Bitmap newBitmap =null;
     public static void pdfLoadImages(final byte[] data, final Context context, final String mainMer)
@@ -478,6 +664,65 @@ public class PrinterTools {
 
         return temp;
     }
+    private static void printAndOpenCashBoxSM_S230IForCopy(String mainAns, final String mainMer, final String mainCli, final Context context, final Activity activity) {
+        if (true) {
+            final ProgressDialog dialog = new ProgressDialog(context);
+            dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    dialog.show();
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    //feed paper
+
+                    dialog.cancel();
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    InvoiceImg invoiceImg = new InvoiceImg(context);
+                    byte b = 0;
+                    try {
+                        //// TODO: 13/06/2018 adding pinpad support
+                        PdfUA pdfUA = new PdfUA();
+
+                        try {
+                            pdfUA.createNormalInvoiceForCopy(context,SESSION._TEMP_ORDER_DETAILES_COPY,SESSION._TEMP_ORDERS_COPY,false,mainMer);
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try
+                        {
+                            File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                            File file = new File(path,"normalInvoice.pdf");
+                            RandomAccessFile f = new RandomAccessFile(file, "r");
+                            byte[] data = new byte[(int)f.length()];
+                            f.readFully(data);
+                            Log.d("bitmapsize",context.toString()+"");
+
+                            pdfLoadImages(data,context,mainMer);
+                        }
+                        catch(Exception ignored)
+                        {
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+
+    }
+
     private static void printAndOpenCashBoxSM_S230I(String mainAns, final String mainMer, final String mainCli, final Context context, final Activity activity) {
         if (true) {
             final ProgressDialog dialog = new ProgressDialog(context);

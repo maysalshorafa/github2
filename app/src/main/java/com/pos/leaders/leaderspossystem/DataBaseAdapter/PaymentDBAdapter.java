@@ -86,7 +86,14 @@ public class PaymentDBAdapter {
 		val.put(PAYMENT_COLUMN_AMOUNT,payment.getAmount() );
 		val.put(PAYMENT_COLUMN_ORDERID, payment.getOrderId());
 		val.put(PAYMENT_COLUMN_KEY,payment.getOrderKey());
-		val.put("paymentWay","p");
+		int a =0;
+		a=checkPaymentWay();
+		if(a==-1){
+
+		}else {
+			val.put("paymentWay","p");
+
+		}
 
 		try {
 			return db.insert(PAYMENT_TABLE_NAME, null, val);
@@ -157,6 +164,14 @@ public class PaymentDBAdapter {
 		return payment;
 	}
 
+	public int checkPaymentWay() {
+		Payment payment = null;
+
+		Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME, null);
+		cursor.moveToFirst();
+		 int x =cursor.getColumnIndex("paymentWay");
+		return x;
+	}
     private Payment make(Cursor cursor){
         return new Payment(Long.parseLong(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_ID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PAYMENT_COLUMN_AMOUNT))),

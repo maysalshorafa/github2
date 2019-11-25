@@ -99,6 +99,8 @@ public class InInventoryDoc extends AppCompatActivity {
     ProductDBAdapter productDBAdapter;
     EditText ETSearch;
     ProductInventoryCatalogGridViewAdapter finalAdapter;
+    JSONObject jsonObject=new JSONObject();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,7 +158,16 @@ public class InInventoryDoc extends AppCompatActivity {
                         }
                         @Override
                         protected void onPostExecute(Void aVoid) {
-                            printInventory();
+                            try {
+                                if(jsonObject.getString("status").equals("200")) {
+                                    printInventory();
+                                }else {
+                                    Toast.makeText(InInventoryDoc.this,"Have Server Error",Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
 
                         }
                         @Override
@@ -188,19 +199,22 @@ public class InInventoryDoc extends AppCompatActivity {
 
                                 Log.d("Invoice log",invoice.toString());
                                 String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
-                                JSONObject jsonObject = new JSONObject(res);
-                                String msgData = jsonObject.getString(MessageKey.responseBody);
-                                invoiceJsonObject=jsonObject;
-                                JSONObject msgDataJson = new JSONObject(msgData);
-                                JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
-                                invoiceNum = msgDataJson.getString("docNum");
-                                Log.d("Invoice log res", res+"");
-                                Log.d("Invoice Num", invoiceNum);
-
+                                 jsonObject = new JSONObject(res);
+                                if(jsonObject.getString("status").equals("200")) {
+                                    String msgData = jsonObject.getString(MessageKey.responseBody);
+                                    invoiceJsonObject = jsonObject;
+                                    JSONObject msgDataJson = new JSONObject(msgData);
+                                    JSONObject jsonObject1 = msgDataJson.getJSONObject("documentsData");
+                                    invoiceNum = msgDataJson.getString("docNum");
+                                    Log.d("Invoice log res", res + "");
+                                    Log.d("Invoice Num", invoiceNum);
+                                }else {
+                                   Toast.makeText(InInventoryDoc.this,"Have Server Error",Toast.LENGTH_LONG).show();
+                                }
                             } catch (IOException e) {
-                                e.printStackTrace();
+
                             } catch (JSONException e) {
-                                e.printStackTrace();
+
                             }
                             return null;
                         }
@@ -232,7 +246,16 @@ public class InInventoryDoc extends AppCompatActivity {
                         }
                         @Override
                         protected void onPostExecute(Void aVoid) {
-                        printInventory();
+                            try {
+                                if(jsonObject.getString("status").equals("200")) {
+                                    printInventory();
+                                }else {
+                                    Toast.makeText(InInventoryDoc.this,"Have Server Error",Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
 
                         }
                         @Override
@@ -267,14 +290,19 @@ public class InInventoryDoc extends AppCompatActivity {
 
                                 Log.d("Invoice log",invoice.toString());
                                 String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
-                                JSONObject jsonObject = new JSONObject(res);
-                                String msgData = jsonObject.getString(MessageKey.responseBody);
-                                invoiceJsonObject=jsonObject;
-                                JSONObject msgDataJson = new JSONObject(msgData);
-                                JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
-                                invoiceNum = msgDataJson.getString("docNum");
-                                Log.d("Invoice log res", res+"");
-                                Log.d("Invoice Num", invoiceNum);
+                                 jsonObject = new JSONObject(res);
+                                if(jsonObject.getString("status").equals("200")) {
+                                    String msgData = jsonObject.getString(MessageKey.responseBody);
+                                    invoiceJsonObject = jsonObject;
+                                    JSONObject msgDataJson = new JSONObject(msgData);
+                                    JSONObject jsonObject1 = msgDataJson.getJSONObject("documentsData");
+                                    invoiceNum = msgDataJson.getString("docNum");
+                                    Log.d("Invoice log res", res + "");
+                                    Log.d("Invoice Num", invoiceNum);
+                                }else {
+                                    Toast.makeText(InInventoryDoc.this,"Have Server Error",Toast.LENGTH_LONG).show();
+                                }
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             } catch (JSONException e) {

@@ -584,7 +584,358 @@ public class InvoiceImg {
         blocks.add(thanks.Left());
 
         return make(blocks);
-    }    public Bitmap copyInvoice(long id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, List<Check> checks) {
+    }
+    public Bitmap copyNormalInvoice(long id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, List<Check> checks,String mainMer) {
+        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
+        cashPaymentDBAdapter.open();
+        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
+        checksDBAdapter.open();
+        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
+        creditCardPaymentDBAdapter.open();
+        orders=SESSION._TEMP_ORDER_DETAILES_COPY;
+        sale=SESSION._TEMP_ORDERS_COPY;
+        Log.d("testSeesin",orders.toString());
+        Log.d("testssss",sale.toString());
+        int count =0;
+        List<Block> blocks = new ArrayList<Block>();
+        blocks.addAll(Head(sale));
+        Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        String status=context.getString(R.string.source_invoice);
+        if(isCopy)
+            status=context.getString(R.string.copy_invoice);
+        Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block inum = new Block("\u200E"+ context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", id) + "\n"
+                + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(bStatus);
+        blocks.add(inum);
+        Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
+        Block counter = new Block("\u200E" + context.getString(R.string.qty) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block unitPrice = new Block("\u200E" + context.getString(R.string.price) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+        Block price = new Block("\u200E" + context.getString(R.string.total) + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.2));
+        Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
+
+        double SaleOriginalityPrice = 0, saleTotalPrice = 0;
+        double totalSaved = 0.0;
+        double price_before_tax=0;
+        for (OrderDetails o : orders) {
+            price_before_tax+=o.getPaidAmountAfterTax();
+
+            count+=o.getQuantity();
+            if (o.getProduct().getDisplayName().equals("General"))
+                o.getProduct().setProductCode(context.getString(R.string.general));
+            int cut = 11;
+            if (o.getProduct().getDisplayName().length() < cut)
+                cut = o.getProduct().getDisplayName().length();
+            name.text += (o.getProduct().getDisplayName().substring(0, cut) + newLineL);
+            counter.text += o.getQuantity() + "\n";
+            unitPrice.text += Util.makePrice(o.getUnitPrice()) + "\n";
+            price.text +=  Util.makePrice(o.getItemTotalPrice()) + "\n";
+            discount.text += String.format(new Locale("en"), "%.2f", o.getDiscount()) + "\n";
+            SaleOriginalityPrice += (o.getItemTotalPrice() );
+            saleTotalPrice += o.getUnitPrice();
+
+        }
+        totalSaved = (SaleOriginalityPrice - saleTotalPrice);
+        Log.d("testTotalSaved",totalSaved+"");
+        blocks.add(discount.Left());
+        blocks.add(price.Left());
+        blocks.add(unitPrice.Left());
+        blocks.add(counter.Left());
+        //name.text = String.format(new Locale("he"), name.text);
+        name.Left();
+        blocks.add(name);
+        Block productCountText = new Block("\u200E" + context.getString(R.string.product_quantity), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block productCount = new Block("\u200E" + String.valueOf(count), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block toPidText = new Block("\u200E" + context.getString(R.string.total_price),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block discountText = new Block("\u200E" + context.getString(R.string.discount), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+
+        Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_discount),25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block discountAmount = new Block("\u200E" + String.valueOf(sale.cartDiscount)+ "%", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()*100/(100-sale.cartDiscount)), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        productCount.Left();
+        productCountText.Left();
+        toPid.Left();
+        toPidText.Left();
+        if (sale.cartDiscount !=0){
+            discountText.Left();
+            discountAmount.Left();
+            toPidBeforeDiscount.Left();
+            toPidTextBeforeDiscount.Left();
+        }
+
+
+        toPid.Bold();
+        toPidText.Bold();
+        blocks.add(lineR);
+        blocks.add(productCount);
+        blocks.add(productCountText);
+        blocks.add(clear.Left());
+        if (sale.cartDiscount !=0){
+            blocks.add(discountAmount);
+            blocks.add(discountText);
+            blocks.add(clear.Left());
+            blocks.add(toPidBeforeDiscount);
+            blocks.add(toPidTextBeforeDiscount);
+            blocks.add(clear.Left());}
+
+        blocks.add(toPid);
+        blocks.add(toPidText);
+        blocks.add(clear.Left());
+
+        Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+"%" , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block priceBeforeTaxText = new Block("\u200E" + context.getString(R.string.price_before_tax) , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+
+        double noTax =price_before_tax - (price_before_tax * (sale.cartDiscount/100));
+        double totalPriceAfterDiscount= SaleOriginalityPrice- (SaleOriginalityPrice * (sale.cartDiscount/100));
+
+        Block addsTaxValue = new Block(Util.makePrice(totalPriceAfterDiscount-noTax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block priceBeforeTax = new Block(Util.makePrice(noTax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+        // Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        //blocks.add(numTax.Left());
+        blocks.add(addsTaxValue.Left());
+        blocks.add(addsTax.Left());
+        blocks.add(clear.Left());
+
+        blocks.add(priceBeforeTax.Left());
+        blocks.add(priceBeforeTaxText.Left());
+        blocks.add(clear.Left());
+        //pid and price
+        Block paidBy = new Block("\u200E" + context.getString(R.string.paid_by), 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block paidByText = new Block("\u200E" + "", 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+
+        Block b_payment = new Block("\u200e" + context.getString(R.string.payment)  , 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+        Block b_total = new Block("\u200E" + context.getString(R.string.total) + "\n" + Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+        Block b_given = new Block("\u200E" + context.getString(R.string.given) + "\n" + Util.makePrice(sale.getTotalPaidAmount()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+        double calcReturned = 0;
+        if (sale.getTotalPrice() < 0 && sale.getTotalPaidAmount() >= 0) {
+            calcReturned = (sale.getTotalPrice() + sale.getTotalPaidAmount());
+        } else {
+            calcReturned = (sale.getTotalPaidAmount() - sale.getTotalPrice());
+            if (calcReturned < 0) {
+                calcReturned = 0;
+            }
+        }
+        Block b_returned = new Block("\u200E" + context.getString(R.string.rest), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        blocks.add(lineR.Left());
+        blocks.add(paidByText.Bold().Left());
+        blocks.add(paidBy.Bold().Left());
+        blocks.add(clear.Left());
+        blocks.add(b_returned.Left());
+        blocks.add(b_given.Left());
+        blocks.add(b_total.Left());
+        blocks.add(b_payment.Left());
+        blocks.add(clear.Left());
+        double cash_plus = 0;
+        double check_plus = 0;
+        double creditCard_plus = 0;
+        List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
+        for(int i=0;i<cashPaymentList.size();i++){
+            cash_plus+=cashPaymentList.get(i).getAmount()*cashPaymentList.get(i).getCurrencyRate();
+        }
+        List<Check>checkList=checksDBAdapter.getPaymentBySaleID(sale.getOrderId());
+        for(int i=0;i<checkList.size();i++){
+            check_plus+=checkList.get(i).getAmount();
+        }
+        List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(sale.getOrderId());
+        for(int i=0;i<creditCardPayments.size();i++){
+            creditCard_plus+=creditCardPayments.get(i).getAmount();
+        }
+        if(cashPaymentList.size()>0){
+            Block b_payment_Cash = new Block("\u200e" + context.getString(R.string.cash)  , 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+            Block b_total_Cash = new Block("\u200E" +  Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_given_Cash = new Block("\u200E" + cash_plus, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_returned_Cash = new Block("\u200E" + Util.makePrice(sale.getTotalPrice()-cash_plus), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+            blocks.add(clear.Left());
+            blocks.add(b_returned_Cash.Left());
+            blocks.add(b_given_Cash.Left());
+            blocks.add(b_total_Cash.Left());
+            blocks.add(b_payment_Cash.Left());
+            blocks.add(clear.Left());
+            blocks.add(lineR.Left());
+
+        }
+        if(checkList.size()>0){
+            Block b_payment_Check = new Block("\u200e" + context.getString(R.string.checks)  , 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+            Block b_total_Check = new Block("\u200E" +  Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_given_Check = new Block("\u200E" + check_plus, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_returned_Check = new Block("\u200E" + Util.makePrice(sale.getTotalPrice()-check_plus), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+            blocks.add(clear.Left());
+            blocks.add(b_returned_Check.Left());
+            blocks.add(b_given_Check.Left());
+            blocks.add(b_total_Check.Left());
+            blocks.add(b_payment_Check.Left());
+            blocks.add(clear.Left());
+            blocks.add(lineR.Left());
+
+        }
+        if(creditCardPayments.size()>0) {
+            Block b_payment_Credit = new Block("\u200e" + context.getString(R.string.credit_card), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+            Block b_total_Credit = new Block("\u200E" + Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_given_Credit = new Block("\u200E" + creditCard_plus, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_returned_Credit = new Block("\u200E" + Util.makePrice(sale.getTotalPrice() - creditCard_plus), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+            blocks.add(clear.Left());
+            blocks.add(b_returned_Credit.Left());
+            blocks.add(b_given_Credit.Left());
+            blocks.add(b_total_Credit.Left());
+            blocks.add(b_payment_Credit.Left());
+            blocks.add(clear.Left());
+            blocks.add(lineR.Left());
+        }
+
+
+        String strPaymentWay = "";
+
+
+        if(SETTINGS.enableCurrencies) {
+            double shekelPaid =0,shekelReturn =0 ,usdPaid=0 , usdReturn=0,GbpPaid=0,GbpReturn=0,EurPaid=0, EurReturn=0;
+            Block currencyDetails = new Block("\u200E" + context.getString(R.string.currency), 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+            Block currencyText = new Block("\u200E" + "", 28f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+            Block currencyType = new Block("\u200E" + context.getString(R.string.type) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block currencyAmount = new Block("\u200E" + context.getString(R.string.given) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block currencyReturned = new Block("\u200E" + context.getString(R.string.returned) + newLineL, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+
+            CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
+            currencyOperationDBAdapter.open();
+            List<CurrencyOperation> currencyOperationList = currencyOperationDBAdapter.getCurrencyOperationByOrderID(sale.getOrderId());
+            CurrencyReturnsDBAdapter currencyReturnDBAdapter = new CurrencyReturnsDBAdapter(context);
+            currencyReturnDBAdapter.open();
+            List<CurrencyReturns> currencyReturnsList=currencyReturnDBAdapter.getCurencyReturnBySaleID(sale.getOrderId());
+            for (int i = 0; i < currencyOperationList.size(); i++) {
+                if(currencyOperationList.get(i).getCurrencyType().equals("ILS")){
+                    shekelPaid+=currencyOperationList.get(i).getAmount();
+                }else if(currencyOperationList.get(i).getCurrencyType().equals("USD")){
+                    usdPaid+=currencyOperationList.get(i).getAmount();
+                }  else if(currencyOperationList.get(i).getCurrencyType().equals("GBP")){
+                    GbpPaid+=currencyOperationList.get(i).getAmount();
+                }else  if(currencyOperationList.get(i).getCurrencyType().equals("EUR")){
+                    EurPaid+=currencyOperationList.get(i).getAmount();
+                }
+
+            }
+            for (int i = 0; i < currencyReturnsList.size(); i++) {
+                if(currencyReturnsList.get(i).getCurrency_type()==0){
+                    shekelReturn+=currencyReturnsList.get(i).getAmount();
+                }else if(currencyReturnsList.get(i).getCurrency_type()==1){
+                    usdReturn+=currencyReturnsList.get(i).getAmount();
+                }  else if(currencyReturnsList.get(i).getCurrency_type()==2){
+                    GbpReturn+=currencyReturnsList.get(i).getAmount();
+                }else  if(currencyReturnsList.get(i).getCurrency_type()==3){
+                    EurReturn+=currencyReturnsList.get(i).getAmount();
+                }
+
+            }
+            if(shekelPaid>0||shekelReturn>0){
+                currencyType.text += context.getString(R.string.shekel) + newLineL;
+                currencyAmount.text += shekelPaid + newLineL;
+                currencyReturned.text+=shekelReturn+newLineL;
+            }
+            if(usdPaid>0||usdReturn>0){
+                currencyType.text += context.getString(R.string.usd) + newLineL;
+                currencyAmount.text += usdPaid + newLineL;
+                currencyReturned.text+=usdReturn+newLineL;
+            }
+            if(GbpPaid>0||GbpReturn>0){
+                currencyType.text += context.getString(R.string.gbp) + newLineL;
+                currencyAmount.text += GbpPaid + newLineL;
+                currencyReturned.text+=GbpReturn+newLineL;
+            }
+            if(EurPaid>0||EurReturn>0){
+                currencyType.text += context.getString(R.string.eur) + newLineL;
+                currencyAmount.text += EurPaid + newLineL;
+                currencyReturned.text+=EurReturn+newLineL;
+            }
+            blocks.add(currencyText.Bold().Left());
+            blocks.add(currencyDetails.Bold().Left());
+            blocks.add(clear.Left());
+            blocks.add(currencyReturned.Left());
+            blocks.add(currencyText.Left());
+            blocks.add(currencyAmount.Left());
+            blocks.add(currencyType.Left());
+            blocks.add(lineR.Left());
+        }
+        if (checkList .size()>0) {
+            Block b_checks_number = new Block("\u200e" + context.getString(R.string.checks), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+            Block b_checks_date = new Block(context.getString(R.string.date), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+            Block b_checks_amount = new Block(context.getString(R.string.amount), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
+            for (Check check : checkList) {
+                b_checks_number.text += newLineL + check.getCheckNum();
+                b_checks_date.text += "\n" + DateConverter.toDate(new Date(check.getCreatedAt().getTime()));
+                b_checks_amount.text += "\n" + Util.makePrice(check.getAmount());
+            }
+            blocks.add(b_checks_amount.Left());
+            blocks.add(b_checks_date.Left());
+            blocks.add(b_checks_number.Left());
+
+            blocks.add(lineR.Left());
+        }
+        if(mainMer!=""){
+            String str = "";
+            for (String s : mainMer.split("\n")) {
+                if(!s.replaceAll(" ","").equals("")) {
+                    if(s.contains("Powered")){
+                        continue;
+                    }
+                    if(s.contains("מספר כרטיס")){
+                        if(s.split("\\s+")[1].length()>4){
+                            String head = "מספר כרטיס";
+                            String ss = "";
+                            for(int i=0;i<s.split("\\s+")[1].length()-4;i++) {
+                                ss += "*";
+                            }
+                            ss += s.split("\\s+")[1].substring(s.split("\\s+")[1].length() - 4, s.split("\\s+")[1].length());
+
+                            str += "\u200E" + ss + "\t" + head + "\n";
+                            continue;
+                        }
+                    }
+                    str += "\u200E" + s + "\n";
+                }
+                Log.i("cc row", s);
+            }
+            Block CC = new Block("\u200E" + str, 25.0f, Color.BLACK).Left();
+
+            blocks.add(CC);
+        }
+        Block cashier = new Block("\u200e" + context.getString(R.string.cashier)+ " " , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+        Block cashierName = new Block("\u200E" +  user.getFullName(), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.5));
+
+        cashier.Left();
+        cashierName.Left();
+        blocks.add(cashierName);
+        blocks.add(cashier);
+        if(SESSION._TEMP_ORDERS_COPY.getCustomer()!=null){
+            if(SESSION._TEMP_ORDERS_COPY.getCustomer().getCustomerType().equals(CustomerType.CREDIT)){
+                Block fourth_part = new Block("\u200E " + context.getString(R.string.customer_ledger) +
+                        ": " + SESSION._ORDERS.CustomerLedger + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+
+                fourth_part.Left();
+                blocks.add(fourth_part);
+            }
+        }
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(date.Left());
+        if (isCopy) {
+            Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            blocks.add(bCopyDate.Left());
+        }
+        //    if ((int) totalSaved != 0) {
+        String s = context.getString(R.string.ins);
+        Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" + String.format(new Locale("en"), "%.2f %s", SESSION._TEMP_ORDERS_COPY.totalSaved, s), 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(totSaved.Bold().Left());
+        //   }
+
+        Block thanks = new Block(SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        blocks.add(thanks.Left());
+
+        return make(blocks);
+    }
+    public Bitmap copyInvoice(long id, List<OrderDetails> orders, Order sale, boolean isCopy, Employee user, List<Check> checks) {
         int count =0;
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));

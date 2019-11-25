@@ -60,7 +60,9 @@ import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
+import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
@@ -693,14 +695,20 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             else{
                                                 try {
 
-                                                    SESSION._TEMP_ORDER_DETAILES=orders;
-                                                    SESSION._TEMP_ORDERS=sale;
+                                                    SESSION._TEMP_ORDER_DETAILES_COPY=orders;
+                                                    SESSION._TEMP_ORDERS_COPY=sale;
 
-
-                                                    SESSION._ORDER_DETAILES=orders;
-                                                    SESSION._ORDERS=sale;
                                                  //   Log.d("ItemId",sale.getOrderId()+"");
-                                                    PrinterTools.printAndOpenCashBox("", "", "", 600,OrdersManagementActivity.this,getParent());
+                                                    if(SETTINGS.printer.equals(PrinterType.SUNMI_T1)){
+
+                                                            printAndOpenCashBoxSUNMI_T1("","","");
+
+
+                                                    }else {
+                                                    PrinterTools.printAndOpenCashBoxForCopy("", "", "", 600,OrdersManagementActivity.this,getParent());
+                                                    }
+                                                  //  SESSION._TEMP_ORDER_DETAILES=new ArrayList<OrderDetails>();
+                                                 //   SESSION._TEMP_ORDERS=new Order();
                                                     /**Customer customer1 =sale.getCustomer();
                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                                     SETTINGS.copyInvoiceBitMap =invoiceImg.copyInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);
@@ -1126,7 +1134,64 @@ public class OrdersManagementActivity extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         etSearch.setText(String.format(new Locale("en"),format.format(myCalendar.getTime())));
     }
+    private void printAndOpenCashBoxSUNMI_T1(String mainAns, final String mainMer, final String mainCli) {
+        //AidlUtil.getInstance().connectPrinterService(this);
+        // if (AidlUtil.getInstance().isConnect()) {
+        final ProgressDialog dialog = new ProgressDialog(OrdersManagementActivity.this);
+        dialog.setTitle(getApplicationContext().getString(R.string.wait_for_finish_printing));
 
+        dialog.show();
+        InvoiceImg invoiceImg = new InvoiceImg(getApplicationContext());
+        byte b = 0;
+        try {
+
+            Bitmap bitmap = invoiceImg.copyNormalInvoice(SESSION._TEMP_ORDERS_COPY.getOrderId(), SESSION._TEMP_ORDER_DETAILES_COPY, SESSION._ORDERS, false, SESSION._EMPLOYEE, SESSION._CHECKS_HOLDER,mainMer);
+            AidlUtil.getInstance().printBitmap(bitmap);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            //cut
+            AidlUtil.getInstance().print3Line();
+            AidlUtil.getInstance().cut();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(mainMer!=""){
+
+            Bitmap bitmap2 = invoiceImg.copyNormalInvoice(SESSION._TEMP_ORDERS_COPY.getOrderId(), SESSION._TEMP_ORDER_DETAILES_COPY, SESSION._TEMP_ORDERS_COPY, false, SESSION._EMPLOYEE, null,mainMer);
+            AidlUtil.getInstance().printBitmap(bitmap2);
+            try {
+                //cut
+                AidlUtil.getInstance().print3Line();
+                AidlUtil.getInstance().cut();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            AidlUtil.getInstance().openCashBox();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        dialog.cancel();
+  /*   } else {
+            new android.support.v7.app.AlertDialog.Builder(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                    .setTitle(getContext().getString(R.string.printer))
+                    .setMessage(getContext().getString(R.string.please_connect_the_printer))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            //Toast.makeText(this, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+        }*/
+    }
 
 }
 class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,String> {
