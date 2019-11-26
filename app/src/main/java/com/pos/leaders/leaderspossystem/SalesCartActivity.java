@@ -3346,12 +3346,14 @@ public class SalesCartActivity extends AppCompatActivity {
             }
             if(o.getProduct().getUnit().equals(ProductUnit.BARCODEWITHWEIGHT)){
 
-               /* final Dialog productWeightDialog = new Dialog(SalesCartActivity.this);
+                final Dialog productWeightDialog = new Dialog(SalesCartActivity.this);
                 productWeightDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 productWeightDialog.show();
-                productWeightDialog.setContentView(R.layout.product_serial_number);
+                productWeightDialog.setContentView(R.layout.product_weight_dialog);
                 productWeightDialog.show();
                 final TextView productName = (EditText) productWeightDialog.findViewById(R.id.TvProductName);
+                final TextView productName = (EditText) productWeightDialog.findViewById(R.id.TvProductName);
+
                 ImageView btn_cancel = (ImageView) productSerialNumberDialog.findViewById(R.id.closeDialog);
                 Button btn_done = (Button) productSerialNumberDialog.findViewById(R.id.productSerialNumberDialog_BTOk);
 
@@ -3377,7 +3379,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         productSerialNumberDialog.dismiss();
                         isWithSerialNo=false;
                     }
-                });*/
+                });
 
             }
 
