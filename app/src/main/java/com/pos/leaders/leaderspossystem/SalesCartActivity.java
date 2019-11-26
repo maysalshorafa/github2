@@ -3351,16 +3351,23 @@ public class SalesCartActivity extends AppCompatActivity {
                 productWeightDialog.show();
                 productWeightDialog.setContentView(R.layout.product_weight_dialog);
                 productWeightDialog.show();
-                final TextView productName = (EditText) productWeightDialog.findViewById(R.id.TvProductName);
-                final TextView productName = (EditText) productWeightDialog.findViewById(R.id.TvProductName);
+                final TextView productName = (TextView) productWeightDialog.findViewById(R.id.TvProductName);
+                final TextView productPrice = (TextView) productWeightDialog.findViewById(R.id.TvPrice);
+                final TextView productWeight = (TextView) productWeightDialog.findViewById(R.id.totalWeight);
+                final TextView productDiscount = (TextView) productWeightDialog.findViewById(R.id.totalDiscount);
+                final TextView totalPrice = (TextView) productWeightDialog.findViewById(R.id.totalPrice);
+                ImageView btn_add_weight = (ImageView) productWeightDialog.findViewById(R.id.addWeight);
+                ImageView btn_close = (ImageView) productWeightDialog.findViewById(R.id.closeDialog);
+                Button btn_done = (Button) productWeightDialog.findViewById(R.id.productWeightDialog_BTOk);
+                Button btn_discount = (Button) productWeightDialog.findViewById(R.id.productWeightDialog_BTDiscount);
+                productName.setText(o.getProduct().getDisplayName());
+                productPrice.setText(Util.makePrice(o.getProduct().getPrice()));
 
-                ImageView btn_cancel = (ImageView) productSerialNumberDialog.findViewById(R.id.closeDialog);
-                Button btn_done = (Button) productSerialNumberDialog.findViewById(R.id.productSerialNumberDialog_BTOk);
 
-                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                btn_close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        productSerialNumberDialog.dismiss();
+                        productWeightDialog.dismiss();
                     }
                 });
 
