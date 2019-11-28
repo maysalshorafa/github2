@@ -4619,14 +4619,12 @@ public class SalesCartActivity extends AppCompatActivity {
                     jsonArray = new JSONArray(MultiCurrencyResult);
                     Log.d("MultiCurrencyResult", MultiCurrencyResult);
                     ObjectMapper objectMapper = new ObjectMapper();
-                    for (int i = 0; i < jsonArray.length() - 1; i++) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         PaymentTable paymentTable= objectMapper.readValue(jsonObject.toString(), PaymentTable.class);
                         paymentTableArrayList.add(paymentTable);
                         TotalPaidAmount += jsonObject.getDouble("tendered") * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
-                        change = Math.abs(change);
-                        Log.d("change",change+"");
-                        Log.d("change",jsonObject.toString()+"");
+                        change = Math.abs(jsonObject.getDouble("due"));
 
                     }
                     double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
