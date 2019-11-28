@@ -2162,15 +2162,28 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
                                                 for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
                                                     if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
-                                                        SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(SESSION._ORDER_DETAILES.get(i).getPaidAmount());
-                                                        SalesWithoutTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
-
+                                                        if(SESSION._ORDERS.getCartDiscount()>0){
+                                                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100))))));
+                                                            SalesWithoutTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                        }else {
+                                                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
+                                                            SalesWithoutTax += SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                        }
                                                     }else {
+                                                        if(SESSION._ORDERS.getCartDiscount()>0){
 
-                                                        SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)));
-                                                        salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
-                                                        Log.d("salesaftertax",salesaftertax+"ko");
-                                                        SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
+                                                            Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
+
+                                                            salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)));
+                                                            Log.d("salesaftertax",salesaftertax+"ko22222");
+                                                            SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                        }else {
+                                                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
+                                                            salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
+                                                            Log.d("salesaftertax",salesaftertax+"ko");
+                                                            SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                        }
                                                     }
                                                 }
 
@@ -4611,30 +4624,39 @@ public class SalesCartActivity extends AppCompatActivity {
                         PaymentTable paymentTable= objectMapper.readValue(jsonObject.toString(), PaymentTable.class);
                         paymentTableArrayList.add(paymentTable);
                         TotalPaidAmount += jsonObject.getDouble("tendered") * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
-                        change = Math.abs(jsonObject.getDouble("change"));
+                        change = Math.abs(change);
+                        Log.d("change",change+"");
+                        Log.d("change",jsonObject.toString()+"");
+
                     }
                     double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
                     for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+
                         if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
-                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
-                            SalesWithoutTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
-
+                            if(SESSION._ORDERS.getCartDiscount()>0){
+                                SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100))))));
+                                SalesWithoutTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                            }else {
+                                SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
+                                SalesWithoutTax += SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                            }
                         }else {
+                            if(SESSION._ORDERS.getCartDiscount()>0){
 
-                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                            salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
-                            Log.d("salesaftertax",salesaftertax+"ko");
+                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
+                                Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
+
+                                salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)));
+                            Log.d("salesaftertax",salesaftertax+"ko22222");
                             SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                            }else {
+                                SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
+                                salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
+                                Log.d("salesaftertax",salesaftertax+"ko");
+                                SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                            }
                         }
                     }
-                   /* for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
-                        price_before_tax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
-
-                    }
-                    double noTax =price_before_tax - (price_before_tax * (SESSION._ORDERS.cartDiscount/100));
-                    double totalPriceAfterDiscount= totalPrice- (totalPrice * (SESSION._ORDERS.cartDiscount/100));
-                    Log.d("totalPriceAfterDiscount",totalPriceAfterDiscount+"");
-                    Log.d("noTax",noTax+"");*/
                     SESSION._ORDERS.setSalesWithTax(Double.parseDouble(Util.makePrice(SalesWitheTax)));
                     SESSION._ORDERS.setSalesBeforeTax(Double.parseDouble(Util.makePrice(SalesWithoutTax)));
                     SESSION._ORDERS.setTotalPaidAmount(TotalPaidAmount);

@@ -208,6 +208,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_order, lvOrders, false);
         lvOrders.addHeaderView(header, null, false);
         objectList.addAll(_saleList);
+        list=objectList;
         adapter = new SaleManagementListViewAdapter(this, R.layout.list_adapter_row_sales_management, objectList);
         lvOrders.setAdapter(adapter);
 
@@ -232,9 +233,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
         lvOrders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Log.d("testInvoice",objectList.size()+"" +position);
-                if(position==objectList.size()){
-                    final Order sale = (Order) objectList.get(objectList.size()-1);
+                Log.d("testInvoice",list.size()+"" +position);
+                if(position==list.size()){
+                    final Order sale = (Order) list.get(list.size()-1);
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(OrdersManagementActivity.this);
                     customerDBAdapter.open();
                     Customer customer=new Customer();
@@ -489,8 +490,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                     previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
                 }
-                else  if(objectList.get(position-1) instanceof  Order){
-                    final Order sale = (Order) objectList.get(position-1);
+                else  if(list.get(position-1) instanceof  Order){
+                    final Order sale = (Order) list.get(position-1);
+                    Log.d("testttt",sale.toString());
+
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(OrdersManagementActivity.this);
                     customerDBAdapter.open();
                     Customer customer=null;

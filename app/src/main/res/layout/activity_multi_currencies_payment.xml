@@ -266,14 +266,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_1"
-                    style="@style/AppTheme.bt_dark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="paymentQuickPriceClick"
-                    android:text="1" />
 
                 <Button
                     android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_5"
@@ -319,6 +311,14 @@
                     android:layout_weight="1"
                     android:onClick="paymentQuickPriceClick"
                     android:text="100" />
+                <Button
+                    android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPrice_1"
+                    style="@style/AppTheme.bt_dark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="paymentQuickPriceClick"
+                    android:text="200" />
             </LinearLayout>
         </LinearLayout>
 
