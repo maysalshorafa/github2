@@ -305,18 +305,12 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         if(paymentMethod.equals(PaymentMethod.CASH)) {
             for(int i=0 ;i<paymentTables.size();i++){
                 if(paymentTables.get(i).getPaymentMethod().equalsIgnoreCase(getString(R.string.cash))){
-                    double beforeChangeExcess = excess;
-
-
                     haveRow=true;
                     totalPaid += val * currencyRate;
-                   // paymentTables.get(i).setChange(excess);
-
+                    double beforeChangeExcess = excess;
                     setExcess();
                     updateView();
                     paymentTables.get(i).setTendered(paymentTables.get(i).getTendered()+val);
-                    paymentTables.get(i).setDue( excess);
-                  //  paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(), beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + ""), actualCurrencyRate));
                     updateLastRow();
                     lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
                 }
