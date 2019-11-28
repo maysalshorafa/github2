@@ -309,6 +309,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customer.setLastName(etCustomerLastName.getText().toString());
                                 customer.setClub(clubID);
                                 customer.setPhoneNumber(etPhoneNo.getText().toString());
+                                customer.setCustomerIdentity(strCustomerId);
                                 if(secondCustomerInformation.getVisibility()==View.VISIBLE){
                                     customer.setBranchId(branchId);
                                 customer.setJob(job);
@@ -319,7 +320,7 @@ public class AddNewCustomer extends AppCompatActivity implements AdapterView.OnI
                                 customer.setCountry(country);
                                 customer.setCountryCode(countryCode);
                                     customer.setCustomerCode(customerCode);
-                                    customer.setCustomerIdentity(strCustomerId);
+
                                     customer.setGender(gender);
                                 customer.setCity(cityId);
                                 customer.setCustomerType(customerType);
