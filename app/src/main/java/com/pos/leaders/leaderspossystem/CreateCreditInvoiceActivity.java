@@ -228,13 +228,25 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         newCartDetails.getJSONObject(p).put("unitPrice", product.getPrice());
                                         haveCart=true;
                                         if(product.isWithTax()){
-                                            SalesWithoutTax+=product.getPrice()*(c+1);
+                                            if(docDocument.getDouble("cartDiscount")>0){
+                                                SalesWithoutTax+=((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100));
+                                            }
+                                            else {
+                                                SalesWithoutTax+=product.getPrice()*(c+1);
+                                            }
+
 
                                         }else {
-
-                                            salesaftertax+=product.getPrice()*(c+1);
-                                            Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                            SalesWitheTax+=product.getPrice()*(c+1)/ (1 + (SETTINGS.tax / 100));
+                                            if(docDocument.getDouble("cartDiscount")>0) {
+                                                salesaftertax += ((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)));
+                                                Log.d("salesaftertax", salesaftertax + "k6666666666");
+                                                SalesWitheTax += ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)));
+                                            }
+                                        else {
+                                                salesaftertax += product.getPrice() * (c + 1);
+                                                Log.d("salesaftertax", salesaftertax + "k6666666666");
+                                                SalesWitheTax += product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100));
+                                            }
                                         }
                                         Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
 
@@ -248,13 +260,22 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                   newCartDetails.put(newCartJson);
                                     Log.d("newCartDeteails111",newCartJson.toString());
                                     if(product.isWithTax()){
-                                        SalesWithoutTax+=product.getPrice()*1;
-
+                                        if(docDocument.getDouble("cartDiscount")>0) {
+                                            SalesWithoutTax += ((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)));
+                                        }
+                                        else {
+                                            SalesWithoutTax += product.getPrice() * 1;
+                                        }
                                     }else {
-
-                                        salesaftertax+=product.getPrice()*1;
+                                        if(docDocument.getDouble("cartDiscount")>0){
+                                        salesaftertax+=((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)));
                                         Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                        SalesWitheTax+=product.getPrice()*1/ (1 + (SETTINGS.tax / 100));
+                                        SalesWitheTax+=((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)));}
+                                        else {
+                                            salesaftertax+=product.getPrice()*1;
+                                            Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                            SalesWitheTax+=product.getPrice()*1/ (1 + (SETTINGS.tax / 100));
+                                        }
                                     }
                                     Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
 
