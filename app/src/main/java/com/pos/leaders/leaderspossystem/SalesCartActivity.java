@@ -59,7 +59,6 @@ import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
@@ -354,51 +353,6 @@ public class SalesCartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_temp);
 
         TitleBar.setTitleBar(this);
-
-
-        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
-        zReportDBAdapter.open();
-        if(DbHelper.DATABASE_ENABEL_ALTER_COLUMN){
-            Log.d("pooos",SESSION.POS_ID_NUMBER+"");
-            zReportDBAdapter.upDatePosSalesV4();
-            OpiningReport aReport = getLastAReport();
-            ZReport zReport = getLastZReport();
-            OrderDBAdapter orderDBAdapter = new OrderDBAdapter(getApplicationContext());
-            orderDBAdapter.open();
-            Order order = orderDBAdapter.getLast();
-            ClosingReport closingReport = getLastClosingReport();
-            if(closingReport.getOpiningReportId()==aReport.getOpiningReportId()&&aReport.getLastZReportID()==zReport.getzReportId()){
-                //insertZReport
-                ZReport z = new ZReport();
-                z.setCreatedAt( new Timestamp(System.currentTimeMillis()));
-                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
-                z.setStartOrderId(zReport.getEndOrderId()+1);
-                Util.tempinsertZReport(z,getApplicationContext());
-            }else if(closingReport.getOpiningReportId()!=aReport.getOpiningReportId()&&aReport.getLastZReportID()==zReport.getzReportId()){
-                //insertZ and closing
-                //insertZReport
-                ZReport z = new ZReport();
-                z.setCreatedAt( new Timestamp(System.currentTimeMillis()));
-                z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
-                z.setStartOrderId(zReport.getEndOrderId()+1);
-                ZReport zReport1 = Util.tempinsertZReport(z,getApplicationContext());
-                ClosingReportDBAdapter closingReportDBAdapter= new ClosingReportDBAdapter(getApplicationContext());
-                closingReportDBAdapter.open();
-                long i =closingReportDBAdapter.insertEntry(0,0,0,new Timestamp(System.currentTimeMillis()),aReport.getOpiningReportId(),order.getOrderId(), SESSION._EMPLOYEE.getEmployeeId());
-                ClosingReportDetailsDBAdapter closingReportDetailsDBAdapter = new ClosingReportDetailsDBAdapter(getApplicationContext());
-                closingReportDetailsDBAdapter.open();
-                if(zReport1.getCheckTotal()>0) {
-                    closingReportDetailsDBAdapter.insertEntry(i, 0, zReport1.getCheckTotal(), 0 - zReport1.getCheckTotal(), CONSTANT.CHECKS, "Shekel");
-                }else if(zReport1.getCreditTotal()>0) {
-                    closingReportDetailsDBAdapter.insertEntry(i, 0, zReport1.getCreditTotal(), 0 - zReport1.getCreditTotal(), CONSTANT.CREDIT_CARD, "Shekel");
-                }
-                closingReportDetailsDBAdapter.insertEntry(i,0,zReport1.getShekelAmount(),0-zReport1.getShekelAmount(),CONSTANT.CASH,"Shekel");
-            }
-
-            Util.addPosSetting(SalesCartActivity.this);
-
-            DbHelper.DATABASE_ENABEL_ALTER_COLUMN=false;
-        }
         if (!Util.isSyncServiceRunning(this)) {
             Intent intent = new Intent(SalesCartActivity.this, SyncMessage.class);
             intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, SETTINGS.BO_SERVER_URL);
