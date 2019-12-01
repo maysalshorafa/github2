@@ -59,8 +59,15 @@ public class CurrencyOperationDBAdapter {
     }
 
     public CurrencyOperationDBAdapter open() throws SQLException {
-        this.db = dbHelper.getWritableDatabase();
-        return this;
+        try {
+            this.db = dbHelper.getWritableDatabase();
+            return this;
+
+        } catch (SQLException s) {
+            new Exception("Error with DB Open");
+            return this;
+
+        }
     }
 
     public void close() {
@@ -140,7 +147,7 @@ public class CurrencyOperationDBAdapter {
             close();
 
         } catch (Exception e) {
-
+Log.d("exception",e.toString());
         }
         return saleReturns;
     }
