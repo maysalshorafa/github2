@@ -51,6 +51,7 @@
     <string name="product">פריט</string>
     <string name="productID">מק\'\'ט</string>
     <string name="qty">כמות</string>
+    <string name="test">מבחן</string>
     <string name="refresh">רענון</string>
     <string name="returned">עודף</string>
     <string name="total_price">סה\'\'כ מחיר</string>

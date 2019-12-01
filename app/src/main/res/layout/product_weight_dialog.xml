@@ -10,13 +10,40 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".Balance.ChoosingBalanceActivity">
-
-        <Button
-            android:id="@+id/btRefresh_choosingBalanceActivity"
-            style="@style/AppTheme.bt_yellow"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/refresh" />
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:id="@+id/closeDialog"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/close"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+
+
+            <TextView
+                android:id="@+id/cashPaymentDialog_TVStatus"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/product"
+                android:textColor="@color/black"
+                android:textDirection="anyRtl"
+                android:textSize="24sp" />
+
+
+        </LinearLayout>
 
         <ListView
             android:id="@+id/lvDevicePort_choosingBalanceActivity"
@@ -27,40 +54,7 @@
         </ListView>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <ImageView
-            android:id="@+id/closeDialog"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/close"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
 
-
-
-        <TextView
-            android:id="@+id/cashPaymentDialog_TVStatus"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="@string/product"
-            android:textColor="@color/black"
-            android:textDirection="anyRtl"
-            android:textSize="24sp" />
-
-
-    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -283,13 +277,22 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="4">
+        <Button
+            android:id="@+id/btRefresh_choosingBalanceActivity"
+            style="@style/AppTheme.bt_yellow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/btTest_choosingBalanceActivity"
             style="@style/AppTheme.bt_yellow"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/test" />
+            android:text="@string/test"
+            android:layout_weight="1"/>
         <Button
             android:id="@+id/productWeightDialog_BTOk"
             style="@style/AppTheme.bt_green"

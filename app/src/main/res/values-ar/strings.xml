@@ -26,6 +26,8 @@
     <string name="products">منتوجات</string>
     <string name="qty">كمية</string>
     <string name="refresh">تحديث</string>
+    <string name="test">فحص</string>
+
     <string name="returned">باقي</string>
     <string name="total_price">السعر الكلي</string>
     <string name="total_saved">وفر</string>
