@@ -238,7 +238,7 @@ public class ProductDBAdapter {
             close();
 
         } catch (Exception e) {
-
+            Log.d("exception",e.toString());
         }
         return product;
     }
@@ -258,7 +258,7 @@ public class ProductDBAdapter {
                 Log.d("NextProductId", String.valueOf(cursor.getLong(0)));
             }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.d("exception",e.toString());
             }
 
             return productID;
@@ -293,6 +293,7 @@ public class ProductDBAdapter {
             close();
 
         } catch (Exception e) {
+            Log.d("exception",e.toString());
 
         }
         return product;
@@ -447,6 +448,7 @@ public class ProductDBAdapter {
             close();
 
         } catch (Exception e) {
+            Log.d("exception",e.toString());
 
         }
         return productsList;
@@ -482,6 +484,7 @@ public class ProductDBAdapter {
             close();
 
         } catch (Exception e) {
+            Log.d("exception",e.toString());
 
         }
 
@@ -557,6 +560,7 @@ public class ProductDBAdapter {
             close();
 
         } catch (Exception e) {
+            Log.d("exception",e.toString());
 
         }
         return productsList;
@@ -692,6 +696,7 @@ public class ProductDBAdapter {
             close();
 
         } catch (Exception e) {
+            Log.d("exception",e.toString());
 
         }
         return productsList;

@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -138,6 +137,7 @@ public class ProductInventoryDbAdapter {
         cursor.close();
         }
         catch (Exception e) {
+            Log.d("exception",e.toString());
 
             }
         return productInventory;
@@ -183,6 +183,7 @@ public class ProductInventoryDbAdapter {
             close();
 
         } catch (Exception e) {
+            Log.d("exception",e.toString());
 
         }
         Log.d("productsListInventory",productsList.size()+"size");

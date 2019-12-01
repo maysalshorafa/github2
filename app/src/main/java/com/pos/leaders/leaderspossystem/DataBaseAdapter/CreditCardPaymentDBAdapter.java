@@ -10,13 +10,10 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
  * Created by KARAM on 31/10/2017.
@@ -170,6 +167,7 @@ public class CreditCardPaymentDBAdapter {
             close();
 
         } catch (Exception e) {
+            Log.d("exception",e.toString());
 
         }
         return orderPaymentList;

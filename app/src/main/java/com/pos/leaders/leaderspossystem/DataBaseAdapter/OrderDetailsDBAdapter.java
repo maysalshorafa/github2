@@ -161,6 +161,7 @@ public class OrderDetailsDBAdapter {
 		}
             close();
         } catch (Exception e) {
+			Log.d("exception",e.toString());
 
         }
 		return saleOrderList;

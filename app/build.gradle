@@ -8,8 +8,8 @@ android {
         applicationId "com.pos.leaders.leaderspossystem"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 18
-        versionName "4.5"
+        versionCode 19
+        versionName "4.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 

@@ -17,7 +17,6 @@ import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
@@ -267,6 +266,7 @@ public class OrderDBAdapter {
 			close();
 
 		} catch (Exception e) {
+			Log.d("exception",e.toString());
 
 		}
 		return saleList;
@@ -317,7 +317,8 @@ e.printStackTrace();
 				close();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.d("exception",e.toString());
+
 			}
 		return saleList;
 	}
@@ -336,6 +337,7 @@ e.printStackTrace();
 			close();
 
 		} catch (Exception e) {
+			Log.d("exception",e.toString());
 
 		}
 		return saleList;
@@ -356,6 +358,7 @@ e.printStackTrace();
 			close();
 
 		} catch (Exception e) {
+			Log.d("exception",e.toString());
 
 		}
 		return orderList;
@@ -404,6 +407,7 @@ e.printStackTrace();
 			close();
 
 		} catch (Exception e) {
+			Log.d("exception",e.toString());
 
 		}
 		return orderList;
@@ -425,6 +429,7 @@ e.printStackTrace();
 			close();
 
 		} catch (Exception e) {
+			Log.d("exception",e.toString());
 
 		}
 		return orderList;

@@ -48,9 +48,18 @@ public class Broker {
     }
 
     public Broker open() throws SQLException {
-        this.db=dbHelper.getWritableDatabase();
-        Log.i(LOG_TAG, "connection open");
-        return this;
+        try {
+            this.db=dbHelper.getWritableDatabase();
+
+            Log.i(LOG_TAG, "connection open");
+            return this;
+
+        } catch (SQLException s) {
+            new Exception("Error with DB Open");
+            return this;
+
+        }
+
     }
 
     public void close(){

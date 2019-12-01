@@ -149,6 +149,7 @@ public class PaymentDBAdapter {
 			close();
 
 		} catch (Exception e) {
+			Log.d("exception",e.toString());
 
 		}
 		return salePaymentList;
