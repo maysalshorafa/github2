@@ -3314,6 +3314,14 @@ public class SalesCartActivity extends AppCompatActivity {
                 ImageView btn_close = (ImageView) productWeightDialog.findViewById(R.id.closeDialog);
                 Button btn_done = (Button) productWeightDialog.findViewById(R.id.productWeightDialog_BTOk);
                 Button btn_discount = (Button) productWeightDialog.findViewById(R.id.productWeightDialog_BTDiscount);
+                Button btRefresh = (Button) productWeightDialog.findViewById(R.id.btRefresh_choosingBalanceActivity);
+              Button  btTest = (Button) productWeightDialog.findViewById(R.id.btTest_choosingBalanceActivity);
+               ListView lvDevices = (ListView) productWeightDialog.findViewById(R.id.lvDevicePort_choosingBalanceActivity);
+
+                devicesListAdapter = new DevicesListAdapter(this, R.layout.list_view_row_devices, devicesList);
+
+                deviceHelper = new DeviceHelper(this);
+                refreshList();
                 productName.setText(o.getProduct().getDisplayName());
                 productPrice.setText(Util.makePrice(o.getProduct().getPrice()));
 
