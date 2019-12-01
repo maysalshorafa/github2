@@ -3344,7 +3344,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         });
 
             }
-            if(o.getProduct().getUnit().equals(ProductUnit.BARCODEWITHWEIGHT)){
+            if(o.getProduct().getUnit().equals(ProductUnit.WEIGHT)){
 
                 final Dialog productWeightDialog = new Dialog(SalesCartActivity.this);
                 productWeightDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -3375,16 +3375,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     public void onClick(View arg0) {
-                        String productSerialNumber="";
-                        if (serialNumber.getText().toString().matches("")) {
-                            productSerialNumber="";
-                        }else {
-                            productSerialNumber=serialNumber.getText().toString();
-                        }
-                        o.setProductSerialNumber(0);
-                        o.setSerialNumber(productSerialNumber);
-                        productSerialNumberDialog.dismiss();
-                        isWithSerialNo=false;
+
                     }
                 });
 

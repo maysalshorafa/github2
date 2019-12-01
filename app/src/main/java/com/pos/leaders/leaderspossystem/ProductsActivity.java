@@ -130,6 +130,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         productUnit.add(ProductUnit.QUANTITY);
         productUnit.add(ProductUnit.BARCODEWITHWEIGHT);
         productUnit.add(ProductUnit.BARCODEWITHPRICE);
+        productUnit.add(ProductUnit.WEIGHT);
         final List<String>productUnitString = new ArrayList<String>();
         productUnitString.add(ProductUnit.QUANTITY.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHWEIGHT.getValue());
