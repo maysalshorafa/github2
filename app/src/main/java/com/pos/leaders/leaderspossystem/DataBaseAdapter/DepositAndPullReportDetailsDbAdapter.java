@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
@@ -44,8 +45,15 @@ public class DepositAndPullReportDetailsDbAdapter {
     }
 
     public DepositAndPullReportDetailsDbAdapter open() {
-        this.db = dbHelper.getWritableDatabase();
-        return this;
+        try {
+            this.db = dbHelper.getWritableDatabase();
+            return this;
+
+        } catch (SQLException s) {
+            new Exception("Error with DB Open");
+            return this;
+
+        }
     }
 
     public void close() {

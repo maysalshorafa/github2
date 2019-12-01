@@ -53,8 +53,15 @@ public class ClosingReportDetailsDBAdapter {
     }
 
     public ClosingReportDetailsDBAdapter open() throws SQLException {
-        this.db = dbHelper.getWritableDatabase();
-        return this;
+        try {
+            this.db = dbHelper.getWritableDatabase();
+            return this;
+
+        } catch (SQLException s) {
+            new Exception("Error with DB Open");
+            return this;
+
+        }
     }
 
     public void close() {
@@ -138,7 +145,7 @@ public class ClosingReportDetailsDBAdapter {
             close();
 
         } catch (Exception e) {
-
+Log.d("exxx",e.toString());
         }
         return closingReportList;
     }
