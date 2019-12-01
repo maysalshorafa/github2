@@ -53,7 +53,15 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hoho.android.usbserial.driver.UsbSerialDriver;
+import com.hoho.android.usbserial.util.SerialInputOutputManager;
 import com.itextpdf.text.DocumentException;
+import com.pos.leaders.leaderspossystem.Balance.DeviceHelper;
+import com.pos.leaders.leaderspossystem.Balance.DeviceSchema;
+import com.pos.leaders.leaderspossystem.Balance.DevicesListAdapter;
+import com.pos.leaders.leaderspossystem.Balance.Exception.CanNotOpenDeviceConnectionException;
+import com.pos.leaders.leaderspossystem.Balance.Exception.NoDevicesAvailableException;
+import com.pos.leaders.leaderspossystem.Balance.Exception.SendRequestException;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
@@ -158,6 +166,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import HPRTAndroidSDK.HPRTPrinterHelper;
 import POSAPI.POSInterfaceAPI;
@@ -342,7 +352,14 @@ public class SalesCartActivity extends AppCompatActivity {
     Bitmap newBitmap =null;
     boolean isWithSerialNo=false;
     ActionBar actionBar;
-
+    ArrayList<DeviceSchema> devicesList = new ArrayList<>();
+    DeviceSchema selectedDevice = null;
+    int selectedDeviceIndex = -1;
+    DevicesListAdapter devicesListAdapter;
+    ListView lvDevices;
+    DeviceHelper deviceHelper;
+    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+    private SerialInputOutputManager mSerialIoManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -3316,15 +3333,32 @@ public class SalesCartActivity extends AppCompatActivity {
                 Button btn_discount = (Button) productWeightDialog.findViewById(R.id.productWeightDialog_BTDiscount);
                 Button btRefresh = (Button) productWeightDialog.findViewById(R.id.btRefresh_choosingBalanceActivity);
               Button  btTest = (Button) productWeightDialog.findViewById(R.id.btTest_choosingBalanceActivity);
-               ListView lvDevices = (ListView) productWeightDialog.findViewById(R.id.lvDevicePort_choosingBalanceActivity);
+                lvDevices = (ListView) productWeightDialog.findViewById(R.id.lvDevicePort_choosingBalanceActivity);
 
-                devicesListAdapter = new DevicesListAdapter(this, R.layout.list_view_row_devices, devicesList);
+                 devicesListAdapter = new DevicesListAdapter(this, R.layout.list_view_row_devices, devicesList);
 
-                deviceHelper = new DeviceHelper(this);
+                  deviceHelper = new DeviceHelper(this);
                 refreshList();
                 productName.setText(o.getProduct().getDisplayName());
                 productPrice.setText(Util.makePrice(o.getProduct().getPrice()));
 
+
+                btRefresh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        refreshList();
+                    }
+                });
+                btTest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (selectedDevice != null) {
+                            runTest(deviceHelper.getAvailableDrivers().get(0));
+                        } else
+                            Toast.makeText(SalesCartActivity.this, "Please select device.", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
 
                 btn_close.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -3334,13 +3368,22 @@ public class SalesCartActivity extends AppCompatActivity {
                 });
 
                 btn_done.setOnClickListener(new View.OnClickListener() {
-
-                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-                    public void onClick(View arg0) {
-
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            deviceHelper.sendReadRequest();
+                        } catch (SendRequestException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
-
+                lvDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        selectedDeviceIndex = i;
+                        selectedDevice = devicesList.get(i);
+                    }
+                });
             }
 
                 SESSION._ORDER_DETAILES.add(o);
@@ -5108,6 +5151,99 @@ Log.d("testCustomer",c.toString());
         lvCustomerAssistant.setAdapter(adapter);
 
 
+    }
+    private void refreshList(){
+        devicesList.clear();
+
+        if(getActiveDevices()!=null)
+            devicesList.addAll(getActiveDevices());
+
+        lvDevices.setAdapter(devicesListAdapter);
+        devicesListAdapter.notifyDataSetChanged();
+    }
+    private void runTest(UsbSerialDriver driver) {
+        deviceHelper.close();
+        try {
+            deviceHelper.openConnection(driver);
+            mSerialIoManager = new SerialInputOutputManager(deviceHelper.port, mListener);
+            mExecutor.submit(mSerialIoManager);
+
+            deviceHelper.sendReadRequest();
+
+        } catch (SendRequestException | CanNotOpenDeviceConnectionException | NoDevicesAvailableException e) {
+            Toast.makeText(this, "Can`t run the test, Please check the USB port connection.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }private static String balanceValue = "";
+    public SerialInputOutputManager.Listener mListener = new SerialInputOutputManager.Listener() {
+        @Override
+        public void onNewData(final byte[] data) {
+            SalesCartActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    balanceValue += new String(data);
+                    if(balanceValue.length()<DeviceHelper.DATA_LENGTH)
+                        return;
+                    if(balanceValue.length()>DeviceHelper.DATA_LENGTH){
+                        balanceValue = "";
+                        return;
+                    }
+
+
+                    String balanceData = balanceValue;
+
+                    balanceValue = "";
+                    final Context context = SalesCartActivity.this;
+
+                    // closing device connection on receives data for ones
+
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+                    } else {
+                        builder = new AlertDialog.Builder(context);
+                    }
+
+                    builder.setTitle("Test Result")
+                            .setMessage("The result is: "+ balanceValue)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                    ((SalesCartActivity) context).deviceHelper.close();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                    ((SalesCartActivity) context).deviceHelper.close();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .show();
+                }
+            });
+        }
+
+        @Override
+        public void onRunError(Exception e) {
+
+        }
+    };
+    private ArrayList<DeviceSchema> getActiveDevices() {
+        ArrayList<DeviceSchema> deviceList = new ArrayList<>();
+        List<UsbSerialDriver> drivers = deviceHelper.getAvailableDrivers();
+
+        if(drivers==null) return null;
+        for(UsbSerialDriver driver:drivers){
+            DeviceSchema dv = new DeviceSchema(driver.getDevice().getDeviceName(), driver.getDevice().getDeviceId(), "");
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                dv.setManufacture(driver.getDevice().toString());
+            }
+            deviceList.add(dv);
+        }
+
+        return deviceList;
     }
 
     public void callPopupForSalesMan() {
