@@ -216,7 +216,7 @@ public class ProductDBAdapter {
             cursor.moveToFirst();
             price=Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE)));
             cursor.close();
-
+        close();
         }
         catch (Exception e) {
 
@@ -240,7 +240,7 @@ public class ProductDBAdapter {
             cursor.moveToFirst();
             product = makeProduct(cursor);
             cursor.close();
-
+           close();
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -264,6 +264,7 @@ public class ProductDBAdapter {
                 productID.add((long) cursor.getLong(0));
                 Log.d("NextProductId", String.valueOf(cursor.getLong(0)));
             }
+            close();
             } catch (Exception e) {
                 Log.d("exception",e.toString());
             }
@@ -299,7 +300,7 @@ public class ProductDBAdapter {
             cursor.moveToFirst();
             product = makeProduct(cursor);
             cursor.close();
-
+    close();
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -327,6 +328,7 @@ public class ProductDBAdapter {
             //  new OfferDBAdapter(context).deleteEntryByResourceId(id);
             Product product=productDBAdapter.getProductByID(id);
             sendToBroker(MessageType.DELETE_PRODUCT, product, this.context);
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
@@ -458,7 +460,7 @@ public class ProductDBAdapter {
 
                 }
             }
-
+close();
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -497,7 +499,7 @@ public class ProductDBAdapter {
                 }
             }
 
-
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -536,7 +538,7 @@ public class ProductDBAdapter {
 
                 }
             }
-
+          close();
 
         } catch (Exception e) {
 
@@ -576,7 +578,7 @@ public class ProductDBAdapter {
 
                 }
             }
-
+     close();
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -715,7 +717,7 @@ public class ProductDBAdapter {
                 }
             }
 
-
+       close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 

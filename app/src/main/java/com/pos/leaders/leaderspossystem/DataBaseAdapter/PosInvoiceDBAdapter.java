@@ -146,7 +146,7 @@ public class PosInvoiceDBAdapter {
                 posInvoices.add(makePosInvoice(cursor));
                 cursor.moveToNext();
             }
-
+ close();
         }catch (Exception e){
             e.printStackTrace();
         }

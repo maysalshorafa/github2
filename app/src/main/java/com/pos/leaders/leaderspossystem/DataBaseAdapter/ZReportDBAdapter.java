@@ -174,6 +174,7 @@ public class ZReportDBAdapter {
             zReports.add(makeZReport(cursor));
             cursor.moveToNext();
         }
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -196,6 +197,7 @@ public class ZReportDBAdapter {
             zReports.add(makeZReport(cursor));
             cursor.moveToNext();
         }
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -269,6 +271,7 @@ public class ZReportDBAdapter {
             pl.addAll(payments);
         }
         paymentDBAdapter.close();
+            close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -303,6 +306,7 @@ public class ZReportDBAdapter {
                 zReportList.add(makeZReport(cursor));
             cursor.moveToNext();
         }
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -410,6 +414,7 @@ public class ZReportDBAdapter {
             cursor.moveToNext();
 
         }
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 

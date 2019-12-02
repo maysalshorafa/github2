@@ -143,9 +143,9 @@ public class CurrencyReturnsDBAdapter {
             cursor.moveToNext();
         }
 
-
+         close();
         } catch (Exception e) {
-
+            Log.d("exception",e.toString());
         }
         return saleReturns;
     }

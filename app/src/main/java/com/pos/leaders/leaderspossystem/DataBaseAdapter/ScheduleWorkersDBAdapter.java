@@ -199,6 +199,7 @@ public class ScheduleWorkersDBAdapter {
             if(item.getUserId()==userId && item.getExitTime()<=to.getTime()&& item.getStartTime()>=from.getTime() )
                 userScheduleWorkerstList.add(item);
         }
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -216,6 +217,7 @@ public class ScheduleWorkersDBAdapter {
             if(item.getUserId()==userId)
                 userScheduleWorkerstList.add(item);
         }
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 

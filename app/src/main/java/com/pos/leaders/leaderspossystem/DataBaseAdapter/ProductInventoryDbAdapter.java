@@ -185,6 +185,7 @@ public class ProductInventoryDbAdapter {
                 productsList.add(makeProduct(cursor));
                 cursor.moveToNext();
             }
+close();
 
 
         } catch (Exception e) {

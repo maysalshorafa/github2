@@ -138,7 +138,7 @@ public class CurrencyOperationDBAdapter {
                 saleReturns.add(make(cursor));
                 cursor.moveToNext();
             }
-
+           close();
 
         } catch (Exception e) {
 Log.d("exception",e.toString());

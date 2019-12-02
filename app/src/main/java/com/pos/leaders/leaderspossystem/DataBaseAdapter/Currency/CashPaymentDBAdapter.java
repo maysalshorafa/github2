@@ -133,7 +133,7 @@ public class CashPaymentDBAdapter {
             salePaymentList.add(make(cursor));
             cursor.moveToNext();
         }
-
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 

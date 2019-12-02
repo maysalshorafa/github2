@@ -143,7 +143,9 @@ public class CurrencyDBAdapter {
                 currencyList.add(build(cursor));
                 cursor.moveToNext();
             }
-        } }
+        }
+        close();
+        }
         catch (Exception e) {
             Log.d("Exception",e.toString());
         }
