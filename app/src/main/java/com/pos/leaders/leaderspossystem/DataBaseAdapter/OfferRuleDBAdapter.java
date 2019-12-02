@@ -53,6 +53,12 @@ public class OfferRuleDBAdapter {
     }
 
     public int insertEntry(int id, int rule,long product_id) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Rule_OFFER_COLUMN_ID, id);
@@ -69,6 +75,12 @@ public class OfferRuleDBAdapter {
     }
 
     public OfferRule getRuleNo() {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
         Offer offer_id=offerDBAdapter.getAllValidOffers();
@@ -89,7 +101,7 @@ public class OfferRuleDBAdapter {
         cursor.close();
 
 
-
+  close();
         return offer;
     }
     public Boolean getProductStatus(int order) {

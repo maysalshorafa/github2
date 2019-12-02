@@ -66,6 +66,12 @@ public class SettingsDBAdapter {
 
 
     public boolean GetSettings() {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         Cursor cursor = db.rawQuery("select * from " + SETTINGS_TABLE_NAME , null);
         if (cursor.getCount() < 1) // NO DATA HAS BEEN SET
         {
@@ -74,15 +80,28 @@ public class SettingsDBAdapter {
         }
         read(cursor);
         cursor.close();
-
+       close();
         return true;
     }
     public int getRowCount(){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         Cursor cursor = db.rawQuery("select * from " + SETTINGS_TABLE_NAME , null);
+        close();
         return cursor.getCount();
     }
 
     public int insertEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(SETTINGS_COLUMN_COMPANY_ID,companyID);
@@ -106,6 +125,12 @@ public class SettingsDBAdapter {
     }
 
     public int updateEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(SETTINGS_COLUMN_COMPANY_ID,companyID);
@@ -129,6 +154,12 @@ public class SettingsDBAdapter {
     }
 
     public void read(Cursor cursor) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         cursor.moveToFirst();
         SETTINGS.companyID = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_COMPANY_ID));
         SETTINGS.companyName = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_COMPANY_NAME));
@@ -141,8 +172,15 @@ public class SettingsDBAdapter {
         SETTINGS.ccPassword = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD));
         SETTINGS.branchId=cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_BRANCH_ID));
         cursor.close();
+        close();
     }
     public void readSetting() {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         Cursor cursor = db.rawQuery("select * from " + SETTINGS_TABLE_NAME , null);
         if (cursor.getCount() < 1) // NO DATA HAS BEEN SET
         {
@@ -160,6 +198,7 @@ public class SettingsDBAdapter {
         SETTINGS.ccPassword = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD));
         SETTINGS.branchId=cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_BRANCH_ID));
         cursor.close();
+        close();
     }
     public static String addColumnInteger(String columnName) {
         String dbc = "ALTER TABLE " + SETTINGS_TABLE_NAME

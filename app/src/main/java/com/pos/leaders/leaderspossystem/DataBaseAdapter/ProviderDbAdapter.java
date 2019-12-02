@@ -83,12 +83,19 @@ public class ProviderDbAdapter {
 
 
     public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, String houseNumber, String postalCode, String country, String countryCode,double balance,String providerCode,String providerIdentity,int branchId) throws JSONException {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         Provider provider = new Provider(Util.idHealth(this.db, PROVIDER_TABLE_NAME, PROVIDER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, houseNumber, postalCode, country, countryCode,balance,providerCode,providerIdentity,branchId);
 
                 sendToBroker(MessageType.ADD_PROVIDER,provider,context);
 
         try {
             long insertResult = insertEntry(provider);
+            close();
             return insertResult;
         } catch (SQLException ex) {
             Log.e("Provider insertEntry", "inserting Entry at " + PROVIDER_TABLE_NAME + ": " + ex.getMessage());
@@ -97,6 +104,12 @@ public class ProviderDbAdapter {
     }
 
     public long insertEntry(Provider provider) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PROVIDER_COLUMN_ID, provider.getProviderId());
@@ -126,6 +139,12 @@ public class ProviderDbAdapter {
         }
     }
     public long insertEntryFromBo(Provider provider) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PROVIDER_COLUMN_ID, provider.getProviderId());
@@ -156,6 +175,12 @@ public class ProviderDbAdapter {
     }
 
     public Provider getProviderByID(long id) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         Provider provider = null;
         Cursor cursor = db.query(PROVIDER_TABLE_NAME, null, PROVIDER_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
         cursor.moveToFirst();
@@ -166,6 +191,7 @@ public class ProviderDbAdapter {
             return provider;
         }
         cursor.close();
+        close();
         return provider;
     }
 
@@ -185,6 +211,12 @@ public class ProviderDbAdapter {
 
 
     public void updateEntry(Provider provider) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ProviderDbAdapter providerDbAdapter=new ProviderDbAdapter(context);
         providerDbAdapter.open();
         ContentValues val = new ContentValues();
@@ -214,9 +246,16 @@ public class ProviderDbAdapter {
         Log.d("Update Object",p.toString());
         sendToBroker(MessageType.UPDATE_PROVIDER, p, this.context);
         providerDbAdapter.close();
+        close();
 
     }
     public long updateEntryBo(Provider provider) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ProviderDbAdapter providerDbAdapter=new ProviderDbAdapter(context);
         providerDbAdapter.open();
         ContentValues val = new ContentValues();
@@ -246,6 +285,7 @@ public class ProviderDbAdapter {
             Provider p=providerDbAdapter.getProviderByID(provider.getProviderId());
             Log.d("Update Object",p.toString());
             providerDbAdapter.close();
+            close();
             return 1;
         } catch (SQLException ex) {
             return 0;
@@ -255,6 +295,12 @@ public class ProviderDbAdapter {
 
 
     private Provider makeProvider(Cursor cursor) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         Provider c = new Provider(Long.parseLong(cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_FIRST_NAME)),
                 cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_LAST_NAME)),
@@ -275,10 +321,17 @@ public class ProviderDbAdapter {
         if (c.getFirstName() == null) {
             c.setFirstName("");
         }
+        close();
         return c;
     }
 
     public List<Provider> getAllCustomer() {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         List<Provider> providers = new ArrayList<Provider>();
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
@@ -308,11 +361,18 @@ public class ProviderDbAdapter {
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(PROVIDER_BRANCH_ID)))));
             cursor.moveToNext();
         }
+        close();
         return providers;
     }
 
 
     public int deleteEntry(long id) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues updatedValues = new ContentValues();
         ProviderDbAdapter providerDbAdapter =new ProviderDbAdapter(context);
         providerDbAdapter.open();
@@ -322,6 +382,7 @@ public class ProviderDbAdapter {
             db.update(PROVIDER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             Provider provider=providerDbAdapter.getProviderByID(id);
             sendToBroker(MessageType.DELETE_PROVIDER, provider, this.context);
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("CustomerDB deleteEntry", "enable hide Entry at " + PROVIDER_TABLE_NAME + ": " + ex.getMessage());
@@ -329,11 +390,18 @@ public class ProviderDbAdapter {
         }
     }
     public long deleteEntryBo(Provider provider) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues updatedValues = new ContentValues();
         updatedValues.put(PROVIDER_COLUMN_DISENABLED, 1);
         String where = PROVIDER_COLUMN_ID + " = ?";
         try {
             db.update(PROVIDER_TABLE_NAME, updatedValues, where, new String[]{provider.getProviderId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("ProviderDB deleteEntry", "enable hide Entry at " + PROVIDER_TABLE_NAME + ": " + ex.getMessage());
@@ -351,11 +419,19 @@ public class ProviderDbAdapter {
     }
 
     public boolean availableProviderId(String customerPhone) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         Cursor cursor = db.query(PROVIDER_TABLE_NAME, null, PROVIDER_IDENTITY + "=?", new String[]{customerPhone}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
+            close();
             return false;
         }
+        close();
         return true;
     }
     public static String addColumn(String columnName) {

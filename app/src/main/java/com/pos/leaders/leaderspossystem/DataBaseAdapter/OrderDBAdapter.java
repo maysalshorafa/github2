@@ -82,12 +82,19 @@ public class OrderDBAdapter {
 
 	public long insertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name,double cartDiscount,double numberDiscount,long cancellingOrderId,double salesBeforeTax,
 							double salesWithTax) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		Generators key = new Generators().setLength(6);
 		Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name,cartDiscount,key.generate(),numberDiscount,cancellingOrderId,salesBeforeTax,salesWithTax);
 
 		sendToBroker(MessageType.ADD_ORDER, order, this.context);
 
 		try {
+			close();
 			return insertEntry(order);
 		} catch (SQLException ex) {
 			Log.e("Sales DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
@@ -95,12 +102,19 @@ public class OrderDBAdapter {
 		}
 	}
 	public long invoiceInsertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name,double cartDiscount,double numberDiscount) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		Generators key = new Generators().setLength(6);
 		Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name,cartDiscount,key.generate(),numberDiscount);
 
 		//    sendToBroker(MessageType.ADD_ORDER, order, this.context);
 
 		try {
+			close();
 			return insertEntry(order);
 		} catch (SQLException ex) {
 			Log.e("Sales DB insert", "inserting Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
@@ -110,14 +124,27 @@ public class OrderDBAdapter {
 
 
 	public long insertEntry(Order order , long _custmer_id, String custmer_name,boolean invoiceStatus,double salesBeforeTax,double salesWithTax) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		if(!invoiceStatus){
 			return insertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order.getNumberDiscount(),order.getCancellingOrderId(),salesBeforeTax,salesWithTax);
 		}
+		close();
 		return invoiceInsertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order
 				.getNumberDiscount());
 
 	}
 	public long insertEntry(Order order){
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		ContentValues val = new ContentValues();
 		val.put(ORDER_COLUMN_ID,order.getOrderId());
 		//Assign values for each row.
@@ -143,6 +170,12 @@ public class OrderDBAdapter {
 		}
 	}
 	public long insertEntryDuplicate(Order order){
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		ContentValues val = new ContentValues();
 		val.put(ORDER_COLUMN_ID,Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID));
 		//Assign values for each row.
@@ -169,21 +202,35 @@ public class OrderDBAdapter {
 		}
 	}
 	public Order getOrderById(long id) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		Order order = null;
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where id='" + id + "'", null);
 		if (cursor.getCount() < 1) // UserName Not Exist
 		{
 			cursor.close();
+			close();
 			return order;
 		}
 		cursor.moveToFirst();
 		order = new Order(makeSale(cursor));
 		cursor.close();
+		close();
 
 		return order;
 	}
 
 	public long deleteEntry(long id) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		OrderDBAdapter orderDBAdapter=new OrderDBAdapter(context);
 		orderDBAdapter.open();
 		// Define the updated row content.
@@ -196,6 +243,7 @@ public class OrderDBAdapter {
 			db.update(ORDER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
 			Order order = orderDBAdapter.getOrderById(id);
 			sendToBroker(MessageType.DELETE_ORDER, order, this.context);
+			close();
 			return 1;
 		} catch (SQLException ex) {
 			Log.e("sales DB deleteEntry", "enable hide Entry at " + ORDER_TABLE_NAME + ": " + ex.getMessage());
@@ -204,6 +252,12 @@ public class OrderDBAdapter {
 	}
 
 	public void updateEntry(Order sale) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 		val.put(ORDER_COLUMN_BYUSER, sale.getByUser());
@@ -224,9 +278,16 @@ public class OrderDBAdapter {
 		Order a= orderDBAdapter.getOrderById(sale.getOrderId());
 		a.setCancellingOrderId(sale.getCancellingOrderId());
 		sendToBroker(MessageType.UPDATE_ORDER,a,context);
+		close();
 	}
 
 	public List<Order> getAllSales() {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		List<Order> salesList = new ArrayList<Order>();
 
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " order by id desc", null);
@@ -235,7 +296,9 @@ public class OrderDBAdapter {
 		while (!cursor.isAfterLast()) {
 			salesList.add(makeSale(cursor));
 			cursor.moveToNext();
+			close();
 		}
+		close();
 
 		return salesList;
 	}
@@ -253,7 +316,10 @@ public class OrderDBAdapter {
 	public List<Order> getBetween(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
 		try {
-			if(dbHelper==null) {
+			if (db.isOpen()){
+
+			}
+			else {
 				open();
 			}
 		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" >= "+from+ " and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
@@ -263,10 +329,11 @@ public class OrderDBAdapter {
 		while (!cursor.isAfterLast()) {
 			saleList.add(makeSale(cursor));
 			cursor.moveToNext();
+
 			Log.d("test","test");
 		}
 		Log.d("test2",saleList.toString()+"list");
-
+			close();
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -279,7 +346,10 @@ public class OrderDBAdapter {
 
        for (int i=0; i<idOrder.size();i++){
 		try {
-			if(dbHelper==null) {
+			if (db.isOpen()){
+
+			}
+			else {
 				open();
 			}
 
@@ -292,7 +362,7 @@ public class OrderDBAdapter {
 				saleList.add(makeSale(cursor));
 				Log.d("Ddddfffd", String.valueOf(makeSale(cursor)));
 			}
-
+     close();
 
 		} catch (Exception e) {
 Log.d("eee",e.toString());
@@ -303,11 +373,13 @@ Log.d("eee",e.toString());
 	public List<Order> getBetweenOrder(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
 
+		if (db.isOpen()){
 
+		}
+		else {
+			open();
+		}
 			try {
-				if(dbHelper==null) {
-					open();
-				}
 
 				Cursor cursor =db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ORDERDATE +" between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')",null);
 				//Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i),null);
@@ -319,7 +391,7 @@ Log.d("eee",e.toString());
 					Log.d("Ddddfffd", String.valueOf(makeSale(cursor)));
 				}
 
-
+    close();
 			} catch (Exception e) {
 				Log.d("exception",e.toString());
 
@@ -329,7 +401,10 @@ Log.d("eee",e.toString());
 	public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
 		try {
-			if(dbHelper==null) {
+			if (db.isOpen()){
+
+			}
+			else {
 				open();
 			}
 		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" > "+from+" and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
@@ -341,7 +416,7 @@ Log.d("eee",e.toString());
 			cursor.moveToNext();
 		}
 
-
+  close();
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -352,7 +427,10 @@ Log.d("eee",e.toString());
 	public List<Order> getBetweenTwoDates(long from, long to){
 		List<Order> orderList = new ArrayList<Order>();
 		try {
-			if(dbHelper==null) {
+			if (db.isOpen()){
+
+			}
+			else {
 				open();
 			}
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ORDERDATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
@@ -363,7 +441,7 @@ Log.d("eee",e.toString());
 				orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-
+   close();
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -376,7 +454,10 @@ Log.d("eee",e.toString());
 		List<Order> orderList = new ArrayList<Order>();
 		Cursor cursor=null;
 		try {
-			if(dbHelper==null) {
+			if (db.isOpen()){
+
+			}
+			else {
 				open();
 			}
 		if(type.equals(context.getString(R.string.price))){
@@ -413,7 +494,7 @@ Log.d("eee",e.toString());
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-
+       close();
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -424,7 +505,10 @@ Log.d("eee",e.toString());
 	public List<Order> lazyLoad(int offset,int count){
 		List<Order> orderList = new ArrayList<Order>();
 		try {
-			if(dbHelper==null) {
+			if (db.isOpen()){
+
+			}
+			else {
 				open();
 			}
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
@@ -436,7 +520,7 @@ Log.d("eee",e.toString());
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-
+   close();
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
@@ -457,6 +541,12 @@ Log.d("eee",e.toString());
 	}*/
 
 	public Order getLast(){
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		Order sale = null;
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
 
@@ -468,10 +558,17 @@ Log.d("eee",e.toString());
 		cursor.moveToFirst();
 		sale = new Order(makeSale(cursor));
 		cursor.close();
+		close();
 		Log.d("LasstSlae",sale.toString());
 		return sale;
 	}
 	public Order getFirst(){
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		Order sale = null;
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id asc", null);
 
@@ -483,7 +580,7 @@ Log.d("eee",e.toString());
 		cursor.moveToFirst();
 		sale = new Order(makeSale(cursor));
 		cursor.close();
-
+       close();
 		return sale;
 	}
 

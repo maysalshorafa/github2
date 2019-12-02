@@ -60,7 +60,10 @@ public class CurrencyTypeDBAdapter {
     public List<CurrencyType> getAllCurrencyType() {
         List<CurrencyType> currencyTypes = new ArrayList<CurrencyType>();
         try {
-            if(dbHelper==null) {
+            if (db.isOpen()){
+
+            }
+            else {
                 open();
             }
         Cursor cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME , null);
@@ -89,10 +92,17 @@ public class CurrencyTypeDBAdapter {
                        return 1;
             }
     public  long getCurrencyIdByType(String type){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         Cursor cursor=null;
         cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME + " where  "+ CurrencyType_COLUMN_Name +"='" + type + "'" , null);
         cursor.moveToFirst();
         CurrencyType currencyType = createNewCurrency(cursor);
+        close();
         return  currencyType.getCurrencyTypeId();
     }
 

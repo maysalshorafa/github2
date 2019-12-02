@@ -57,10 +57,17 @@ public class PaymentDBAdapter {
 	}
 
 	public long insertEntry(double amount, long saleId, String orderDetailsKey) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), amount, saleId,orderDetailsKey);
 		sendToBroker(MessageType.ADD_PAYMENT, payment, this.context);
 
 		try {
+			close();
 			return insertEntry(payment);
 		} catch (SQLException ex) {
 			Log.e("Payment DB insert", "inserting Entry at " + PAYMENT_TABLE_NAME + ": " + ex.getMessage());
@@ -80,6 +87,12 @@ public class PaymentDBAdapter {
 
 
 	public long insertEntry(Payment payment){
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 
@@ -104,6 +117,12 @@ public class PaymentDBAdapter {
 		}
 	}
 	public long insertEntryDuplicate(Payment payment){
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 
@@ -136,6 +155,12 @@ public class PaymentDBAdapter {
 	}
 
 	public List<Payment> getPaymentBySaleID(long saleID) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		List<Payment> salePaymentList = new ArrayList<Payment>();
 		try {
 			if(dbHelper==null) {
@@ -168,11 +193,18 @@ public class PaymentDBAdapter {
 	}
 
 	public int checkPaymentWay() {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		Payment payment = null;
 
 		Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME, null);
 		cursor.moveToFirst();
 		 int x =cursor.getColumnIndex("paymentWay");
+		close();
 		return x;
 	}
     private Payment make(Cursor cursor){

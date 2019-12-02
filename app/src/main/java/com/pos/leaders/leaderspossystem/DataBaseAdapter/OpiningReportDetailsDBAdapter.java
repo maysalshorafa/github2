@@ -64,9 +64,16 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(long a_report_id, double amount, long type, double amount_in_basic_currency) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         OpiningReportDetails aReportDetails = new OpiningReportDetails(Util.idHealth(this.db,OPINING_REPORT_DETAILS_TABLE_NAME, OPINING_REPORT_DETAILS_COLUMN_ID), a_report_id, amount, type, amount_in_basic_currency);
         sendToBroker(MessageType.ADD_OPINING_REPORT_DETAILS, aReportDetails, this.context);
         try {
+            close();
             return insertEntry(aReportDetails);
         } catch (SQLException ex) {
             Log.e(" DB insert", "inserting Entry at " + OPINING_REPORT_DETAILS_TABLE_NAME + ": " + ex.getMessage());
@@ -93,16 +100,24 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public Double getLastRow(int type,long aReportId) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         OpiningReportDetails aReportDetails = null;
         Cursor cursor = db.rawQuery("SELECT * from " + OPINING_REPORT_DETAILS_TABLE_NAME + "  where "+ OPINING_REPORT_DETAILS_COLUMN_TYPE +"=" + type +" and " + OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID +" = " + aReportId , null);
         if (cursor.getCount() < 1) {
             cursor.close();
+            close();
             return 0.0;
         }
         cursor.moveToFirst();
         aReportDetails = new OpiningReportDetails(makeAReportDetails(cursor));
 
         cursor.close();
+        close();
         return aReportDetails.getAmount();
     }
 

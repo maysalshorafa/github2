@@ -72,12 +72,18 @@ public class CurrencyOperationDBAdapter {
     }
 
     public long insertEntry(Timestamp createDate, long operation_id, String operation_type, double amount, String currency_type,String paymentWay) {
+        if (db.isOpen()){
 
+        }
+        else {
+            open();
+        }
         CurrencyOperation currency = new CurrencyOperation(Util.idHealth(this.db, CurrencyOperation_TABLE_NAME, CurrencyOperation_COLUMN_ID), createDate, operation_id,operation_type, amount, currency_type,paymentWay);
         sendToBroker(MessageType.ADD_CURRENCY_OPERATION, currency, this.context);
 
         try {
             long insertResult = insertEntry(currency);
+            close();
             return insertResult;
         } catch (SQLException ex) {
             Log.d(CurrencyOperation_TABLE_NAME, "inserting Entry at " + CurrencyOperation_TABLE_NAME + ": " + ex.getMessage());
@@ -86,7 +92,12 @@ public class CurrencyOperationDBAdapter {
 
     }
     public long insertEntry(CurrencyOperation currency) {
+        if (db.isOpen()){
 
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -106,7 +117,12 @@ public class CurrencyOperationDBAdapter {
         }
     }
     public long insertEntryDuplicate(CurrencyOperation currency) {
+        if (db.isOpen()){
 
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -129,9 +145,13 @@ public class CurrencyOperationDBAdapter {
     public List<CurrencyOperation> getCurrencyOperationByOrderID(long orderId) {
         List<CurrencyOperation> saleReturns = new ArrayList<CurrencyOperation>();
         try {
-            if(dbHelper==null) {
+            if (db.isOpen()){
+
+            }
+            else {
                 open();
-            }            Cursor cursor = db.rawQuery("select * from " + CurrencyOperation_TABLE_NAME +" where "+CurrencyOperation_COLUMN_Operation_ID+"="+orderId, null);
+            }
+            Cursor cursor = db.rawQuery("select * from " + CurrencyOperation_TABLE_NAME +" where "+CurrencyOperation_COLUMN_Operation_ID+"="+orderId, null);
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {

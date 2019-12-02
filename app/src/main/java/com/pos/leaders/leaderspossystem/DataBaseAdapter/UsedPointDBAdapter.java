@@ -65,11 +65,18 @@ public class UsedPointDBAdapter {
 
 
     public long insertEntry( long saleId, int point,long custmerId) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         UsedPoint usedPoint = new UsedPoint(Util.idHealth(this.db, USED_POINT_TABLE_NAME, USED_POINT_COLUMN_ID),saleId, point,custmerId);
         sendToBroker(MessageType.ADD_USED_POINT, usedPoint, this.context);
 
         try {
             long insertResult = insertEntry(usedPoint);
+            close();
             return insertResult;
         } catch (SQLException ex) {
             Log.e("UsedPoint insertEntry", "inserting Entry at " + USED_POINT_TABLE_NAME + ": " + ex.getMessage());
@@ -77,6 +84,12 @@ public class UsedPointDBAdapter {
         }
     }
     public long insertEntry(UsedPoint usedPoint){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         val.put(USED_POINT_COLUMN_ID,usedPoint.getUsedPointId());
         //Assign values for each row.

@@ -50,6 +50,7 @@ public class Rule11DBAdapter {
     }
 
     public long insertEntry(Rule11 rule11){
+
         ContentValues val = new ContentValues();
         //Assign values for each row.
 

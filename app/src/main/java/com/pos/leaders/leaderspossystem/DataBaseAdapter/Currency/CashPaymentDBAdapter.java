@@ -57,17 +57,31 @@ public class CashPaymentDBAdapter {
     }
 
     public long insertEntry(long saleId, double amount, long currency_type, Timestamp createDate,double currencyRate,double actualCurrencyRate) {
+
+       if (db.isOpen()){
+
+       }
+        else {
+           open();
+       }
         CashPayment payment = new CashPayment(Util.idHealth(this.db, CashPAYMENT_TABLE_NAME, CashPAYMENT_COLUMN_ID), saleId, amount, currency_type,createDate, currencyRate,actualCurrencyRate);
     //    sendToBroker(MessageType.ADD_CASH_PAYMENT, payment, this.context);
-
         try {
+            close();
             return insertEntry(payment);
+
         } catch (SQLException ex) {
             Log.e("Cash Payment DB insert", "inserting Entry at " + CashPAYMENT_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
     }
     public long insertEntry(CashPayment payment){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -87,6 +101,12 @@ public class CashPaymentDBAdapter {
     }
 
     public long insertEntryDuplicate(CashPayment payment){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -106,6 +126,12 @@ public class CashPaymentDBAdapter {
     }
 
     public List<CashPayment> getAllPayments() {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         List<CashPayment> paymentsList = new ArrayList<CashPayment>();
 
         Cursor cursor = db.rawQuery("select * from " + CashPAYMENT_TABLE_NAME, null);
@@ -115,14 +141,17 @@ public class CashPaymentDBAdapter {
             paymentsList.add(make(cursor));
             cursor.moveToNext();
         }
-
+       close();
         return paymentsList;
     }
 
     public List<CashPayment> getPaymentBySaleID(long orderId) {
         List<CashPayment> salePaymentList = new ArrayList<CashPayment>();
         try {
-            if(dbHelper==null) {
+            if (db.isOpen()){
+
+            }
+            else {
                 open();
             }
 
@@ -151,12 +180,19 @@ public class CashPaymentDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CashPAYMENT_COLUMN_ActualCurrencyRATE))));
     }
     public double getSumOfType(int currencyType, long from, long to) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         double total=0;
         Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CashPAYMENT_TABLE_NAME + "  where "+ CashPAYMENT_COLUMN_CurrencyType +"=" + currencyType +" and " + CashPAYMENT_COLUMN_OrderID +" <= " + to + " and " + CashPAYMENT_COLUMN_OrderID +" >= "+from, null);
       if(cur.moveToFirst()){
           cur.getString(cur.getColumnIndex("amount"));
             // total = cur.getDouble(cur.getColumnIndex(0));// get final total
            }
+           close();
             return total;
 
     }

@@ -62,11 +62,18 @@ public class Sum_PointDbAdapter {
     }
 
     public long insertEntry( long  saleId, int point,long custmerId) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         SumPoint sumPoint = new SumPoint(Util.idHealth(this.db, SUM_POINT_TABLE_NAME, SUM_POINT_COLUMN_ID),saleId, point,custmerId);
         sendToBroker(MessageType.ADD_SUM_POINT, sumPoint, this.context);
 
         try {
             long insertResult = insertEntry(sumPoint);
+            close();
             return insertResult;
         } catch (SQLException ex) {
             Log.e("SumPoint insertEntry", "inserting Entry at " + SUM_POINT_TABLE_NAME + ": " + ex.getMessage());
@@ -74,6 +81,12 @@ public class Sum_PointDbAdapter {
         }
     }
     public long insertEntry(SumPoint sumPoint){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         val.put(SUM_POINT_COLUMN_ID,sumPoint.getSumPointId());
         //Assign values for each row.

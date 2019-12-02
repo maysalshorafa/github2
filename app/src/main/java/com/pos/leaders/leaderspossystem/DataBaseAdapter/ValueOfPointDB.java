@@ -49,11 +49,18 @@ public class ValueOfPointDB {
     }
 
       public long insertEntry( int value,long create_date) {
+          if (db.isOpen()){
+
+          }
+          else {
+              open();
+          }
         ValueOfPoint valueOfPoint = new ValueOfPoint(Util.idHealth(this.db, ValueOfPoint_TABLE_NAME, Value_COLUMN_Id),value, create_date);
         sendToBroker(MessageType.ADD_VALUE_OF_POINT, valueOfPoint, this.context);
 
         try {
             long insertResult = insertEntry(valueOfPoint);
+            close();
             return insertResult;
         } catch (SQLException ex) {
             Log.e("Value Of Point insertEntry", "inserting Entry at " + ValueOfPoint_TABLE_NAME + ": " + ex.getMessage());
@@ -61,6 +68,12 @@ public class ValueOfPointDB {
         }
     }
     public long insertEntry(ValueOfPoint valueOfPoint){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         val.put(Value_COLUMN_Id,valueOfPoint.getValueOfPointId());
         val.put(Value_COLUMN, valueOfPoint.getValue());
@@ -75,16 +88,24 @@ public class ValueOfPointDB {
     }
 
     public ValueOfPoint getValue(){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ValueOfPoint valueOfPoint=null;
         Cursor cursor = db.rawQuery("SELECT  * FROM " + ValueOfPoint_TABLE_NAME, null);
         if (cursor.getCount() < 1) // Entry Not Exist
         {
             cursor.close();
+            close();
             return valueOfPoint;
         }        cursor.moveToLast();
         valueOfPoint =new ValueOfPoint(Long.parseLong(cursor.getString(cursor.getColumnIndex(Value_COLUMN_Id))),Double.parseDouble(
                 cursor.getString(cursor.getColumnIndex(Value_COLUMN))),
                 cursor.getLong(cursor.getColumnIndex(CreateDate_Value_COLUMN_CreateDate)));
+        close();
         return valueOfPoint;
     }
 }

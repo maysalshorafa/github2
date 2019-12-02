@@ -65,9 +65,16 @@ public class PosInvoiceDBAdapter {
 
 
     public long insertEntry(double amount,long zReportId,String type,String status,String boID,String paymentMethod) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         PosInvoice invoice = new PosInvoice(Util.idHealth(this.db, POS_INVOICE_TABLE_NAME, POS_INVOICE_COLUMN_ID), amount,zReportId,type,status,boID,paymentMethod);
 
         try {
+            close();
             return insertEntry(invoice);
         } catch (SQLException ex) {
             Log.e("Invoice insert", "inserting Entry at " + POS_INVOICE_TABLE_NAME + ": " + ex.getMessage());
@@ -76,6 +83,12 @@ public class PosInvoiceDBAdapter {
     }
 
     public long insertEntry(PosInvoice invoice) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -96,6 +109,12 @@ public class PosInvoiceDBAdapter {
 
     }
     public List<PosInvoice> getPosInvoice(long zReportId){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
         Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_TYPE +  " = "+"'"+DocumentType.INVOICE.getValue() +"'", null);
@@ -105,7 +124,7 @@ public class PosInvoiceDBAdapter {
             posInvoices.add(makePosInvoice(cursor));
             cursor.moveToNext();
         }
-
+       close();
         return posInvoices;
     }
 
@@ -114,10 +133,12 @@ public class PosInvoiceDBAdapter {
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
         try {
-            if(dbHelper==null) {
+            if (db.isOpen()){
+
+            }
+            else {
                 open();
             }
-
             Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_STATUS + " = "+ "'"+ status + "' "+ " and " + POS_INVOICE_COLUMN_TYPE +  " = "+"'"+DocumentType.INVOICE.getValue() +"'", null);
         cursor.moveToFirst();
 
@@ -129,13 +150,17 @@ public class PosInvoiceDBAdapter {
         }catch (Exception e){
             e.printStackTrace();
         }
+        close();
         return posInvoices;
     }
     public List<PosInvoice> getPosInvoiceListByType(long zReportId,String type,String paymentMethod){
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
         try {
-            if(dbHelper==null) {
+            if (db.isOpen()){
+
+            }
+            else {
                 open();
             }
 
@@ -175,11 +200,18 @@ public class PosInvoiceDBAdapter {
         db.update(POS_INVOICE_TABLE_NAME, val, where, new String[]{invoice.getId() + ""});
     }
     public PosInvoice getPodInvoiceByBoId(String id) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         PosInvoice posInvoice = null;
         Cursor c = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where boID='" + id + "'", null);
         if (c.getCount() < 1) // UserName Not Exist
         {
             c.close();
+            close();
             return posInvoice;
         }
         c.moveToFirst();
@@ -191,7 +223,7 @@ public class PosInvoiceDBAdapter {
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)),
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_PAYMENT_METHOD)));
         c.close();
-
+       close();
         return posInvoice;
     }
 }
