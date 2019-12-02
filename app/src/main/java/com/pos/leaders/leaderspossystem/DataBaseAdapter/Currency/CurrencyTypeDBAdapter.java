@@ -69,6 +69,7 @@ public class CurrencyTypeDBAdapter {
             currencyTypes.add(createNewCurrency(cursor));
             cursor.moveToNext();
         }
+        close();
         }
           catch (Exception e) {
               Log.d("CurrencyTypeEx",e.toString());
