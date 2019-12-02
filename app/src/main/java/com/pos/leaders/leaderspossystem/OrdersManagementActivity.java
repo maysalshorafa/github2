@@ -67,6 +67,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -464,9 +465,38 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                         sendLogFile();
                                                     }
 
+                                                double SalesWitheTaxCancle=0,SalesWithoutTaxCancle=0,salesaftertaxCancle=0;
+                                                for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+                                                    if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+                                                        if(SESSION._ORDERS.getCartDiscount()>0){
+                                                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100))))));
+                                                            SalesWithoutTaxCancle+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                        }else {
+                                                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
+                                                            SalesWithoutTaxCancle += SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                        }
+                                                    }else {
+                                                        if(SESSION._ORDERS.getCartDiscount()>0){
+
+                                                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
+                                                            Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
+                                                            salesaftertaxCancle+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)));
+                                                            Log.d("salesaftertax",salesaftertaxCancle+"ko22222");
+                                                            SalesWitheTaxCancle+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                        }else {
+                                                            SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
+                                                            salesaftertaxCancle+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
+                                                            Log.d("salesaftertax",salesaftertaxCancle+"ko");
+                                                            SalesWitheTaxCancle+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                        }
+                                                    }
+                                                }
                                                 zReport1.setCashTotal(zReport1.getCashTotal() - sale.getTotalPrice());
                                                 zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount() - sale.getTotalPrice());
                                                 zReport1.setShekelAmount(zReport1.getShekelAmount() - sale.getTotalPrice());
+                                                zReport1.setSalesWithTax(zReport1.getSalesWithTax()-sale.getSalesWithTax());
+                                                zReport1.setSalesBeforeTax(zReport1.getSalesBeforeTax()-sale.getSalesBeforeTax());
+                                                zReport1.setTotalTax(zReport1.getTotalTax()-Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+Math.abs(salesaftertaxCancle - sale.getSalesWithTax()))));
                                                 zReportCount.setCashCount(zReportCount.getCashCount() - 1);
                                                 zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount() - 1);
                                                 zReportCount.setShekelCount(zReportCount.getShekelCount() - 1);
@@ -646,9 +676,41 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
+
+
+                                            double SalesWitheTaxDuplicuat=0,SalesWithoutTaxDuplicuat=0,salesaftertaxDuplicuat=0;
+                                            for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+                                                if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+                                                    if(SESSION._ORDERS.getCartDiscount()>0){
+                                                        SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100))))));
+                                                        SalesWithoutTaxDuplicuat+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                    }else {
+                                                        SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
+                                                        SalesWithoutTaxDuplicuat += SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                    }
+                                                }else {
+                                                    if(SESSION._ORDERS.getCartDiscount()>0){
+
+                                                        SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
+                                                        Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
+                                                        salesaftertaxDuplicuat+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)));
+                                                        Log.d("salesaftertax",salesaftertaxDuplicuat+"ko22222");
+                                                        SalesWitheTaxDuplicuat+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                    }else {
+                                                        SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
+                                                        salesaftertaxDuplicuat+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
+                                                        Log.d("salesaftertax",salesaftertaxDuplicuat+"ko");
+                                                        SalesWitheTaxDuplicuat+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
+                                                    }
+                                                }
+                                            }
+
                                             z.setCashTotal(z.getCashTotal()+sale.getTotalPrice());
                                             z.setInvoiceReceiptAmount(z.getInvoiceReceiptAmount()+sale.getTotalPrice());
                                             z.setShekelAmount(z.getShekelAmount()+sale.getTotalPrice());
+                                            z.setSalesWithTax(z.getSalesWithTax()+sale.getSalesWithTax());
+                                            z.setSalesBeforeTax(z.getSalesBeforeTax()+sale.getSalesBeforeTax());
+                                            z.setTotalTax(z.getTotalTax()+Double.parseDouble(Util.makePrice(z.getTotalTax()+Math.abs(salesaftertaxDuplicuat - sale.getSalesWithTax()))));
                                             zReportCount1.setCashCount(zReportCount1.getCashCount()+1);
                                             zReportCount1.setInvoiceReceiptCount(zReportCount1.getInvoiceReceiptCount()+1);
                                             zReportCount1.setShekelCount(zReportCount1.getShekelCount()+1);
