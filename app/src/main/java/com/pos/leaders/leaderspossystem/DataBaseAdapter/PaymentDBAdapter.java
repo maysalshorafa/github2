@@ -43,15 +43,9 @@ public class PaymentDBAdapter {
 		this.dbHelper = new DbHelper(context);
 	}
 	public PaymentDBAdapter open() throws SQLException {
-		try {
+
 			this.db = dbHelper.getWritableDatabase();
 			return this;
-
-		} catch (SQLException s) {
-			new Exception("Error with DB Open");
-			return this;
-
-		}
 	}
 
 	public void close() {
@@ -144,7 +138,9 @@ public class PaymentDBAdapter {
 	public List<Payment> getPaymentBySaleID(long saleID) {
 		List<Payment> salePaymentList = new ArrayList<Payment>();
 		try {
-			open();
+			if(dbHelper==null) {
+				open();
+			}
 			Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_ORDERID+"="+saleID + " and "+ " id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
 			cursor.moveToFirst();
 
@@ -153,8 +149,6 @@ public class PaymentDBAdapter {
 				cursor.moveToNext();
 			}
 			cursor.close();
-			close();
-
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
 

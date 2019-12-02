@@ -56,15 +56,8 @@ public class CurrencyDBAdapter {
     }
 
     public CurrencyDBAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -136,6 +129,10 @@ public class CurrencyDBAdapter {
 
     public List<Currency> getAllCurrencyLastUpdate(List<CurrencyType> currency) {
         List<Currency> currencyList = new ArrayList<Currency>();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor=null;
         String name="";
         for (int i=0;i<currency.size();i++) {
@@ -146,6 +143,9 @@ public class CurrencyDBAdapter {
                 currencyList.add(build(cursor));
                 cursor.moveToNext();
             }
+        } }
+        catch (Exception e) {
+            Log.d("Exception",e.toString());
         }
         return currencyList;
     }

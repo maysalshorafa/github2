@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
@@ -42,15 +43,9 @@ public class CurrencyTypeDBAdapter {
     }
 
     public CurrencyTypeDBAdapter open() throws SQLException {
-        try {
+
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -64,12 +59,20 @@ public class CurrencyTypeDBAdapter {
 
     public List<CurrencyType> getAllCurrencyType() {
         List<CurrencyType> currencyTypes = new ArrayList<CurrencyType>();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME , null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             currencyTypes.add(createNewCurrency(cursor));
             cursor.moveToNext();
         }
+        }
+          catch (Exception e) {
+              Log.d("CurrencyTypeEx",e.toString());
+            }
         return currencyTypes;
     }
 

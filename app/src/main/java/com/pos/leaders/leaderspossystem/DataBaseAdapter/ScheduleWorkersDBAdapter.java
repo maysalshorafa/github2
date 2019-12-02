@@ -49,15 +49,8 @@ public class ScheduleWorkersDBAdapter {
     }
 
     public ScheduleWorkersDBAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close(){
@@ -198,18 +191,34 @@ public class ScheduleWorkersDBAdapter {
     public List<ScheduleWorkers> getAllUserScheduleWorkBtweenToDate(long userId , Date from , Date to){
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         for (ScheduleWorkers item:scheduleWorkersList) {
             if(item.getUserId()==userId && item.getExitTime()<=to.getTime()&& item.getStartTime()>=from.getTime() )
                 userScheduleWorkerstList.add(item);
+        }
+        } catch (Exception e) {
+            Log.d("exception",e.toString());
+
         }
         return userScheduleWorkerstList;
     }
     public List<ScheduleWorkers> getAllUserScheduleWork(long userId){
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         for (ScheduleWorkers item:scheduleWorkersList) {
             if(item.getUserId()==userId)
                 userScheduleWorkerstList.add(item);
+        }
+        } catch (Exception e) {
+            Log.d("exception",e.toString());
+
         }
         return userScheduleWorkerstList;
     }

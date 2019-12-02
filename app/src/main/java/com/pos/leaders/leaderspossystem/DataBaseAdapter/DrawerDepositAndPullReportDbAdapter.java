@@ -53,15 +53,9 @@ public class DrawerDepositAndPullReportDbAdapter {
     }
 
     public DrawerDepositAndPullReportDbAdapter open() throws SQLException {
-        try {
+
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -115,6 +109,10 @@ public class DrawerDepositAndPullReportDbAdapter {
     }
     public List<DepositAndPullReport> getListByLastZReport(long lastZReportID){
         List<DepositAndPullReport> depositAndPullReportList = new ArrayList<DepositAndPullReport>();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID ) + "'", null);
         if (cursor.getCount() < 1) {
             //cursor.close();
@@ -126,12 +124,17 @@ public class DrawerDepositAndPullReportDbAdapter {
             depositAndPullReportList.add(makeDepositAndPullReport(cursor));
             cursor.moveToNext();
         }
-
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return depositAndPullReportList;
     }
     public List<DepositAndPullReport> getBetween(Date fromDate, Date toDate){
         List<DepositAndPullReport> depositAndPullReportList = new ArrayList<DepositAndPullReport>();
-
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE + "<='" + toDate.getTime() + "' and " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE +
                 ">='" + fromDate.getTime() + "'" + " order by " + DEPOSIT_AND_PULL_REPORT_COLUMN_ID + " desc", null);
         cursor.moveToFirst();
@@ -140,7 +143,9 @@ public class DrawerDepositAndPullReportDbAdapter {
             depositAndPullReportList.add(makeDepositAndPullReport(cursor));
             cursor.moveToNext();
         }
-
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return depositAndPullReportList;
     }
 
@@ -182,7 +187,10 @@ public class DrawerDepositAndPullReportDbAdapter {
 
     public List<DepositAndPullReport> getAll() {
         List<DepositAndPullReport> depositAndPullReportList = new ArrayList<DepositAndPullReport>();
-
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME , null);
         cursor.moveToFirst();
 
@@ -190,18 +198,26 @@ public class DrawerDepositAndPullReportDbAdapter {
             depositAndPullReportList.add(makeDepositAndPullReport(cursor));
             cursor.moveToNext();
         }
-
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return depositAndPullReportList;
     }
     public List<DepositAndPullReport> getBetweenTwoDates(long from, long to){
         List<DepositAndPullReport> depositAndPullReportList = new ArrayList<DepositAndPullReport>();
-
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
             depositAndPullReportList.add(makeDepositAndPullReport(cursor));
             cursor.moveToNext();
+        }
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
         }
         return depositAndPullReportList;
     }

@@ -104,7 +104,10 @@ public class GroupsResourceDbAdapter {
 
     public List<Long> getGroupsIdByProductSku(String productSku){
         List<Long> groups = null;
-
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productSku + "';", null);
 
         if (cursor.getCount() > 0 ) {
@@ -116,12 +119,17 @@ public class GroupsResourceDbAdapter {
             }
         }
         cursor.close();
-
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return groups;
     }
     public List<Long> getGroupsIdByProductCategory(long productCategory){
         List<Long> groups = null;
-
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productCategory + "';", null);
 
         if (cursor.getCount() > 0 ) {
@@ -133,6 +141,9 @@ public class GroupsResourceDbAdapter {
             }
         }
         cursor.close();
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return groups;
     }
 

@@ -226,6 +226,10 @@ public class ClubAdapter {
     }
     public List<Club> getAllGroup() {
         List<Club> groups = new ArrayList<Club>();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery( "select * from "+Group_TABLE_NAME+ " where " + Group_COLUMN_DISENABLED +" = 0 order by id desc", null );
@@ -237,6 +241,9 @@ public class ClubAdapter {
         while (!cursor.isAfterLast()) {
             groups.add(createNewGroup(cursor));
             cursor.moveToNext();
+        }
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
         }
         return groups;
     }

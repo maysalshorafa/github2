@@ -57,15 +57,9 @@ public class OpiningReportDBAdapter {
     }
 
     public OpiningReportDBAdapter open() throws SQLException {
-        try {
+
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -136,8 +130,9 @@ public class OpiningReportDBAdapter {
     public  List<OpiningReport> getListByLastZReport(long lastZReportID){
         List<OpiningReport> aReports = new ArrayList<OpiningReport>();
         try {
-            open();
-
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID ) + "'", null);
         if (cursor.getCount() < 1) {
             //cursor.close();
@@ -149,10 +144,10 @@ public class OpiningReportDBAdapter {
             aReports.add(makeAReport(cursor));
             cursor.moveToNext();
         }
-            close();
+
 
         } catch (Exception e) {
-
+        Log.d("eeeeeee",e.toString());
         }
 
         return aReports;
@@ -160,7 +155,9 @@ public class OpiningReportDBAdapter {
     public List<OpiningReport> getBetween(Date fromDate, Date toDate){
         List<OpiningReport> aReports = new ArrayList<OpiningReport>();
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_CREATEDATE + "<='" + toDate.getTime() + "' and " + OPINING_REPORT_COLUMN_CREATEDATE +
                 ">='" + fromDate.getTime() + "'" + " order by " + OPINING_REPORT_COLUMN_ID + " desc", null);
         cursor.moveToFirst();
@@ -169,10 +166,10 @@ public class OpiningReportDBAdapter {
             aReports.add(makeAReport(cursor));
             cursor.moveToNext();
         }
-        close();
+
 
     } catch (Exception e) {
-
+        Log.d("exception",e.toString());
     }
 
         return aReports;

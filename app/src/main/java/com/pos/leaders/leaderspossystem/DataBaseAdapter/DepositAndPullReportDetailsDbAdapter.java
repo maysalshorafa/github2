@@ -3,8 +3,8 @@ package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.DepositAndPullDetailsReport;
@@ -45,15 +45,9 @@ public class DepositAndPullReportDetailsDbAdapter {
     }
 
     public DepositAndPullReportDetailsDbAdapter open() {
-        try {
+
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -100,6 +94,10 @@ public class DepositAndPullReportDetailsDbAdapter {
     }
     public List<DepositAndPullDetailsReport> getListDepositAndPullReportReport(long aReportId){
         List<DepositAndPullDetailsReport> depositAndPullReportDetailsList =new ArrayList<DepositAndPullDetailsReport>();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor =  db.rawQuery( "select * from "+DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME +" where "+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID +" = "+aReportId, null );
         cursor.moveToFirst();
 
@@ -107,7 +105,9 @@ public class DepositAndPullReportDetailsDbAdapter {
             depositAndPullReportDetailsList.add(makeDepositAndPullDetailsReportDetails(cursor));
             cursor.moveToNext();
         }
-
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return depositAndPullReportDetailsList;
     }
     private DepositAndPullDetailsReport makeDepositAndPullDetailsReportDetails(Cursor cursor) {

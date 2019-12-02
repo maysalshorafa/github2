@@ -60,15 +60,9 @@ public class CreditCardPaymentDBAdapter {
     }
 
     public CreditCardPaymentDBAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
 
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -163,7 +157,9 @@ public class CreditCardPaymentDBAdapter {
     public List<CreditCardPayment> getPaymentByOrderID(long orderId) {
         List<CreditCardPayment> orderPaymentList = new ArrayList<CreditCardPayment>();
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME +" where "+ORDERID+"="+orderId, null);
         cursor.moveToFirst();
 
@@ -171,7 +167,6 @@ public class CreditCardPaymentDBAdapter {
             orderPaymentList.add(make(cursor));
             cursor.moveToNext();
         }
-            close();
 
         } catch (Exception e) {
             Log.d("exception",e.toString());

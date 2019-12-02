@@ -66,15 +66,8 @@ public class OrderDBAdapter {
 
 	public OrderDBAdapter open() throws SQLException {
 
-		try {
 			this.db = dbHelper.getWritableDatabase();
 			return this;
-
-		} catch (SQLException s) {
-			new Exception("Error with DB Open");
-			return this;
-
-		}
 	}
 
 	public void close() {
@@ -260,7 +253,9 @@ public class OrderDBAdapter {
 	public List<Order> getBetween(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
 		try {
-			open();
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" >= "+from+ " and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
 		//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
 		cursor.moveToFirst();
@@ -271,7 +266,6 @@ public class OrderDBAdapter {
 			Log.d("test","test");
 		}
 		Log.d("test2",saleList.toString()+"list");
-			close();
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
@@ -285,7 +279,9 @@ public class OrderDBAdapter {
 
        for (int i=0; i<idOrder.size();i++){
 		try {
-			open();
+			if(dbHelper==null) {
+				open();
+			}
 
 			Cursor cursor =db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i)+" and "+ ORDER_COLUMN_ORDERDATE +" between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')",null);
 			//Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i),null);
@@ -297,10 +293,9 @@ public class OrderDBAdapter {
 				Log.d("Ddddfffd", String.valueOf(makeSale(cursor)));
 			}
 
-			close();
 
 		} catch (Exception e) {
-e.printStackTrace();
+Log.d("eee",e.toString());
 		}}
 		return saleList;
 	}
@@ -310,7 +305,9 @@ e.printStackTrace();
 
 
 			try {
-				open();
+				if(dbHelper==null) {
+					open();
+				}
 
 				Cursor cursor =db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ORDERDATE +" between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')",null);
 				//Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +"="+idOrder.get(i),null);
@@ -322,7 +319,6 @@ e.printStackTrace();
 					Log.d("Ddddfffd", String.valueOf(makeSale(cursor)));
 				}
 
-				close();
 
 			} catch (Exception e) {
 				Log.d("exception",e.toString());
@@ -333,7 +329,9 @@ e.printStackTrace();
 	public List<Order> getBetweenTwoSalesForClosingReport(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
 		try {
-			open();
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor = db.rawQuery("select * from "+ ORDER_TABLE_NAME +" where "+ ORDER_COLUMN_ID +" <= "+to+" and "+ ORDER_COLUMN_ID +" > "+from+" and id like '%"+SESSION.POS_ID_NUMBER+"%'",null);
 		//Cursor cursor = db.rawQuery("select * from "+ORDER_DETAILS_TABLE_NAME+" where "+ORDER_COLUMN_ORDERDATE+" <= "+to+" and "+ORDER_COLUMN_ORDERDATE +" >= "+from,null);
 		cursor.moveToFirst();
@@ -342,7 +340,7 @@ e.printStackTrace();
 			saleList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-			close();
+
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
@@ -354,7 +352,9 @@ e.printStackTrace();
 	public List<Order> getBetweenTwoDates(long from, long to){
 		List<Order> orderList = new ArrayList<Order>();
 		try {
-			open();
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_ORDERDATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
 		cursor.moveToFirst();
 
@@ -363,7 +363,6 @@ e.printStackTrace();
 				orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-			close();
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
@@ -377,7 +376,9 @@ e.printStackTrace();
 		List<Order> orderList = new ArrayList<Order>();
 		Cursor cursor=null;
 		try {
-			open();
+			if(dbHelper==null) {
+				open();
+			}
 		if(type.equals(context.getString(R.string.price))){
 
 			cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_TOTALPRICE + " like '%" +
@@ -412,7 +413,6 @@ e.printStackTrace();
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-			close();
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
@@ -424,7 +424,9 @@ e.printStackTrace();
 	public List<Order> lazyLoad(int offset,int count){
 		List<Order> orderList = new ArrayList<Order>();
 		try {
-			open();
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
 				" order by id desc limit " + offset + "," + count, null);
 		cursor.moveToFirst();
@@ -434,7 +436,7 @@ e.printStackTrace();
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-			close();
+
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());

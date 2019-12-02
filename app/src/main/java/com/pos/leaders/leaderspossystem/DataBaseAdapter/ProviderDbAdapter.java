@@ -69,15 +69,8 @@ public class ProviderDbAdapter {
     }
 
     public ProviderDbAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {

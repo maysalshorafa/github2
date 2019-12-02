@@ -51,15 +51,10 @@ public class ChecksDBAdapter {
 	}
 
 	public ChecksDBAdapter open() throws SQLException {
-		try {
+
 			this.db = dbHelper.getWritableDatabase();
 			return this;
 
-		} catch (SQLException s) {
-			new Exception("Error with DB Open");
-			return this;
-
-		}
 	}
 
 	public void close() {
@@ -122,14 +117,16 @@ public class ChecksDBAdapter {
 	public List<Check> getPaymentBySaleID(long saleID) {
 		List<Check> checksList = new ArrayList<Check>();
 		try {
-			open();
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor = db.rawQuery("select * from " + CHECKS_TABLE_NAME + " where " + CHECKS_COLUMN_ORDERID + "=" + saleID, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			checksList.add(newCheck(cursor));
 			cursor.moveToNext();
 		}
-			close();
+
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());

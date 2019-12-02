@@ -59,15 +59,8 @@ public class CurrencyOperationDBAdapter {
     }
 
     public CurrencyOperationDBAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -136,15 +129,16 @@ public class CurrencyOperationDBAdapter {
     public List<CurrencyOperation> getCurrencyOperationByOrderID(long orderId) {
         List<CurrencyOperation> saleReturns = new ArrayList<CurrencyOperation>();
         try {
-            open();
-            Cursor cursor = db.rawQuery("select * from " + CurrencyOperation_TABLE_NAME +" where "+CurrencyOperation_COLUMN_Operation_ID+"="+orderId, null);
+            if(dbHelper==null) {
+                open();
+            }            Cursor cursor = db.rawQuery("select * from " + CurrencyOperation_TABLE_NAME +" where "+CurrencyOperation_COLUMN_Operation_ID+"="+orderId, null);
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
                 saleReturns.add(make(cursor));
                 cursor.moveToNext();
             }
-            close();
+
 
         } catch (Exception e) {
 Log.d("exception",e.toString());

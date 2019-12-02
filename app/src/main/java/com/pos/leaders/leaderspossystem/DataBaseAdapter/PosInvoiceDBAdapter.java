@@ -49,15 +49,10 @@ public class PosInvoiceDBAdapter {
     }
 
     public PosInvoiceDBAdapter open() throws SQLException {
-        try {
+
             this.db = dbHelper.getWritableDatabase();
             return this;
 
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -119,7 +114,9 @@ public class PosInvoiceDBAdapter {
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
 
             Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_STATUS + " = "+ "'"+ status + "' "+ " and " + POS_INVOICE_COLUMN_TYPE +  " = "+"'"+DocumentType.INVOICE.getValue() +"'", null);
         cursor.moveToFirst();
@@ -128,7 +125,7 @@ public class PosInvoiceDBAdapter {
             posInvoices.add(makePosInvoice(cursor));
             cursor.moveToNext();
         }
-            close();
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -138,7 +135,9 @@ public class PosInvoiceDBAdapter {
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
 
             Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where " + POS_INVOICE_COLUMN_LAST_Z_REPORT + " = " + zReportId + " and " + POS_INVOICE_COLUMN_TYPE + " = " + "'" + type + "'" + " and " + POS_INVOICE_COLUMN_PAYMENT_METHOD + " = " + "'" + paymentMethod + "'", null);
             cursor.moveToFirst();
@@ -147,7 +146,7 @@ public class PosInvoiceDBAdapter {
                 posInvoices.add(makePosInvoice(cursor));
                 cursor.moveToNext();
             }
-            close();
+
         }catch (Exception e){
             e.printStackTrace();
         }

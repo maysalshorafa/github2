@@ -50,15 +50,9 @@ public class ProductInventoryDbAdapter {
     }
 
     public ProductInventoryDbAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
 
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -125,7 +119,9 @@ public class ProductInventoryDbAdapter {
     public ProductInventory getProductInventoryByID(long id) {
         ProductInventory productInventory = null;
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + PRODUCT_INVENTORY_TABLE_NAME + " where productId='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
@@ -172,7 +168,9 @@ public class ProductInventoryDbAdapter {
         List<ProductInventory> productsList =new ArrayList<ProductInventory>();
 
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
 
@@ -187,7 +185,7 @@ public class ProductInventoryDbAdapter {
                 productsList.add(makeProduct(cursor));
                 cursor.moveToNext();
             }
-            close();
+
 
         } catch (Exception e) {
             Log.d("exception",e.toString());

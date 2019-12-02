@@ -55,15 +55,8 @@ public class CustomerAssetDB {
 
 
     public CustomerAssetDB open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -111,7 +104,10 @@ public class CustomerAssetDB {
     public List<CustomerAssistant> getBetweenTwoDates(long employeeId,long from, long to){
         List<CustomerAssistant> customerAssistants = new ArrayList<CustomerAssistant>();
         List<CustomerAssistant> customerAssistantList = new ArrayList<CustomerAssistant>();
-
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from "+ CustmerAsset_TabelName +" where "+ CustmerAssest_COLUMN_ID +" = "+employeeId+" order by "+ CustmerAssest_COLUMN_CEATEDATE +" DESC",null);
         cursor.moveToFirst();
 
@@ -120,6 +116,9 @@ public class CustomerAssetDB {
             cursor.moveToNext();
         }
         customerAssistantList=getListBetweenTwoDates(from,to,customerAssistants);
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return customerAssistantList;
     }
     public List<CustomerAssistant> getListBetweenTwoDates(long from, long to,List<CustomerAssistant>customerAssistantList){

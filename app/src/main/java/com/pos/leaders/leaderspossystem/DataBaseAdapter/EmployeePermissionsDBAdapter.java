@@ -78,6 +78,10 @@ public class EmployeePermissionsDBAdapter {
 	}
 	public ArrayList<Integer> getPermissions(long user_id) {
 		ArrayList<Integer> permissions = new ArrayList<Integer>();
+		try {
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where employeeId='" + user_id + "'" , null);
 		cursor1.moveToFirst();
 
@@ -90,11 +94,18 @@ public class EmployeePermissionsDBAdapter {
 			permissions.add(cursor1.getInt(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_PERMISSIONSID)));
 			cursor1.moveToNext();
 		}
+		} catch (Exception e) {
+			Log.d("exxx",e.toString());
+		}
 		return permissions;
 	}
     public ArrayList<Long> getSalesManId() {
         ArrayList<Long> salesManId = new ArrayList<Long>();
         EmployeesPermissions userPermissions=null;
+		try {
+			if(dbHelper==null) {
+				open();
+			}
         Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where permissionId='" + 10 + "'" , null);
         cursor1.moveToFirst();
 
@@ -109,6 +120,9 @@ public class EmployeePermissionsDBAdapter {
             salesManId.add( userPermissions.getEmployeeId());
             cursor1.moveToNext();
         }
+		} catch (Exception e) {
+			Log.d("exxx",e.toString());
+		}
         return salesManId;
     }
 

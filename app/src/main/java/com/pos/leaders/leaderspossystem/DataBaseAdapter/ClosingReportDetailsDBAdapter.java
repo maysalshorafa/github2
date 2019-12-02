@@ -53,15 +53,8 @@ public class ClosingReportDetailsDBAdapter {
     }
 
     public ClosingReportDetailsDBAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -130,7 +123,9 @@ public class ClosingReportDetailsDBAdapter {
     public List<ClosingReportDetails> getClosingReportByClosingID(long closingId) {
         List<ClosingReportDetails> closingReportList = new ArrayList<ClosingReportDetails>();
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_DETAILS_TABLE_NAME +" where "+CLOSING_REPORT_DETAILS_COLUMN_CLOSING_REPORT_ID+"="+closingId, null);
             cursor.moveToFirst();
 
@@ -142,7 +137,6 @@ public class ClosingReportDetailsDBAdapter {
                         cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_DETAILS_COLUMN_CURRENCY_TYPE))));
                 cursor.moveToNext();
             }
-            close();
 
         } catch (Exception e) {
 Log.d("exxx",e.toString());

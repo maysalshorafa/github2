@@ -52,15 +52,8 @@ public class CategoryDBAdapter {
     }
 
     public CategoryDBAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -220,6 +213,11 @@ public class CategoryDBAdapter {
 
     public List<Category> getAllDepartments() {
         List<Category> departmentList = new ArrayList<Category>();
+
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
          cursor  = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where " + CATEGORY_COLUMN_DISENABLED + "=0 order by id desc", null);
@@ -237,7 +235,10 @@ public class CategoryDBAdapter {
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BRANCH_ID)))));
             cursor.moveToNext();
         }
-
+        }
+        catch (Exception e) {
+            Log.d("exception",e.toString());
+        }
         return departmentList;
     }
 
@@ -253,6 +254,10 @@ public class CategoryDBAdapter {
 
     public List<Category> getAllDepartmentByHint(String hint) {
         List<Category> departmentList = new ArrayList<Category>();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
 
         Cursor cursor = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where " + CATEGORY_COLUMN_NAME + " like '%" +
                 hint + "%' " + "and " + CATEGORY_COLUMN_DISENABLED + "=0 order by id desc  ", null);
@@ -263,7 +268,10 @@ public class CategoryDBAdapter {
             departmentList.add(makeDepartment(cursor));
             cursor.moveToNext();
         }
-
+        }
+        catch (Exception e) {
+            Log.d("exception",e.toString());
+        }
         return departmentList;
     }
 

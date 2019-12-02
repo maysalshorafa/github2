@@ -58,15 +58,8 @@ public class ClosingReportDBAdapter {
     }
 
     public ClosingReportDBAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -193,7 +186,9 @@ public class ClosingReportDBAdapter {
     public List<ClosingReport> getClosingReportByOpiningID(long opiningId) {
         List<ClosingReport> closingReportList = new ArrayList<ClosingReport>();
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_TABLE_NAME +" where "+CLOSING_REPORT_COLUMN_OPINING_REPORT_ID+">="+opiningId, null);
             cursor.moveToFirst();
 
@@ -201,10 +196,10 @@ public class ClosingReportDBAdapter {
                 closingReportList.add(makeCReport(cursor));
                 cursor.moveToNext();
             }
-            close();
+
 
         } catch (Exception e) {
-
+Log.d("test",e.toString());
         }
         return closingReportList;
     }

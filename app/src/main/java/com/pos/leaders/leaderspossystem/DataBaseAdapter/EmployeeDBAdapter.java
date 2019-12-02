@@ -56,7 +56,13 @@ public class EmployeeDBAdapter {
     }
 
     public EmployeeDBAdapter open() throws SQLException {
-        this.db = dbHelper.getWritableDatabase();
+        try {
+
+            this.db = dbHelper.getWritableDatabase();
+
+        } catch (SQLException s) {
+          Log.d("test","Error with DB Open");
+        }
         return this;
     }
 
@@ -262,7 +268,10 @@ public class EmployeeDBAdapter {
     }
     public List<Employee> getAllEmployee() {
         List<Employee> employee = new ArrayList<Employee>();
-        Cursor cursor=null;
+        try {
+            if(dbHelper==null) {
+                open();
+            }        Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery( "select * from "+EMPLOYEE_TABLE_NAME+" where "+  EMPLOYEE_COLUMN_DISENABLED +" = 0 order by id desc", null );
         }else {
@@ -274,13 +283,20 @@ public class EmployeeDBAdapter {
             employee.add(createNewEmployee(cursor));
             cursor.moveToNext();
         }
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return employee;
     }
 
     public List<Employee> getAllSalesMAn() {
         List<Long> salesManId = new ArrayList<Long>();
         List<Employee> employees = new ArrayList<Employee>();
-        EmployeePermissionsDBAdapter employeePermissionsDBAdapter = new EmployeePermissionsDBAdapter(context);
+        try {
+            if(dbHelper==null) {
+                open();
+            }
+            EmployeePermissionsDBAdapter employeePermissionsDBAdapter = new EmployeePermissionsDBAdapter(context);
         employeePermissionsDBAdapter.open();
         salesManId = employeePermissionsDBAdapter.getSalesManId();
 
@@ -300,7 +316,9 @@ public class EmployeeDBAdapter {
             }
         }
         cursor.close();
-
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return employees;
     }
 

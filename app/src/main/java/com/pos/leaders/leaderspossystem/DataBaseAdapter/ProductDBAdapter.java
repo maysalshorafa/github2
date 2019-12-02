@@ -97,15 +97,9 @@ public class ProductDBAdapter {
     }
 
     public ProductDBAdapter open() throws SQLException {
-        try {
+
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close(){
@@ -210,7 +204,9 @@ public class ProductDBAdapter {
     public double getProductPrice(long id){
         double price=0;
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
             {
@@ -220,7 +216,7 @@ public class ProductDBAdapter {
             cursor.moveToFirst();
             price=Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE)));
             cursor.close();
-            close();
+
         }
         catch (Exception e) {
 
@@ -232,7 +228,9 @@ public class ProductDBAdapter {
     public Product getProductByID(long id) {
         Product product = null;
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
             {
@@ -242,7 +240,7 @@ public class ProductDBAdapter {
             cursor.moveToFirst();
             product = makeProduct(cursor);
             cursor.close();
-            close();
+
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -252,7 +250,9 @@ public class ProductDBAdapter {
     public List<Long> getProductByCategory(Long idCategory) {
         List<Long> productID =new ArrayList<>();
             try {
-            open();
+                if(dbHelper==null) {
+                    open();
+                }
             Cursor cursor = db.rawQuery("select "+PRODUCTS_COLUMN_ID+" from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+idCategory, null);
          /*   if (cursor.getCount() < 1) // UserName Not Exist
             {
@@ -287,7 +287,9 @@ public class ProductDBAdapter {
     public Product getProductByBarCode(String barcode){
         Product product = null;
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "' or sku='" + barcode + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
             {
@@ -297,7 +299,7 @@ public class ProductDBAdapter {
             cursor.moveToFirst();
             product = makeProduct(cursor);
             cursor.close();
-            close();
+
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -307,7 +309,9 @@ public class ProductDBAdapter {
     }
 
     public int deleteEntry(long id) {
-        open();
+        if(dbHelper==null) {
+            open();
+        }
         ProductDBAdapter productDBAdapter=new ProductDBAdapter(context);
         productDBAdapter.open();
         // Define the updated row content.
@@ -428,7 +432,9 @@ public class ProductDBAdapter {
         CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         List<Product> productsList =new ArrayList<Product>();
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
                 cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
@@ -452,7 +458,7 @@ public class ProductDBAdapter {
 
                 }
             }
-            close();
+
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -465,7 +471,9 @@ public class ProductDBAdapter {
         List<Product> productsList =new ArrayList<Product>();
         CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
                 cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +" = 0 order by id desc", null );
@@ -488,7 +496,7 @@ public class ProductDBAdapter {
 
                 }
             }
-            close();
+
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -503,7 +511,9 @@ public class ProductDBAdapter {
         List<Product> productsList =new ArrayList<Product>();
         CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
                 cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
@@ -526,7 +536,7 @@ public class ProductDBAdapter {
 
                 }
             }
-            close();
+
 
         } catch (Exception e) {
 
@@ -540,7 +550,9 @@ public class ProductDBAdapter {
 
         //SELECT * FROM table limit 100, 200
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
 
@@ -564,7 +576,7 @@ public class ProductDBAdapter {
 
                 }
             }
-            close();
+
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -673,7 +685,9 @@ public class ProductDBAdapter {
         CategoryDBAdapter categoryDBAdapter= new CategoryDBAdapter(context);
         List<Product> productsList =new ArrayList<Product>();
         try {
-            open();
+            if(dbHelper==null) {
+                open();
+            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
                 cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
@@ -700,7 +714,7 @@ public class ProductDBAdapter {
 
                 }
             }
-            close();
+
 
         } catch (Exception e) {
             Log.d("exception",e.toString());

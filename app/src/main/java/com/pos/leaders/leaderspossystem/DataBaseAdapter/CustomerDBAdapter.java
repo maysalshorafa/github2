@@ -73,15 +73,8 @@ public class CustomerDBAdapter {
     }
 
     public CustomerDBAdapter open() throws SQLException {
-        try {
             this.db = dbHelper.getWritableDatabase();
             return this;
-
-        } catch (SQLException s) {
-            new Exception("Error with DB Open");
-            return this;
-
-        }
     }
 
     public void close() {
@@ -314,19 +307,26 @@ public class CustomerDBAdapter {
     public List<Customer> getTopCustomer(int from, int count) {
         List<Customer> customerList = new ArrayList<Customer>();
         Cursor cursor=null;
-        if(SETTINGS.enableAllBranch) {
-            cursor =  db.rawQuery( "select * from "+CUSTOMER_TABLE_NAME+ " where " + CUSTOMER_COLUMN_DISENABLED +" = 0 order by id desc", null );
-        }else {
-            cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
+        try {
+            if (dbHelper == null) {
+                open();
+            }
+            if (SETTINGS.enableAllBranch) {
+                cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_COLUMN_DISENABLED + " = 0 order by id desc", null);
+            } else {
+                cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_BRANCH_ID + " = " + SETTINGS.branchId + " and " + CUSTOMER_COLUMN_DISENABLED + "=0 order by id desc", null);
+
+            }
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                customerList.add(makeCustomer(cursor));
+                cursor.moveToNext();
+            }
+        } catch (Exception e) {
+            Log.d("exception",e.toString());
 
         }
-        cursor.moveToFirst();
-
-        while (!cursor.isAfterLast()) {
-            customerList.add(makeCustomer(cursor));
-            cursor.moveToNext();
-        }
-
         return customerList;
     }
 
