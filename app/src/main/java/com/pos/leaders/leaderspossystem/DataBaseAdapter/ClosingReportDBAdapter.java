@@ -197,7 +197,7 @@ public class ClosingReportDBAdapter {
                 cursor.moveToNext();
             }
 
-
+close();
         } catch (Exception e) {
 Log.d("test",e.toString());
         }

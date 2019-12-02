@@ -102,7 +102,10 @@ public class OfferCategoryDbAdapter {
     public List<OfferCategory>getOfferCategoryByProductId(long productId){
             List<OfferCategory> tempOfferCategoryList = new ArrayList<OfferCategory>();
         List<OfferCategory> offerCategoryList = new ArrayList<OfferCategory>();
-
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where " +OFFER_CATEGORY_COLUMN_HIDE+"=0  order by " + OFFER_CATEGORY_COLUMN_ID + " desc", null);
             cursor.moveToFirst();
 
@@ -121,6 +124,10 @@ public class OfferCategoryDbAdapter {
                 }
             }
             }
+            close();
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return offerCategoryList;
 
     }
@@ -177,6 +184,10 @@ public class OfferCategoryDbAdapter {
     }
     public List<OfferCategory> getAllCategoryOffer() {
         List<OfferCategory> departmentList = new ArrayList<OfferCategory>();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor  = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where " + OFFER_CATEGORY_COLUMN_HIDE + "=0 order by id desc", null);
@@ -189,7 +200,10 @@ public class OfferCategoryDbAdapter {
             departmentList.add(createOfferCategoryObject(cursor));
             cursor.moveToNext();
         }
-
+            close();
+        } catch (Exception e) {
+            Log.d("exxx",e.toString());
+        }
         return departmentList;
     }
     public int deleteEntry(long id) {

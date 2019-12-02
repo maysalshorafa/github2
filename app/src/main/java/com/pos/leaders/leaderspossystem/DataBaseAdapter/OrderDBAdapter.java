@@ -266,7 +266,7 @@ public class OrderDBAdapter {
 			Log.d("test","test");
 		}
 		Log.d("test2",saleList.toString()+"list");
-
+close();
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -292,7 +292,7 @@ public class OrderDBAdapter {
 				saleList.add(makeSale(cursor));
 				Log.d("Ddddfffd", String.valueOf(makeSale(cursor)));
 			}
-
+close();
 
 		} catch (Exception e) {
 Log.d("eee",e.toString());
@@ -319,7 +319,7 @@ Log.d("eee",e.toString());
 					Log.d("Ddddfffd", String.valueOf(makeSale(cursor)));
 				}
 
-
+close();
 			} catch (Exception e) {
 				Log.d("exception",e.toString());
 
@@ -363,7 +363,7 @@ Log.d("eee",e.toString());
 				orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-
+close();
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -413,7 +413,7 @@ Log.d("eee",e.toString());
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-
+close();
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -436,7 +436,7 @@ Log.d("eee",e.toString());
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
-
+close();
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());

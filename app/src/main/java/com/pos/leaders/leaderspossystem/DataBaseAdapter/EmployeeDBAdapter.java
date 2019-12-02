@@ -283,6 +283,7 @@ public class EmployeeDBAdapter {
             employee.add(createNewEmployee(cursor));
             cursor.moveToNext();
         }
+       close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }
@@ -316,6 +317,7 @@ public class EmployeeDBAdapter {
             }
         }
         cursor.close();
+        close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }

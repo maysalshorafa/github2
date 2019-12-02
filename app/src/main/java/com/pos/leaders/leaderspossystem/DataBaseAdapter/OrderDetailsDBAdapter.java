@@ -163,7 +163,7 @@ public class OrderDetailsDBAdapter {
 			saleOrderList.add(make(cursor));
 			cursor.moveToNext();
 		}
-
+close();
         } catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -172,12 +172,21 @@ public class OrderDetailsDBAdapter {
 	}
 	public List<OrderDetails> getOrderBySaleIDAndProductId(long saleID,long productId){
 		List<OrderDetails> saleOrderList=new ArrayList<OrderDetails>();
+		try {
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ORDER_ID +"="+saleID+ " and product_id = "+productId, null );
 		cursor.moveToFirst();
 
 		while(!cursor.isAfterLast()){
 			saleOrderList.add(make(cursor));
 			cursor.moveToNext();
+		}
+		close();
+		} catch (Exception e) {
+			Log.d("exception",e.toString());
+
 		}
 		return saleOrderList;
 	}
@@ -212,6 +221,10 @@ public class OrderDetailsDBAdapter {
 	public List<Long> getOrderDetailsByIDproduct(long product){
 		OrderDetails orderDetails=new OrderDetails();
       List<Long> orderId =new ArrayList<>();
+		try {
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor =  db.rawQuery( "select "+ORDER_DETAILS_COLUMN_ORDER_ID+" from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILES_COLUMN_PRODUCTID +"="+product, null );
 		if (cursor.getCount() < 1) // UserName Not Exist
 		{
@@ -225,12 +238,20 @@ public class OrderDetailsDBAdapter {
 			Log.d("Ddddd", String.valueOf(cursor.getLong(0)));
 		}
 		cursor.close();
+			close();
+		} catch (Exception e) {
+			Log.d("exception",e.toString());
 
+		}
 		return orderId;
 	}
 	public List<Long> getOrderDetailsByListIDproduct(List<Long> product){
 		OrderDetails orderDetails=new OrderDetails();
 		List<Long> orderId =new ArrayList<>();
+		try {
+			if(dbHelper==null) {
+				open();
+			}
 		for (int i=0; i<product.size();i++) {
 			Cursor cursor = db.rawQuery("select " + ORDER_DETAILS_COLUMN_ORDER_ID + " from " + ORDER_DETAILS_TABLE_NAME + " where " + ORDER_DETAILES_COLUMN_PRODUCTID + "=" + product.get(i), null);
 			if (cursor.getCount() < 1) // UserName Not Exist
@@ -243,6 +264,11 @@ public class OrderDetailsDBAdapter {
 				orderId.add((long) cursor.getLong(0));
 			}
 			cursor.close();
+		}
+			close();
+		} catch (Exception e) {
+			Log.d("exception",e.toString());
+
 		}
 		return orderId;
 	}

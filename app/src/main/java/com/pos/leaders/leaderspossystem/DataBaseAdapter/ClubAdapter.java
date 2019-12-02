@@ -242,6 +242,7 @@ public class ClubAdapter {
             groups.add(createNewGroup(cursor));
             cursor.moveToNext();
         }
+        close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }

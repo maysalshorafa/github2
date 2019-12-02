@@ -167,7 +167,7 @@ public class OpiningReportDBAdapter {
             cursor.moveToNext();
         }
 
-
+close();
     } catch (Exception e) {
         Log.d("exception",e.toString());
     }

@@ -160,11 +160,20 @@ public class CurrencyDBAdapter {
     }
     public Currency getLastCurrency(){
         Currency currency = new Currency();
+        try {
+            if(dbHelper==null) {
+                open();
+            }
         Cursor cursor=null;
             cursor = db.rawQuery("SELECT * FROM "+CURRENCY_TABLE_NAME+" ORDER BY id DESC LIMIT 1", null);
         cursor.moveToFirst();
                 currency=build(cursor);
         Log.d("Currency",currency.toString());
+            close();
+        }
+        catch (Exception e) {
+            Log.d("Exception",e.toString());
+        }
         return currency;
     }
     public void deleteCurrencyList(){

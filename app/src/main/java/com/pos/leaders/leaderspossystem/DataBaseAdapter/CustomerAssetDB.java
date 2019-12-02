@@ -116,6 +116,7 @@ public class CustomerAssetDB {
             cursor.moveToNext();
         }
         customerAssistantList=getListBetweenTwoDates(from,to,customerAssistants);
+       close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }

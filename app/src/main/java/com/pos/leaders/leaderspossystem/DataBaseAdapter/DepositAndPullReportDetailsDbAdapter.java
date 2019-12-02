@@ -105,6 +105,7 @@ public class DepositAndPullReportDetailsDbAdapter {
             depositAndPullReportDetailsList.add(makeDepositAndPullDetailsReportDetails(cursor));
             cursor.moveToNext();
         }
+        close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }
