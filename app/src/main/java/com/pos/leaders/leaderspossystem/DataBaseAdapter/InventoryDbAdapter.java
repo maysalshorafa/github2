@@ -56,14 +56,25 @@ public class InventoryDbAdapter {
         return db;
     }
     public long insertEntry(String name, long inventoryId,String productsIdWithQuantityList ,int branchId,int hide) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Inventory inventory = new Inventory(Util.idHealth(this.db, INVENTORY_TABLE_NAME, INVENTORY_COLUMN_ID), name,inventoryId,productsIdWithQuantityList,branchId,hide);
         try {
+            close();
             return insertEntry(inventory);
         } catch (SQLException ex) {
             Log.d("InventoryDB", "inserting Entry at " + INVENTORY_COLUMN_NAME + ": " + ex.getMessage());
             return -1;
         }}
     public long insertEntry(Inventory inventory) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -82,6 +93,11 @@ public class InventoryDbAdapter {
         }
         }
     public long deleteEntryBo(Inventory inventory) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -90,6 +106,7 @@ public class InventoryDbAdapter {
         String where = INVENTORY_COLUMN_INVENTORY_ID + " = ?";
         try {
             db.update(INVENTORY_TABLE_NAME, updatedValues, where, new String[]{inventory.getInventoryId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Inventory DB delete", "enable hide Entry at " + INVENTORY_TABLE_NAME + ": " + ex.getMessage());
@@ -98,6 +115,11 @@ public class InventoryDbAdapter {
     }
 
     public long updateEntryBo(BoInventory inventory) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(context);
         inventoryDbAdapter.open();
         ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
@@ -125,12 +147,18 @@ public class InventoryDbAdapter {
         try {
             String where = INVENTORY_COLUMN_ID + " = ?";
             db.update(INVENTORY_TABLE_NAME, val, where, new String[]{inventory.getId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             return 0;
         }
     }
  public Inventory getLastRow() throws Exception {
+     if(db.isOpen()){
+
+     }else {
+         open();
+     }
      Inventory inventory = null;
      Cursor cursor = db.rawQuery("select * from " + INVENTORY_TABLE_NAME , null);
      if (cursor.getCount() < 1) // zReport Not Exist
@@ -141,7 +169,7 @@ public class InventoryDbAdapter {
      cursor.moveToFirst();
      inventory = makeInventory(cursor);
      cursor.close();
-
+        close();
      return inventory;
  }
 

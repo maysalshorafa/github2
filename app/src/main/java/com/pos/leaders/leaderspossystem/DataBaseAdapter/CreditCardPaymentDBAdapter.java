@@ -76,11 +76,17 @@ public class CreditCardPaymentDBAdapter {
     public long insertEntry(long saleId, double amount, String cccName,int transactionType,
                             String last4Digit,String transactionId,String answer,int paymentsNumber,
                             double firstPaymentAmount,double otherPaymentAmount,String cardHolder) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         CreditCardPayment payment = new CreditCardPayment(Util.idHealth(this.db, TABLE_NAME, ID), saleId, amount, cccName,transactionType,
                 last4Digit,transactionId,answer,paymentsNumber,firstPaymentAmount,otherPaymentAmount,cardHolder,new Timestamp(System.currentTimeMillis()));
         //sendToBroker(MessageType.ADD_CREDIT_CARD_PAYMENT, payment, this.context);
 
         try {
+            close();
             return insertEntry(payment);
         } catch (SQLException ex) {
             Log.e(TABLE_NAME + " DB insert", "inserting Entry at " + TABLE_NAME + ": " + ex.getMessage());
@@ -89,6 +95,11 @@ public class CreditCardPaymentDBAdapter {
     }
 
     public long insertEntry(CreditCardPayment p){
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -157,7 +168,9 @@ public class CreditCardPaymentDBAdapter {
     public List<CreditCardPayment> getPaymentByOrderID(long orderId) {
         List<CreditCardPayment> orderPaymentList = new ArrayList<CreditCardPayment>();
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME +" where "+ORDERID+"="+orderId, null);

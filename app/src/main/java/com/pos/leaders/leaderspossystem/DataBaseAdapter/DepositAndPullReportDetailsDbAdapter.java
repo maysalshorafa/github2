@@ -59,13 +59,24 @@ public class DepositAndPullReportDetailsDbAdapter {
     }
 
     public long insertEntry(long depositAndPullId, double amount, String currencyType) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         DepositAndPullDetailsReport depositAndPullReport = new DepositAndPullDetailsReport(Util.idHealth(this.db,DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME, DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID), depositAndPullId, amount,currencyType);
         sendToBroker(MessageType.ADD_DEPOSIT_AND_PULL_DETAILS_REPORT, depositAndPullReport, this.context);
+   close();
         return insertEntry(depositAndPullReport);
 
     }
 
     public long insertEntry(DepositAndPullDetailsReport depositAndPullReport) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
 
         val.put(DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID, depositAndPullReport.getDepositAndPullDetailsId());
@@ -93,6 +104,11 @@ public class DepositAndPullReportDetailsDbAdapter {
         return depositAndPullDetailsReport;
     }
     public List<DepositAndPullDetailsReport> getListDepositAndPullReportReport(long aReportId){
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         List<DepositAndPullDetailsReport> depositAndPullReportDetailsList =new ArrayList<DepositAndPullDetailsReport>();
         try {
             if(dbHelper==null) {

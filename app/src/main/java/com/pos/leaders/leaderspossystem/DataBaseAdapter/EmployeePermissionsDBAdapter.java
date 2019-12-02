@@ -51,11 +51,17 @@ public class EmployeePermissionsDBAdapter {
 
 
 		public long insertEntry( long permissionsId, long userId) {
+			if(db.isOpen()){
+
+			}else {
+				open();
+			}
 			EmployeesPermissions userPermissions = new EmployeesPermissions(Util.idHealth(this.db, USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_ID),userId,permissionsId);
 			sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION, userPermissions, this.context);
 
 			try {
 				long insertResult = insertEntry(userPermissions);
+				close();
 				return insertResult;
 			} catch (SQLException ex) {
 				Log.e("UserPermissions insert", "inserting Entry at " + USERPERMISSIONS_TABLE_NAME + ": " + ex.getMessage());
@@ -63,6 +69,11 @@ public class EmployeePermissionsDBAdapter {
 			}
 		}
 	public long insertEntry(EmployeesPermissions userPermissions){
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		ContentValues val = new ContentValues();
 		val.put(USERPERMISSIONS_COLUMN_ID,userPermissions.getEmployeePermissionId());
 		//Assign values for each row.
@@ -79,7 +90,9 @@ public class EmployeePermissionsDBAdapter {
 	public ArrayList<Integer> getPermissions(long user_id) {
 		ArrayList<Integer> permissions = new ArrayList<Integer>();
 		try {
-			if(dbHelper==null) {
+			if(db.isOpen()){
+
+			}else {
 				open();
 			}
 		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where employeeId='" + user_id + "'" , null);
@@ -88,6 +101,7 @@ public class EmployeePermissionsDBAdapter {
 		if (cursor1.getCount() < 1) // UserName Not Exist
 		{
 			cursor1.close();
+			close();
 			return permissions;
 		}
 		while(!cursor1.isAfterLast()){
@@ -101,10 +115,13 @@ public class EmployeePermissionsDBAdapter {
 		return permissions;
 	}
     public ArrayList<Long> getSalesManId() {
+
         ArrayList<Long> salesManId = new ArrayList<Long>();
         EmployeesPermissions userPermissions=null;
 		try {
-			if(dbHelper==null) {
+			if(db.isOpen()){
+
+			}else {
 				open();
 			}
         Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where permissionId='" + 10 + "'" , null);
@@ -137,6 +154,11 @@ public class EmployeePermissionsDBAdapter {
 	}
 	public boolean deletePermissions(long userId ,int permissions)
 	{
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		return db.delete(USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_PERMISSIONSID + "=" + permissions+ " and " + USERPERMISSIONS_COLUMN_USERID + "="+userId, null) > 0;
 	}
 

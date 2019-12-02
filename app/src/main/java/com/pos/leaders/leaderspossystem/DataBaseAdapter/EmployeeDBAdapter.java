@@ -75,7 +75,11 @@ public class EmployeeDBAdapter {
     }
 
     public long insertEntry(String employeeName, String password, String firstName, String lastName, String phoneNumber, Double persent, Double hourlyWag,int branchId) {
+        if(db.isOpen()){
 
+        }else {
+            open();
+        }
         Employee u = new Employee(Util.idHealth(this.db, EMPLOYEE_TABLE_NAME, EMPLOYEE_COLUMN_ID), employeeName, password, firstName, lastName, new Timestamp(System.currentTimeMillis()), false, phoneNumber, persent, hourlyWag,branchId);
         Employee boEmployee = u;
         boEmployee.setEmployeeName(Util.getString(boEmployee.getEmployeeName()));
@@ -87,6 +91,7 @@ public class EmployeeDBAdapter {
 
         try {
             long insertResult = insertEntry(u);
+            close();
             return insertResult;
         } catch (SQLException ex) {
             Log.e("UserDB insertEntry", "inserting Entry at " + EMPLOYEE_TABLE_NAME + ": " + ex.getMessage());
@@ -95,6 +100,11 @@ public class EmployeeDBAdapter {
     }
 
     public long insertEntry(Employee employee) throws  SQLException {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(EMPLOYEE_COLUMN_ID, employee.getEmployeeId());
@@ -109,11 +119,16 @@ public class EmployeeDBAdapter {
         val.put(EMPLOYEE_COLUMN_BRANCH_ID,employee.getBranchId());
 
         long id = db.insertOrThrow(EMPLOYEE_TABLE_NAME, null, val);
-
+close();
         return id;
     }
 
     public Employee getEmployeeByID(long id) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Employee employee = null;
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
         //Cursor cursor = db.rawQuery("select * from " + EMPLOYEE_TABLE_NAME + " where id='" + id + "'", null);
@@ -125,10 +140,16 @@ public class EmployeeDBAdapter {
             return employee;
         }
         cursor.close();
+        close();
         return employee;
     }
 
     public Employee logIn(String employeeName, String Passowrd) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_EMPLOYEE_NAME + "=? and " + EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{employeeName, Passowrd}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) // UserName Not Exist
@@ -139,13 +160,20 @@ public class EmployeeDBAdapter {
 
             cursor.close();
             Log.i("Log in", u.toString());
+            close();
             return u;
         }
         cursor.close();
+        close();
         return null;
     }
 
     public Employee logIn(String Passowrd) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         long userID = 0;
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{Passowrd}, null, null, null);
         cursor.moveToFirst();
@@ -157,13 +185,20 @@ public class EmployeeDBAdapter {
 
             cursor.close();
             Log.i("Log in", u.toString());
+            close();
             return u;
         }
         cursor.close();
+        close();
         return null;
     }
 
     public int deleteEntry(long id) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         EmployeeDBAdapter employeeDBAdapter=new EmployeeDBAdapter(context);
         employeeDBAdapter.open();
         // Define the updated row content.
@@ -176,6 +211,7 @@ public class EmployeeDBAdapter {
             db.update(EMPLOYEE_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             Employee user = employeeDBAdapter.getEmployeeByID(id);
             sendToBroker(MessageType.DELETE_EMPLOYEE, user, this.context);
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("deleteEntry", "enable hide Entry at " + EMPLOYEE_TABLE_NAME + ": " + ex.getMessage());
@@ -183,6 +219,11 @@ public class EmployeeDBAdapter {
         }
     }
     public long deleteEntryBo(Employee employee) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -191,6 +232,7 @@ public class EmployeeDBAdapter {
         String where = EMPLOYEE_COLUMN_ID + " = ?";
         try {
             db.update(EMPLOYEE_TABLE_NAME, updatedValues, where, new String[]{employee.getEmployeeId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("employeeDB deleteEntry", "enable hide Entry at " + EMPLOYEE_TABLE_NAME + ": " + ex.getMessage());
@@ -199,6 +241,11 @@ public class EmployeeDBAdapter {
     }
 
     public void updateEntry(Employee employee) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
         ContentValues val = new ContentValues();
@@ -218,8 +265,14 @@ public class EmployeeDBAdapter {
         Log.d("Update Object",u.toString());
         sendToBroker(MessageType.UPDATE_EMPLOYEE, u, this.context);
         userDBAdapter.close();
+        close();
     }
     public long updateEntryBo(Employee employee) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
         ContentValues val = new ContentValues();
@@ -239,6 +292,7 @@ public class EmployeeDBAdapter {
             Employee u=userDBAdapter.getEmployeeByID(employee.getEmployeeId());
             Log.d("Update Object",u.toString());
             userDBAdapter.close();
+            close();
             return 1;
         } catch (SQLException ex) {
             return 0;
@@ -247,31 +301,48 @@ public class EmployeeDBAdapter {
     }
 
     public boolean availableEmployeeName(String employeeName) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_EMPLOYEE_NAME + "=?", new String[]{employeeName}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             // Employee Name not available
+            close();
             return false;
         }
+        close();
         // Employee Name available
         return true;
     }
     public boolean availablePassWord(String password) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             // Employee Name not available
+            close();
             return false;
         }
         // Employee Name available
+        close();
         return true;
     }
     public List<Employee> getAllEmployee() {
         List<Employee> employee = new ArrayList<Employee>();
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
-            }        Cursor cursor=null;
+            }
+            Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery( "select * from "+EMPLOYEE_TABLE_NAME+" where "+  EMPLOYEE_COLUMN_DISENABLED +" = 0 order by id desc", null );
         }else {
@@ -294,7 +365,9 @@ public class EmployeeDBAdapter {
         List<Long> salesManId = new ArrayList<Long>();
         List<Employee> employees = new ArrayList<Employee>();
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
             EmployeePermissionsDBAdapter employeePermissionsDBAdapter = new EmployeePermissionsDBAdapter(context);
@@ -337,6 +410,11 @@ public class EmployeeDBAdapter {
     }
 
     public String getEmployeesName(long id) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         String employeesName = "";
         Employee employee = null;
         Cursor cursor = db.rawQuery("select * from " + EMPLOYEE_TABLE_NAME + " where " + EMPLOYEE_COLUMN_ID + " = " + id, null);
@@ -358,24 +436,37 @@ public class EmployeeDBAdapter {
                 ,Integer.parseInt(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_BRANCH_ID)))
         );
         cursor.close();
+        close();
         return employee.getFullName();
     }
     public Boolean isValidPassword(String password) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-
+close();
             return true;
         }
+        close();
         return false;
     }
     public Employee getEmployeesByPassword(String password) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Employee employee = null;
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
+            close();
             return employee;
         }
         cursor.moveToFirst();
@@ -390,6 +481,7 @@ public class EmployeeDBAdapter {
                 ,Integer.parseInt(cursor.getString(cursor.getColumnIndex(EMPLOYEE_COLUMN_BRANCH_ID)))
         );
         cursor.close();
+        close();
         return employee;
     }
     public static String addColumnInteger(String columnName) {

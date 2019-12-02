@@ -11,8 +11,6 @@ import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Group;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
-import java.util.List;
-
 /**
  * Created by Karam on 8/12/2018.
  */
@@ -47,18 +45,33 @@ public class GroupDbAdapter {
     }
 
     public long insertEntry(String name) {
-        Group group = new Group(Util.idHealth(this.db, GROUP_TABLE_NAME, GROUP_COLUMN_ID),name);
+        if(db.isOpen()){
 
+        }else {
+            open();
+        }
+        Group group = new Group(Util.idHealth(this.db, GROUP_TABLE_NAME, GROUP_COLUMN_ID),name);
+close();
         return insertEntry(group);
     }
 
     public long insertEntry(long Id,String name) {
-        Group group = new Group(Id, name);
+        if(db.isOpen()){
 
+        }else {
+            open();
+        }
+        Group group = new Group(Id, name);
+close();
         return insertEntry(group);
     }
 
     public long insertEntry(Group group) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 

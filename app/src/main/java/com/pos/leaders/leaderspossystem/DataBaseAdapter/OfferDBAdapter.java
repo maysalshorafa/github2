@@ -83,6 +83,11 @@ public class OfferDBAdapter {
 	}
 
 	public long insertEntry(Offer offer){
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(OFFER_COLUMN_ID, offer.getOfferId());
@@ -110,11 +115,17 @@ public class OfferDBAdapter {
 	}
 
 	public long insertEntry(String name, String active, long resourceId, ResourceType resourceType, Timestamp start, Timestamp end, String data, long byEmployee) throws JSONException, IOException {
-		Offer offer = new Offer(Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID), name, active, resourceId, resourceType, start, end, data.toString(), byEmployee, new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()));
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
+			Offer offer = new Offer(Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID), name, active, resourceId, resourceType, start, end, data.toString(), byEmployee, new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()));
 
 		sendToBroker(MessageType.ADD_OFFER, offer, this.context);
 
         try {
+			close();
             return insertEntry(offer);
         } catch (SQLException ex) {
             Log.e(LOG_TAG, "inserting Entry in " + OFFER_TABLE_NAME + ": " + ex.getMessage());
@@ -122,6 +133,11 @@ public class OfferDBAdapter {
         }
 	}
 	public Offer getOfferById(long id){
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where "+OFFER_COLUMN_ID+"='" + id + "'", null);
 		if (cursor.getCount() < 1) // Offer Not Exist
 		{
@@ -129,6 +145,7 @@ public class OfferDBAdapter {
 			return null;
 		}
 		cursor.moveToFirst();
+		close();
 		return createOfferObject(cursor);
 	}
 
@@ -145,6 +162,11 @@ public class OfferDBAdapter {
 	}
 
 	public List<Offer> getAllActiveOffersByResourceIdResourceType(long id,ResourceType resourceType ) {
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		List<Offer> offerList = null;
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME +" where "+ OFFER_COLUMN_RESOURCE_TYPE+ " = '"+resourceType.getValue() +"' and "+OFFER_COLUMN_RESOURCE_ID+" = " + id +" and "+OFFER_COLUMN_ACTIVE+"='ACTIVE' and "+OFFER_COLUMN_HIDE+"=0  order by " + OFFER_COLUMN_ID + " desc", null);
 		cursor.moveToFirst();
@@ -155,6 +177,7 @@ public class OfferDBAdapter {
 				cursor.moveToNext();
 			}
 		}
+		close();
 		return offerList;
 	}
 
@@ -201,6 +224,11 @@ public class OfferDBAdapter {
 	// "=1 and "+OFFER_COLUMN_ENDDATE+"< '"+new Date().getTime()+"' order by id desc"
 
 	public Offer getAllValidOffers() {
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		Offer offer =null;
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_ACTIVE +"="+ "ACTIVE", null);
 		cursor.moveToFirst();
@@ -213,9 +241,15 @@ public class OfferDBAdapter {
 				cursor.close();
 			}
 		}
+		close();
 		return offer;
 	}
 	public  List<Offer> getListOfValidOffers() {
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		List<Offer> offerList = new ArrayList<Offer>();
 
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_ACTIVE +"="+ "ACTIVE"+ " and "+OFFER_COLUMN_HIDE + " = " + 0, null);
@@ -225,9 +259,15 @@ public class OfferDBAdapter {
 			cursor.moveToNext();
 		}
 		Log.d("offerList",offerList.toString());
+		close();
 		return offerList;
 	}
 	public List<Offer> getBetweenTwoDates(long from, long to){
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		List<Offer> offerList = new ArrayList<Offer>();
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_START_DATE + " > datetime("+from+"/1000, 'unixepoch') and "+  OFFER_COLUMN_END_DATE +" < datetime("+to+"/1000, 'unixepoch')"+ " and "+OFFER_COLUMN_ACTIVE + " = " + "'ACTIVE' "+ " and "+OFFER_COLUMN_HIDE + " = " + 0 , null);
 		cursor.moveToFirst();
@@ -237,10 +277,16 @@ public class OfferDBAdapter {
 			cursor.moveToNext();
 		}
 		Log.d("offerList",offerList.toString());
+		close();
 		return offerList;
 	}
 
 	public int deleteEntry(long id) {
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
 		offerDBAdapter.open();
 		// Define the updated row content.
@@ -253,6 +299,7 @@ public class OfferDBAdapter {
 			db.update(OFFER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
 			Offer offer=offerDBAdapter.getOfferById(id);
 			sendToBroker(MessageType.DELETE_OFFER, offer, this.context);
+			close();
 			return 1;
 		} catch (SQLException ex) {
 			Log.e("Offer deleteEntry", "enable hide Entry at " + OFFER_TABLE_NAME + ": " + ex.getMessage());
@@ -278,6 +325,11 @@ public class OfferDBAdapter {
 	}
 
 	public long deleteEntryBo(Offer offer) {
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		// Define the updated row content.
 		ContentValues updatedValues = new ContentValues();
 		// Assign values for each row.
@@ -286,6 +338,7 @@ public class OfferDBAdapter {
 		String where = OFFER_COLUMN_ID + " = ?";
 		try {
 			db.update(OFFER_TABLE_NAME, updatedValues, where, new String[]{offer.getOfferId() + ""});
+			close();
 			return 1;
 		} catch (SQLException ex) {
 			Log.e("Offer deleteEntry", "enable hide Entry at " + OFFER_TABLE_NAME + ": " + ex.getMessage());
@@ -294,6 +347,11 @@ public class OfferDBAdapter {
 	}
 
 	public void updateEntry(Offer offer) {
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
 		offerDBAdapter.open();
 		ContentValues val = new ContentValues();
@@ -321,6 +379,7 @@ public class OfferDBAdapter {
 		Log.d("Update Object",p.toString());
 		sendToBroker(MessageType.UPDATE_OFFER, p, this.context);
 		offerDBAdapter.close();
+		close();
 	}
 
 	public long updateEntryBo(Offer offer) {

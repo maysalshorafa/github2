@@ -67,11 +67,17 @@ public class OfferCategoryDbAdapter {
 
 
     public long insertEntry(String name, long byUser, List<String> productIdList, int branchId) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
             OfferCategory offerCategory = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList, byUser,branchId,false);
 
         sendToBroker(MessageType.ADD_OFFER_CATEGORY, offerCategory, this.context);
 
         try {
+            close();
             return insertEntry(offerCategory);
         } catch (SQLException ex) {
             Log.d("OfferCategory insert", "inserting Entry at " + OFFER_CATEGORY_TABLE_NAME + ": " + ex.getMessage());
@@ -80,6 +86,11 @@ public class OfferCategoryDbAdapter {
     }
 
     public long insertEntry(OfferCategory category) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -100,6 +111,11 @@ public class OfferCategoryDbAdapter {
 
     }
     public List<OfferCategory>getOfferCategoryByProductId(long productId){
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
             List<OfferCategory> tempOfferCategoryList = new ArrayList<OfferCategory>();
         List<OfferCategory> offerCategoryList = new ArrayList<OfferCategory>();
         try {
@@ -141,6 +157,11 @@ public class OfferCategoryDbAdapter {
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(OFFER_CATEGORY_COLUMN_HIDE))));
     }
     public long updateEntryBo(OfferCategory offerCategory) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(OFFER_CATEGORY_COLUMN_ID, offerCategory.getOfferCategoryId());
@@ -152,12 +173,18 @@ public class OfferCategoryDbAdapter {
         try {
             String where = OFFER_CATEGORY_COLUMN_ID + " = ?";
             db.update(OFFER_CATEGORY_TABLE_NAME, val, where, new String[]{offerCategory.getOfferCategoryId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             return 0;
         }
     }
     public OfferCategory getOfferById(long id){
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Cursor cursor = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where "+OFFER_CATEGORY_COLUMN_ID+"='" + id + "'", null);
         if (cursor.getCount() < 1) // Offer Not Exist
         {
@@ -165,9 +192,15 @@ public class OfferCategoryDbAdapter {
             return null;
         }
         cursor.moveToFirst();
+        close();
         return createOfferCategoryObject(cursor);
     }
     public long deleteEntryBo(OfferCategory offerCategory) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -176,6 +209,7 @@ public class OfferCategoryDbAdapter {
         String where = OFFER_CATEGORY_COLUMN_ID + " = ?";
         try {
             db.update(OFFER_CATEGORY_TABLE_NAME, updatedValues, where, new String[]{offerCategory.getOfferCategoryId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("OfferCategory delete", "enable hide " + OFFER_CATEGORY_TABLE_NAME + ": " + ex.getMessage());
@@ -185,7 +219,9 @@ public class OfferCategoryDbAdapter {
     public List<OfferCategory> getAllCategoryOffer() {
         List<OfferCategory> departmentList = new ArrayList<OfferCategory>();
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
         Cursor cursor=null;
@@ -207,6 +243,11 @@ public class OfferCategoryDbAdapter {
         return departmentList;
     }
     public int deleteEntry(long id) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         OfferCategoryDbAdapter offerCategoryDbAdapter=new OfferCategoryDbAdapter(context);
         offerCategoryDbAdapter.open();
         // Define the updated row content.
@@ -219,6 +260,7 @@ public class OfferCategoryDbAdapter {
             db.update(OFFER_CATEGORY_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             OfferCategory offerCategory = offerCategoryDbAdapter.getOfferById(id);
             sendToBroker(MessageType.DELETE_OFFER_CATEGORY, offerCategory, this.context);
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("OfferCategory DB delete", "enable hide Entry at " + OFFER_CATEGORY_TABLE_NAME + ": " + ex.getMessage());
@@ -226,6 +268,11 @@ public class OfferCategoryDbAdapter {
         }
     }
     public void updateEntry(OfferCategory offerCategory) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(context);
         offerCategoryDbAdapter.open();
         ContentValues val = new ContentValues();
@@ -242,5 +289,6 @@ public class OfferCategoryDbAdapter {
         Log.d("Update object",d.toString());
         sendToBroker(MessageType.UPDATE_OFFER_CATEGORY, d, this.context);
         offerCategoryDbAdapter.close();
+        close();
     }
 }

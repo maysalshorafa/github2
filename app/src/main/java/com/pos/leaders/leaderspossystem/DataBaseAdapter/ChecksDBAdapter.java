@@ -68,10 +68,16 @@ public class ChecksDBAdapter {
 
 
 	public long insertEntry(long checkNum, long bankNum, long branchNum, long accountNum, double amount, Timestamp date, long saleId) {
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
         Check check = new Check(Util.idHealth(this.db, CHECKS_TABLE_NAME, CHECKS_COLUMN_ID), checkNum, bankNum, branchNum, accountNum, amount, date, false, saleId);
         //sendToBroker(MessageType.ADD_CHECK, check, this.context);
 
         try {
+
             return insertEntry(check);
         } catch (SQLException ex) {
             Log.e("Checks DB insert", "inserting Entry at " + CHECKS_TABLE_NAME + ": " + ex.getMessage());
@@ -80,7 +86,11 @@ public class ChecksDBAdapter {
 	}
 
 	public long insertEntry(Check check){
+		if(db.isOpen()){
 
+		}else {
+			open();
+		}
 		ContentValues val = new ContentValues();
 		val.put(CHECKS_COLUMN_ID,check.getCheckId());
 		//Assign values for each row.
@@ -117,7 +127,9 @@ public class ChecksDBAdapter {
 	public List<Check> getPaymentBySaleID(long saleID) {
 		List<Check> checksList = new ArrayList<Check>();
 		try {
-			if(dbHelper==null) {
+			if(db.isOpen()){
+
+			}else {
 				open();
 			}
 		Cursor cursor = db.rawQuery("select * from " + CHECKS_TABLE_NAME + " where " + CHECKS_COLUMN_ORDERID + "=" + saleID, null);
@@ -149,6 +161,11 @@ close();
 	}
 
 	public int deleteEntry(long id) {
+		if(db.isOpen()){
+
+		}else {
+			open();
+		}
 		// Define the updated row content.
 		ContentValues updatedValues = new ContentValues();
 		// Assign values for each row.
@@ -157,6 +174,7 @@ close();
 		String where = CHECKS_COLUMN_ID + " = ?";
 		try {
 			db.update(CHECKS_TABLE_NAME, updatedValues, where, new String[]{id + ""});
+			close();
 			return 1;
 		} catch (SQLException ex) {
 			Log.e("Checks deleteEntry", "enable hide Entry at " + CHECKS_TABLE_NAME + ": " + ex.getMessage());

@@ -87,6 +87,14 @@ public class CustomerDBAdapter {
 
     public Customer getCustomerByName(String name) {
         Customer customer_m = null;
+        try {
+
+            if(db.isOpen()){
+
+            }else {
+                open();
+            }
+
         Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where firstName='" + name + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
@@ -110,11 +118,20 @@ public class CustomerDBAdapter {
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY)),
                 cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_COUNTRY_CODE)),Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))), CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()),cursor.getString(cursor.getColumnIndex(CUSTOMER_CODE)),cursor.getString(cursor.getColumnIndex(CUSTOMER_IDENTITY)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_BRANCH_ID))));
         cursor.close();
+            close();
 
+        } catch (Exception e) {
+            Log.d("exception",e.toString());
+        }
         return customer_m;
     }
 
     public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, long clubId, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType,String customerCode,String customerIdentity,int branchId) throws JSONException {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Customer customer_m = new Customer(Util.idHealth(this.db, CUSTOMER_TABLE_NAME, CUSTOMER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, clubId, houseNumber, postalCode, country, countryCode,balance,customerType,customerCode,customerIdentity,branchId);
         Customer boCustomer = customer_m;
         boCustomer.setFirstName(Util.getString(boCustomer.getFirstName()));
@@ -135,6 +152,7 @@ public class CustomerDBAdapter {
 
         try {
             long insertResult = insertEntry(customer_m);
+            close();
             return insertResult;
         } catch (SQLException ex) {
             Log.e("OldCustomer insertEntry", "inserting Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
@@ -143,6 +161,11 @@ public class CustomerDBAdapter {
     }
 
     public long insertEntry(Customer customer) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(CUSTOMER_COLUMN_ID, customer.getCustomerId());
@@ -206,6 +229,11 @@ public class CustomerDBAdapter {
     }
 
     public Customer getCustomerByID(long id) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Customer customer = null;
         Cursor cursor = db.query(CUSTOMER_TABLE_NAME, null, CUSTOMER_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
         cursor.moveToFirst();
@@ -216,6 +244,7 @@ public class CustomerDBAdapter {
             return customer;
         }
         cursor.close();
+        close();
         return customer;
     }
 
@@ -235,6 +264,11 @@ public class CustomerDBAdapter {
 
 
     public void updateEntry(Customer customer) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(context);
         customerDBAdapter.open();
         ContentValues val = new ContentValues();
@@ -265,9 +299,15 @@ public class CustomerDBAdapter {
         Log.d("Update Object",c.toString());
         sendToBroker(MessageType.UPDATE_CUSTOMER, c, this.context);
         customerDBAdapter.close();
+        close();
 
     }
     public long updateEntryBo(Customer customer) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(context);
         customerDBAdapter.open();
         ContentValues val = new ContentValues();
@@ -298,6 +338,7 @@ public class CustomerDBAdapter {
             Customer c=customerDBAdapter.getCustomerByID(customer.getCustomerId());
             Log.d("Update Object",c.toString());
             customerDBAdapter.close();
+            close();
             return 1;
         } catch (SQLException ex) {
             return 0;
@@ -308,7 +349,9 @@ public class CustomerDBAdapter {
         List<Customer> customerList = new ArrayList<Customer>();
         Cursor cursor=null;
         try {
-            if (dbHelper == null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
             if (SETTINGS.enableAllBranch) {
@@ -358,7 +401,9 @@ public class CustomerDBAdapter {
     public List<Customer> getAllCustomer() {
         List<Customer> customerMs = new ArrayList<Customer>();
         try {
-            if (dbHelper == null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
         Cursor cursor=null;
@@ -399,7 +444,9 @@ public class CustomerDBAdapter {
     public List<Customer> getAllCustomerInClub(long id) {
         List<Customer> customerMs = new ArrayList<Customer>();
         try {
-            if (dbHelper == null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
         Cursor cursor=null;
@@ -439,6 +486,11 @@ public class CustomerDBAdapter {
     }
 
     public int deleteEntry(long id) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues updatedValues = new ContentValues();
         CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(context);
         customerDBAdapter.open();
@@ -448,6 +500,7 @@ public class CustomerDBAdapter {
             db.update(CUSTOMER_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             Customer customer=customerDBAdapter.getCustomerByID(id);
             sendToBroker(MessageType.DELETE_CUSTOMER, customer, this.context);
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("CustomerDB deleteEntry", "enable hide Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
@@ -455,11 +508,17 @@ public class CustomerDBAdapter {
         }
     }
     public long deleteEntryBo(Customer customer) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues updatedValues = new ContentValues();
         updatedValues.put(CUSTOMER_COLUMN_DISENABLED, 1);
         String where = CUSTOMER_COLUMN_ID + " = ?";
         try {
             db.update(CUSTOMER_TABLE_NAME, updatedValues, where, new String[]{customer.getCustomerId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("CustomerDB deleteEntry", "enable hide Entry at " + CUSTOMER_TABLE_NAME + ": " + ex.getMessage());
@@ -497,11 +556,17 @@ public class CustomerDBAdapter {
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()), cursor.getString(cursor.getColumnIndex(CUSTOMER_CODE)), cursor.getString(cursor.getColumnIndex(CUSTOMER_IDENTITY)),  Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_BRANCH_ID))));
     }
     public boolean availableCustomerPhoneNo(String customerPhone) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Cursor cursor = db.query(CUSTOMER_TABLE_NAME, null, CUSTOMER_COLUMN_PHONE_NUMBER + "=?", new String[]{customerPhone}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             return false;
         }
+        close();
         return true;
     }
     public static String addColumn(String columnName) {
@@ -512,7 +577,9 @@ public class CustomerDBAdapter {
     public List<Customer> getAllNormalCustomer() {
         List<Customer> customerMs = new ArrayList<Customer>();
         try {
-            if (dbHelper == null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
         Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_COLUMN_DISENABLED + "=0"+" and " + CUSTOMER_COLUMN_TYPE + " = '"+ CustomerType.CREDIT.getValue()+"' order by id desc", null);

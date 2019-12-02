@@ -67,6 +67,11 @@ public class ClosingReportDetailsDBAdapter {
 
 
     public long insertEntry(long closingReportId ,double actualValue, double expectedValue , double differentValue , String type  ,String currencyType  ) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ClosingReportDetails closingReportDetails = new ClosingReportDetails(Util.idHealth(this.db, CLOSING_REPORT_DETAILS_TABLE_NAME, CLOSING_REPORT_DETAILS_COLUMN_ID),closingReportId, actualValue,expectedValue,differentValue, type, currencyType);
         if(Util.idHealth(this.db, CLOSING_REPORT_DETAILS_TABLE_NAME, CLOSING_REPORT_DETAILS_COLUMN_ID)>0){
             Log.d("ClosingReportDetails",closingReportDetails.toString());
@@ -82,6 +87,11 @@ public class ClosingReportDetailsDBAdapter {
     }
 
     public long insertEntry(ClosingReportDetails closingReportDetails) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -123,7 +133,9 @@ public class ClosingReportDetailsDBAdapter {
     public List<ClosingReportDetails> getClosingReportByClosingID(long closingId) {
         List<ClosingReportDetails> closingReportList = new ArrayList<ClosingReportDetails>();
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
             Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_DETAILS_TABLE_NAME +" where "+CLOSING_REPORT_DETAILS_COLUMN_CLOSING_REPORT_ID+"="+closingId, null);

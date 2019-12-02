@@ -251,13 +251,13 @@ public class SyncMessage extends Service {
                         //Log.i("date", DateConverter.toDate(timestamp.getTime()));
                         //if(!(DateConverter.toDate(currency.getLastUpdate().getTime()) == DateConverter.toDate(timestamp.getTime()))){
 
-                        try {
+                       /* try {
                             updateCurrency();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
+                        }*/
                         //}
 
                         try {

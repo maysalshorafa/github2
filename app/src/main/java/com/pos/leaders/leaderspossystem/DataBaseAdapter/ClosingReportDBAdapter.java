@@ -72,10 +72,16 @@ public class ClosingReportDBAdapter {
 
 
     public long insertEntry(double actualTotalValue,double expectedTotalValue ,double differentTotalValue ,Timestamp createdAt , long  opiningReportId,long lastOrderId ,long byUser) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ClosingReport closingReport = new ClosingReport(Util.idHealth(this.db, CLOSING_REPORT_TABLE_NAME, CLOSING_REPORT_COLUMN_ID), actualTotalValue,expectedTotalValue,differentTotalValue, createdAt, opiningReportId,lastOrderId,byUser);
         sendToBroker(MessageType.ADD_CLOSING_REPORT, closingReport, this.context);
 
         try {
+
             return insertEntry(closingReport);
         } catch (SQLException ex) {
             Log.e("ClosingReport insert", "inserting Entry at " + CLOSING_REPORT_TABLE_NAME + ": " + ex.getMessage());
@@ -84,6 +90,11 @@ public class ClosingReportDBAdapter {
     }
 
     public long insertEntry(ClosingReport closingReport) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -97,6 +108,7 @@ public class ClosingReportDBAdapter {
         val.put(CLOSING_REPORT_COLUMN_BY_USER,closingReport.getByUser());
 
         try {
+
             return db.insert(CLOSING_REPORT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("ClosingReport insert", "inserting Entry at " + CLOSING_REPORT_TABLE_NAME + ": " + ex.getMessage());
@@ -126,6 +138,11 @@ public class ClosingReportDBAdapter {
         return closingReport;
     }
     public ClosingReport getClosingReportByOpiningReportId(long opiningReportId) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ClosingReport closingReport = null;
         Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_TABLE_NAME + " where opiningReportId='" + opiningReportId + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
@@ -142,10 +159,15 @@ public class ClosingReportDBAdapter {
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_LAST_ORDER_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CLOSING_REPORT_COLUMN_BY_USER))));
         cursor.close();
-
+close();
         return closingReport;
     }
     public ClosingReport getLastRow() throws Exception {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ClosingReport c = null;
         Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
         if (cursor.getCount() < 1)
@@ -156,7 +178,7 @@ public class ClosingReportDBAdapter {
         cursor.moveToFirst();
         c = makeCReport(cursor);
        // cursor.close();
-
+close();
         return c;
     }
     private ClosingReport makeCReport(Cursor cursor) {
@@ -186,7 +208,9 @@ public class ClosingReportDBAdapter {
     public List<ClosingReport> getClosingReportByOpiningID(long opiningId) {
         List<ClosingReport> closingReportList = new ArrayList<ClosingReport>();
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
             Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_TABLE_NAME +" where "+CLOSING_REPORT_COLUMN_OPINING_REPORT_ID+">="+opiningId, null);

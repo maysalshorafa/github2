@@ -66,6 +66,11 @@ public class CategoryDBAdapter {
 
 
     public long insertEntry(String name, long byUser,int branchId) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Category department = new Category(Util.idHealth(this.db, CATEGORY_TABLE_NAME, CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), byUser, false,branchId);
         Category boDepartment = department;
         boDepartment.setName(Util.getString(boDepartment.getName()));
@@ -73,6 +78,7 @@ public class CategoryDBAdapter {
         sendToBroker(MessageType.ADD_CATEGORY, boDepartment, this.context);
 
         try {
+
             return insertEntry(department);
         } catch (SQLException ex) {
             Log.e("DepartmentDB insert", "inserting Entry at " + CATEGORY_TABLE_NAME + ": " + ex.getMessage());
@@ -98,6 +104,11 @@ public class CategoryDBAdapter {
         return department.getName();
     }
     public long insertEntry(Category department) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -108,7 +119,6 @@ public class CategoryDBAdapter {
         val.put(CATEGORY_COLUMN_CREATINGDATE, String.valueOf(department.getCreatedAt()));
         val.put(CATEGORY_COLUMN_BRANCH_ID,department.getBranchId());
         try {
-
             return db.insert(CATEGORY_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("DepartmentDB insert", "inserting Entry at " + CATEGORY_TABLE_NAME + ": " + ex.getMessage());
@@ -118,6 +128,11 @@ public class CategoryDBAdapter {
     }
 
     public Category getDepartmentByID(long id) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Category department = null;
         Cursor cursor = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
@@ -132,11 +147,16 @@ public class CategoryDBAdapter {
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_DISENABLED))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BRANCH_ID))));
         cursor.close();
-
+            close();
         return department;
     }
 
     public int deleteEntry(long id) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         CategoryDBAdapter departmentDBAdapter=new CategoryDBAdapter(context);
         departmentDBAdapter.open();
         // Define the updated row content.
@@ -149,6 +169,7 @@ public class CategoryDBAdapter {
             db.update(CATEGORY_TABLE_NAME, updatedValues, where, new String[]{id + ""});
             Category department = departmentDBAdapter.getDepartmentByID(id);
             sendToBroker(MessageType.DELETE_CATEGORY, department, this.context);
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Category DB delete", "enable hide Entry at " + CATEGORY_TABLE_NAME + ": " + ex.getMessage());
@@ -156,6 +177,11 @@ public class CategoryDBAdapter {
         }
     }
     public long deleteEntryBo(Category department) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -164,6 +190,7 @@ public class CategoryDBAdapter {
         String where = CATEGORY_COLUMN_ID + " = ?";
         try {
             db.update(CATEGORY_TABLE_NAME, updatedValues, where, new String[]{department.getCategoryId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Category DB delete", "enable hide Entry at " + CATEGORY_TABLE_NAME + ": " + ex.getMessage());
@@ -172,6 +199,11 @@ public class CategoryDBAdapter {
     }
 
     public long updateEntryBo(Category department) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         CategoryDBAdapter departmentDBAdapter = new CategoryDBAdapter(context);
         departmentDBAdapter.open();
         ContentValues val = new ContentValues();
@@ -187,6 +219,7 @@ public class CategoryDBAdapter {
             Category d=departmentDBAdapter.getDepartmentByID(department.getCategoryId());
             Log.d("Update object",d.toString());
             departmentDBAdapter.close();
+            close();
             return 1;
         } catch (SQLException ex) {
             return 0;
@@ -194,6 +227,11 @@ public class CategoryDBAdapter {
     }
 
     public void updateEntry(Category department) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         CategoryDBAdapter departmentDBAdapter = new CategoryDBAdapter(context);
         departmentDBAdapter.open();
         ContentValues val = new ContentValues();
@@ -209,13 +247,16 @@ public class CategoryDBAdapter {
         Log.d("Update object",d.toString());
         sendToBroker(MessageType.UPDATE_CATEGORY, d, this.context);
         departmentDBAdapter.close();
+        close();
     }
 
     public List<Category> getAllDepartments() {
         List<Category> departmentList = new ArrayList<Category>();
 
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
         Cursor cursor=null;
@@ -256,7 +297,9 @@ public class CategoryDBAdapter {
     public List<Category> getAllDepartmentByHint(String hint) {
         List<Category> departmentList = new ArrayList<Category>();
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
 
@@ -299,6 +342,11 @@ public class CategoryDBAdapter {
         }
     }
     public boolean availableDepartmentName(String departmentName) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Cursor cursor = db.query(CATEGORY_TABLE_NAME, null, CATEGORY_COLUMN_NAME + "=?", new String[]{departmentName}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
@@ -306,6 +354,7 @@ public class CategoryDBAdapter {
             return false;
         }
         // Category Name available
+        close();
         return true;
     }
     public static String addColumnInteger(String columnName) {

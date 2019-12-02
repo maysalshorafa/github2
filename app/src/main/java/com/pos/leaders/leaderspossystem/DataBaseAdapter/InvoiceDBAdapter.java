@@ -55,8 +55,14 @@ public class InvoiceDBAdapter {
 
 
     public long insertEntry(String invoiceId,long customerID) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Invoice invoice = new Invoice(Util.idHealth(this.db, INVOICE_TABLE_NAME, INVOICE_COLUMN_NAME), invoiceId,customerID);
         try {
+            close();
             return insertEntry(invoice);
         } catch (SQLException ex) {
             Log.e("Invoice insert", "inserting Entry at " + INVOICE_TABLE_NAME + ": " + ex.getMessage());
@@ -65,6 +71,11 @@ public class InvoiceDBAdapter {
     }
 
     public long insertEntry(Invoice invoice) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 

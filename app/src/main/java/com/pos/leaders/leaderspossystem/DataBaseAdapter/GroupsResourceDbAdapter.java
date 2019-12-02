@@ -55,8 +55,14 @@ public class GroupsResourceDbAdapter {
     }
 
     public long insertEntry(String productSku,long offerGroupId) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         GroupsResources groupsProducts = new GroupsResources(Util.idHealth(this.db, GROUPS_RESOURCES_TABLE_NAME, GROUPS_RESOURCES_COLUMN_ID),productSku, offerGroupId);
         try {
+            close();
             return insertEntry(groupsProducts);
         } catch (SQLException ex) {
             Log.e("groupsResources insert", "inserting Entry at " + GROUPS_RESOURCES_TABLE_NAME + ": " + ex.getMessage());
@@ -65,6 +71,11 @@ public class GroupsResourceDbAdapter {
     }
 
     public long insertEntry(GroupsResources groupsProducts) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
 
         val.put(GROUPS_RESOURCES_COLUMN_ID, groupsProducts.getId());
@@ -105,7 +116,9 @@ public class GroupsResourceDbAdapter {
     public List<Long> getGroupsIdByProductSku(String productSku){
         List<Long> groups = null;
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
         Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productSku + "';", null);
@@ -119,6 +132,7 @@ public class GroupsResourceDbAdapter {
             }
         }
         cursor.close();
+            close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }
@@ -127,7 +141,9 @@ public class GroupsResourceDbAdapter {
     public List<Long> getGroupsIdByProductCategory(long productCategory){
         List<Long> groups = null;
         try {
-            if(dbHelper==null) {
+            if(db.isOpen()){
+
+            }else {
                 open();
             }
         Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productCategory + "';", null);
@@ -144,6 +160,7 @@ public class GroupsResourceDbAdapter {
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }
+        close();
         return groups;
     }
 

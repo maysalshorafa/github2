@@ -79,6 +79,11 @@ public class ClubAdapter {
     }
 
     public long insertEntry( String name,String description, int type, float parcent, int amount, int point,int branchId) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         Club group = new Club(Util.idHealth(this.db, Group_TABLE_NAME, Group_COLUMN__ID), name, description, type, parcent, amount, point, false,branchId );
         Club boClub=group;
         boClub.setName(Util.getString(boClub.getName()));
@@ -87,6 +92,7 @@ public class ClubAdapter {
 
         try {
             long insertResult = insertEntry(group);
+            close();
             return insertResult;
         } catch (SQLException ex) {
             Log.e("Club insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
@@ -95,6 +101,11 @@ public class ClubAdapter {
     }
 
     public long insertEntry(Club group) {
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Group_COLUMN__ID, group.getClubId());
@@ -115,6 +126,11 @@ public class ClubAdapter {
     }
 
     public int updateEntry(Club club){
+        if(db.isOpen()){
+
+        }else {
+            open();
+        }
         ClubAdapter clubAdapter =new ClubAdapter(context);
         clubAdapter.open();
         ContentValues val = new ContentValues();
@@ -134,6 +150,7 @@ public class ClubAdapter {
             Log.d("UpDate Object",c.toString());
             sendToBroker(MessageType.UPDATE_CLUB, c, this.context);
             clubAdapter.close();
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Club insertEntry", "inserting Entry at " + Group_TABLE_NAME + ": " + ex.getMessage());
