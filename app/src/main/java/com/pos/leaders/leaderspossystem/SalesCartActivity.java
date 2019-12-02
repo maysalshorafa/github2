@@ -71,7 +71,6 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
@@ -338,7 +337,6 @@ public class SalesCartActivity extends AppCompatActivity {
     List<Offer>validOffer = new ArrayList<>();
     CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
     ProductInventoryDbAdapter productInventoryDbAdapter;
-    InventoryDbAdapter inventoryDbAdapter;
     public static ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
     Bitmap newBitmap =null;
     boolean isWithSerialNo=false;
@@ -478,8 +476,6 @@ public class SalesCartActivity extends AppCompatActivity {
         tvTotalPriceBeforeCartDiscount = (TextView) findViewById(R.id.saleCart_tvTotalPriceBeforeCartDiscount);
         productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
         productInventoryDbAdapter.open();
-        inventoryDbAdapter =new InventoryDbAdapter(SalesCartActivity.this);
-        inventoryDbAdapter.open();
         //fragmentTouchPad = (FrameLayout) findViewById(R.id.mainActivity_fragmentTochPad);
 
         //region  Init cash drawer

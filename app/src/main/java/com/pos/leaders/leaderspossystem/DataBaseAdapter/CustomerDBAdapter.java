@@ -323,6 +323,7 @@ public class CustomerDBAdapter {
                 customerList.add(makeCustomer(cursor));
                 cursor.moveToNext();
             }
+        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -356,6 +357,10 @@ public class CustomerDBAdapter {
 
     public List<Customer> getAllCustomer() {
         List<Customer> customerMs = new ArrayList<Customer>();
+        try {
+            if (dbHelper == null) {
+                open();
+            }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery( "select * from "+CUSTOMER_TABLE_NAME+ " where " + CUSTOMER_COLUMN_DISENABLED +" = 0 order by id desc", null );
@@ -383,12 +388,20 @@ public class CustomerDBAdapter {
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()), cursor.getString(cursor.getColumnIndex(CUSTOMER_CODE)), cursor.getString(cursor.getColumnIndex(CUSTOMER_IDENTITY)),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_BRANCH_ID)))));
             cursor.moveToNext();
+        }  close();
+        } catch (Exception e) {
+            Log.d("exception",e.toString());
+
         }
         return customerMs;
     }
 
     public List<Customer> getAllCustomerInClub(long id) {
         List<Customer> customerMs = new ArrayList<Customer>();
+        try {
+            if (dbHelper == null) {
+                open();
+            }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
             cursor =  db.rawQuery( "select * from "+CUSTOMER_TABLE_NAME+ " where "+ CUSTOMER_COLUMN_CLUB +"=" +id  +" and "  + CUSTOMER_COLUMN_DISENABLED +" = 0 order by id desc", null );
@@ -416,6 +429,11 @@ public class CustomerDBAdapter {
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()), cursor.getString(cursor.getColumnIndex(CUSTOMER_CODE)), cursor.getString(cursor.getColumnIndex(CUSTOMER_IDENTITY)),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_BRANCH_ID)))));
             cursor.moveToNext();
+        }
+        close();
+        } catch (Exception e) {
+            Log.d("exception",e.toString());
+
         }
         return customerMs;
     }
@@ -493,6 +511,10 @@ public class CustomerDBAdapter {
     }
     public List<Customer> getAllNormalCustomer() {
         List<Customer> customerMs = new ArrayList<Customer>();
+        try {
+            if (dbHelper == null) {
+                open();
+            }
         Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_COLUMN_DISENABLED + "=0"+" and " + CUSTOMER_COLUMN_TYPE + " = '"+ CustomerType.CREDIT.getValue()+"' order by id desc", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -514,6 +536,11 @@ public class CustomerDBAdapter {
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_BALANCE))),CustomerType.valueOf(cursor.getString(cursor.getColumnIndex(CUSTOMER_COLUMN_TYPE)).toUpperCase()), cursor.getString(cursor.getColumnIndex(CUSTOMER_CODE)), cursor.getString(cursor.getColumnIndex(CUSTOMER_IDENTITY)),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(CUSTOMER_BRANCH_ID)))));
             cursor.moveToNext();
+        }
+            close();
+        } catch (Exception e) {
+            Log.d("exception",e.toString());
+
         }
         return customerMs;
     }

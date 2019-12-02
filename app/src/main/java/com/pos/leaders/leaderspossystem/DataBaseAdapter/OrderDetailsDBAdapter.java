@@ -186,6 +186,8 @@ public class OrderDetailsDBAdapter {
 			cursor.moveToNext();
 		}
         close();
+
+
         } catch (Exception e) {
 			Log.d("exception",e.toString());
 
@@ -200,6 +202,10 @@ public class OrderDetailsDBAdapter {
 			open();
 		}
 		List<OrderDetails> saleOrderList=new ArrayList<OrderDetails>();
+		try {
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ORDER_ID +"="+saleID+ " and product_id = "+productId, null );
 		cursor.moveToFirst();
 
@@ -208,6 +214,12 @@ public class OrderDetailsDBAdapter {
 			cursor.moveToNext();
 		}
 		close();
+
+		} catch (Exception e) {
+			Log.d("exception",e.toString());
+
+		}
+
 		return saleOrderList;
 	}
 	public OrderDetails getOrderDetailsByID(long saleID){
@@ -254,6 +266,10 @@ public class OrderDetailsDBAdapter {
 		}
 		OrderDetails orderDetails=new OrderDetails();
       List<Long> orderId =new ArrayList<>();
+		try {
+			if(dbHelper==null) {
+				open();
+			}
 		Cursor cursor =  db.rawQuery( "select "+ORDER_DETAILS_COLUMN_ORDER_ID+" from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILES_COLUMN_PRODUCTID +"="+product, null );
 		if (cursor.getCount() < 1) // UserName Not Exist
 		{
@@ -268,8 +284,15 @@ public class OrderDetailsDBAdapter {
 			Log.d("Ddddd", String.valueOf(cursor.getLong(0)));
 		}
 		cursor.close();
+
 		close();
 
+			close();
+		} catch (Exception e) {
+			Log.d("exception",e.toString());
+
+
+		}
 		return orderId;
 	}
 	public List<Long> getOrderDetailsByListIDproduct(List<Long> product){
@@ -281,6 +304,10 @@ public class OrderDetailsDBAdapter {
 		}
 		OrderDetails orderDetails=new OrderDetails();
 		List<Long> orderId =new ArrayList<>();
+		try {
+			if(dbHelper==null) {
+				open();
+			}
 		for (int i=0; i<product.size();i++) {
 			Cursor cursor = db.rawQuery("select " + ORDER_DETAILS_COLUMN_ORDER_ID + " from " + ORDER_DETAILS_TABLE_NAME + " where " + ORDER_DETAILES_COLUMN_PRODUCTID + "=" + product.get(i), null);
 			if (cursor.getCount() < 1) // UserName Not Exist
@@ -295,6 +322,11 @@ public class OrderDetailsDBAdapter {
 			}
 			cursor.close();
 			close();
+		}
+			close();
+		} catch (Exception e) {
+			Log.d("exception",e.toString());
+
 		}
 		return orderId;
 	}

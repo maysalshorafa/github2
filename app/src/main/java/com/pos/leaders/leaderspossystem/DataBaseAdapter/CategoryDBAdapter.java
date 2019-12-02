@@ -235,6 +235,7 @@ public class CategoryDBAdapter {
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_BRANCH_ID)))));
             cursor.moveToNext();
         }
+        close();
         }
         catch (Exception e) {
             Log.d("exception",e.toString());
@@ -268,6 +269,7 @@ public class CategoryDBAdapter {
             departmentList.add(makeDepartment(cursor));
             cursor.moveToNext();
         }
+        close();
         }
         catch (Exception e) {
             Log.d("exception",e.toString());

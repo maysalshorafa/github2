@@ -167,7 +167,7 @@ public class CreditCardPaymentDBAdapter {
             orderPaymentList.add(make(cursor));
             cursor.moveToNext();
         }
-
+close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 

@@ -94,6 +94,7 @@ public class EmployeePermissionsDBAdapter {
 			permissions.add(cursor1.getInt(cursor1.getColumnIndex(USERPERMISSIONS_COLUMN_PERMISSIONSID)));
 			cursor1.moveToNext();
 		}
+		close();
 		} catch (Exception e) {
 			Log.d("exxx",e.toString());
 		}
@@ -120,6 +121,7 @@ public class EmployeePermissionsDBAdapter {
             salesManId.add( userPermissions.getEmployeeId());
             cursor1.moveToNext();
         }
+        close();
 		} catch (Exception e) {
 			Log.d("exxx",e.toString());
 		}

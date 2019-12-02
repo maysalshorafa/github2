@@ -216,6 +216,7 @@ public class DrawerDepositAndPullReportDbAdapter {
             depositAndPullReportList.add(makeDepositAndPullReport(cursor));
             cursor.moveToNext();
         }
+        close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }

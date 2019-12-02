@@ -188,6 +188,7 @@ public class OpiningReportDBAdapter {
             aReports.add(makeAReport(cursor));
             cursor.moveToNext();
         }
+
         close();
 
     } catch (Exception e) {
