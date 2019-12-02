@@ -74,10 +74,17 @@ public class PosSettingDbAdapter {
         return db;
     }
     public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType, String posVersionNo, String posDbVersionNo, int branchId){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,posVersionNo,posDbVersionNo,branchId);
         sendToBroker(MessageType.ADD_POS_SETTING, posSetting, this.context);
 
         try {
+            close();
             return insertEntry(posSetting);
         } catch (SQLException ex) {
             Log.e("PosSettingDB insert", "inserting Entry at " + POS_SETTING_TABLE_NAME + ": " + ex.getMessage());
@@ -85,6 +92,12 @@ public class PosSettingDbAdapter {
         }
     }
     public long insertEntry(PosSetting posSetting) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -109,6 +122,12 @@ public class PosSettingDbAdapter {
 
     }
     public long updateEntryBo(PosSetting posSetting) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(POS_SETTING_COLUMN_ENABLE_CURRENCY, posSetting.isEnableCurrency() ? 1 : 0);
@@ -174,6 +193,7 @@ public class PosSettingDbAdapter {
         try {
             String where = POS_SETTING_COLUMN_ID + " = ?";
             db.update(POS_SETTING_TABLE_NAME, val, where, new String[]{posSetting.getPosSettingId() + ""});
+            close();
             return 1;
         } catch (SQLException ex) {
             return 0;
@@ -181,6 +201,12 @@ public class PosSettingDbAdapter {
     }
 
     public void updateEntry(PosSetting posSetting) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
         posSettingDbAdapter.open();
@@ -201,14 +227,22 @@ public class PosSettingDbAdapter {
         Log.d("Update object",d.toString());
         sendToBroker(MessageType.UPDATE_CATEGORY, d, this.context);
         posSettingDbAdapter.close();
+        close();
     }
 
     public PosSetting getPosSettingByID(long id) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         PosSetting posSetting = null;
         Cursor cursor = db.rawQuery("select * from " + POS_SETTING_TABLE_NAME + " where id='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
+            close();
             return posSetting;
         }
         cursor.moveToFirst();
@@ -220,7 +254,7 @@ public class PosSettingDbAdapter {
                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_PRINTER_TYPE)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_VERSION_NO)),
                         cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_DB_VERSION_NO)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_BRANCH_ID))));
         cursor.close();
-
+  close();
         return posSetting;
     }
 

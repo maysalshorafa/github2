@@ -98,9 +98,16 @@ public class XReportDBAdapter {
         return db;
     }
     public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double totalSales, double totalCashAmount , double totalCheckAmount , double totalCreditAmount, double totalPosSalesAmount, double amountWithTax, double invoiceAmount , double creditInvoiceAmount, double shekelAmount, double usdAmount , double eurAmount , double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,double salesBeforeTax,double salesWithTax,double totalTax){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         XReport xReport = new XReport(Util.idHealth(this.db, X_REPORT_TABLE_NAME, X_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,totalSales,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,pullReportAmount,depositReportAmount,salesBeforeTax,salesWithTax,totalTax);
         sendToBroker(MessageType.ADD_X_REPORT, xReport, this.context);
         try {
+            close();
             return insertEntry(xReport);
         } catch (SQLException ex) {
             Log.e(X_REPORT_TABLE_NAME +" DB insert", "inserting Entry at " + X_REPORT_TABLE_NAME + ": " + ex.getMessage());
@@ -109,6 +116,12 @@ public class XReportDBAdapter {
     }
 
     public long insertEntry(XReport xReport) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(X_REPORT_COLUMN_ID, xReport.getxReportId());
@@ -143,21 +156,34 @@ public class XReportDBAdapter {
     }
 
     public XReport getByID(long id) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         XReport xReport = null;
         Cursor cursor = db.rawQuery("select * from " + X_REPORT_TABLE_NAME + " where "+ X_REPORT_COLUMN_ID +"='" + id + "'", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
+            close();
             return xReport;
         }
         cursor.moveToFirst();
         xReport = makeXReport(cursor);
         cursor.close();
-
+       close();
         return xReport;
     }
 
     public List<XReport> getAll() {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         List<XReport> xReports = new ArrayList<XReport>();
 
         Cursor cursor = db.rawQuery("select * from " + X_REPORT_TABLE_NAME, null);
@@ -167,12 +193,18 @@ public class XReportDBAdapter {
             xReports.add(makeXReport(cursor));
             cursor.moveToNext();
         }
-
+       close();
         return xReports;
     }
 
 
     public List<XReport> getBetween(Date fromDate, Date toDate){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         List<XReport> xReports = new ArrayList<XReport>();
 
         Cursor cursor = db.rawQuery("select * from " + X_REPORT_TABLE_NAME + " where "+ X_REPORT_COLUMN_CREATEDATE +"<='"+toDate.getTime()+"' and "+ X_REPORT_COLUMN_CREATEDATE +
@@ -183,11 +215,17 @@ public class XReportDBAdapter {
             xReports.add(makeXReport(cursor));
             cursor.moveToNext();
         }
-
+        close();
         return xReports;
     }
 
     public XReport getLastRow() throws Exception {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         XReport xReport = null;
         Cursor cursor = db.rawQuery("select * from " + X_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
@@ -198,7 +236,7 @@ public class XReportDBAdapter {
         cursor.moveToFirst();
         xReport = makeXReport(cursor);
         cursor.close();
-
+        close();
         return xReport;
     }
     private XReport makeXReport(Cursor c){
@@ -221,7 +259,14 @@ public class XReportDBAdapter {
         , c.getDouble(c.getColumnIndex(X_REPORT_COLUMN_TOTAL_TAX_REPORT)));
     }
 
+
     public List<Payment> paymentList(List<Order> sales) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         List<Payment> pl = new ArrayList<Payment>();
         PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
         paymentDBAdapter.open();
@@ -230,9 +275,16 @@ public class XReportDBAdapter {
             pl.addAll(payments);
         }
         paymentDBAdapter.close();
+        close();
         return pl;
     }
     public List<XReport> calculateXReportAmount(){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         List<XReport> xReportList = new ArrayList<XReport>();
         Cursor cursor = db.rawQuery("select * from "+ X_REPORT_TABLE_NAME,null);
         cursor.moveToFirst();
@@ -240,11 +292,17 @@ public class XReportDBAdapter {
             xReportList.add(makeXReport(cursor));
             cursor.moveToNext();
         }
-
+         close();
         return xReportList;
     }
 
     public void updateEntry(XReport xReport) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(X_REPORT_COLUMN_TOTAL_SALES_AMOUNT, xReport.getTotalSales());
@@ -253,8 +311,15 @@ public class XReportDBAdapter {
 
         String where = X_REPORT_COLUMN_ID + " = ?";
         db.update(X_REPORT_TABLE_NAME, val, where, new String[]{xReport.getxReportId() + ""});
+        close();
     }
     public List<XReport> getBetweenTwoDates(long from, long to){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         List<XReport> xReportList = new ArrayList<XReport>();
 
         Cursor cursor = db.rawQuery("select * from " + X_REPORT_TABLE_NAME + " where " + X_REPORT_COLUMN_CREATEDATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
@@ -264,14 +329,22 @@ public class XReportDBAdapter {
             xReportList.add(makeXReport(cursor));
             cursor.moveToNext();
         }
+        close();
         return xReportList;
     }
 
     public int getProfilesCount() {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         String countQuery = "SELECT  * FROM " + X_REPORT_TABLE_NAME;
         Cursor cursor = db.rawQuery(countQuery, null);
         int count = cursor.getCount();
         cursor.close();
+        close();
         return count;
     }
     public double getXReportAmount( long from, long to) {

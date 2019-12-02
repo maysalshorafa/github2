@@ -57,6 +57,12 @@ public class ProductOfferDBAdapter {
 
 
 	public int insertEntry(long productId, int offerId) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
 
@@ -73,16 +79,24 @@ public class ProductOfferDBAdapter {
 	}
 
 	public int insertEntry(List<Product> products, int offerId) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		int count = 0, i;
 		for (Product product : products) {
 			i = insertEntry(product.getProductId(), offerId);
 			if (i > 0) {
 				count++;
 			} else {
+				close();
 				// fail to add this item
 				return count;
 			}
 		}
+		close();
 		// number of all inserted item
 		return count + 1;
 	}
@@ -162,10 +176,22 @@ public class ProductOfferDBAdapter {
     }
 
 	public boolean deleteEntry(int id) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		return db.delete(PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID + "=?", new String[]{id + ""}) > 0;
 	}
 
 	public boolean deleteEntry(long productId,int offerId) {
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		return db.delete(PRODUCTOFFER_TABLE_NAME , PRODUCTOFFER_COLUMN_PRODUCTID + "=? and " + PRODUCTOFFER_COLUMN_OFFERID + "=? ", new String[]{productId + "", offerId + ""}) > 0;
 	}
 }

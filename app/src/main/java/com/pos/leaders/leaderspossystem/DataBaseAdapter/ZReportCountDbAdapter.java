@@ -67,6 +67,12 @@ public class ZReportCountDbAdapter {
     }
 
     public long insertEntry(ZReportCount zReport) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Z_REPORT_COUNT_COLUMN_ID, Util.idHealth(this.db, Z_REPORT_COUNT_TABLE_NAME, Z_REPORT_COUNT_COLUMN_ID));
@@ -93,17 +99,24 @@ public class ZReportCountDbAdapter {
     }
 
     public ZReportCount getByID(long id) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ZReportCount zReport = null;
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_COUNT_TABLE_NAME + " where "+Z_REPORT_COUNT_COLUMN_ZREPORT_ID+"='" + id + "'", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
+            close();
             return zReport;
         }
         cursor.moveToFirst();
         zReport = makeZReport(cursor);
         cursor.close();
-
+         close();
         return zReport;
     }
     private ZReportCount makeZReport(Cursor c){
@@ -119,6 +132,12 @@ public class ZReportCountDbAdapter {
                 ,c.getLong(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_ZREPORT_ID)));
     }
     public void updateEntry(ZReportCount zReport) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         val.put(Z_REPORT_COUNT_COLUMN_CASH,zReport.getCashCount());
         val.put(Z_REPORTCOUNT_COLUMN_CHECK,zReport.getCheckCount());
@@ -134,8 +153,15 @@ public class ZReportCountDbAdapter {
 
         String where = Z_REPORT_COUNT_COLUMN_ID + " = ?";
         db.update(Z_REPORT_COUNT_TABLE_NAME, val, where, new String[]{zReport.getzReportCountId() + ""});
+        close();
     }
     public ZReportCount getLastRow() throws Exception {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ZReportCount zReport = null;
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_COUNT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
@@ -146,7 +172,7 @@ public class ZReportCountDbAdapter {
         cursor.moveToFirst();
         zReport = makeZReport(cursor);
         cursor.close();
-
+       close();
         return zReport;
     }
 }
