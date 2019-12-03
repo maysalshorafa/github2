@@ -83,6 +83,12 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(OpiningReportDetails aReportDetails) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
 
         val.put(OPINING_REPORT_DETAILS_COLUMN_ID, aReportDetails.getOpiningReportDetailsId());

@@ -4691,10 +4691,13 @@ public class SalesCartActivity extends AppCompatActivity {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         PaymentTable paymentTable= objectMapper.readValue(jsonObject.toString(), PaymentTable.class);
                         paymentTableArrayList.add(paymentTable);
-                        TotalPaidAmount += jsonObject.getDouble("tendered") * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
+                        if( jsonObject.getDouble("tendered") >0) {
+                            TotalPaidAmount += jsonObject.getDouble("tendered") * getCurrencyRate(jsonObject.getJSONObject("currency").getString("type"));
+                        }
                         change = Math.abs(jsonObject.getDouble("due"));
 
                     }
+
                     double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
                     for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
 
@@ -4801,7 +4804,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     zReportCountDbAdapter.updateEntry(zReportCount);
                     cashPaymentDBAdapter.close();
                     // Club with point and amount
-                    if (clubType == 2) {
+                  /*  if (clubType == 2) {
                         pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
                         sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
                     }
@@ -4825,7 +4828,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                         saleDBAdapter.updateEntry(SESSION._ORDERS);
                         usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
-                    }
+                    }*/
                     if (forSaleMan) {
                         custmerAssetDB.insertEntry(saleIDforCash, custmerSaleAssetstId, SESSION._ORDERS.getTotalPrice(), 0, "ORDER", SESSION._ORDERS.getCreatedAt());
                     }
@@ -4911,6 +4914,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     clearCart();
                     return;
                 } catch (Exception e) {
+                    e.printStackTrace();
 
                 }
             }

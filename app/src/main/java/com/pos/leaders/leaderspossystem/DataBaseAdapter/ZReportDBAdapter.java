@@ -99,7 +99,12 @@ public class ZReportDBAdapter {
     }
     public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double totalSales,double totalCashAmount , double totalCheckAmount , double totalCreditAmount,double totalPosSalesAmount,double amountWithTax,double invoiceAmount , double creditInvoiceAmount, double shekelAmount, double usdAmount , double eurAmount ,double gbpAmount,double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax,double totalTaxReport){
         ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,totalSales,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,pullReportAmount,depositReportAmount,closeOpenReport,salesBeforeTax,salesWithTax,totalTaxReport);
+        if (db.isOpen()){
 
+        }
+        else {
+            open();
+        }
         try {
             return insertEntry(zReport);
         } catch (SQLException ex) {
@@ -263,6 +268,12 @@ public class ZReportDBAdapter {
                     c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TOTAL_TAX_REPORT)));
     }
     public double getZReportAmount( long from, long to) {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         double amount =0 , amountPlus =0 , amountMinus =0;
         OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
         saleDBAdapter.open();
@@ -279,7 +290,7 @@ public class ZReportDBAdapter {
             }
         }
         amount = amountPlus+amountMinus;
-
+close();
         return amount;
     }
     public List<Payment> paymentList(List<Order> sales) {

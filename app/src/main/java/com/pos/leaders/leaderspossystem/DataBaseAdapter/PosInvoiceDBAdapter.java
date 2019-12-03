@@ -186,7 +186,14 @@ public class PosInvoiceDBAdapter {
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)),
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_PAYMENT_METHOD)));
     }
-    public void updateEntry(PosInvoice invoice) {
+    public void updateEntry(PosInvoice invoice)
+    {
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(POS_INVOICE_COLUMN_ID, invoice.getId());
@@ -198,6 +205,7 @@ public class PosInvoiceDBAdapter {
         val.put(POS_INVOICE_COLUMN_PAYMENT_METHOD,invoice.getPaymentMethod());
         String where = POS_INVOICE_COLUMN_ID + " = ?";
         db.update(POS_INVOICE_TABLE_NAME, val, where, new String[]{invoice.getId() + ""});
+        close();
     }
     public PosInvoice getPodInvoiceByBoId(String id) {
         if (db.isOpen()){

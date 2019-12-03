@@ -228,6 +228,12 @@ public class OpiningReportDBAdapter {
                 c.getLong(c.getColumnIndex(OPINING_REPORT_COLUMN_LASTZREPORTID)));
     }
     public OpiningReport getById(long id){
+        if (db.isOpen()){
+
+        }
+        else {
+            open();
+        }
         OpiningReport aReport;
         Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_ID + "='" + (id ) + "'", null);
         if (cursor.getCount() < 1) {
@@ -237,6 +243,7 @@ public class OpiningReportDBAdapter {
         }
         cursor.moveToFirst();
         aReport = makeAReport(cursor);
+        close();
         return aReport;
     }
 }

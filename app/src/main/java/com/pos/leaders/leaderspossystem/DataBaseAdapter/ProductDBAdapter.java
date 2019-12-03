@@ -205,6 +205,11 @@ public class ProductDBAdapter {
 
         }
         try {
+            if(db.isOpen()){
+
+            }else {
+                open();
+            }
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("ProductDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
