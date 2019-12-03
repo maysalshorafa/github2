@@ -57,11 +57,15 @@ public class ProductOfferDBAdapter {
 
 
 	public int insertEntry(long productId, int offerId) {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
@@ -79,11 +83,15 @@ public class ProductOfferDBAdapter {
 	}
 
 	public int insertEntry(List<Product> products, int offerId) {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		int count = 0, i;
 		for (Product product : products) {
@@ -176,21 +184,29 @@ public class ProductOfferDBAdapter {
     }
 
 	public boolean deleteEntry(int id) {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		return db.delete(PRODUCTOFFER_TABLE_NAME, PRODUCTOFFER_COLUMN_ID + "=?", new String[]{id + ""}) > 0;
 	}
 
 	public boolean deleteEntry(long productId,int offerId) {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		return db.delete(PRODUCTOFFER_TABLE_NAME , PRODUCTOFFER_COLUMN_PRODUCTID + "=? and " + PRODUCTOFFER_COLUMN_OFFERID + "=? ", new String[]{productId + "", offerId + ""}) > 0;
 	}

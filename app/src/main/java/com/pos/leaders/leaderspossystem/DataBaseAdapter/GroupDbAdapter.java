@@ -48,7 +48,12 @@ public class GroupDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Group group = new Group(Util.idHealth(this.db, GROUP_TABLE_NAME, GROUP_COLUMN_ID),name);
 close();
@@ -59,7 +64,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Group group = new Group(Id, name);
 close();
@@ -70,7 +80,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -78,7 +93,6 @@ close();
         val.put(GROUP_COLUMN_ID, group.getId());
         val.put(GROUP_COLUMN_NAME, group.getName());
         try {
-
             return db.insert(GROUP_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("Groups insert", "inserting Entry at " + GROUP_TABLE_NAME + ": " + ex.getMessage());

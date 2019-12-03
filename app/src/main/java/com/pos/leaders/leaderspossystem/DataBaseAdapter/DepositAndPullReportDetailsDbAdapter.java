@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -62,7 +63,12 @@ public class DepositAndPullReportDetailsDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         DepositAndPullDetailsReport depositAndPullReport = new DepositAndPullDetailsReport(Util.idHealth(this.db,DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME, DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_ID), depositAndPullId, amount,currencyType);
         sendToBroker(MessageType.ADD_DEPOSIT_AND_PULL_DETAILS_REPORT, depositAndPullReport, this.context);
@@ -75,7 +81,12 @@ public class DepositAndPullReportDetailsDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
 
@@ -104,15 +115,18 @@ public class DepositAndPullReportDetailsDbAdapter {
         return depositAndPullDetailsReport;
     }
     public List<DepositAndPullDetailsReport> getListDepositAndPullReportReport(long aReportId){
-        if(db.isOpen()){
 
-        }else {
-            open();
-        }
         List<DepositAndPullDetailsReport> depositAndPullReportDetailsList =new ArrayList<DepositAndPullDetailsReport>();
         try {
-            if(dbHelper==null) {
-                open();
+            if(db.isOpen()){
+
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor =  db.rawQuery( "select * from "+DEPOSIT_AND_PULL_DETAILS_REPORT_TABLE_NAME +" where "+ DEPOSIT_AND_PULL_DETAILS_REPORT_COLUMN_DEPOSIT_AND_PULL_ID +" = "+aReportId, null );
         cursor.moveToFirst();

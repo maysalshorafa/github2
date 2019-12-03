@@ -64,11 +64,15 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(long a_report_id, double amount, long type, double amount_in_basic_currency) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         OpiningReportDetails aReportDetails = new OpiningReportDetails(Util.idHealth(this.db,OPINING_REPORT_DETAILS_TABLE_NAME, OPINING_REPORT_DETAILS_COLUMN_ID), a_report_id, amount, type, amount_in_basic_currency);
         sendToBroker(MessageType.ADD_OPINING_REPORT_DETAILS, aReportDetails, this.context);
@@ -83,11 +87,16 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(OpiningReportDetails aReportDetails) {
-        if (db.isOpen()){
 
-        }
-        else {
-            open();
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
 
@@ -106,11 +115,15 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public Double getLastRow(int type,long aReportId) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         OpiningReportDetails aReportDetails = null;
         Cursor cursor = db.rawQuery("SELECT * from " + OPINING_REPORT_DETAILS_TABLE_NAME + "  where "+ OPINING_REPORT_DETAILS_COLUMN_TYPE +"=" + type +" and " + OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID +" = " + aReportId , null);

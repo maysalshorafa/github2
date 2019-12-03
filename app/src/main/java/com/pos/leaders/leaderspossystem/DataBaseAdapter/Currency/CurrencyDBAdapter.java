@@ -74,7 +74,12 @@ public class CurrencyDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Currency currency = new Currency(Util.idHealth(this.db, CURRENCY_TABLE_NAME, CURRENCY_COLUMN_ID), name, currency_code, country,rate,createDate);
         sendToBroker(MessageType.ADD_CURRENCY, currency, this.context);
@@ -94,14 +99,17 @@ public class CurrencyDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
         val.put(CURRENCY_COLUMN_ID, currency.getId());
-
-
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode() );
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
@@ -120,7 +128,12 @@ public class CurrencyDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
@@ -142,7 +155,12 @@ public class CurrencyDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -150,7 +168,6 @@ public class CurrencyDBAdapter {
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode());
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());
-
         String where = CURRENCY_COLUMN_ID + " = ?";
         db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
         close();
@@ -163,7 +180,12 @@ public class CurrencyDBAdapter {
 
             }
             else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor=null;
         String name="";
@@ -193,16 +215,19 @@ public class CurrencyDBAdapter {
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
     }
     public Currency getLastCurrency(){
-        if (db.isOpen()){
 
-        }
-        else {
-            open();
-        }
         Currency currency = new Currency();
         try {
-            if(dbHelper==null) {
-                open();
+
+            if (db.isOpen()){
+            }
+            else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor=null;
             cursor = db.rawQuery("SELECT * FROM "+CURRENCY_TABLE_NAME+" ORDER BY id DESC LIMIT 1", null);
@@ -227,7 +252,12 @@ public class CurrencyDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         String name="";
         for (int i=0;i<currency.size();i++) {
@@ -242,7 +272,12 @@ public class CurrencyDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Currency currency = null;
         Cursor cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME + " where currency_code='" + code + "'", null);

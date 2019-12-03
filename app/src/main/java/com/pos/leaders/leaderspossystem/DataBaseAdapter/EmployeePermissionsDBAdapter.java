@@ -54,7 +54,12 @@ public class EmployeePermissionsDBAdapter {
 			if(db.isOpen()){
 
 			}else {
-				open();
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
 			EmployeesPermissions userPermissions = new EmployeesPermissions(Util.idHealth(this.db, USERPERMISSIONS_TABLE_NAME, USERPERMISSIONS_COLUMN_ID),userId,permissionsId);
 			sendToBroker(MessageType.ADD_EMPLOYEE_PERMISSION, userPermissions, this.context);
@@ -72,7 +77,12 @@ public class EmployeePermissionsDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		ContentValues val = new ContentValues();
 		val.put(USERPERMISSIONS_COLUMN_ID,userPermissions.getEmployeePermissionId());
@@ -93,7 +103,12 @@ public class EmployeePermissionsDBAdapter {
 			if(db.isOpen()){
 
 			}else {
-				open();
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
 		Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where employeeId='" + user_id + "'" , null);
 		cursor1.moveToFirst();
@@ -122,7 +137,12 @@ public class EmployeePermissionsDBAdapter {
 			if(db.isOpen()){
 
 			}else {
-				open();
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
         Cursor cursor1 = db.rawQuery("select * from " + USERPERMISSIONS_TABLE_NAME+ " where permissionId='" + 10 + "'" , null);
         cursor1.moveToFirst();

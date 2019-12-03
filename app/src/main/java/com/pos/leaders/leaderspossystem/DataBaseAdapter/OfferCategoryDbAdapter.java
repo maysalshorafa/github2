@@ -70,7 +70,12 @@ public class OfferCategoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
             OfferCategory offerCategory = new OfferCategory(Util.idHealth(this.db, OFFER_CATEGORY_TABLE_NAME, OFFER_CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), productIdList, byUser,branchId,false);
 
@@ -89,7 +94,12 @@ public class OfferCategoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -111,16 +121,19 @@ public class OfferCategoryDbAdapter {
 
     }
     public List<OfferCategory>getOfferCategoryByProductId(long productId){
-        if(db.isOpen()){
 
-        }else {
-            open();
-        }
             List<OfferCategory> tempOfferCategoryList = new ArrayList<OfferCategory>();
         List<OfferCategory> offerCategoryList = new ArrayList<OfferCategory>();
         try {
-            if(dbHelper==null) {
-                open();
+            if(db.isOpen()){
+
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where " +OFFER_CATEGORY_COLUMN_HIDE+"=0  order by " + OFFER_CATEGORY_COLUMN_ID + " desc", null);
             cursor.moveToFirst();
@@ -160,7 +173,12 @@ public class OfferCategoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -183,12 +201,18 @@ public class OfferCategoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.rawQuery("select * from " + OFFER_CATEGORY_TABLE_NAME + " where "+OFFER_CATEGORY_COLUMN_ID+"='" + id + "'", null);
         if (cursor.getCount() < 1) // Offer Not Exist
         {
             cursor.close();
+            close();
             return null;
         }
         cursor.moveToFirst();
@@ -199,7 +223,12 @@ public class OfferCategoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
@@ -222,7 +251,12 @@ public class OfferCategoryDbAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
@@ -246,7 +280,12 @@ public class OfferCategoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         OfferCategoryDbAdapter offerCategoryDbAdapter=new OfferCategoryDbAdapter(context);
         offerCategoryDbAdapter.open();
@@ -271,7 +310,12 @@ public class OfferCategoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(context);
         offerCategoryDbAdapter.open();

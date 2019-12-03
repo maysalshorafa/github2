@@ -65,11 +65,15 @@ public class PosInvoiceDBAdapter {
 
 
     public long insertEntry(double amount,long zReportId,String type,String status,String boID,String paymentMethod) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         PosInvoice invoice = new PosInvoice(Util.idHealth(this.db, POS_INVOICE_TABLE_NAME, POS_INVOICE_COLUMN_ID), amount,zReportId,type,status,boID,paymentMethod);
 
@@ -83,11 +87,15 @@ public class PosInvoiceDBAdapter {
     }
 
     public long insertEntry(PosInvoice invoice) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -109,11 +117,15 @@ public class PosInvoiceDBAdapter {
 
     }
     public List<PosInvoice> getPosInvoice(long zReportId){
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
@@ -133,11 +145,15 @@ public class PosInvoiceDBAdapter {
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where "+POS_INVOICE_COLUMN_LAST_Z_REPORT+" = "+zReportId+ " and " + POS_INVOICE_COLUMN_STATUS + " = "+ "'"+ status + "' "+ " and " + POS_INVOICE_COLUMN_TYPE +  " = "+"'"+DocumentType.INVOICE.getValue() +"'", null);
         cursor.moveToFirst();
@@ -157,11 +173,15 @@ public class PosInvoiceDBAdapter {
         List<PosInvoice> posInvoices = new ArrayList<PosInvoice>();
 
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
 
             Cursor cursor = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where " + POS_INVOICE_COLUMN_LAST_Z_REPORT + " = " + zReportId + " and " + POS_INVOICE_COLUMN_TYPE + " = " + "'" + type + "'" + " and " + POS_INVOICE_COLUMN_PAYMENT_METHOD + " = " + "'" + paymentMethod + "'", null);
@@ -186,13 +206,18 @@ public class PosInvoiceDBAdapter {
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)),
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_PAYMENT_METHOD)));
     }
-    public void updateEntry(PosInvoice invoice)
-    {
-        if (db.isOpen()){
 
-        }
-        else {
-            open();
+
+    public void updateEntry(PosInvoice invoice) {
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -208,11 +233,15 @@ public class PosInvoiceDBAdapter {
         close();
     }
     public PosInvoice getPodInvoiceByBoId(String id) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         PosInvoice posInvoice = null;
         Cursor c = db.rawQuery("select * from " + POS_INVOICE_TABLE_NAME + " where boID='" + id + "'", null);

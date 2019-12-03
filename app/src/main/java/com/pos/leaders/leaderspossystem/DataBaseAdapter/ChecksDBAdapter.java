@@ -71,13 +71,18 @@ public class ChecksDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
         Check check = new Check(Util.idHealth(this.db, CHECKS_TABLE_NAME, CHECKS_COLUMN_ID), checkNum, bankNum, branchNum, accountNum, amount, date, false, saleId);
         //sendToBroker(MessageType.ADD_CHECK, check, this.context);
 
         try {
-
+            close();
             return insertEntry(check);
         } catch (SQLException ex) {
             Log.e("Checks DB insert", "inserting Entry at " + CHECKS_TABLE_NAME + ": " + ex.getMessage());
@@ -89,7 +94,12 @@ public class ChecksDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		ContentValues val = new ContentValues();
 		val.put(CHECKS_COLUMN_ID,check.getCheckId());
@@ -130,7 +140,12 @@ public class ChecksDBAdapter {
 			if(db.isOpen()){
 
 			}else {
-				open();
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
 		Cursor cursor = db.rawQuery("select * from " + CHECKS_TABLE_NAME + " where " + CHECKS_COLUMN_ORDERID + "=" + saleID, null);
 		cursor.moveToFirst();
@@ -164,7 +179,12 @@ close();
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		// Define the updated row content.
 		ContentValues updatedValues = new ContentValues();

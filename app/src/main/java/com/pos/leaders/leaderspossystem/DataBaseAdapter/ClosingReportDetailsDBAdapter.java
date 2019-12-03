@@ -70,7 +70,14 @@ public class ClosingReportDetailsDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
+
         }
         ClosingReportDetails closingReportDetails = new ClosingReportDetails(Util.idHealth(this.db, CLOSING_REPORT_DETAILS_TABLE_NAME, CLOSING_REPORT_DETAILS_COLUMN_ID),closingReportId, actualValue,expectedValue,differentValue, type, currencyType);
         if(Util.idHealth(this.db, CLOSING_REPORT_DETAILS_TABLE_NAME, CLOSING_REPORT_DETAILS_COLUMN_ID)>0){
@@ -79,6 +86,7 @@ public class ClosingReportDetailsDBAdapter {
         }
 
         try {
+            close();
             return insertEntry(closingReportDetails);
         } catch (SQLException ex) {
             Log.e("ClosingReportDetails", "inserting Entry at " + CLOSING_REPORT_DETAILS_TABLE_NAME + ": " + ex.getMessage());
@@ -90,7 +98,13 @@ public class ClosingReportDetailsDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -136,7 +150,13 @@ public class ClosingReportDetailsDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor = db.rawQuery("select * from " + CLOSING_REPORT_DETAILS_TABLE_NAME +" where "+CLOSING_REPORT_DETAILS_COLUMN_CLOSING_REPORT_ID+"="+closingId, null);
             cursor.moveToFirst();

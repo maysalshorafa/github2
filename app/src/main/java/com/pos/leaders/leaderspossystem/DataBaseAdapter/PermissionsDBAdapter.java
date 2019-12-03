@@ -54,11 +54,15 @@ public class PermissionsDBAdapter {
 
 
 	public long insertEntry(String name) {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		ContentValues val = new ContentValues();
 		val.put(PERMISSIONS_COLUMN_ID, Util.idHealth(this.db, PERMISSIONS_TABLE_NAME, PERMISSIONS_COLUMN_ID));
@@ -76,11 +80,15 @@ public class PermissionsDBAdapter {
 	}
 
 	public Permissions getPermission(long id){
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		Cursor cursor = db.rawQuery("select * from " + PERMISSIONS_TABLE_NAME + " where id=" + id, null);
 		if (cursor.getCount() < 1) // UserName Not Exist
@@ -96,11 +104,15 @@ public class PermissionsDBAdapter {
 	}
 
 	public List<Permissions> getAllPermissions() {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		List<Permissions> permissionsList = new ArrayList<Permissions>();
 

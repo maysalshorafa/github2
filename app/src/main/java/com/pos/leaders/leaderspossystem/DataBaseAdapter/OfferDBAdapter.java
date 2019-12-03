@@ -86,7 +86,12 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -118,7 +123,12 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 			Offer offer = new Offer(Util.idHealth(this.db, OFFER_TABLE_NAME, OFFER_COLUMN_ID), name, active, resourceId, resourceType, start, end, data.toString(), byEmployee, new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()));
 
@@ -136,12 +146,18 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where "+OFFER_COLUMN_ID+"='" + id + "'", null);
 		if (cursor.getCount() < 1) // Offer Not Exist
 		{
 			cursor.close();
+			close();
 			return null;
 		}
 		cursor.moveToFirst();
@@ -165,7 +181,12 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		List<Offer> offerList = null;
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME +" where "+ OFFER_COLUMN_RESOURCE_TYPE+ " = '"+resourceType.getValue() +"' and "+OFFER_COLUMN_RESOURCE_ID+" = " + id +" and "+OFFER_COLUMN_ACTIVE+"='ACTIVE' and "+OFFER_COLUMN_HIDE+"=0  order by " + OFFER_COLUMN_ID + " desc", null);
@@ -227,12 +248,18 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		Offer offer =null;
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_ACTIVE +"="+ "ACTIVE", null);
 		cursor.moveToFirst();
 		if(cursor.getCount()<0){
+			close();
 			return offer;
 		}
 		else {
@@ -248,7 +275,12 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		List<Offer> offerList = new ArrayList<Offer>();
 
@@ -266,7 +298,12 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		List<Offer> offerList = new ArrayList<Offer>();
 		Cursor cursor = db.rawQuery("select * from " + OFFER_TABLE_NAME + " where " + OFFER_COLUMN_START_DATE + " > datetime("+from+"/1000, 'unixepoch') and "+  OFFER_COLUMN_END_DATE +" < datetime("+to+"/1000, 'unixepoch')"+ " and "+OFFER_COLUMN_ACTIVE + " = " + "'ACTIVE' "+ " and "+OFFER_COLUMN_HIDE + " = " + 0 , null);
@@ -285,7 +322,12 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
 		offerDBAdapter.open();
@@ -328,7 +370,12 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		// Define the updated row content.
 		ContentValues updatedValues = new ContentValues();
@@ -350,7 +397,12 @@ public class OfferDBAdapter {
 		if(db.isOpen()){
 
 		}else {
-			open();
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
 		offerDBAdapter.open();
@@ -383,6 +435,16 @@ public class OfferDBAdapter {
 	}
 
 	public long updateEntryBo(Offer offer) {
+		if(db.isOpen()){
+
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
+		}
 		OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
 		offerDBAdapter.open();
 		ContentValues val = new ContentValues();
@@ -410,6 +472,7 @@ public class OfferDBAdapter {
 			Offer p=offerDBAdapter.getOfferById(offer.getOfferId());
 			Log.d("Update Object",p.toString());
 			offerDBAdapter.close();
+			close();
 			return 1;
 		} catch (SQLException ex) {
 			return 0;

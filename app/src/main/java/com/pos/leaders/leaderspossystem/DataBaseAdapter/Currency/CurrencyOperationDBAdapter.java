@@ -76,7 +76,12 @@ public class CurrencyOperationDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         CurrencyOperation currency = new CurrencyOperation(Util.idHealth(this.db, CurrencyOperation_TABLE_NAME, CurrencyOperation_COLUMN_ID), createDate, operation_id,operation_type, amount, currency_type,paymentWay);
         sendToBroker(MessageType.ADD_CURRENCY_OPERATION, currency, this.context);
@@ -96,7 +101,12 @@ public class CurrencyOperationDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -121,7 +131,12 @@ public class CurrencyOperationDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -149,7 +164,12 @@ public class CurrencyOperationDBAdapter {
 
             }
             else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor = db.rawQuery("select * from " + CurrencyOperation_TABLE_NAME +" where "+CurrencyOperation_COLUMN_Operation_ID+"="+orderId, null);
             cursor.moveToFirst();

@@ -71,11 +71,15 @@ public class OpiningReportDBAdapter {
     }
 
     public long insertEntry(Timestamp createDate, long byUser, double amount, long lastSaleID, long lastZReport) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         OpiningReport aReport = new OpiningReport(Util.idHealth(this.db,OPINING_REPORT_TABLE_NAME, OPINING_REPORT_COLUMN_ID), createDate, byUser, amount, lastSaleID, lastZReport);
         sendToBroker(MessageType.ADD_OPINING_REPORT, aReport, this.context);
@@ -90,11 +94,15 @@ public class OpiningReportDBAdapter {
     }
 
     public long insertEntry(OpiningReport aReport) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
 
@@ -111,11 +119,15 @@ public class OpiningReportDBAdapter {
         }
     }
     public long upDateEntry(OpiningReport aReport) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
 
@@ -131,6 +143,7 @@ public class OpiningReportDBAdapter {
             Log.e(" DB Update", "update Entry at " + OPINING_REPORT_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
+        close();
         return 1;
     }
 
@@ -149,8 +162,15 @@ public class OpiningReportDBAdapter {
     public  List<OpiningReport> getListByLastZReport(long lastZReportID){
         List<OpiningReport> aReports = new ArrayList<OpiningReport>();
         try {
-            if(dbHelper==null) {
-                open();
+            if(db.isOpen()){
+
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_LASTZREPORTID + "='" + (lastZReportID ) + "'", null);
         if (cursor.getCount() < 1) {
@@ -168,17 +188,22 @@ public class OpiningReportDBAdapter {
         } catch (Exception e) {
         Log.d("eeeeeee",e.toString());
         }
+        close();
 
         return aReports;
     }
     public List<OpiningReport> getBetween(Date fromDate, Date toDate){
         List<OpiningReport> aReports = new ArrayList<OpiningReport>();
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_CREATEDATE + "<='" + toDate.getTime() + "' and " + OPINING_REPORT_COLUMN_CREATEDATE +
                 ">='" + fromDate.getTime() + "'" + " order by " + OPINING_REPORT_COLUMN_ID + " desc", null);
@@ -199,11 +224,15 @@ public class OpiningReportDBAdapter {
     }
 
     public OpiningReport getLastRow() throws Exception {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         OpiningReport aReport = null;
         Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where id like '%"+SESSION.POS_ID_NUMBER+"%' order by id desc", null);
@@ -228,11 +257,16 @@ public class OpiningReportDBAdapter {
                 c.getLong(c.getColumnIndex(OPINING_REPORT_COLUMN_LASTZREPORTID)));
     }
     public OpiningReport getById(long id){
-        if (db.isOpen()){
 
-        }
-        else {
-            open();
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         OpiningReport aReport;
         Cursor cursor = db.rawQuery("select * from " + OPINING_REPORT_TABLE_NAME + " where " + OPINING_REPORT_COLUMN_ID + "='" + (id ) + "'", null);

@@ -92,7 +92,12 @@ public class CustomerDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
 
         Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where firstName='" + name + "'", null);
@@ -130,7 +135,12 @@ public class CustomerDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Customer customer_m = new Customer(Util.idHealth(this.db, CUSTOMER_TABLE_NAME, CUSTOMER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, clubId, houseNumber, postalCode, country, countryCode,balance,customerType,customerCode,customerIdentity,branchId);
         Customer boCustomer = customer_m;
@@ -164,7 +174,12 @@ public class CustomerDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -232,7 +247,12 @@ public class CustomerDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Customer customer = null;
         Cursor cursor = db.query(CUSTOMER_TABLE_NAME, null, CUSTOMER_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
@@ -267,7 +287,12 @@ public class CustomerDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(context);
         customerDBAdapter.open();
@@ -306,7 +331,12 @@ public class CustomerDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         CustomerDBAdapter customerDBAdapter=new CustomerDBAdapter(context);
         customerDBAdapter.open();
@@ -352,7 +382,12 @@ public class CustomerDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             if (SETTINGS.enableAllBranch) {
                 cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_COLUMN_DISENABLED + " = 0 order by id desc", null);
@@ -404,7 +439,12 @@ public class CustomerDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
@@ -447,7 +487,12 @@ public class CustomerDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
@@ -489,7 +534,12 @@ public class CustomerDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues updatedValues = new ContentValues();
         CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(context);
@@ -511,7 +561,12 @@ public class CustomerDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues updatedValues = new ContentValues();
         updatedValues.put(CUSTOMER_COLUMN_DISENABLED, 1);
@@ -559,7 +614,12 @@ public class CustomerDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(CUSTOMER_TABLE_NAME, null, CUSTOMER_COLUMN_PHONE_NUMBER + "=?", new String[]{customerPhone}, null, null, null);
         cursor.moveToFirst();
@@ -580,7 +640,12 @@ public class CustomerDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + CUSTOMER_TABLE_NAME + " where " + CUSTOMER_COLUMN_DISENABLED + "=0"+" and " + CUSTOMER_COLUMN_TYPE + " = '"+ CustomerType.CREDIT.getValue()+"' order by id desc", null);
         cursor.moveToFirst();

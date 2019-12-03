@@ -118,7 +118,12 @@ public class ProductDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price,
                 costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType,branchId,offerId,lastCostPrice,withSerialNumber);
@@ -140,7 +145,12 @@ public class ProductDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Product product = getProductByBarCode(p.getSku());
         if (p.getStockQuantity() > 0) {
@@ -244,16 +254,22 @@ public class ProductDBAdapter {
     public Product getProductByID(long id) {
         Product product = null;
         try {
-                if(db.isOpen()){
+            if(db.isOpen()){
 
-                }else {
+            }else {
+                try {
                     open();
                 }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
+            }
 
             Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
             {
                 cursor.close();
+                close();
                 return product;
             }
             cursor.moveToFirst();
@@ -272,7 +288,12 @@ public class ProductDBAdapter {
                 if(db.isOpen()){
 
                 }else {
-                    open();
+                    try {
+                        open();
+                    }
+                    catch (SQLException ex) {
+                        Log.d("Exception",ex.toString());
+                    }
                 }
             Cursor cursor = db.rawQuery("select "+PRODUCTS_COLUMN_ID+" from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+idCategory, null);
          /*   if (cursor.getCount() < 1) // UserName Not Exist
@@ -296,7 +317,12 @@ public class ProductDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         String countQuery="";
         if(!SETTINGS.enableAllBranch){
@@ -318,12 +344,18 @@ public class ProductDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "' or sku='" + barcode + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
             {
                 cursor.close();
+                close();
                 return product;
             }
             cursor.moveToFirst();
@@ -342,7 +374,12 @@ public class ProductDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ProductDBAdapter productDBAdapter=new ProductDBAdapter(context);
         productDBAdapter.open();
@@ -370,7 +407,12 @@ public class ProductDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
@@ -394,7 +436,12 @@ public class ProductDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
 
         ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
@@ -436,7 +483,12 @@ public class ProductDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
         productDBAdapter.open();
@@ -486,7 +538,12 @@ public class ProductDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
@@ -527,7 +584,12 @@ close();
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
@@ -569,7 +631,12 @@ close();
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
@@ -596,7 +663,7 @@ close();
           close();
 
         } catch (Exception e) {
-
+      Log.d("Exception",e.toString());
         }
         return productsList;
     }
@@ -610,7 +677,12 @@ close();
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
@@ -658,6 +730,16 @@ close();
         return categoryId;
     }
     private Product makeProduct(Cursor cursor){
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         int withTaxValue = cursor.getInt(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX));
 
         boolean withTaxStatus ,weighableStatus =false ;
@@ -712,13 +794,19 @@ close();
         if(Double.isNaN(p.getRegularPrice())){
             p.setRegularPrice(p.getPrice());
         }
+        close();
         return p;
     }
     public boolean availableProductName(String productName) {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_NAME + "=?", new String[]{productName}, null, null, null);
         cursor.moveToFirst();
@@ -735,7 +823,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor;
         try {
@@ -761,7 +854,12 @@ close();
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
@@ -802,7 +900,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_SKU + "=?", new String[]{sku}, null, null, null);
         cursor.moveToFirst();
@@ -817,7 +920,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Product product = null;
         Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" order by id desc", null);

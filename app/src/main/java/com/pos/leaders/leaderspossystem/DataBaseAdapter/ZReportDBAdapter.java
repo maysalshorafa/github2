@@ -98,6 +98,18 @@ public class ZReportDBAdapter {
         return db;
     }
     public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double totalSales,double totalCashAmount , double totalCheckAmount , double totalCreditAmount,double totalPosSalesAmount,double amountWithTax,double invoiceAmount , double creditInvoiceAmount, double shekelAmount, double usdAmount , double eurAmount ,double gbpAmount,double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax,double totalTaxReport){
+
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
+
         ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,totalSales,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,pullReportAmount,depositReportAmount,closeOpenReport,salesBeforeTax,salesWithTax,totalTaxReport);
         if (db.isOpen()){
 
@@ -106,6 +118,7 @@ public class ZReportDBAdapter {
             open();
         }
         try {
+            close();
             return insertEntry(zReport);
         } catch (SQLException ex) {
             Log.e(Z_REPORT_TABLE_NAME+" DB insert", "inserting Entry at " + Z_REPORT_TABLE_NAME + ": " + ex.getMessage());
@@ -114,11 +127,15 @@ public class ZReportDBAdapter {
     }
 
     public long insertEntry(ZReport zReport) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -158,17 +175,22 @@ public class ZReportDBAdapter {
     }
 
     public ZReport getByID(long id) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ZReport zReport = null;
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where "+Z_REPORT_COLUMN_ID+"='" + id + "'", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
             cursor.close();
+            close();
             return zReport;
         }
         cursor.moveToFirst();
@@ -181,11 +203,15 @@ public class ZReportDBAdapter {
     public List<ZReport> getAll() {
         List<ZReport> zReports = new ArrayList<ZReport>();
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME , null);
         cursor.moveToFirst();
@@ -206,11 +232,15 @@ public class ZReportDBAdapter {
     public List<ZReport> getBetween(Date fromDate,Date toDate){
         List<ZReport> zReports = new ArrayList<ZReport>();
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where "+Z_REPORT_COLUMN_CREATEDATE+"<='"+toDate.getTime()+"' and "+Z_REPORT_COLUMN_CREATEDATE+
                 ">='"+fromDate.getTime()+"'"+" order by "+Z_REPORT_COLUMN_ID+" desc", null);
@@ -229,11 +259,15 @@ public class ZReportDBAdapter {
     }
 
     public ZReport getLastRow() throws Exception {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ZReport zReport = null;
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
@@ -268,11 +302,16 @@ public class ZReportDBAdapter {
                     c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TOTAL_TAX_REPORT)));
     }
     public double getZReportAmount( long from, long to) {
-        if (db.isOpen()){
 
-        }
-        else {
-            open();
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         double amount =0 , amountPlus =0 , amountMinus =0;
         OrderDBAdapter saleDBAdapter = new OrderDBAdapter(context);
@@ -290,17 +329,21 @@ public class ZReportDBAdapter {
             }
         }
         amount = amountPlus+amountMinus;
-close();
+      close();
         return amount;
     }
     public List<Payment> paymentList(List<Order> sales) {
         List<Payment> pl = new ArrayList<Payment>();
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
         paymentDBAdapter.open();
@@ -325,11 +368,15 @@ close();
         return  0;
     }
     public double zReportTotalAmountUpDate(long id){
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.rawQuery(" select sum(amount) from " + Z_REPORT_TABLE_NAME + " where id like '%"+SESSION.POS_ID_NUMBER+"%'" + "and id <= " + id , null);
 
@@ -342,11 +389,15 @@ close();
     public List<ZReport> calculateZReportAmount(){
         List<ZReport> zReportList = new ArrayList<ZReport>();
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from "+Z_REPORT_TABLE_NAME,null);
         cursor.moveToFirst();
@@ -362,6 +413,16 @@ close();
         return zReportList;
     }
     public void  test(){
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         List<ZReport> zReportList = calculateZReportAmount();
@@ -376,14 +437,19 @@ close();
                     amount,zl.get(i).getCashTotal(),zl.get(i).getCheckTotal(),zl.get(i).getCreditTotal(),totalAmount,zl.get(i).getTax(),zl.get(i).getInvoiceAmount(),zl.get(i).getCreditInvoiceAmount(),zl.get(i).getShekelAmount(),zl.get(i).getUsdAmount(),zl.get(i).getEurAmount(),zl.get(i).getGbpAmount(),zl.get(i).getInvoiceReceiptAmount(),zl.get(i).getPullReportAmount(),zl.get(i).getDepositReportAmount(),zl.get(i).getCloseOpenReport()
                 ,zl.get(i).getSalesBeforeTax(),zl.get(i).getSalesWithTax(),zl.get(i).getTotalTax());
             updateEntry(zReport);
+            close();
         }
     }
     public void updateEntry(ZReport zReport) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         val.put(Z_REPORT_COLUMN_ID, zReport.getzReportId());
@@ -420,6 +486,16 @@ close();
         close();
     }
     public int updateEntryBo(ZReport zReport) {
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         ContentValues val = new ContentValues();
         val.put(Z_REPORT_COLUMN_ID, zReport.getzReportId());
         val.put(Z_REPORT_COLUMN_CREATEDATE, String.valueOf(zReport.getCreatedAt()));
@@ -455,11 +531,15 @@ close();
     public List<ZReport> getBetweenTwoDates(long from, long to){
         List<ZReport> zReportList = new ArrayList<ZReport>();
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where " + Z_REPORT_COLUMN_CREATEDATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
         cursor.moveToFirst();
@@ -481,11 +561,15 @@ close();
     }
 
     public int getProfilesCount() {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         String countQuery = "SELECT  * FROM " + Z_REPORT_TABLE_NAME;
         Cursor cursor = db.rawQuery(countQuery, null);
@@ -495,6 +579,16 @@ close();
         return count;
     }
     public void  upDatePosSalesV4(){
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         List<ZReport>zReportList=new ArrayList<>();
@@ -504,7 +598,9 @@ close();
             zReportList.get(a).setCloseOpenReport("close");
             zReportDBAdapter.updateEntry(zReportList.get(a));
             zReportDBAdapter.close();
+
         }
+        close();
     }
     public static String addColumnReal(String columnName) {
         String dbc = "ALTER TABLE " + Z_REPORT_TABLE_NAME

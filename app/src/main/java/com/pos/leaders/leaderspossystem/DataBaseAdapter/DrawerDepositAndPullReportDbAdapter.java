@@ -70,7 +70,12 @@ public class DrawerDepositAndPullReportDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         DepositAndPullReport depositAndPullReport = new DepositAndPullReport(Util.idHealth(this.db,DEPOSIT_AND_PULL_REPORT_TABLE_NAME, DEPOSIT_AND_PULL_REPORT_COLUMN_ID), createDate, byUser, amount,type,lastZReportID);
         sendToBroker(MessageType.ADD_DEPOSIT_AND_PULL_REPORT, depositAndPullReport, this.context);
@@ -88,7 +93,12 @@ public class DrawerDepositAndPullReportDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
 
@@ -149,7 +159,12 @@ public class DrawerDepositAndPullReportDbAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE + "<='" + toDate.getTime() + "' and " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE +
                 ">='" + fromDate.getTime() + "'" + " order by " + DEPOSIT_AND_PULL_REPORT_COLUMN_ID + " desc", null);
@@ -159,6 +174,7 @@ public class DrawerDepositAndPullReportDbAdapter {
             depositAndPullReportList.add(makeDepositAndPullReport(cursor));
             cursor.moveToNext();
         }
+        close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }
@@ -198,7 +214,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_ID + "='" + (id ) + "'", null);
         if (cursor.getCount() < 1) {
@@ -218,7 +239,12 @@ close();
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME , null);
         cursor.moveToFirst();
@@ -227,6 +253,7 @@ close();
             depositAndPullReportList.add(makeDepositAndPullReport(cursor));
             cursor.moveToNext();
         }
+        close();
         } catch (Exception e) {
             Log.d("exxx",e.toString());
         }
@@ -238,7 +265,12 @@ close();
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + DEPOSIT_AND_PULL_REPORT_TABLE_NAME + " where " + DEPOSIT_AND_PULL_REPORT_COLUMN_CREATE_DATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
         cursor.moveToFirst();

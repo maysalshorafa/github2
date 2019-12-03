@@ -71,10 +71,21 @@ public class CustomerAssetDB {
 
    
     public long insertEntry(long order_id,long user_id,double amount,int type,String salescase,Timestamp saleDate ) {
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         CustomerAssistant assest = new CustomerAssistant(Util.idHealth(this.db, CustmerAsset_TabelName, CUSTMER_ASSEST_ID), order_id, user_id, amount,type,salescase,saleDate);
         sendToBroker(MessageType.ADD_CUSTOMER_ASSISTANT, assest, this.context);
 
         try {
+            close();
             return insertEntry(assest);
         } catch (SQLException ex) {
             Log.e("AssistantDB insert", "inserting Entry at " + CustmerAsset_TabelName + ": " + ex.getMessage());
@@ -83,6 +94,16 @@ public class CustomerAssetDB {
     }
 
     public long insertEntry(CustomerAssistant assest){
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
@@ -105,8 +126,15 @@ public class CustomerAssetDB {
         List<CustomerAssistant> customerAssistants = new ArrayList<CustomerAssistant>();
         List<CustomerAssistant> customerAssistantList = new ArrayList<CustomerAssistant>();
         try {
-            if(dbHelper==null) {
-                open();
+            if(db.isOpen()){
+
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from "+ CustmerAsset_TabelName +" where "+ CustmerAssest_COLUMN_ID +" = "+employeeId+" order by "+ CustmerAssest_COLUMN_CEATEDATE +" DESC",null);
         cursor.moveToFirst();
@@ -170,6 +198,16 @@ public class CustomerAssetDB {
         return users;
     }
     public double getTotalAmountForAssistant( long id,long from , long to){
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         CustomerAssetDB customerAssetDB = new CustomerAssetDB(context);
         customerAssetDB.open();
         List<CustomerAssistant>customerAssistants=new ArrayList<CustomerAssistant>();
@@ -179,6 +217,7 @@ public class CustomerAssetDB {
         for (int i=0;i<customerAssistants.size();i++){
             amount+=customerAssistants.get(i).getAmount();
         }
+        close();
         return  amount;
     }
 }

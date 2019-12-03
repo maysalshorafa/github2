@@ -60,6 +60,16 @@ public class CityDbAdapter {
     }
 
     public int insertEntry(String name) {
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         ContentValues val = new ContentValues();
 
         //Assign values for each row.
@@ -71,13 +81,24 @@ public class CityDbAdapter {
 
         try {
             db.insert(City_TABLE_NAME, null, val);
+            close();
             return 1;
         } catch (SQLException ex) {
             Log.e( LOG_TAG,"inserting Entry at " + City_TABLE_NAME + ": " + ex.getMessage());
             return 0;
         }
     }
-    public long insertEntry(City city){
+            public long insertEntry(City city){
+                if(db.isOpen()){
+
+                }else {
+                    try {
+                        open();
+                    }
+                    catch (SQLException ex) {
+                        Log.d("Exception",ex.toString());
+                    }
+                }
         ContentValues val = new ContentValues();
         val.put(City_COLUMN_Id,city.getCityId());
         //Assign values for each row.
@@ -92,6 +113,16 @@ public class CityDbAdapter {
 
 
     public List<City> getAllCity() {
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         List<City> city = new ArrayList<City>();
         Cursor cursor = db.rawQuery("select * from " + City_TABLE_NAME , null);
         cursor.moveToFirst();
@@ -99,6 +130,7 @@ public class CityDbAdapter {
             city.add(createNewCity(cursor));
             cursor.moveToNext();
         }
+        close();
         return city;
     }
 

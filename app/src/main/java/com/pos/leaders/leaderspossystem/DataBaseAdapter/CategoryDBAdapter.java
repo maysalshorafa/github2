@@ -69,7 +69,12 @@ public class CategoryDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Category department = new Category(Util.idHealth(this.db, CATEGORY_TABLE_NAME, CATEGORY_COLUMN_ID), name, new Timestamp(System.currentTimeMillis()), byUser, false,branchId);
         Category boDepartment = department;
@@ -78,7 +83,7 @@ public class CategoryDBAdapter {
         sendToBroker(MessageType.ADD_CATEGORY, boDepartment, this.context);
 
         try {
-
+            close();
             return insertEntry(department);
         } catch (SQLException ex) {
             Log.e("DepartmentDB insert", "inserting Entry at " + CATEGORY_TABLE_NAME + ": " + ex.getMessage());
@@ -107,7 +112,12 @@ public class CategoryDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -131,7 +141,12 @@ public class CategoryDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Category department = null;
         Cursor cursor = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where id='" + id + "'", null);
@@ -155,7 +170,12 @@ public class CategoryDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         CategoryDBAdapter departmentDBAdapter=new CategoryDBAdapter(context);
         departmentDBAdapter.open();
@@ -180,7 +200,12 @@ public class CategoryDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
@@ -202,7 +227,12 @@ public class CategoryDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         CategoryDBAdapter departmentDBAdapter = new CategoryDBAdapter(context);
         departmentDBAdapter.open();
@@ -230,7 +260,12 @@ public class CategoryDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         CategoryDBAdapter departmentDBAdapter = new CategoryDBAdapter(context);
         departmentDBAdapter.open();
@@ -257,7 +292,12 @@ public class CategoryDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
@@ -300,7 +340,12 @@ public class CategoryDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
 
         Cursor cursor = db.rawQuery("select * from " + CATEGORY_TABLE_NAME + " where " + CATEGORY_COLUMN_NAME + " like '%" +
@@ -345,7 +390,12 @@ public class CategoryDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(CATEGORY_TABLE_NAME, null, CATEGORY_COLUMN_NAME + "=?", new String[]{departmentName}, null, null, null);
         cursor.moveToFirst();

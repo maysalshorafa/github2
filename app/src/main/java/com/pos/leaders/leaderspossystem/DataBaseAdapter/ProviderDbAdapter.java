@@ -83,11 +83,15 @@ public class ProviderDbAdapter {
 
 
     public long insertEntry(String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, int cityId, String houseNumber, String postalCode, String country, String countryCode,double balance,String providerCode,String providerIdentity,int branchId) throws JSONException {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Provider provider = new Provider(Util.idHealth(this.db, PROVIDER_TABLE_NAME, PROVIDER_COLUMN_ID), firstName, lastName, gender, email, job, phoneNumber, street, false, cityId, houseNumber, postalCode, country, countryCode,balance,providerCode,providerIdentity,branchId);
 
@@ -104,11 +108,15 @@ public class ProviderDbAdapter {
     }
 
     public long insertEntry(Provider provider) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -139,11 +147,15 @@ public class ProviderDbAdapter {
         }
     }
     public long insertEntryFromBo(Provider provider) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -175,11 +187,15 @@ public class ProviderDbAdapter {
     }
 
     public Provider getProviderByID(long id) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Provider provider = null;
         Cursor cursor = db.query(PROVIDER_TABLE_NAME, null, PROVIDER_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
@@ -188,6 +204,7 @@ public class ProviderDbAdapter {
         {
             provider = makeProvider(cursor);
             cursor.close();
+            close();
             return provider;
         }
         cursor.close();
@@ -211,11 +228,15 @@ public class ProviderDbAdapter {
 
 
     public void updateEntry(Provider provider) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ProviderDbAdapter providerDbAdapter=new ProviderDbAdapter(context);
         providerDbAdapter.open();
@@ -250,11 +271,15 @@ public class ProviderDbAdapter {
 
     }
     public long updateEntryBo(Provider provider) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ProviderDbAdapter providerDbAdapter=new ProviderDbAdapter(context);
         providerDbAdapter.open();
@@ -295,11 +320,15 @@ public class ProviderDbAdapter {
 
 
     private Provider makeProvider(Cursor cursor) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Provider c = new Provider(Long.parseLong(cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_ID))),
                 cursor.getString(cursor.getColumnIndex(PROVIDER_COLUMN_FIRST_NAME)),
@@ -326,11 +355,15 @@ public class ProviderDbAdapter {
     }
 
     public List<Provider> getAllCustomer() {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         List<Provider> providers = new ArrayList<Provider>();
         Cursor cursor=null;
@@ -367,11 +400,15 @@ public class ProviderDbAdapter {
 
 
     public int deleteEntry(long id) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues updatedValues = new ContentValues();
         ProviderDbAdapter providerDbAdapter =new ProviderDbAdapter(context);
@@ -390,11 +427,15 @@ public class ProviderDbAdapter {
         }
     }
     public long deleteEntryBo(Provider provider) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues updatedValues = new ContentValues();
         updatedValues.put(PROVIDER_COLUMN_DISENABLED, 1);
@@ -419,11 +460,15 @@ public class ProviderDbAdapter {
     }
 
     public boolean availableProviderId(String customerPhone) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(PROVIDER_TABLE_NAME, null, PROVIDER_IDENTITY + "=?", new String[]{customerPhone}, null, null, null);
         cursor.moveToFirst();

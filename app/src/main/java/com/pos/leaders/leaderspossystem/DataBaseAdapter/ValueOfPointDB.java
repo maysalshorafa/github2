@@ -49,11 +49,15 @@ public class ValueOfPointDB {
     }
 
       public long insertEntry( int value,long create_date) {
-          if (db.isOpen()){
+          if(db.isOpen()){
 
-          }
-          else {
-              open();
+          }else {
+              try {
+                  open();
+              }
+              catch (SQLException ex) {
+                  Log.d("Exception",ex.toString());
+              }
           }
         ValueOfPoint valueOfPoint = new ValueOfPoint(Util.idHealth(this.db, ValueOfPoint_TABLE_NAME, Value_COLUMN_Id),value, create_date);
         sendToBroker(MessageType.ADD_VALUE_OF_POINT, valueOfPoint, this.context);
@@ -88,11 +92,15 @@ public class ValueOfPointDB {
     }
 
     public ValueOfPoint getValue(){
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ValueOfPoint valueOfPoint=null;
         Cursor cursor = db.rawQuery("SELECT  * FROM " + ValueOfPoint_TABLE_NAME, null);
