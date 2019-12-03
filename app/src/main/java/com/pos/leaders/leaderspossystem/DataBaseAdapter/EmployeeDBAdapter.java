@@ -78,7 +78,12 @@ public class EmployeeDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Employee u = new Employee(Util.idHealth(this.db, EMPLOYEE_TABLE_NAME, EMPLOYEE_COLUMN_ID), employeeName, password, firstName, lastName, new Timestamp(System.currentTimeMillis()), false, phoneNumber, persent, hourlyWag,branchId);
         Employee boEmployee = u;
@@ -103,7 +108,12 @@ public class EmployeeDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -127,7 +137,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Employee employee = null;
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_ID + "=? ", new String[]{id + ""}, null, null, null);
@@ -148,7 +163,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_EMPLOYEE_NAME + "=? and " + EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{employeeName, Passowrd}, null, null, null);
         cursor.moveToFirst();
@@ -172,7 +192,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         long userID = 0;
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{Passowrd}, null, null, null);
@@ -197,7 +222,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         EmployeeDBAdapter employeeDBAdapter=new EmployeeDBAdapter(context);
         employeeDBAdapter.open();
@@ -222,7 +252,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
         }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
@@ -244,7 +279,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
@@ -271,7 +311,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
@@ -304,7 +349,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_EMPLOYEE_NAME + "=?", new String[]{employeeName}, null, null, null);
         cursor.moveToFirst();
@@ -321,7 +371,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
         cursor.moveToFirst();
@@ -340,7 +395,12 @@ close();
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor=null;
         if(SETTINGS.enableAllBranch) {
@@ -368,7 +428,12 @@ close();
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             EmployeePermissionsDBAdapter employeePermissionsDBAdapter = new EmployeePermissionsDBAdapter(context);
         employeePermissionsDBAdapter.open();
@@ -413,7 +478,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         String employeesName = "";
         Employee employee = null;
@@ -443,7 +513,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);
         cursor.moveToFirst();
@@ -458,7 +533,12 @@ close();
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Employee employee = null;
         Cursor cursor = db.query(EMPLOYEE_TABLE_NAME, null, EMPLOYEE_COLUMN_PASSWORD + "=?", new String[]{password}, null, null, null);

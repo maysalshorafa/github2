@@ -66,11 +66,15 @@ public class SettingsDBAdapter {
 
 
     public boolean GetSettings() {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.rawQuery("select * from " + SETTINGS_TABLE_NAME , null);
         if (cursor.getCount() < 1) // NO DATA HAS BEEN SET
@@ -84,11 +88,15 @@ public class SettingsDBAdapter {
         return true;
     }
     public int getRowCount(){
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.rawQuery("select * from " + SETTINGS_TABLE_NAME , null);
         close();
@@ -96,11 +104,15 @@ public class SettingsDBAdapter {
     }
 
     public int insertEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId){
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -125,11 +137,15 @@ public class SettingsDBAdapter {
     }
 
     public int updateEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId){
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -154,11 +170,15 @@ public class SettingsDBAdapter {
     }
 
     public void read(Cursor cursor) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         cursor.moveToFirst();
         SETTINGS.companyID = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_COMPANY_ID));
@@ -175,11 +195,15 @@ public class SettingsDBAdapter {
         close();
     }
     public void readSetting() {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor = db.rawQuery("select * from " + SETTINGS_TABLE_NAME , null);
         if (cursor.getCount() < 1) // NO DATA HAS BEEN SET

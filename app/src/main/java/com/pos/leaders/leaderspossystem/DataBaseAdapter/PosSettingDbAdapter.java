@@ -74,11 +74,15 @@ public class PosSettingDbAdapter {
         return db;
     }
     public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType, String posVersionNo, String posDbVersionNo, int branchId){
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,posVersionNo,posDbVersionNo,branchId);
         sendToBroker(MessageType.ADD_POS_SETTING, posSetting, this.context);
@@ -92,11 +96,15 @@ public class PosSettingDbAdapter {
         }
     }
     public long insertEntry(PosSetting posSetting) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -122,11 +130,15 @@ public class PosSettingDbAdapter {
 
     }
     public long updateEntryBo(PosSetting posSetting) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -201,11 +213,15 @@ public class PosSettingDbAdapter {
     }
 
     public void updateEntry(PosSetting posSetting) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
@@ -231,11 +247,15 @@ public class PosSettingDbAdapter {
     }
 
     public PosSetting getPosSettingByID(long id) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         PosSetting posSetting = null;
         Cursor cursor = db.rawQuery("select * from " + POS_SETTING_TABLE_NAME + " where id='" + id + "'", null);

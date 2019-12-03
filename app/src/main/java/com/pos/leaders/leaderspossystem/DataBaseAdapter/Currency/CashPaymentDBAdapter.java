@@ -62,7 +62,13 @@ public class CashPaymentDBAdapter {
 
        }
         else {
-           open();
+           try {
+               open();
+           }
+           catch (SQLException ex) {
+               Log.d("Exception",ex.toString());
+           }
+
        }
         CashPayment payment = new CashPayment(Util.idHealth(this.db, CashPAYMENT_TABLE_NAME, CashPAYMENT_COLUMN_ID), saleId, amount, currency_type,createDate, currencyRate,actualCurrencyRate);
     //    sendToBroker(MessageType.ADD_CASH_PAYMENT, payment, this.context);
@@ -80,7 +86,12 @@ public class CashPaymentDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -105,7 +116,12 @@ public class CashPaymentDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -130,7 +146,12 @@ public class CashPaymentDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         List<CashPayment> paymentsList = new ArrayList<CashPayment>();
 
@@ -152,7 +173,12 @@ public class CashPaymentDBAdapter {
 
             }
             else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
 
         Cursor cursor = db.rawQuery("select * from " + CashPAYMENT_TABLE_NAME +" where "+CashPAYMENT_COLUMN_OrderID+"="+orderId, null);
@@ -184,7 +210,12 @@ public class CashPaymentDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         double total=0;
         Cursor cur = db.rawQuery("SELECT SUM(amount) from " +  CashPAYMENT_TABLE_NAME + "  where "+ CashPAYMENT_COLUMN_CurrencyType +"=" + currencyType +" and " + CashPAYMENT_COLUMN_OrderID +" <= " + to + " and " + CashPAYMENT_COLUMN_OrderID +" >= "+from, null);

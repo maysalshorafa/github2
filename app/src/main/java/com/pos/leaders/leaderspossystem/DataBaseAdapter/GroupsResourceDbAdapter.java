@@ -58,7 +58,12 @@ public class GroupsResourceDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         GroupsResources groupsProducts = new GroupsResources(Util.idHealth(this.db, GROUPS_RESOURCES_TABLE_NAME, GROUPS_RESOURCES_COLUMN_ID),productSku, offerGroupId);
         try {
@@ -74,7 +79,12 @@ public class GroupsResourceDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
 
@@ -83,7 +93,6 @@ public class GroupsResourceDbAdapter {
         val.put(GROUPS_RESOURCE_COLUMN_GROUP_ID, groupsProducts.getGroupId());
 
         try {
-
             return db.insert(GROUPS_RESOURCES_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("GroupsResources insert", "inserting Entry at " + GROUPS_RESOURCES_TABLE_NAME + ": " + ex.getMessage());
@@ -119,7 +128,12 @@ public class GroupsResourceDbAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productSku + "';", null);
 
@@ -144,7 +158,12 @@ public class GroupsResourceDbAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + GROUPS_RESOURCES_TABLE_NAME + " where " + GROUPS_RESOURCES_COLUMN_RESOURCE_ID + "='" + productCategory + "';", null);
 

@@ -67,11 +67,15 @@ public class ZReportCountDbAdapter {
     }
 
     public long insertEntry(ZReportCount zReport) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -99,11 +103,15 @@ public class ZReportCountDbAdapter {
     }
 
     public ZReportCount getByID(long id) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ZReportCount zReport = null;
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_COUNT_TABLE_NAME + " where "+Z_REPORT_COUNT_COLUMN_ZREPORT_ID+"='" + id + "'", null);
@@ -132,11 +140,15 @@ public class ZReportCountDbAdapter {
                 ,c.getLong(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_ZREPORT_ID)));
     }
     public void updateEntry(ZReportCount zReport) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         val.put(Z_REPORT_COUNT_COLUMN_CASH,zReport.getCashCount());
@@ -156,11 +168,15 @@ public class ZReportCountDbAdapter {
         close();
     }
     public ZReportCount getLastRow() throws Exception {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ZReportCount zReport = null;
         Cursor cursor = db.rawQuery("select * from " + Z_REPORT_COUNT_TABLE_NAME + " where id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);

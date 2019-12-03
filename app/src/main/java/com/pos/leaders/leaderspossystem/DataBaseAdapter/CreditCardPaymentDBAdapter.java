@@ -79,7 +79,12 @@ public class CreditCardPaymentDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         CreditCardPayment payment = new CreditCardPayment(Util.idHealth(this.db, TABLE_NAME, ID), saleId, amount, cccName,transactionType,
                 last4Digit,transactionId,answer,paymentsNumber,firstPaymentAmount,otherPaymentAmount,cardHolder,new Timestamp(System.currentTimeMillis()));
@@ -98,7 +103,12 @@ public class CreditCardPaymentDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -171,7 +181,12 @@ public class CreditCardPaymentDBAdapter {
             if(db.isOpen()){
 
             }else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + TABLE_NAME +" where "+ORDERID+"="+orderId, null);
         cursor.moveToFirst();

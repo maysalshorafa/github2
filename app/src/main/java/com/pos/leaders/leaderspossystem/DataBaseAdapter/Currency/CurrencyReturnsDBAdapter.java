@@ -66,7 +66,12 @@ public class CurrencyReturnsDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         CurrencyReturns returns = new CurrencyReturns(Util.idHealth(this.db, CurrencyReturnsDBAdapterTabelName, CurrencyReturns_COLUMN_ID), saleId, amount,createDate, currency_type);
         sendToBroker(MessageType.ADD_CURRENCY_RETURN, returns, this.context);
@@ -85,7 +90,12 @@ public class CurrencyReturnsDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -111,7 +121,12 @@ public class CurrencyReturnsDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -139,7 +154,12 @@ public class CurrencyReturnsDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         List<CurrencyReturns> Returns = new ArrayList<CurrencyReturns>();
 
@@ -161,7 +181,12 @@ public class CurrencyReturnsDBAdapter {
 
             }
             else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + CurrencyReturnsDBAdapterTabelName +" where "+CurrencyReturns_COLUMN_SALEID+"="+saleID, null);
         cursor.moveToFirst();

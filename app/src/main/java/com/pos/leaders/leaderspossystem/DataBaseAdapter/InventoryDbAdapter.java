@@ -59,7 +59,12 @@ public class InventoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Inventory inventory = new Inventory(Util.idHealth(this.db, INVENTORY_TABLE_NAME, INVENTORY_COLUMN_ID), name,inventoryId,productsIdWithQuantityList,branchId,hide);
         try {
@@ -73,7 +78,12 @@ public class InventoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -96,7 +106,12 @@ public class InventoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
@@ -118,7 +133,12 @@ public class InventoryDbAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(context);
         inventoryDbAdapter.open();
@@ -157,7 +177,12 @@ public class InventoryDbAdapter {
      if(db.isOpen()){
 
      }else {
-         open();
+         try {
+             open();
+         }
+         catch (SQLException ex) {
+             Log.d("Exception",ex.toString());
+         }
      }
      Inventory inventory = null;
      Cursor cursor = db.rawQuery("select * from " + INVENTORY_TABLE_NAME , null);

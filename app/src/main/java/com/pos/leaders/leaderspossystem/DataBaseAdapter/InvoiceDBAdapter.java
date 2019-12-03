@@ -58,7 +58,12 @@ public class InvoiceDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Invoice invoice = new Invoice(Util.idHealth(this.db, INVOICE_TABLE_NAME, INVOICE_COLUMN_NAME), invoiceId,customerID);
         try {
@@ -74,7 +79,12 @@ public class InvoiceDBAdapter {
         if(db.isOpen()){
 
         }else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.

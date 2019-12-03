@@ -57,11 +57,15 @@ public class PaymentDBAdapter {
 	}
 
 	public long insertEntry(double amount, long saleId, String orderDetailsKey) {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		Payment payment = new Payment(Util.idHealth(this.db, PAYMENT_TABLE_NAME, PAYMENT_COLUMN_ID), amount, saleId,orderDetailsKey);
 		sendToBroker(MessageType.ADD_PAYMENT, payment, this.context);
@@ -87,11 +91,15 @@ public class PaymentDBAdapter {
 
 
 	public long insertEntry(Payment payment){
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
@@ -117,11 +125,15 @@ public class PaymentDBAdapter {
 		}
 	}
 	public long insertEntryDuplicate(Payment payment){
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		ContentValues val = new ContentValues();
 		//Assign values for each row.
@@ -155,16 +167,18 @@ public class PaymentDBAdapter {
 	}
 
 	public List<Payment> getPaymentBySaleID(long saleID) {
-		if (db.isOpen()){
 
-		}
-		else {
-			open();
-		}
 		List<Payment> salePaymentList = new ArrayList<Payment>();
 		try {
-			if(dbHelper==null) {
-				open();
+			if(db.isOpen()){
+
+			}else {
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
 			Cursor cursor = db.rawQuery("select * from " + PAYMENT_TABLE_NAME +" where "+PAYMENT_COLUMN_ORDERID+"="+saleID + " and "+ " id like '"+ SESSION.POS_ID_NUMBER+"%' order by id desc", null);
 			cursor.moveToFirst();
@@ -193,11 +207,15 @@ public class PaymentDBAdapter {
 	}
 
 	public int checkPaymentWay() {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		Payment payment = null;
 

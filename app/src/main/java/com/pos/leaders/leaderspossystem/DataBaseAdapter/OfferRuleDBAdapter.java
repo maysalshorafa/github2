@@ -53,11 +53,15 @@ public class OfferRuleDBAdapter {
     }
 
     public int insertEntry(int id, int rule,long product_id) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -75,11 +79,15 @@ public class OfferRuleDBAdapter {
     }
 
     public OfferRule getRuleNo() {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         OfferDBAdapter offerDBAdapter=new OfferDBAdapter(context);
         offerDBAdapter.open();
@@ -92,6 +100,7 @@ public class OfferRuleDBAdapter {
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
+            close();
             return  offer;
         }
         cursor.moveToFirst();
@@ -99,8 +108,6 @@ public class OfferRuleDBAdapter {
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_Rule_COLUMN_Rule_ID))),
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(OFFER_Rule_COLUMN_Product))));
         cursor.close();
-
-
   close();
         return offer;
     }

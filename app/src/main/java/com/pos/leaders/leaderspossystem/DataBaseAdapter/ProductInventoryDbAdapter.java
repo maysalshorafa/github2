@@ -64,11 +64,15 @@ public class ProductInventoryDbAdapter {
     }
 
     public long insertEntry(long productId , int qty , String operation ,long byUser,int branchId , int hide,String name , double price) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ProductInventory productInventory = new ProductInventory(Util.idHealth(this.db, PRODUCT_INVENTORY_TABLE_NAME, PRODUCT_INVENTORY_COLUMN_ID), productId, qty, operation, byUser,branchId,hide,name,price);
         try {
@@ -81,11 +85,15 @@ public class ProductInventoryDbAdapter {
     }
 
     public long insertEntry(ProductInventory productInventory) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -111,11 +119,15 @@ public class ProductInventoryDbAdapter {
     }
 
     public void updateEntry(long productId,int qty) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
         productInventoryDbAdapter.open();
@@ -139,16 +151,21 @@ public class ProductInventoryDbAdapter {
     public ProductInventory getProductInventoryByID(long id) {
         ProductInventory productInventory = null;
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + PRODUCT_INVENTORY_TABLE_NAME + " where productId='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
+            close();
             return productInventory;
         }
         cursor.moveToFirst();
@@ -192,11 +209,15 @@ public class ProductInventoryDbAdapter {
         List<ProductInventory> productsList =new ArrayList<ProductInventory>();
 
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
@@ -223,11 +244,15 @@ close();
         return productsList;
     }
     private ProductInventory makeProduct(Cursor cursor) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         try {
             ProductInventory d =new ProductInventory( Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_ID))),

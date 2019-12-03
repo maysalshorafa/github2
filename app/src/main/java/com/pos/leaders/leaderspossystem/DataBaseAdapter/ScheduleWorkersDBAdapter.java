@@ -64,11 +64,15 @@ public class ScheduleWorkersDBAdapter {
     //insert region
     // normal insert region with start time
     public long insertEntry(long userId) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime(),0);
             BoScheduleWorkers boScheduleWorkers =new BoScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime());
@@ -85,11 +89,15 @@ public class ScheduleWorkersDBAdapter {
     // end
     // insert exit time and last row have start and exit time first step insert new row with exit time then send it
     public long insertEntryExitTime(long userId) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ScheduleWorkers scheduleWorkers = new ScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  0,new Date().getTime());
         BoScheduleWorkers boScheduleWorkers =new BoScheduleWorkers(Util.idHealth(this.db, SCHEDULEWORKERS_TABLE_NAME, SCHEDULEWORKERS_COLUMN_ID), userId,new Date().getTime(),  new Date().getTime());
@@ -106,11 +114,15 @@ public class ScheduleWorkersDBAdapter {
     //end
 
     public long insertEntry(ScheduleWorkers scheduleWorkers) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         val.put(SCHEDULEWORKERS_COLUMN_ID,scheduleWorkers.getScheduleWorkersId());
@@ -129,11 +141,15 @@ public class ScheduleWorkersDBAdapter {
     //end insert region for two cases
     //update region
     public void updateEntry(long userId,Date exitTime) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ScheduleWorkersDBAdapter scheduleWorkersDBAdapter =new ScheduleWorkersDBAdapter(context);
         scheduleWorkersDBAdapter.open();
@@ -165,11 +181,15 @@ public class ScheduleWorkersDBAdapter {
 
 
     public ScheduleWorkers getScheduleWorkersByID(long id) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ScheduleWorkers scheduleWorkers = null;
         Cursor cursor = db.rawQuery("select * from " + SCHEDULEWORKERS_TABLE_NAME + " where id='" + id + "'", null);
@@ -190,11 +210,15 @@ public class ScheduleWorkersDBAdapter {
     }
 
     public void updateEntry(ScheduleWorkers scheduleWorkers) {
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
@@ -211,11 +235,15 @@ public class ScheduleWorkersDBAdapter {
 
 
     public List<ScheduleWorkers> getAllScheduleWorkers(){
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         List<ScheduleWorkers> scheduleWorkersList =new ArrayList<ScheduleWorkers>();
 
@@ -239,11 +267,15 @@ public class ScheduleWorkersDBAdapter {
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         for (ScheduleWorkers item:scheduleWorkersList) {
             if(item.getUserId()==userId && item.getExitTime()<=to.getTime()&& item.getStartTime()>=from.getTime() )
@@ -260,11 +292,15 @@ public class ScheduleWorkersDBAdapter {
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
         try {
-            if (db.isOpen()){
+            if(db.isOpen()){
 
-            }
-            else {
-                open();
+            }else {
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         for (ScheduleWorkers item:scheduleWorkersList) {
             if(item.getUserId()==userId)
@@ -293,11 +329,15 @@ public class ScheduleWorkersDBAdapter {
     //get last row in table
     public ScheduleWorkers getLastScheduleWorkersByUserID(long userId) {
         ScheduleWorkers scheduleWorkers=null;
-        if (db.isOpen()){
+        if(db.isOpen()){
 
-        }
-        else {
-            open();
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor =  db.rawQuery( "select * from "+SCHEDULEWORKERS_TABLE_NAME +" where "+SCHEDULEWORKERS_COLUMN_USERID+" = "+ userId+ " order by id desc", null );
         cursor.moveToFirst();

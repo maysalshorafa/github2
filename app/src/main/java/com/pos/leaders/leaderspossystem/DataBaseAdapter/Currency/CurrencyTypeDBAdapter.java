@@ -64,7 +64,12 @@ public class CurrencyTypeDBAdapter {
 
             }
             else {
-                open();
+                try {
+                    open();
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
+                }
             }
         Cursor cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME , null);
         cursor.moveToFirst();
@@ -96,7 +101,12 @@ public class CurrencyTypeDBAdapter {
 
         }
         else {
-            open();
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
         }
         Cursor cursor=null;
         cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME + " where  "+ CurrencyType_COLUMN_Name +"='" + type + "'" , null);

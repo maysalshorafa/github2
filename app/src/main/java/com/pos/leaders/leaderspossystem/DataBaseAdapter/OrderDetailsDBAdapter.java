@@ -77,11 +77,15 @@ public class OrderDetailsDBAdapter {
 	}
 
 	public long insertEntry(OrderDetails o){
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
         ContentValues val = new ContentValues();
         val.put(ORDER_DETAILS_COLUMN_ID, o.getOrderDetailsId());
@@ -107,11 +111,15 @@ public class OrderDetailsDBAdapter {
         }
 	}
 	public long insertEntryDuplicate(OrderDetails o){
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		ContentValues val = new ContentValues();
 		val.put(ORDER_DETAILS_COLUMN_ID, Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID));
@@ -138,11 +146,15 @@ public class OrderDetailsDBAdapter {
 	}
 
 	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId,productSerialNumber,paidAmountAfterTax,serialNo);
 		sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
@@ -172,11 +184,15 @@ public class OrderDetailsDBAdapter {
 	public List<OrderDetails> getOrderBySaleID(long saleID){
 		List<OrderDetails> saleOrderList=new ArrayList<OrderDetails>();
         try {
-			if (db.isOpen()){
+			if(db.isOpen()){
 
-			}
-			else {
-				open();
+			}else {
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
 		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ORDER_ID +"="+saleID, null );
 		cursor.moveToFirst();
@@ -195,16 +211,18 @@ public class OrderDetailsDBAdapter {
 		return saleOrderList;
 	}
 	public List<OrderDetails> getOrderBySaleIDAndProductId(long saleID,long productId){
-		if (db.isOpen()){
 
-		}
-		else {
-			open();
-		}
 		List<OrderDetails> saleOrderList=new ArrayList<OrderDetails>();
 		try {
-			if(dbHelper==null) {
-				open();
+			if(db.isOpen()){
+
+			}else {
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
 		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ORDER_ID +"="+saleID+ " and product_id = "+productId, null );
 		cursor.moveToFirst();
@@ -223,11 +241,15 @@ public class OrderDetailsDBAdapter {
 		return saleOrderList;
 	}
 	public OrderDetails getOrderDetailsByID(long saleID){
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		OrderDetails orderDetails=new OrderDetails();
 		Cursor cursor =  db.rawQuery( "select * from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILS_COLUMN_ID +"="+saleID, null );
@@ -258,17 +280,19 @@ public class OrderDetailsDBAdapter {
 		return productId;
 	}
 	public List<Long> getOrderDetailsByIDproduct(long product){
-		if (db.isOpen()){
 
-		}
-		else {
-			open();
-		}
 		OrderDetails orderDetails=new OrderDetails();
       List<Long> orderId =new ArrayList<>();
 		try {
-			if(dbHelper==null) {
-				open();
+			if(db.isOpen()){
+
+			}else {
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
 		Cursor cursor =  db.rawQuery( "select "+ORDER_DETAILS_COLUMN_ORDER_ID+" from "+ ORDER_DETAILS_TABLE_NAME +" where "+ ORDER_DETAILES_COLUMN_PRODUCTID +"="+product, null );
 		if (cursor.getCount() < 1) // UserName Not Exist
@@ -284,9 +308,6 @@ public class OrderDetailsDBAdapter {
 			Log.d("Ddddd", String.valueOf(cursor.getLong(0)));
 		}
 		cursor.close();
-
-		close();
-
 			close();
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
@@ -296,17 +317,19 @@ public class OrderDetailsDBAdapter {
 		return orderId;
 	}
 	public List<Long> getOrderDetailsByListIDproduct(List<Long> product){
-		if (db.isOpen()){
 
-		}
-		else {
-			open();
-		}
 		OrderDetails orderDetails=new OrderDetails();
 		List<Long> orderId =new ArrayList<>();
 		try {
-			if(dbHelper==null) {
-				open();
+			if(db.isOpen()){
+
+			}else {
+				try {
+					open();
+				}
+				catch (SQLException ex) {
+					Log.d("Exception",ex.toString());
+				}
 			}
 		for (int i=0; i<product.size();i++) {
 			Cursor cursor = db.rawQuery("select " + ORDER_DETAILS_COLUMN_ORDER_ID + " from " + ORDER_DETAILS_TABLE_NAME + " where " + ORDER_DETAILES_COLUMN_PRODUCTID + "=" + product.get(i), null);
@@ -321,7 +344,7 @@ public class OrderDetailsDBAdapter {
 				orderId.add((long) cursor.getLong(0));
 			}
 			cursor.close();
-			close();
+
 		}
 			close();
 		} catch (Exception e) {
@@ -348,11 +371,15 @@ public class OrderDetailsDBAdapter {
 		return orderId;
 	}
 	private OrderDetails make(Cursor cursor){
-		if (db.isOpen()){
+		if(db.isOpen()){
 
-		}
-		else {
-			open();
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
 		}
 		long offerId=0;
 		long serialNo=0;
