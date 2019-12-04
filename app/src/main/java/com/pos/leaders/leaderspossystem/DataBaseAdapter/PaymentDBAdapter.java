@@ -110,6 +110,12 @@ public class PaymentDBAdapter {
 		val.put(PAYMENT_COLUMN_KEY,payment.getOrderKey());
 		int a =0;
 		a=checkPaymentWay();
+		if (db.isOpen()){
+
+		}
+		else {
+			open();
+		}
 		if(a==-1){
 
 		}else {

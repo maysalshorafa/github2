@@ -111,7 +111,12 @@ public class ZReportDBAdapter {
         }
 
         ZReport zReport = new ZReport(Util.idHealth(this.db, Z_REPORT_TABLE_NAME, Z_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,totalSales,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,pullReportAmount,depositReportAmount,closeOpenReport,salesBeforeTax,salesWithTax,totalTaxReport);
+        if (db.isOpen()){
 
+        }
+        else {
+            open();
+        }
         try {
             close();
             return insertEntry(zReport);
@@ -297,6 +302,7 @@ public class ZReportDBAdapter {
                     c.getDouble(c.getColumnIndex(Z_REPORT_COLUMN_TOTAL_TAX_REPORT)));
     }
     public double getZReportAmount( long from, long to) {
+
         if(db.isOpen()){
 
         }else {

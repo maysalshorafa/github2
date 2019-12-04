@@ -87,6 +87,7 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(OpiningReportDetails aReportDetails) {
+
         if(db.isOpen()){
 
         }else {

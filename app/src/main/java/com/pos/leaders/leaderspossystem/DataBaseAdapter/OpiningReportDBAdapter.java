@@ -257,6 +257,7 @@ public class OpiningReportDBAdapter {
                 c.getLong(c.getColumnIndex(OPINING_REPORT_COLUMN_LASTZREPORTID)));
     }
     public OpiningReport getById(long id){
+
         if(db.isOpen()){
 
         }else {

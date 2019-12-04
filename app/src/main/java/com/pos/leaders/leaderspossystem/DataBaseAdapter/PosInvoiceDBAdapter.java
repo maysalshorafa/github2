@@ -206,6 +206,8 @@ public class PosInvoiceDBAdapter {
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_BO_ID)),
                 c.getString(c.getColumnIndex(POS_INVOICE_COLUMN_PAYMENT_METHOD)));
     }
+
+
     public void updateEntry(PosInvoice invoice) {
         if(db.isOpen()){
 
