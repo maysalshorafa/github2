@@ -270,11 +270,11 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         if(docDocument.getDouble("cartDiscount")>0){
                                         salesaftertax+=((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)));
                                         Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                        SalesWitheTax+=((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)));}
+                                        SalesWitheTax+=(((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)));}
                                         else {
                                             salesaftertax+=product.getPrice()*1;
                                             Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                            SalesWitheTax+=product.getPrice()*1/ (1 + (SETTINGS.tax / 100));
+                                            SalesWitheTax+=(product.getPrice()*1)/ (1 + (SETTINGS.tax / 100));
                                         }
                                     }
                                     Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -471,7 +471,6 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 zReport.setTotalSales(zReport.getTotalSales()+creditAmount*-1);
                                                 zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() - (SalesWithoutTax))));
                                                 zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() - (SalesWitheTax))));
-                                                Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
                                                 zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()-Math.abs(salesaftertax - SalesWitheTax))));
                                                 zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
                                                 zReportCountDbAdapter.updateEntry(zReportCount);

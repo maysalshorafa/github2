@@ -5203,8 +5203,6 @@ Log.d("testCustomer",c.toString());
     public void callPopupForSalesMan() {
         EmployeeDBAdapter userDB = new EmployeeDBAdapter(this);
         userDB.open();
-        final CustomerAssetDB customerAssistantDb = new CustomerAssetDB(this);
-        customerAssistantDb.open();
         final Dialog salesManDialog = new Dialog(SalesCartActivity.this);
         salesManDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         salesManDialog.show();
