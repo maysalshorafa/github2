@@ -3377,7 +3377,6 @@ public class SalesCartActivity extends AppCompatActivity {
             }
             CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
             currencyDBAdapter.open();
-            Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
             final OrderDetails o = new OrderDetails(1, 0, p, p.getPrice() , p.getPrice(), 0);
             //getOfferCategoryForProduct
             OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);

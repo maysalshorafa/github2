@@ -1349,7 +1349,7 @@ public class InvoiceImg {
             Product p= productDBAdapter.getProductByID(o.getProductId());
             o.setProduct(p);
             count += o.getQuantity();
-            if (o.getProduct().getDisplayName().equals("General"))
+            if (o.getProduct().getDisplayName().equalsIgnoreCase("General"))
                 o.getProduct().setProductCode(context.getString(R.string.general));
             int cut = 11;
             if (o.getProduct().getDisplayName().length() < cut)

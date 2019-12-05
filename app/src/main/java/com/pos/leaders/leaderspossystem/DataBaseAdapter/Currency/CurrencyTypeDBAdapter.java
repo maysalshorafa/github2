@@ -43,8 +43,12 @@ public class CurrencyTypeDBAdapter {
     }
 
     public CurrencyTypeDBAdapter open() throws SQLException {
+                try {
+                    this.db = dbHelper.getWritableDatabase();
+                }catch (Exception e){
+                    Log.d("eeee",e.toString());
+                }
 
-            this.db = dbHelper.getWritableDatabase();
             return this;
     }
 
@@ -77,11 +81,12 @@ public class CurrencyTypeDBAdapter {
             currencyTypes.add(createNewCurrency(cursor));
             cursor.moveToNext();
         }
-        close();
+            close();
         }
           catch (Exception e) {
               Log.d("CurrencyTypeEx",e.toString());
             }
+
         return currencyTypes;
     }
 
