@@ -158,7 +158,16 @@ public class ProductDBAdapter {
         } else if (p.getStockQuantity() == 0) {
             p.setStatus(ProductStatus.OUT_OF_STOCKS);
         }
+        if(db.isOpen()){
 
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
 
         if (product != null) {
             Log.i("Inserting product", "barcode is exist");

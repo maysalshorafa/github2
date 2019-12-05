@@ -503,9 +503,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                                 zReport1.setSalesBeforeTax(zReport1.getSalesBeforeTax()-SalesWithoutTaxCancle);
                                                 Log.d("Tax",zReport1.getTotalTax()+"fji");
-                                                Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+Math.abs(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
+                                                Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
 
-                                                zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- Math.abs(salesaftertaxCancle - SalesWitheTaxCancle))));
+                                                zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (salesaftertaxCancle - SalesWitheTaxCancle))));
                                                 zReportCount.setCashCount(zReportCount.getCashCount() - 1);
                                                 zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount() - 1);
                                                 zReportCount.setShekelCount(zReportCount.getShekelCount() - 1);
@@ -723,7 +723,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             z.setShekelAmount(z.getShekelAmount()+sale.getTotalPrice());
                                             z.setSalesWithTax(Double.parseDouble(Util.makePrice(z.getSalesWithTax()+SalesWitheTaxDuplicute)));
                                             z.setSalesBeforeTax(Double.parseDouble(Util.makePrice(z.getSalesBeforeTax()+SalesWithoutTaxDuplicute)));
-                                            z.setTotalTax(Double.parseDouble(Util.makePrice(z.getTotalTax()+(Math.abs(salesaftertaxDuplicute - SalesWitheTaxDuplicute)))));
+                                            z.setTotalTax(Double.parseDouble(Util.makePrice(z.getTotalTax()+(salesaftertaxDuplicute - SalesWitheTaxDuplicute))));
                                             zReportCount1.setCashCount(zReportCount1.getCashCount()+1);
                                             zReportCount1.setInvoiceReceiptCount(zReportCount1.getInvoiceReceiptCount()+1);
                                             zReportCount1.setShekelCount(zReportCount1.getShekelCount()+1);
@@ -942,9 +942,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                             zReport1.setSalesBeforeTax(zReport1.getSalesBeforeTax()-SalesWithoutTaxCancle);
                             Log.d("Tax",zReport1.getTotalTax()+"fji");
-                            Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+Math.abs(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
+                            Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
 
-                            zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- Math.abs(salesaftertaxCancle - SalesWitheTaxCancle))));
+                            zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (salesaftertaxCancle - SalesWitheTaxCancle))));
 
                             zReport1.setCashTotal(zReport1.getCashTotal()-sale.getTotalPrice());
                             zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-sale.getTotalPrice());
