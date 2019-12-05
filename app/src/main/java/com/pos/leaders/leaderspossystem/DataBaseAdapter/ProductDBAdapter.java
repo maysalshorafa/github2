@@ -715,6 +715,16 @@ close();
                     cursor.moveToNext();
 
                 }
+                if(db.isOpen()){
+
+                }else {
+                    try {
+                        open();
+                    }
+                    catch (SQLException ex) {
+                        Log.d("Exception",ex.toString());
+                    }
+                }
             }
      close();
 

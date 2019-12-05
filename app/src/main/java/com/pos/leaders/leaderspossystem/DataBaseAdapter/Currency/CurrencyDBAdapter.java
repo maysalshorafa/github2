@@ -56,8 +56,11 @@ public class CurrencyDBAdapter {
     }
 
     public CurrencyDBAdapter open() throws SQLException {
+        try {
             this.db = dbHelper.getWritableDatabase();
-            return this;
+        }catch (Exception e){
+            Log.d("eeee",e.toString());
+        }            return this;
     }
 
     public void close() {
