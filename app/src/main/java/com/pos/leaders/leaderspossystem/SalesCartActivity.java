@@ -757,9 +757,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                 zReport1.setSalesBeforeTax(zReport1.getSalesBeforeTax()-SalesWithoutTaxCancle);
                                  Log.d("Tax",zReport1.getTotalTax()+"fji");
-                                    Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+Math.abs(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
+                                    Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
 
-                                zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- Math.abs(salesaftertaxCancle - SalesWitheTaxCancle))));
+                                zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (salesaftertaxCancle - SalesWitheTaxCancle))));
 
                                 zReportCount.setCashCount(zReportCount.getCashCount()-1);
                                 zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
@@ -880,12 +880,10 @@ public class SalesCartActivity extends AppCompatActivity {
                                                             orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(copyOrder.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
                                                             Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(copyOrder.getCartDiscount()/100));
                                                             salesaftertaxDuplicute+=(orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(copyOrder.getCartDiscount()/100)));
-                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko22222");
                                                             SalesWitheTaxDuplicute+=orderDetailsList.get(i).getPaidAmountAfterTax();
                                                         }else {
                                                             orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
                                                             salesaftertaxDuplicute+=orderDetailsList.get(i).getPaidAmount();
-                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko");
                                                             SalesWitheTaxDuplicute+=orderDetailsList.get(i).getPaidAmountAfterTax();
                                                         }
                                                     }
@@ -896,7 +894,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 z.setSalesWithTax(Double.parseDouble(Util.makePrice(z.getSalesWithTax()+SalesWitheTaxDuplicute)));
 
                                  z.setSalesBeforeTax(Double.parseDouble(Util.makePrice(z.getSalesBeforeTax()+SalesWithoutTaxDuplicute)));
-                                 z.setTotalTax(Double.parseDouble(Util.makePrice(z.getTotalTax()+(Math.abs(salesaftertaxDuplicute - SalesWitheTaxDuplicute)))));
+                                 z.setTotalTax(Double.parseDouble(Util.makePrice(z.getTotalTax()+((salesaftertaxDuplicute - SalesWitheTaxDuplicute)))));
                                 zReportCount1.setCashCount(zReportCount1.getCashCount()+1);
                                 zReportCount1.setInvoiceReceiptCount(zReportCount1.getInvoiceReceiptCount()+1);
                                 zReportCount1.setShekelCount(zReportCount1.getShekelCount()+1);
@@ -2244,12 +2242,10 @@ public class SalesCartActivity extends AppCompatActivity {
                                                             SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
                                                             Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
                                                             salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)));
-                                                            Log.d("salesaftertax",salesaftertax+"ko22222");
                                                             SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
                                                         }else {
                                                             SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
                                                             salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
-                                                            Log.d("salesaftertax",salesaftertax+"ko");
                                                             SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
                                                         }
                                                     }
@@ -2319,7 +2315,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() + (SalesWithoutTax))));
                                                         zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() + (SalesWitheTax))));
                                                         Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
-                                                        zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax))));
+                                                        zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+(salesaftertax - SalesWitheTax))));
 
                                                             Log.d("getTotalPos",zReport.getTotalPosSales()+"poss");
                                                             zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
@@ -2336,10 +2332,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
                                                             zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() + (SalesWithoutTax))));
                                                             zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() + (SalesWitheTax))));
-                                                            Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
-                                                            zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax))));
-
-                                                            Log.d("getTotalPos1",zReport.getTotalPosSales()+"poss");
+                                                            zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+(salesaftertax - SalesWitheTax))));
                                                             zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
                                                             zReportDBAdapter.updateEntry(zReport);
                                                             zReportCountDbAdapter.updateEntry(zReportCount);
@@ -4715,12 +4708,10 @@ public class SalesCartActivity extends AppCompatActivity {
                                 Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
 
                                 salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)));
-                            Log.d("salesaftertax",salesaftertax+"ko22222");
                             SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
                             }else {
                                 SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
                                 salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
-                                Log.d("salesaftertax",salesaftertax+"ko");
                                 SalesWitheTax+=SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax();
                             }
                         }
@@ -4731,7 +4722,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,SalesWithoutTax,SalesWitheTax);
                     zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() + (SalesWithoutTax))));
                     zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() + (SalesWitheTax))));
-                    zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+Math.abs(salesaftertax - SalesWitheTax))));
+                    zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+(salesaftertax - SalesWitheTax))));
                     Order order = saleDBAdapter.getOrderById(saleIDforCash);
                     SESSION._ORDERS.setOrderId(saleIDforCash);
                     SESSION._ORDERS.setNumberDiscount(order.getNumberDiscount());

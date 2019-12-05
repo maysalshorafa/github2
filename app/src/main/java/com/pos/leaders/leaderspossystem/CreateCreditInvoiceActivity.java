@@ -457,7 +457,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() - (SalesWithoutTax))));
                                                 zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() - (SalesWitheTax))));
                                                 Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
-                                                zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()-Math.abs(salesaftertax - SalesWitheTax))));
+                                                zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()-(salesaftertax - SalesWitheTax))));
 
                                                 zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
                                                     zReportDBAdapter.updateEntry(zReport);
@@ -471,7 +471,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 zReport.setTotalSales(zReport.getTotalSales()+creditAmount*-1);
                                                 zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() - (SalesWithoutTax))));
                                                 zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() - (SalesWitheTax))));
-                                                zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()-Math.abs(salesaftertax - SalesWitheTax))));
+                                                zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()-(salesaftertax - SalesWitheTax))));
                                                 zReportCount.setCreditInvoiceCount(zReportCount.getCreditInvoiceCount()+1);
                                                 zReportCountDbAdapter.updateEntry(zReportCount);
                                                 zReportDBAdapter.updateEntry(zReport);
