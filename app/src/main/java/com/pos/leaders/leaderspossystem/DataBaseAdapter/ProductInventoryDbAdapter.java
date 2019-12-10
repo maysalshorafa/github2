@@ -64,19 +64,9 @@ public class ProductInventoryDbAdapter {
     }
 
     public long insertEntry(long productId , int qty , String operation ,long byUser,int branchId , int hide,String name , double price) {
-        if(db.isOpen()){
 
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         ProductInventory productInventory = new ProductInventory(Util.idHealth(this.db, PRODUCT_INVENTORY_TABLE_NAME, PRODUCT_INVENTORY_COLUMN_ID), productId, qty, operation, byUser,branchId,hide,name,price);
         try {
-            close();
             return insertEntry(productInventory);
         } catch (SQLException ex) {
             Log.e("productInventory insert", "inserting Entry at " + PRODUCT_INVENTORY_TABLE_NAME + ": " + ex.getMessage());
@@ -85,16 +75,6 @@ public class ProductInventoryDbAdapter {
     }
 
     public long insertEntry(ProductInventory productInventory) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(PRODUCT_INVENTORY_COLUMN_ID, productInventory.getProductInventoryId());
@@ -119,16 +99,6 @@ public class ProductInventoryDbAdapter {
     }
 
     public void updateEntry(long productId,int qty) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
         productInventoryDbAdapter.open();
         ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(productId);
@@ -146,26 +116,14 @@ public class ProductInventoryDbAdapter {
         String where = PRODUCT_INVENTORY_COLUMN_ID + " = ?";
         db.update(PRODUCT_INVENTORY_TABLE_NAME, val, where, new String[]{productInventory.getProductInventoryId() + ""});
         productInventoryDbAdapter.close();
-        close();
     }
     public ProductInventory getProductInventoryByID(long id) {
         ProductInventory productInventory = null;
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
         Cursor cursor = db.rawQuery("select * from " + PRODUCT_INVENTORY_TABLE_NAME + " where productId='" + id + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
         {
             cursor.close();
-            close();
             return productInventory;
         }
         cursor.moveToFirst();
@@ -178,7 +136,6 @@ public class ProductInventoryDbAdapter {
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_BRANCH_ID))),
                 cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_NAME)), Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_PRICE))));
         cursor.close();
-            close();
         }
         catch (Exception e) {
             Log.d("exception",e.toString());
@@ -209,16 +166,6 @@ public class ProductInventoryDbAdapter {
         List<ProductInventory> productsList =new ArrayList<ProductInventory>();
 
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
 
@@ -233,7 +180,7 @@ public class ProductInventoryDbAdapter {
                 productsList.add(makeProduct(cursor));
                 cursor.moveToNext();
             }
-close();
+
 
 
         } catch (Exception e) {
@@ -244,16 +191,6 @@ close();
         return productsList;
     }
     private ProductInventory makeProduct(Cursor cursor) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         try {
             ProductInventory d =new ProductInventory( Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_ID))),
                     Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_PRODUCT_ID))),
@@ -263,7 +200,6 @@ close();
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_HIDE))),
                     Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_BRANCH_ID))),
                     cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_NAME)), Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_PRICE))));
-            close();
             return d;
         } catch (Exception ex) {
             ProductInventory d = new ProductInventory( Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_ID))),
