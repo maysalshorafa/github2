@@ -227,6 +227,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         newCartDetails.getJSONObject(p).remove("unitPrice");
                                         newCartDetails.getJSONObject(p).put("unitPrice", product.getPrice());
                                         haveCart=true;
+                                       if (product.getCurrencyType()==0){
                                         if(product.isWithTax()){
                                             if(docDocument.getDouble("cartDiscount")>0){
                                                 SalesWithoutTax+=((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100));
@@ -236,7 +237,8 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                             }
 
 
-                                        }else {
+                                        }
+                                    else {
                                             if(docDocument.getDouble("cartDiscount")>0) {
                                                 salesaftertax += ((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)));
                                                 Log.d("salesaftertax", salesaftertax + "k6666666666");
@@ -251,6 +253,91 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
 
                                     }
+
+                                      else   if (product.getCurrencyType()==1){
+                                            if(product.isWithTax()){
+                                                if(docDocument.getDouble("cartDiscount")>0){
+                                                    SalesWithoutTax+=(((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100))*3.491);
+                                                }
+                                                else {
+                                                    SalesWithoutTax+=((product.getPrice()*(c+1))*3.491);
+                                                }
+
+
+                                            }
+                                            else {
+                                                if(docDocument.getDouble("cartDiscount")>0) {
+                                                    salesaftertax += (((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*3.491);
+                                                    Log.d("salesaftertax", salesaftertax + "k6666666666");
+                                                    SalesWitheTax += (((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*3.491);
+                                                }
+                                                else {
+                                                    salesaftertax += ((product.getPrice() * (c + 1))*3.491);
+                                                    Log.d("salesaftertax", salesaftertax + "k6666666666");
+                                                    SalesWitheTax += ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100)))*3.491);
+                                                }
+                                            }
+                                            Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
+
+                                        }
+
+
+                                       else if (product.getCurrencyType()==2){
+                                            if(product.isWithTax()){
+                                                if(docDocument.getDouble("cartDiscount")>0){
+                                                    SalesWithoutTax+=(((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100))*4.5974);
+                                                }
+                                                else {
+                                                    SalesWithoutTax+=((product.getPrice()*(c+1))*4.5974);
+                                                }
+
+
+                                            }
+                                            else {
+                                                if(docDocument.getDouble("cartDiscount")>0) {
+                                                    salesaftertax += (((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*4.5974);
+                                                    Log.d("salesaftertax", salesaftertax + "k6666666666");
+                                                    SalesWitheTax += (((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*4.5974);
+                                                }
+                                                else {
+                                                    salesaftertax +=((product.getPrice() * (c + 1))*4.5974);
+                                                    Log.d("salesaftertax", salesaftertax + "k6666666666");
+                                                    SalesWitheTax += ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100)))*4.5974);
+                                                }
+                                            }
+                                            Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
+
+                                        }
+
+                                       else if (product.getCurrencyType()==3){
+                                            if(product.isWithTax()){
+                                                if(docDocument.getDouble("cartDiscount")>0){
+                                                    SalesWithoutTax+=(((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100))*4.1002);
+                                                }
+                                                else {
+                                                    SalesWithoutTax+=((product.getPrice()*(c+1))*4.1002);
+                                                }
+
+
+                                            }
+                                            else {
+                                                if(docDocument.getDouble("cartDiscount")>0) {
+                                                    salesaftertax += ((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)));
+                                                    Log.d("salesaftertax", salesaftertax + "k6666666666");
+                                                    SalesWitheTax += (((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*4.1002);
+                                                }
+                                                else {
+                                                    salesaftertax += ((product.getPrice() * (c + 1))*4.1002);
+                                                    Log.d("salesaftertax", salesaftertax + "k6666666666");
+                                                    SalesWitheTax += ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100)))*4.1002);
+                                                }
+                                            }
+                                            Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
+
+                                        }
+
+
+                                    }
                                 }
                                 if(!haveCart){
                                     newCartJson.remove("unitPrice");
@@ -259,6 +346,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                     newCartJson.put("quantity", 1);
                                   newCartDetails.put(newCartJson);
                                     Log.d("newCartDeteails111",newCartJson.toString());
+                                    if (product.getCurrencyType()==0){
                                     if(product.isWithTax()){
                                         if(docDocument.getDouble("cartDiscount")>0) {
                                             SalesWithoutTax += ((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)));
@@ -278,6 +366,80 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         }
                                     }
                                     Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
+
+                                }
+                                   else if (product.getCurrencyType()==1){
+                                        if(product.isWithTax()){
+                                            if(docDocument.getDouble("cartDiscount")>0) {
+                                                SalesWithoutTax += (((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*3.491);
+                                            }
+                                            else {
+                                                SalesWithoutTax +=(( product.getPrice() * 1)*3.491);
+                                            }
+                                        }else {
+                                            if(docDocument.getDouble("cartDiscount")>0){
+                                                salesaftertax+=(((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)))*3.491);
+                                                Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                                SalesWitheTax+=((((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*3.491);}
+                                            else {
+                                                salesaftertax+=((product.getPrice()*1)*3.491);
+                                                Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                                SalesWitheTax+=(((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))*3.491);
+                                            }
+                                        }
+                                        Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
+
+                                    }
+
+
+                                   else if (product.getCurrencyType()==2){
+                                        if(product.isWithTax()){
+                                            if(docDocument.getDouble("cartDiscount")>0) {
+                                                SalesWithoutTax += (((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*4.5974);
+                                            }
+                                            else {
+                                                SalesWithoutTax += ((product.getPrice() * 1)*4.5974);
+                                            }
+                                        }else {
+                                            if(docDocument.getDouble("cartDiscount")>0){
+                                                salesaftertax+=(((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)))*4.5974);
+                                                Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                                SalesWitheTax+=((((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*4.5974);}
+                                            else {
+                                                salesaftertax+=((product.getPrice()*1)*4.5974);
+                                                Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                                SalesWitheTax+=(((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))*4.5974);
+                                            }
+                                        }
+                                        Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
+
+                                    }
+
+
+                                   else if (product.getCurrencyType()==3){
+                                        if(product.isWithTax()){
+                                            if(docDocument.getDouble("cartDiscount")>0) {
+                                                SalesWithoutTax += (((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*4.1002);
+                                            }
+                                            else {
+                                                SalesWithoutTax += ((product.getPrice() * 1)*4.1002);
+                                            }
+                                        }else {
+                                            if(docDocument.getDouble("cartDiscount")>0){
+                                                salesaftertax+=(((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)))*4.1002);
+                                                Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                                SalesWitheTax+=((((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*4.1002);}
+                                            else {
+                                                salesaftertax+=((product.getPrice()*1)*4.1002);
+                                                Log.d("salesaftertax",salesaftertax+"k6666666666");
+                                                SalesWitheTax+=(((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))*4.1002);
+                                            }
+                                        }
+                                        Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
+
+                                    }
+
+
 
                                 }
                             } catch (JSONException e) {
