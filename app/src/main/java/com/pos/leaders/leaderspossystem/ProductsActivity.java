@@ -135,6 +135,8 @@ public class ProductsActivity  extends AppCompatActivity  {
         productUnitString.add(ProductUnit.QUANTITY.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHWEIGHT.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHPRICE.getValue());
+        productUnitString.add(ProductUnit.WEIGHT.getValue());
+
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productUnitString);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
