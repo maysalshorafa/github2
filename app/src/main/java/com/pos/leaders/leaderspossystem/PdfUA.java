@@ -2059,7 +2059,20 @@ public class PdfUA {
         double creditCard_plus = 0;
         List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(order.getOrderId());
         for(int i=0;i<cashPaymentList.size();i++){
-            cash_plus+=cashPaymentList.get(i).getAmount();
+            if (orderDetailsList.get(i).getProduct().getCurrencyType()==0){
+                cash_plus+=cashPaymentList.get(i).getAmount();
+            }
+
+            else if (orderDetailsList.get(i).getProduct().getCurrencyType()==1){
+                cash_plus+=(cashPaymentList.get(i).getAmount()*3.491);
+            }
+
+            else if (orderDetailsList.get(i).getProduct().getCurrencyType()==2){
+                cash_plus+=(cashPaymentList.get(i).getAmount()*4.5974);
+            }
+            else if (orderDetailsList.get(i).getProduct().getCurrencyType()==3){
+                cash_plus+=(cashPaymentList.get(i).getAmount()*4.1002);
+            }
         }
         List<Check>checkList=checksDBAdapter.getPaymentBySaleID(order.getOrderId());
         for(int i=0;i<checkList.size();i++){
@@ -2404,7 +2417,20 @@ public class PdfUA {
         double creditCard_plus = 0;
             List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(order.getOrderId());
             for(int i=0;i<cashPaymentList.size();i++){
-                cash_plus+=cashPaymentList.get(i).getAmount();
+                if (orderDetailsList.get(i).getProduct().getCurrencyType()==0){
+                    cash_plus+=cashPaymentList.get(i).getAmount();
+                }
+
+                else if (orderDetailsList.get(i).getProduct().getCurrencyType()==1){
+                    cash_plus+=(cashPaymentList.get(i).getAmount()*3.491);
+                }
+
+                else if (orderDetailsList.get(i).getProduct().getCurrencyType()==2){
+                    cash_plus+=(cashPaymentList.get(i).getAmount()*4.5974);
+                }
+                else if (orderDetailsList.get(i).getProduct().getCurrencyType()==3){
+                    cash_plus+=(cashPaymentList.get(i).getAmount()*4.1002);
+                }
             }
             List<Check>checkList=checksDBAdapter.getPaymentBySaleID(order.getOrderId());
             for(int i=0;i<checkList.size();i++){

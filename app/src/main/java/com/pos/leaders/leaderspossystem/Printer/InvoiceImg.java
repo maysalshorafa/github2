@@ -244,6 +244,9 @@ public class InvoiceImg {
         creditCardPaymentDBAdapter.open();
         orders=SESSION._TEMP_ORDER_DETAILES;
         sale=SESSION._TEMP_ORDERS;
+
+
+
         Log.d("testSeesin",orders.toString());
         Log.d("testssss",sale.toString());
         int count =0;

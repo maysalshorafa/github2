@@ -4789,6 +4789,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleIDforCash = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,0,0);
                 Order order = saleDBAdapter.getOrderById(saleIDforCash);
                 SESSION._ORDERS.setOrderId(saleIDforCash);
+                Log.d("excess",excess+"excess00");
                 currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, excess, new Order(SESSION._ORDERS),"","","");
 
                 if (firstCurrencyAmount > 0) {
@@ -5211,9 +5212,11 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._TEMP_ORDERS=SESSION._ORDERS;
                     if(saleTotalPrice<0){
                         if(!trueCreditCard) {
+                            Log.d("saleTotalPrice",saleTotalPrice+"excess00");
                             currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1,"","","");
                         }
                         else {
+                            Log.d("saleTotalPrice2",saleTotalPrice+"excess00");
                             currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1,CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,
                                     data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
                                     data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
@@ -5222,9 +5225,11 @@ public class SalesCartActivity extends AppCompatActivity {
                         }
                     }else {
                         if(!trueCreditCard) {
+                            Log.d("change",change+"change");
                            currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,"","","");
                         }
                         else {
+                            Log.d("change2",change+"change2");
                             currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,
                                     data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
                                     data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
