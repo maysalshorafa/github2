@@ -401,7 +401,7 @@ public class InvoiceImg {
         if(cashPaymentList.size()>0){
             Block b_payment_Cash = new Block("\u200e" + context.getString(R.string.cash)  , 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
             Block b_total_Cash = new Block("\u200E" +  Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-            Block b_given_Cash = new Block("\u200E" + cash_plus, 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_given_Cash = new Block("\u200E" + Util.makePrice(cash_plus), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
             Block b_returned_Cash = new Block("\u200E" + Util.makePrice(sale.getTotalPrice()-cash_plus), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
             blocks.add(clear.Left());
             blocks.add(b_returned_Cash.Left());
