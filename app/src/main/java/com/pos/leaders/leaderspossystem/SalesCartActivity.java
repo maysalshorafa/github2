@@ -3326,6 +3326,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 final TextView productPrice = (TextView) productWeightDialog.findViewById(R.id.TvPrice);
                 final TextView productWeight = (TextView) productWeightDialog.findViewById(R.id.totalWeight);
                 final TextView productDiscount = (TextView) productWeightDialog.findViewById(R.id.totalDiscount);
+                final TextView discountT = (TextView) productWeightDialog.findViewById(R.id.discountText);
                 final TextView totalPrice = (TextView) productWeightDialog.findViewById(R.id.totalPrice);
                 ImageView btn_add_weight = (ImageView) productWeightDialog.findViewById(R.id.addWeight);
                 ImageView btn_close = (ImageView) productWeightDialog.findViewById(R.id.closeDialog);
@@ -3341,6 +3342,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 refreshList();
                 productName.setText(o.getProduct().getDisplayName());
                 productPrice.setText(Util.makePrice(o.getProduct().getPrice()));
+                productWeight.setText(Util.makePrice(o.getProduct().getWeight()));
 
 
                 btRefresh.setOnClickListener(new View.OnClickListener() {
@@ -3360,11 +3362,290 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                 });
 
-                btn_close.setOnClickListener(new View.OnClickListener() {
+                btn_discount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        productWeightDialog.dismiss();
-                    }
+                        if (SESSION._ORDER_DETAILES.size() > 0) {
+                            selectedOrderOnCart=o;
+                            if(selectedOrderOnCart.getUnitPrice()<=0) {
+                                //todo show message cant implement discount on credit item
+                                return;
+                            }
+
+                                if (SESSION._ORDER_DETAILES.contains(selectedOrderOnCart)) {
+                                    final Dialog cashDialog = new Dialog(SalesCartActivity.this);
+                                    cashDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    // cashDialog.setTitle(R.string.please_select_discount_offer);
+                                    cashDialog.show();
+                                    cashDialog.setContentView(R.layout.discount_dialog);
+                                    final Button cashBTOk = (Button) cashDialog.findViewById(R.id.cashPaymentDialog_BTOk);
+                                    final EditText cashETCash = (EditText) cashDialog.findViewById(R.id.cashPaymentDialog_TECash);
+                                    final Switch sw = (Switch) cashDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
+                                    final TextView totalPrice = (TextView) cashDialog.findViewById(R.id.TvTotalPrice);
+                                    final TextView priceAfterDiscount = (TextView) cashDialog.findViewById(R.id.TvPriceAfterDiscount);
+                                    final TextView totalDiscount = (TextView) cashDialog.findViewById(R.id.totalDiscount);
+                                    final ImageView closeDialogImage = (ImageView) cashDialog.findViewById(R.id.closeDialog);
+                                    closeDialogImage.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            cashDialog.dismiss();
+                                        }
+                                    });
+                                    List<OrderDetails> list = new ArrayList<OrderDetails>();
+                                    list.add(selectedOrderOnCart);
+                                    final TextView discountType = (TextView) cashDialog.findViewById(R.id.cashPaymentDialog_TVStatus);
+                                    discountType.append(":" + selectedOrderOnCart.getProduct().getDisplayName());
+                                    double pad = (selectedOrderOnCart.getPaidAmount());
+                                    selectedOrderOnCart.rowDiscount = 0;
+                                    selectedOrderOnCart.setDiscount(0);
+                                    double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
+                                    String currencyType="";
+                                    if(selectedOrderOnCart.getProduct().getCurrencyType()==0) {
+                                        currencyType="ILS";
+                                        type=context.getString(R.string.ins);
+                                    }
+                                    if(selectedOrderOnCart.getProduct().getCurrencyType()==1) {
+                                        currencyType="USD";
+                                        type=context.getString(R.string.dolor_sign);
+
+                                    }
+                                    if(selectedOrderOnCart.getProduct().getCurrencyType()==2) {
+                                        currencyType="GBP";
+                                        type=context.getString(R.string.gbp);
+
+                                    }
+                                    if(selectedOrderOnCart.getProduct().getCurrencyType()==3) {
+                                        currencyType="EUR";
+                                        type=context.getString(R.string.eur);
+
+                                    }
+                                    priceAfterDiscount.setText( pad + type);
+
+                                    CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
+                                    currencyDBAdapter.open();
+                                    Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
+                                    totalPrice.setText(selectedOrderOnCart.getPaidAmount() + type);
+                                    totalDiscount.setText(selectedOrderOnCart.getDiscount()*selectedOrderOnCart.getQuantity() + type);
+                                    sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                            double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
+                                            if (isChecked) {
+                                                sw.setText(getBaseContext().getString(R.string.amount));
+                                                cashETCash.setText("");
+                                                cashETCash.setHint("0");
+                                            } else {
+                                                sw.setText(getBaseContext().getString(R.string.proportion));
+                                                cashETCash.setText("");
+                                                cashETCash.setHint("0");
+                                            }
+                                            totalDiscount.setText(Util.makePrice((itemOriginalPrice - selectedOrderOnCart.getPaidAmount())) + type);
+                                            priceAfterDiscount.setText(selectedOrderOnCart.getPaidAmount()+ type);
+                                        }
+                                    });
+                                    cashETCash.setHint(R.string.proportion);
+                                    final List<OrderDetails> orderList = list;
+                                    cashETCash.addTextChangedListener(new TextWatcher() {
+                                        @Override
+                                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                        }
+
+                                        @Override
+                                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                        }
+
+                                        @Override
+                                        public void afterTextChanged(Editable s) {
+                                            cashETCash.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+                                            String str = cashETCash.getText().toString();
+                                            double discount = 0;
+                                            selectedOrderOnCart.rowDiscount = 0;
+                                            selectedOrderOnCart.setDiscount(0);
+                                            double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
+                                            double X = SESSION._EMPLOYEE.getPresent();
+                                            if (sw.isChecked()) {
+                                                discountT.setText(getString(R.string.price_after_discount));
+                                                if (!(str.equals(""))) {
+                                                    double d = Double.parseDouble(str);
+                                                    double originalTotalPrice = 0;
+                                                    double salePrice=0;
+                                                    for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
+                                                        OrderDetails o =SESSION._ORDER_DETAILES.get(i);
+                                                        salePrice+=(o.getUnitPrice() * o.getQuantity());
+                                                            originalTotalPrice += d;
+
+                                                    }
+                                                    originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+                                                    salePrice= salePrice - (salePrice * (X/ 100));
+                                                    Log.d("teeestr",originalTotalPrice+":  "+salePrice);
+                                                    if (originalTotalPrice>=salePrice){
+                                                        discount = (1 - (d / (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity()))) * 100;
+                                                        selectedOrderOnCart.setDiscount(discount);
+                                                        totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
+                                                        priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
+                                                        productDiscount.setText(str);
+                                                    } else {
+                                                        Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                        cashETCash.setBackgroundResource(R.drawable.backtext);
+                                                    }
+
+                                                } else {
+                                                    productDiscount.setText(Util.makePrice(itemOriginalPrice ));
+                                                    totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
+                                                    priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
+                                                }
+                                            } else {
+                                                if (!(str.equals(""))) {
+                                                    double d = Double.parseDouble(str);
+                                                    double originalTotalPrice = 0;
+                                                    double salePrice=0;
+                                                    for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
+                                                        OrderDetails o =SESSION._ORDER_DETAILES.get(i);
+                                                        salePrice+=(o.getUnitPrice() * o.getQuantity());
+                                                            originalTotalPrice += (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity())*(1-d/100);
+
+                                                    }
+                                                    originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+                                                    salePrice= salePrice - (salePrice * (X/ 100));
+                                                    if (originalTotalPrice>=salePrice){
+                                                        discount= Double.parseDouble(str);
+                                                        selectedOrderOnCart.setDiscount(discount);
+                                                        Log.d("teeestr",itemOriginalPrice +"  "+ selectedOrderOnCart.getDiscount()/100);
+                                                        totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
+                                                        priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
+                                                        productDiscount.setText(str+"%");
+
+                                                    } else {
+                                                        productDiscount.setText(0+"%");
+                                                        Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                        cashETCash.setBackgroundResource(R.drawable.backtext);
+                                                    }
+
+
+                                                } else {
+                                                    productDiscount.setText(0+"%");
+                                                    totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
+                                                    priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
+                                                }
+                                            }
+                                        /*
+                                        double X = SESSION._EMPLOYEE.getPresent();
+                                        double discount = 0;
+                                        if (!(str.equals(""))) {
+                                            if (sw.isChecked()) {
+                                                double d = Double.parseDouble(str);
+                                                discount = (1 - (d / (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity()))) * 100;
+                                            } else {
+                                                discount= Double.parseDouble(str);
+                                            }
+
+                                        }
+                                        if (discount <= X) {
+                                            //   selectedOrderOnCart.rowDiscount = discount;
+                                            selectedOrderOnCart.setDiscount(discount);
+                                        } else {
+                                            Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                            cashETCash.setBackgroundResource(R.drawable.backtext);
+                                        }
+
+                                        totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + getString(R.string.ins));
+                                        priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + getString(R.string.ins));
+*/
+                                        }
+                                    });
+                                    cashBTOk.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            double discount=0;
+                                            double itemOriginalPrice = selectedOrderOnCart.getPaidAmount();
+                                            String str = cashETCash.getText().toString();
+                                            int indexOfItem = SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart);
+                                            double X = SESSION._EMPLOYEE.getPresent();
+                                            if (sw.isChecked()) {
+                                                if (!(str.equals(""))) {
+                                                    double d = Double.parseDouble(str);
+                                                    double originalTotalPrice = 0;
+                                                    double salePrice=0;
+                                                    for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
+                                                        OrderDetails o =SESSION._ORDER_DETAILES.get(i);
+                                                        salePrice+=(o.getUnitPrice() * o.getQuantity());
+
+                                                            originalTotalPrice += d;
+
+                                                    }
+                                                    originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+                                                    salePrice= salePrice - (salePrice * (X/ 100));
+                                                    if (originalTotalPrice>=salePrice){
+                                                        discount = (1 - (d / (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity()))) * 100;
+                                                        SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(Double.parseDouble(Util.makePrice(discount)));
+                                                        calculateTotalPrice();
+
+                                                        cashDialog.cancel();
+                                                    } else {
+                                                        Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                        cashETCash.setBackgroundResource(R.drawable.backtext);
+                                                    }
+                                                }
+                                            } else {
+                                                if (!(str.equals(""))) {
+                                                    double d = Double.parseDouble(str);
+                                                    double originalTotalPrice = 0;
+                                                    double salePrice=0;
+                                                    for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
+                                                        OrderDetails o =SESSION._ORDER_DETAILES.get(i);
+                                                        salePrice+=(o.getUnitPrice() * o.getQuantity());
+
+                                                            originalTotalPrice += (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity())*(1-d/100);
+
+                                                    }
+                                                    originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
+                                                    salePrice= salePrice - (salePrice * (X/ 100));
+                                                    if (originalTotalPrice>=salePrice){
+                                                        discount= Double.parseDouble(str);
+                                                        SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(Double.parseDouble(Util.makePrice(discount)));
+
+                                                        calculateTotalPrice();
+                                                        cashDialog.cancel();
+                                                    }
+                                                }
+                                            }
+                                      /*  if (sw.isChecked()) {
+                                            if (!(str.equals(""))) {
+                                                double d = Double.parseDouble(str);
+                                                int count = SESSION._ORDER_DETAILES.get(indexOfItem).getQuantity();
+                                                double discount = (1 - (d / (SESSION._ORDER_DETAILES.get(indexOfItem).getUnitPrice() * count)));
+
+                                                if (discount <= (X / 100)) {
+                                                    // SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (discount * 100);
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(Double.parseDouble(Util.makePrice(discount * 100)));
+                                                    calculateTotalPrice();
+
+                                                    cashDialog.cancel();
+                                                } else {
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        } else {
+                                            if (!(str.equals(""))) {
+                                                float val = Float.parseFloat(str);
+                                                if (val <= X) {
+                                                    //    SESSION._ORDER_DETAILES.get(indexOfItem).rowDiscount = (val);
+                                                    SESSION._ORDER_DETAILES.get(indexOfItem).setDiscount(Double.parseDouble(Util.makePrice(val)));
+
+                                                    calculateTotalPrice();
+                                                    cashDialog.cancel();
+                                                } else {
+                                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }*/
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.please_select_item), Toast.LENGTH_SHORT);
+                                }
+
+                    }}
                 });
 
                 btn_done.setOnClickListener(new View.OnClickListener() {
@@ -3375,6 +3656,12 @@ public class SalesCartActivity extends AppCompatActivity {
                         } catch (SendRequestException e) {
                             e.printStackTrace();
                         }
+                    }
+                });
+                btn_close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        productWeightDialog.dismiss();
                     }
                 });
                 lvDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {

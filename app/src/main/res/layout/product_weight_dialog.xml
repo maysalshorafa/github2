@@ -212,6 +212,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/discountText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
