@@ -205,7 +205,7 @@ public class SalesCartActivity extends AppCompatActivity {
     TextView tvTotalPrice;
     TextView tvTotalSaved;
     TextView salesSaleMan;
-    static TextView customerBalance;
+    static TextView customerBalance , productWeight;
     TextView payment_by_customer_credit;
     EditText etSearch;
     ImageButton btnDone;
@@ -3324,10 +3324,10 @@ public class SalesCartActivity extends AppCompatActivity {
                 productWeightDialog.show();
                 final TextView productName = (TextView) productWeightDialog.findViewById(R.id.TvProductName);
                 final TextView productPrice = (TextView) productWeightDialog.findViewById(R.id.TvPrice);
-                final TextView productWeight = (TextView) productWeightDialog.findViewById(R.id.totalWeight);
+                productWeight = (TextView) productWeightDialog.findViewById(R.id.totalWeight);
                 final TextView productDiscount = (TextView) productWeightDialog.findViewById(R.id.totalDiscount);
                 final TextView discountT = (TextView) productWeightDialog.findViewById(R.id.discountText);
-                final TextView totalPrice = (TextView) productWeightDialog.findViewById(R.id.totalPrice);
+                final TextView totalPriceForBalance = (TextView) productWeightDialog.findViewById(R.id.totalPrice);
                 ImageView btn_add_weight = (ImageView) productWeightDialog.findViewById(R.id.addWeight);
                 ImageView btn_close = (ImageView) productWeightDialog.findViewById(R.id.closeDialog);
                 Button btn_done = (Button) productWeightDialog.findViewById(R.id.productWeightDialog_BTOk);
@@ -3340,9 +3340,10 @@ public class SalesCartActivity extends AppCompatActivity {
 
                   deviceHelper = new DeviceHelper(this);
                 refreshList();
+                btRefresh.performClick();
+                btTest.performClick();
                 productName.setText(o.getProduct().getDisplayName());
                 productPrice.setText(Util.makePrice(o.getProduct().getPrice()));
-                productWeight.setText(Util.makePrice(o.getProduct().getWeight()));
 
 
                 btRefresh.setOnClickListener(new View.OnClickListener() {
@@ -5477,8 +5478,7 @@ Log.d("testCustomer",c.toString());
                     }
 
 
-                    String balanceData = balanceValue;
-
+                    final String balanceData = balanceValue;
                     balanceValue = "";
                     final Context context = SalesCartActivity.this;
 
@@ -5492,10 +5492,11 @@ Log.d("testCustomer",c.toString());
                     }
 
                     builder.setTitle("Test Result")
-                            .setMessage("The result is: "+ balanceValue)
+                            .setMessage("The result is: "+ balanceData)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     // continue with delete
+                                    productWeight.setText(balanceData);
                                     ((SalesCartActivity) context).deviceHelper.close();
                                 }
                             })
