@@ -350,8 +350,8 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                             for(OrderDetails o :SESSION._ORDER_DETAILES){
                                                 if(o.getProduct().getProductId()!=-1) {
                                                     ProductInventory productInventory = productInventoryDbAdapter.getProductInventoryByID(o.getProduct().getProductId());
-                                                    productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(), productInventory.getQty() - o.getQuantity());
-                                                    productHashMap.put(String.valueOf(o.getProduct().getProductId()),productInventory.getQty()-o.getQuantity());
+                                                    productInventoryDbAdapter.updateEntry(o.getProduct().getProductId(), (int) (productInventory.getQty() - o.getQuantity()));
+                                                    productHashMap.put(String.valueOf(o.getProduct().getProductId()), (int) (productInventory.getQty()-o.getQuantity()));
                                                 }
                                             }
 

@@ -45,16 +45,6 @@
 
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/lvDevicePort_choosingBalanceActivity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-        </ListView>
-
-
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -278,22 +268,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:orientation="horizontal"
-        android:weightSum="4">
-        <Button
-            android:id="@+id/btRefresh_choosingBalanceActivity"
-            style="@style/AppTheme.bt_yellow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/refresh"
-            android:layout_weight="1"/>
+        android:weightSum="2">
 
-        <Button
-            android:id="@+id/btTest_choosingBalanceActivity"
-            style="@style/AppTheme.bt_yellow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/test"
-            android:layout_weight="1"/>
         <Button
             android:id="@+id/productWeightDialog_BTOk"
             style="@style/AppTheme.bt_green"

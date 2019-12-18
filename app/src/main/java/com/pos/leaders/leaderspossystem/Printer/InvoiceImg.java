@@ -1525,7 +1525,7 @@ public class InvoiceImg {
         return make(blocks);
     }
     public Bitmap replacmentNote(Order sale, boolean isCopy) {
-        int count=0;
+        double count=0;
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
@@ -2057,7 +2057,7 @@ public class InvoiceImg {
     public Bitmap pinPadInvoice(Order order, Boolean isCopy, HashMap<String, String> mainMer) {
         Block rest = new Block("\u200E" , 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        int count=0;
+        double count=0;
         final List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(order));
         String status = context.getString(R.string.source_invoice);

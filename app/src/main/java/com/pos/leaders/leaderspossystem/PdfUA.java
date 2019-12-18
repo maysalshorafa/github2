@@ -2337,8 +2337,8 @@ public class PdfUA {
         insertCell(table, "%", Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 2, urFontName1);
         insertCell(table, context.getString(R.string.price), Element.ALIGN_CENTER, 2, urFontName1);
-        insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 1, urFontName1);
-        insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 3, urFontName1);
+        insertCell(table, context.getString(R.string.qty), Element.ALIGN_CENTER, 2, urFontName1);
+        insertCell(table, context.getString(R.string.product), Element.ALIGN_CENTER, 2, urFontName1);
 
         double price_before_tax=0;
         ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
@@ -2348,13 +2348,13 @@ public class PdfUA {
             insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
             insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
-            insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 2, urFontName); // insert date value
 
             Product product =productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
             orderDetailsList.get(i).setProduct(product);
             if (orderDetailsList.get(i).getProduct().getDisplayName().equals("General"))
                 orderDetailsList.get(i).getProduct().setProductCode(context.getString(R.string.general));
-            insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_CENTER, 3, urFontName); // insert date value
+            insertCell(table, orderDetailsList.get(i).getProduct().getDisplayName(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             totalPrice+=orderDetailsList.get(i).getItemTotalPrice();
             count+=orderDetailsList.get(i).getQuantity();
             if (orderDetailsList.get(i).getProductSerialNumber()>0) {

@@ -205,7 +205,8 @@ public class SalesCartActivity extends AppCompatActivity {
     TextView tvTotalPrice;
     TextView tvTotalSaved;
     TextView salesSaleMan;
-    static TextView customerBalance , productWeight;
+    static TextView customerBalance , productWeight , totalPriceForBalance;
+    double PriceForWeight=0 , weightForProduct;
     TextView payment_by_customer_credit;
     EditText etSearch;
     ImageButton btnDone;
@@ -356,7 +357,6 @@ public class SalesCartActivity extends AppCompatActivity {
     DeviceSchema selectedDevice = null;
     int selectedDeviceIndex = -1;
     DevicesListAdapter devicesListAdapter;
-    ListView lvDevices;
     DeviceHelper deviceHelper;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private SerialInputOutputManager mSerialIoManager;
@@ -3156,8 +3156,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
 
                 Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
-                saleTotalPrice += o.getItemTotalPrice() * currency.getRate();
-                SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity() * currency.getRate());
+                    saleTotalPrice += o.getItemTotalPrice() * currency.getRate();
+                    SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity() * currency.getRate());
             }
         }
 
@@ -3316,7 +3316,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
             }
             if(o.getProduct().getUnit().equals(ProductUnit.WEIGHT)){
-
+                PriceForWeight=o.getProduct().getPrice();
                 final Dialog productWeightDialog = new Dialog(SalesCartActivity.this);
                 productWeightDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 productWeightDialog.show();
@@ -3327,42 +3327,22 @@ public class SalesCartActivity extends AppCompatActivity {
                 productWeight = (TextView) productWeightDialog.findViewById(R.id.totalWeight);
                 final TextView productDiscount = (TextView) productWeightDialog.findViewById(R.id.totalDiscount);
                 final TextView discountT = (TextView) productWeightDialog.findViewById(R.id.discountText);
-                final TextView totalPriceForBalance = (TextView) productWeightDialog.findViewById(R.id.totalPrice);
+                totalPriceForBalance = (TextView) productWeightDialog.findViewById(R.id.totalPrice);
                 ImageView btn_add_weight = (ImageView) productWeightDialog.findViewById(R.id.addWeight);
                 ImageView btn_close = (ImageView) productWeightDialog.findViewById(R.id.closeDialog);
                 Button btn_done = (Button) productWeightDialog.findViewById(R.id.productWeightDialog_BTOk);
                 Button btn_discount = (Button) productWeightDialog.findViewById(R.id.productWeightDialog_BTDiscount);
-                Button btRefresh = (Button) productWeightDialog.findViewById(R.id.btRefresh_choosingBalanceActivity);
-              Button  btTest = (Button) productWeightDialog.findViewById(R.id.btTest_choosingBalanceActivity);
-                lvDevices = (ListView) productWeightDialog.findViewById(R.id.lvDevicePort_choosingBalanceActivity);
+
 
                  devicesListAdapter = new DevicesListAdapter(this, R.layout.list_view_row_devices, devicesList);
 
                   deviceHelper = new DeviceHelper(this);
-                refreshList();
-                btRefresh.performClick();
-                btTest.performClick();
                 productName.setText(o.getProduct().getDisplayName());
                 productPrice.setText(Util.makePrice(o.getProduct().getPrice()));
-
-
-                btRefresh.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        refreshList();
-                    }
-                });
-                btTest.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (selectedDevice != null) {
-                            runTest(deviceHelper.getAvailableDrivers().get(0));
-                        } else
-                            Toast.makeText(SalesCartActivity.this, "Please select device.", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
+                refreshList();
+                selectedDeviceIndex =0;
+                selectedDevice = devicesList.get(0);
+                runTest(deviceHelper.getAvailableDrivers().get(0));
                 btn_discount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -3473,7 +3453,11 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
                                                         OrderDetails o =SESSION._ORDER_DETAILES.get(i);
                                                         salePrice+=(o.getUnitPrice() * o.getQuantity());
+                                                        if(i!=SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart)){
+                                                            originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                                        }else {
                                                             originalTotalPrice += d;
+                                                        }
 
                                                     }
                                                     originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
@@ -3484,13 +3468,19 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         selectedOrderOnCart.setDiscount(discount);
                                                         totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
                                                         priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
+                                                        totalPriceForBalance.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100)*weightForProduct + type);
+
                                                         productDiscount.setText(str);
                                                     } else {
+                                                        totalPriceForBalance.setText(itemOriginalPrice*weightForProduct + type);
+
                                                         Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                         cashETCash.setBackgroundResource(R.drawable.backtext);
                                                     }
 
                                                 } else {
+                                                    totalPriceForBalance.setText(itemOriginalPrice*weightForProduct + type);
+
                                                     productDiscount.setText(Util.makePrice(itemOriginalPrice ));
                                                     totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
                                                     priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
@@ -3503,7 +3493,11 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
                                                         OrderDetails o =SESSION._ORDER_DETAILES.get(i);
                                                         salePrice+=(o.getUnitPrice() * o.getQuantity());
+                                                        if(i!=SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart)){
+                                                            originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                                        }else {
                                                             originalTotalPrice += (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity())*(1-d/100);
+                                                        }
 
                                                     }
                                                     originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
@@ -3514,9 +3508,12 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         Log.d("teeestr",itemOriginalPrice +"  "+ selectedOrderOnCart.getDiscount()/100);
                                                         totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
                                                         priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
+                                                        totalPriceForBalance.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100)*weightForProduct + type);
+
                                                         productDiscount.setText(str+"%");
 
                                                     } else {
+                                                        totalPriceForBalance.setText(itemOriginalPrice*weightForProduct + type);
                                                         productDiscount.setText(0+"%");
                                                         Toast.makeText(SalesCartActivity.this, getBaseContext().getString(R.string.cant_do_this_function_discount), Toast.LENGTH_SHORT).show();
                                                         cashETCash.setBackgroundResource(R.drawable.backtext);
@@ -3524,6 +3521,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
                                                 } else {
+                                                    totalPriceForBalance.setText(itemOriginalPrice*weightForProduct + type);
+
                                                     productDiscount.setText(0+"%");
                                                     totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
                                                     priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
@@ -3571,7 +3570,11 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         OrderDetails o =SESSION._ORDER_DETAILES.get(i);
                                                         salePrice+=(o.getUnitPrice() * o.getQuantity());
 
+                                                        if(i!=indexOfItem){
+                                                            originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                                        }else {
                                                             originalTotalPrice += d;
+                                                        }
 
                                                     }
                                                     originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
@@ -3596,8 +3599,11 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         OrderDetails o =SESSION._ORDER_DETAILES.get(i);
                                                         salePrice+=(o.getUnitPrice() * o.getQuantity());
 
+                                                        if(i!=SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart)){
+                                                            originalTotalPrice += (o.getUnitPrice() * o.getQuantity())*(1-o.getDiscount()/100);
+                                                        }else {
                                                             originalTotalPrice += (selectedOrderOnCart.getUnitPrice() * selectedOrderOnCart.getQuantity())*(1-d/100);
-
+                                                        }
                                                     }
                                                     originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
                                                     salePrice= salePrice - (salePrice * (X/ 100));
@@ -3652,24 +3658,26 @@ public class SalesCartActivity extends AppCompatActivity {
                 btn_done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        try {
-                            deviceHelper.sendReadRequest();
-                        } catch (SendRequestException e) {
-                            e.printStackTrace();
-                        }
+
+                        String    str = totalPriceForBalance.getText().toString().substring(0, totalPriceForBalance.getText().toString().length() - 1);
+                        SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setQuantity(weightForProduct);
+                        calculateTotalPrice();
+                      productWeightDialog.dismiss();
+                    }
+                });
+                btn_add_weight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        refreshList();
+                        selectedDeviceIndex =0;
+                        selectedDevice = devicesList.get(0);
+                        runTest(deviceHelper.getAvailableDrivers().get(0));
                     }
                 });
                 btn_close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         productWeightDialog.dismiss();
-                    }
-                });
-                lvDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        selectedDeviceIndex = i;
-                        selectedDevice = devicesList.get(i);
                     }
                 });
             }
@@ -4290,13 +4298,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 // insert order region
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
-                    if(o.getProduct().isWithTax()){
-                         orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
-
-                    }else {
                          orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
-                    }
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
@@ -5441,13 +5444,13 @@ Log.d("testCustomer",c.toString());
 
     }
     private void refreshList(){
+        balanceValue="";
         devicesList.clear();
 
         if(getActiveDevices()!=null)
             devicesList.addAll(getActiveDevices());
-
-        lvDevices.setAdapter(devicesListAdapter);
-        devicesListAdapter.notifyDataSetChanged();
+        selectedDeviceIndex = 0;
+        selectedDevice = devicesList.get(0);
     }
     private void runTest(UsbSerialDriver driver) {
         deviceHelper.close();
@@ -5479,7 +5482,6 @@ Log.d("testCustomer",c.toString());
 
 
                     final String balanceData = balanceValue;
-                    balanceValue = "";
                     final Context context = SalesCartActivity.this;
 
                     // closing device connection on receives data for ones
@@ -5490,8 +5492,11 @@ Log.d("testCustomer",c.toString());
                     } else {
                         builder = new AlertDialog.Builder(context);
                     }
+                    productWeight.setText(balanceData);
+                    weightForProduct=Double.parseDouble(balanceData);
+                    totalPriceForBalance.setText(Util.makePrice(Double.parseDouble(balanceData)*PriceForWeight));
 
-                    builder.setTitle("Test Result")
+                   /* builder.setTitle("Test Result")
                             .setMessage("The result is: "+ balanceData)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -5507,7 +5512,7 @@ Log.d("testCustomer",c.toString());
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_info)
-                            .show();
+                            .show();*/
                 }
             });
         }

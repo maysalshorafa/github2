@@ -43,7 +43,7 @@ public class OrderDetailsDBAdapter {
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
-			" `quantity` INTEGER, `order_id` INTEGER, " +
+			" `quantity` REAL, `order_id` INTEGER, " +
 			" '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" + ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
 			ORDER_DETAILES_COLUMN_KEY + " TEXT , " +	ORDER_DETAILES_COLUMN_PRICE_AFTER_DISCOUNT + " REAL DEFAULT 0.0, " +ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER + " INTEGER DEFAULT 0, " +ORDER_DETAILS_COLUMN_SERIAL_NUMBER + " TEXT DEFAULT 0, " +ORDER_DETAILES_COLUMN_OFFER_ID + " INTEGER DEFAULT 0, '" +ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX + "' REAL, " +
 			"FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
@@ -123,7 +123,7 @@ public class OrderDetailsDBAdapter {
 		}
 	}
 
-	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
+	public long insertEntry(long productId, double counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
 		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId,productSerialNumber,paidAmountAfterTax,serialNo);
 		sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
@@ -135,7 +135,7 @@ public class OrderDetailsDBAdapter {
 			return 0;
 		}
 	}
-	public long insertEntryFromInvoice(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
+	public long insertEntryFromInvoice(long productId, double counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID  , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
 		OrderDetails o = new OrderDetails(Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID), productId, counter, userOffer, saleId, price, original_price, discount,custmerAssestID,orderDetailsKey,offerId,productSerialNumber,paidAmountAfterTax,serialNo);
 		// sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 
