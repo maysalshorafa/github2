@@ -115,16 +115,6 @@ public class ProductDBAdapter {
                             boolean withTax, long categoryId, long byUser , int pos, int point_system,
 
                             String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPrice,boolean withSerialNumber) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price,
                 costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType,branchId,offerId,lastCostPrice,withSerialNumber);
 
@@ -137,36 +127,15 @@ public class ProductDBAdapter {
             boProduct.setBarCode(Util.getString(boProduct.getSku()));*/
             sendToBroker(MessageType.ADD_PRODUCT, p, this.context);
         }
-        close();
         return id;
     }
 
     public long insertEntry(Product p) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         Product product = getProductByBarCode(p.getSku());
         if (p.getStockQuantity() > 0) {
             p.setStatus(ProductStatus.ACTIVE);
         } else if (p.getStockQuantity() == 0) {
             p.setStatus(ProductStatus.OUT_OF_STOCKS);
-        }
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
         }
 
         if (product != null) {
@@ -224,11 +193,6 @@ public class ProductDBAdapter {
 
         }
         try {
-            if(db.isOpen()){
-
-            }else {
-                open();
-            }
             return db.insert(PRODUCTS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
             Log.e("ProductDB insertEntry", "inserting Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
@@ -238,10 +202,6 @@ public class ProductDBAdapter {
 
     public double getProductPrice(long id){
         double price=0;
-        try {
-            if(dbHelper==null) {
-                open();
-            }
             Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
             {
@@ -251,11 +211,7 @@ public class ProductDBAdapter {
             cursor.moveToFirst();
             price=Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE)));
             cursor.close();
-        close();
-        }
-        catch (Exception e) {
 
-        }
         return price;
     }
 
@@ -263,17 +219,6 @@ public class ProductDBAdapter {
     public Product getProductByID(long id) {
         Product product = null;
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
-
             Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where id='" + id + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
             {
@@ -284,7 +229,6 @@ public class ProductDBAdapter {
             cursor.moveToFirst();
             product = makeProduct(cursor);
             cursor.close();
-           close();
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -293,17 +237,6 @@ public class ProductDBAdapter {
     }
     public List<Long> getProductByCategory(Long idCategory) {
         List<Long> productID =new ArrayList<>();
-            try {
-                if(db.isOpen()){
-
-                }else {
-                    try {
-                        open();
-                    }
-                    catch (SQLException ex) {
-                        Log.d("Exception",ex.toString());
-                    }
-                }
             Cursor cursor = db.rawQuery("select "+PRODUCTS_COLUMN_ID+" from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_CATEGORYID +"="+idCategory, null);
          /*   if (cursor.getCount() < 1) // UserName Not Exist
             {
@@ -315,24 +248,11 @@ public class ProductDBAdapter {
                 productID.add((long) cursor.getLong(0));
                 Log.d("NextProductId", String.valueOf(cursor.getLong(0)));
             }
-            close();
-            } catch (Exception e) {
-                Log.d("exception",e.toString());
-            }
+
 
             return productID;
     }
     public int getProductsCount() {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         String countQuery="";
         if(!SETTINGS.enableAllBranch){
             countQuery  = "SELECT  * FROM " + PRODUCTS_TABLE_NAME+ " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc";
@@ -343,34 +263,21 @@ public class ProductDBAdapter {
         Cursor cursor = db.rawQuery(countQuery, null);
         int count = cursor.getCount();
         cursor.close();
-        close();
         return count;
     }
 
     public Product getProductByBarCode(String barcode){
         Product product = null;
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
             Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where barcode='" + barcode + "' or sku='" + barcode + "'", null);
             if (cursor.getCount() < 1) // UserName Not Exist
             {
                 cursor.close();
-                close();
                 return product;
             }
             cursor.moveToFirst();
             product = makeProduct(cursor);
             cursor.close();
-    close();
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -380,16 +287,6 @@ public class ProductDBAdapter {
     }
 
     public int deleteEntry(long id) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         ProductDBAdapter productDBAdapter=new ProductDBAdapter(context);
         productDBAdapter.open();
         // Define the updated row content.
@@ -413,16 +310,6 @@ public class ProductDBAdapter {
         }
     }
     public long deleteEntryBo(Product product) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -433,7 +320,6 @@ public class ProductDBAdapter {
             db.update(PRODUCTS_TABLE_NAME, updatedValues, where, new String[]{product.getProductId() + ""});
             //delete all offers for this product
             // new OfferDBAdapter(context).deleteEntryByResourceId(product.getProductId());
-            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Product deleteEntry", "enable hide Entry at " + PRODUCTS_TABLE_NAME + ": " + ex.getMessage());
@@ -442,16 +328,6 @@ public class ProductDBAdapter {
     }
 
     public void updateEntry(Product product) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
 
         ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
         productDBAdapter.open();
@@ -486,19 +362,8 @@ public class ProductDBAdapter {
         Log.d("Update Object",p.toString());
         sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
         productDBAdapter.close();
-        close();
     }
     public long updateEntryBo(Product product) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
         productDBAdapter.open();
         ContentValues val = new ContentValues();
@@ -533,7 +398,6 @@ public class ProductDBAdapter {
             Product p=productDBAdapter.getProductByID(product.getProductId());
             Log.d("Update Object",p.toString());
             productDBAdapter.close();
-            close();
             return 1;
         } catch (SQLException ex) {
             return 0;
@@ -544,16 +408,6 @@ public class ProductDBAdapter {
         CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         List<Product> productsList =new ArrayList<Product>();
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
                 cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED + "=0 order by id desc", null);
@@ -577,7 +431,7 @@ public class ProductDBAdapter {
 
                 }
             }
-close();
+
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -590,16 +444,6 @@ close();
         List<Product> productsList =new ArrayList<Product>();
         CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
                 cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +" = 0 order by id desc", null );
@@ -623,7 +467,6 @@ close();
                 }
             }
 
-        close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -637,16 +480,6 @@ close();
         List<Product> productsList =new ArrayList<Product>();
         CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
                 cursor =  db.rawQuery( "select * from "+PRODUCTS_TABLE_NAME+" where "+ PRODUCTS_COLUMN_CATEGORYID +" = "+categoryId+" and "+ PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null );
@@ -669,7 +502,6 @@ close();
 
                 }
             }
-          close();
 
         } catch (Exception e) {
       Log.d("Exception",e.toString());
@@ -683,16 +515,6 @@ close();
 
         //SELECT * FROM table limit 100, 200
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
 
@@ -715,18 +537,8 @@ close();
                     cursor.moveToNext();
 
                 }
-                if(db.isOpen()){
 
-                }else {
-                    try {
-                        open();
-                    }
-                    catch (SQLException ex) {
-                        Log.d("Exception",ex.toString());
-                    }
-                }
             }
-     close();
 
         } catch (Exception e) {
             Log.d("exception",e.toString());
@@ -749,16 +561,6 @@ close();
         return categoryId;
     }
     private Product makeProduct(Cursor cursor){
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         int withTaxValue = cursor.getInt(cursor.getColumnIndex(PRODUCTS_COLUMN_WITHTAX));
 
         boolean withTaxStatus ,weighableStatus =false ;
@@ -813,42 +615,20 @@ close();
         if(Double.isNaN(p.getRegularPrice())){
             p.setRegularPrice(p.getPrice());
         }
-        close();
         return p;
     }
     public boolean availableProductName(String productName) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_NAME + "=?", new String[]{productName}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             //Product Name not available
-            close();
+
             return false;
         }
         // Product Name available
-        close();
         return true;
     }
     public Product getByProductName(String productName) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         Cursor cursor;
         try {
             cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_NAME + "=?", new String[]{productName}, null, null, null);
@@ -858,10 +638,8 @@ close();
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             //Product Name not available
-            close();
             return makeProduct(cursor);
         }
-        close();
         // Product Name available
         return null;
     }
@@ -870,16 +648,6 @@ close();
         CategoryDBAdapter categoryDBAdapter= new CategoryDBAdapter(context);
         List<Product> productsList =new ArrayList<Product>();
         try {
-            if(db.isOpen()){
-
-            }else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
                 cursor =  db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" where "+ PRODUCTS_COLUMN_BARCODE +" like '%"+
@@ -907,7 +675,6 @@ close();
                 }
             }
 
-       close();
         } catch (Exception e) {
             Log.d("exception",e.toString());
 
@@ -916,36 +683,14 @@ close();
     }
     // methode to test if barcode is UNIQUE
     public Boolean isValidSku(String sku) {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         Cursor cursor = db.query(PRODUCTS_TABLE_NAME, null, PRODUCTS_COLUMN_SKU + "=?", new String[]{sku}, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-close();
             return false;
         }
-        close();
         return true;
     }
     public Product getLastRow() throws Exception {
-        if(db.isOpen()){
-
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         Product product = null;
         Cursor cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME +" order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
@@ -956,7 +701,6 @@ close();
         cursor.moveToFirst();
         product = makeProduct(cursor);
         cursor.close();
-close();
         return product;
     }
     public static String addColumnInteger(String columnName) {

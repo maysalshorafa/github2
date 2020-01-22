@@ -56,11 +56,8 @@ public class CurrencyDBAdapter {
     }
 
     public CurrencyDBAdapter open() throws SQLException {
-        try {
-            this.db = dbHelper.getWritableDatabase();
-        }catch (Exception e){
-            Log.d("eeee",e.toString());
-        }            return this;
+        this.db = dbHelper.getWritableDatabase();
+        return this;
     }
 
     public void close() {
@@ -73,22 +70,10 @@ public class CurrencyDBAdapter {
 
 
     public long insertEntry(String name, String currency_code, String country, long rate,Timestamp createDate) {
-        if (db.isOpen()){
-
-        }
-        else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         Currency currency = new Currency(Util.idHealth(this.db, CURRENCY_TABLE_NAME, CURRENCY_COLUMN_ID), name, currency_code, country,rate,createDate);
         sendToBroker(MessageType.ADD_CURRENCY, currency, this.context);
 
         try {
-            close();
             return insertEntry(currency);
         } catch (SQLException ex) {
             Log.e("Currency DB insert", "inserting Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
@@ -97,29 +82,18 @@ public class CurrencyDBAdapter {
     }
 
     public long insertEntry(Currency currency){
-
-        if (db.isOpen()){
-
-        }
-        else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
 
         val.put(CURRENCY_COLUMN_ID, currency.getId());
+
+
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode() );
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());
 
         try {
-
             return db.insert(CURRENCY_TABLE_NAME, null, val);
         } catch (Exception ex) {
             Log.e("Currency DB insert", "inserting Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
@@ -127,17 +101,6 @@ public class CurrencyDBAdapter {
         }
     }
     public int deleteEntry(long id) {
-        if (db.isOpen()){
-
-        }
-        else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         // Define the updated row content.
         ContentValues updatedValues = new ContentValues();
         // Assign values for each row.
@@ -145,7 +108,6 @@ public class CurrencyDBAdapter {
         String where = CURRENCY_COLUMN_ID + " = ?";
         try {
             db.update(CURRENCY_TABLE_NAME, updatedValues, where, new String[]{id + ""});
-            close();
             return 1;
         } catch (SQLException ex) {
             Log.e("Currency DB delete", "enable hide Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
@@ -154,42 +116,19 @@ public class CurrencyDBAdapter {
     }
 
     public void updateEntry(Currency currency) {
-        if (db.isOpen()){
-
-        }
-        else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode());
         val.put(CURRENCYCOLUMN_RATE, currency.getRate());
+
         String where = CURRENCY_COLUMN_ID + " = ?";
         db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
-        close();
     }
 
     public List<Currency> getAllCurrencyLastUpdate(List<CurrencyType> currency) {
         List<Currency> currencyList = new ArrayList<Currency>();
-        try {
-            if (db.isOpen()){
-
-            }
-            else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
         Cursor cursor=null;
         String name="";
         for (int i=0;i<currency.size();i++) {
@@ -200,11 +139,6 @@ public class CurrencyDBAdapter {
                 currencyList.add(build(cursor));
                 cursor.moveToNext();
             }
-        }
-        close();
-        }
-        catch (Exception e) {
-            Log.d("Exception",e.toString());
         }
         return currencyList;
     }
@@ -218,70 +152,27 @@ public class CurrencyDBAdapter {
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
     }
     public Currency getLastCurrency(){
-
         Currency currency = new Currency();
-        try {
-
-            if (db.isOpen()){
-            }
-            else {
-                try {
-                    open();
-                }
-                catch (SQLException ex) {
-                    Log.d("Exception",ex.toString());
-                }
-            }
         Cursor cursor=null;
-            cursor = db.rawQuery("SELECT * FROM "+CURRENCY_TABLE_NAME+" ORDER BY id DESC LIMIT 1", null);
+        cursor = db.rawQuery("SELECT * FROM "+CURRENCY_TABLE_NAME+" ORDER BY id DESC LIMIT 1", null);
         cursor.moveToFirst();
-                currency=build(cursor);
+        currency=build(cursor);
         Log.d("Currency",currency.toString());
-
-            close();
-        }
-        catch (Exception e) {
-            Log.d("Exception",e.toString());
-        }
-
         return currency;
     }
     public void deleteCurrencyList(){
         db.execSQL("delete from "+ CURRENCY_TABLE_NAME);
-        }
+    }
 
     public void deleteOldRate(List<CurrencyType> currency) {
-        if (db.isOpen()){
-
-        }
-        else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         String name="";
         for (int i=0;i<currency.size();i++) {
             name = currency.get(i).getType();
             db.execSQL("delete from " + CURRENCY_TABLE_NAME + " where " + CURRENCY_COLUMN_ID + " not in ( select " + CURRENCY_COLUMN_ID + " from " + CURRENCY_TABLE_NAME + " where " + CURRENCY_COLUMN_CURRENCYCODE + "='" + name + "'" + " order by " + CURRENCY_COLUMN_ID + " desc LIMIT 1) AND currency_code ='"+name+"'");
         }
-        close();
 
     }
     public Currency getCurrencyByCode(String code) {
-        if (db.isOpen()){
-
-        }
-        else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         Currency currency = null;
         Cursor cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME + " where currency_code='" + code + "'", null);
         if (cursor.getCount() < 1) // UserName Not Exist
@@ -297,7 +188,7 @@ public class CurrencyDBAdapter {
                 Double.parseDouble( cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_RATE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
         cursor.close();
-       close();
+
         return currency;
     }
 
