@@ -1,32 +1,33 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+        import android.app.AlertDialog;
+        import android.content.Context;
+        import android.content.DialogInterface;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.View.OnClickListener;
+        import android.view.ViewGroup;
+        import android.widget.ArrayAdapter;
+        import android.widget.ImageView;
+        import android.widget.LinearLayout;
+        import android.widget.TextView;
 
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Offer;
-import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-import com.pos.leaders.leaderspossystem.Models.Product;
-import com.pos.leaders.leaderspossystem.R;
+        import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+        import com.pos.leaders.leaderspossystem.Models.Offer;
+        import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+        import com.pos.leaders.leaderspossystem.Models.Product;
+        import com.pos.leaders.leaderspossystem.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        import org.json.JSONException;
+        import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+        import java.util.ArrayList;
+        import java.util.List;
+        import java.util.Locale;
 
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+        import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
  * Created by KARAM on 20/10/2016.
@@ -95,20 +96,30 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         ProductDBAdapter productDBAdapter =new  ProductDBAdapter(context);
         productDBAdapter.open();
         Product product =productDBAdapter.getProductByID(orderList.get(position).getProductId());
-        holder.tvName.setText(_Substring(product.getDisplayName()));
-        String currencyType="";
-        if(product.getCurrencyType()==0) {
-            currencyType=context.getString(R.string.ins);
+        productDBAdapter.close();
+        String currencyType = "";
+        try {
+
+            holder.tvName.setText(_Substring(product.getDisplayName()));
+            if (product.getCurrencyType() == 0) {
+                currencyType = context.getString(R.string.ins);
+            }
+            if (product.getCurrencyType() == 1) {
+                currencyType = context.getString(R.string.dolor_sign);
+            }
+            if (product.getCurrencyType() == 2) {
+                currencyType = context.getString(R.string.gbp);
+            }
+            if (product.getCurrencyType() == 3) {
+                currencyType = context.getString(R.string.eur);
+            }
+
         }
-        if(product.getCurrencyType()==1) {
-            currencyType=context.getString(R.string.dolor_sign);
+        catch(NullPointerException e)
+        {
+            Log.d("NullPointerException",e.toString());
         }
-        if(product.getCurrencyType()==2) {
-            currencyType=context.getString(R.string.gbp);
-        }
-        if(product.getCurrencyType()==3) {
-            currencyType=context.getString(R.string.eur);
-        }
+
         holder.tvPrice.setText(String.format(new Locale("en"), "%.2f", orderList.get(position).getUnitPrice()) + " " + currencyType);
         holder.tvCount.setText(count + "");
         holder.tvTotal.setText(String.format(new Locale("en"), "%.2f", (price )) + " " + currencyType);
@@ -150,6 +161,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
                         OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
                         offerDBAdapter.open();
                         Offer offer = offerDBAdapter.getOfferById(orderList.get(position).getProduct().getOfferId());
+                        offerDBAdapter.close();
                         offerNames.add(offer.getName() + " _ " + offer.getActionName());
                         offerDiscount.add(orderList.get(position).getDiscount());
                     }
@@ -173,6 +185,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
                 OfferDBAdapter offerDBAdapter = new OfferDBAdapter(context);
                 offerDBAdapter.open();
                 Offer offer = offerDBAdapter.getOfferById(orderList.get(position).getProduct().getOfferId());
+                offerDBAdapter.close();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(finalConvertView.getRootView().getContext());
                 alertDialogBuilder .setTitle(getContext().getString(R.string.offer_name));
                 alertDialogBuilder.setMessage(offer.getName());

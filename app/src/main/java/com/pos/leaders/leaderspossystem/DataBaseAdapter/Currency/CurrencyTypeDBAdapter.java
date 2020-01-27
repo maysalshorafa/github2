@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
@@ -56,6 +57,17 @@ public class CurrencyTypeDBAdapter {
 
 
     public List<CurrencyType> getAllCurrencyType() {
+        if (db.isOpen()){
+
+        }
+        else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         List<CurrencyType> currencyTypes = new ArrayList<CurrencyType>();
         Cursor cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME , null);
         cursor.moveToFirst();
@@ -67,10 +79,32 @@ public class CurrencyTypeDBAdapter {
     }
 
     private CurrencyType createNewCurrency(Cursor cursor){
+        if (db.isOpen()){
+
+        }
+        else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         return new CurrencyType(Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyType_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(CurrencyType_COLUMN_Name)));
     }
     public long insertEntry(String name) {
+        if (db.isOpen()){
+
+        }
+        else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         CurrencyType currencyType = new CurrencyType(Util.idHealth(this.db, CurrencyType_TABLE_NAME, CurrencyType_COLUMN_ID), name);
         CurrencyType boCurrencyType = currencyType;
         sendToBroker(MessageType.ADD_CURRENCY_TYPE, boCurrencyType, this.context);
@@ -78,6 +112,17 @@ public class CurrencyTypeDBAdapter {
         return 1;
     }
     public  long getCurrencyIdByType(String type){
+        if (db.isOpen()){
+
+        }
+        else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         Cursor cursor=null;
         cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME + " where  "+ CurrencyType_COLUMN_Name +"='" + type + "'" , null);
         cursor.moveToFirst();
@@ -87,3 +132,4 @@ public class CurrencyTypeDBAdapter {
 
 
 }
+

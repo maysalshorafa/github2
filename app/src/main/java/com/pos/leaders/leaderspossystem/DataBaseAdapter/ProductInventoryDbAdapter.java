@@ -1,19 +1,20 @@
-package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+        package com.pos.leaders.leaderspossystem.DataBaseAdapter;
 
-import com.pos.leaders.leaderspossystem.DbHelper;
-import com.pos.leaders.leaderspossystem.Models.ProductInventory;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-import com.pos.leaders.leaderspossystem.Tools.Util;
+        import android.content.ContentValues;
+        import android.content.Context;
+        import android.database.Cursor;
+        import android.database.SQLException;
+        import android.database.sqlite.SQLiteDatabase;
+        import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+        import com.pos.leaders.leaderspossystem.DbHelper;
+        import com.pos.leaders.leaderspossystem.Models.ProductInventory;
+        import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+        import com.pos.leaders.leaderspossystem.Tools.Util;
+
+        import java.util.ArrayList;
+        import java.util.List;
 
 /**
  * Created by Win8.1 on 7/21/2019.
@@ -50,8 +51,8 @@ public class ProductInventoryDbAdapter {
     }
 
     public ProductInventoryDbAdapter open() throws SQLException {
-            this.db = dbHelper.getWritableDatabase();
-            return this;
+        this.db = dbHelper.getWritableDatabase();
+        return this;
 
     }
 
@@ -87,7 +88,16 @@ public class ProductInventoryDbAdapter {
         val.put(PRODUCT_INVENTORY_COLUMN_NAME,productInventory.getName());
         val.put(PRODUCT_INVENTORY_COLUMN_PRICE,productInventory.getPrice());
 
+        if(db.isOpen()){
 
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         try {
 
             return db.insert(PRODUCT_INVENTORY_TABLE_NAME, null, val);
@@ -114,33 +124,53 @@ public class ProductInventoryDbAdapter {
         val.put(PRODUCT_INVENTORY_COLUMN_PRICE,productInventory.getPrice());
         val.put(PRODUCT_INVENTORY_COLUMN_QTY,qty);
         String where = PRODUCT_INVENTORY_COLUMN_ID + " = ?";
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         db.update(PRODUCT_INVENTORY_TABLE_NAME, val, where, new String[]{productInventory.getProductInventoryId() + ""});
         productInventoryDbAdapter.close();
     }
     public ProductInventory getProductInventoryByID(long id) {
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         ProductInventory productInventory = null;
         try {
-        Cursor cursor = db.rawQuery("select * from " + PRODUCT_INVENTORY_TABLE_NAME + " where productId='" + id + "'", null);
-        if (cursor.getCount() < 1) // UserName Not Exist
-        {
+            Cursor cursor = db.rawQuery("select * from " + PRODUCT_INVENTORY_TABLE_NAME + " where productId='" + id + "'", null);
+            if (cursor.getCount() < 1) // UserName Not Exist
+            {
+                cursor.close();
+                return productInventory;
+            }
+            cursor.moveToFirst();
+            productInventory = new ProductInventory( Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_ID))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_PRODUCT_ID))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_QTY))),
+                    cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_OPERATION)),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_BY_EMPLOYEE))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_HIDE))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_BRANCH_ID))),
+                    cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_NAME)), Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_PRICE))));
             cursor.close();
-            return productInventory;
-        }
-        cursor.moveToFirst();
-        productInventory = new ProductInventory( Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_ID))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_PRODUCT_ID))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_QTY))),
-                cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_OPERATION)),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_BY_EMPLOYEE))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_HIDE))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_BRANCH_ID))),
-                cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_NAME)), Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCT_INVENTORY_COLUMN_PRICE))));
-        cursor.close();
         }
         catch (Exception e) {
             Log.d("exception",e.toString());
 
-            }
+        }
         return productInventory;
     }
     public List<ProductInventory> getAllProducts(){
@@ -163,6 +193,16 @@ public class ProductInventoryDbAdapter {
         return productsList;
     }
     public List<ProductInventory> getTopProducts(int from ,int count){
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
         List<ProductInventory> productsList =new ArrayList<ProductInventory>();
 
         try {
@@ -215,3 +255,4 @@ public class ProductInventoryDbAdapter {
         }
     }
 }
+

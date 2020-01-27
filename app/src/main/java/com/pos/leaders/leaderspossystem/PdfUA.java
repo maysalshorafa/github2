@@ -344,14 +344,28 @@ public class PdfUA {
             insertCell(opiningReportDetailsTable, context.getString(R.string.eur), Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
         }
+
         double salesaftertax=0;
         for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
-            if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+            try {
+                if (SESSION._ORDER_DETAILES.get(i).getProduct()!=null){
+                    if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
 
-        }else {
-            salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
+                    }else {
+                        salesaftertax+=SESSION._ORDER_DETAILES.get(i).getPaidAmount();
+                    }
+                }}
+            catch(NullPointerException e)
+            {
+                Log.d("NullPointerExceptionPdf",e.toString());
+            }
+
         }
-    }
+
+
+
+
+
         PdfPTable accountInformation = new PdfPTable(4);
         accountInformation.deleteBodyRows();
         accountInformation.setRunDirection(0);
