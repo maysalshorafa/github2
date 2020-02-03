@@ -761,20 +761,21 @@ public class PdfUA {
     }
     public static void insertCell(PdfPTable table, String text, int align, int colspan, Font font){
         //create a new cell with the specified Text and Font
-        PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
-        cell.setBorder(Rectangle.NO_BORDER);
+        if (text!=null) {
+            PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
+            cell.setBorder(Rectangle.NO_BORDER);
 
-        //set the cell alignment
-        cell.setHorizontalAlignment(align);
-        //set the cell column span in case you want to merge two or more cells+
-        cell.setColspan(colspan);
-        //in case there is no text and you wan to create an empty row
-        if(text.trim().equalsIgnoreCase("")){
-            cell.setMinimumHeight(14f);
+            //set the cell alignment
+            cell.setHorizontalAlignment(align);
+            //set the cell column span in case you want to merge two or more cells+
+            cell.setColspan(colspan);
+            //in case there is no text and you wan to create an empty row
+            if (text.trim().equalsIgnoreCase("")) {
+                cell.setMinimumHeight(14f);
+            }
+            //add the call to the table
+            table.addCell(cell);
         }
-        //add the call to the table
-        table.addCell(cell);
-
     }
     public static void  printCustomerWalletReport(Context context, String res) throws IOException, DocumentException, JSONException {
         JSONObject jsonObject = new JSONObject(res);
@@ -1345,6 +1346,7 @@ public class PdfUA {
         document.close();
     }
     public static void insertCellSalesMan(PdfPTable table, String text, int align, int colspan, Font font){
+        if (text!=null){
         //create a new cell with the specified Text and Font
         PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
         // cell.setBorder(Rectangle.NO_BORDER);
@@ -1359,7 +1361,7 @@ public class PdfUA {
             cell.setMinimumHeight(14f);
         }
         //add the call to the table
-        table.addCell(cell);
+        table.addCell(cell);}
 
     }
     public static void createXReport(Context context, XReport xReport,ZReportCount zReportCount) throws IOException, DocumentException {
@@ -1397,7 +1399,7 @@ public class PdfUA {
         insertCell(headingTable, context.getString(R.string.date) +":  "+xReport.getCreatedAt(), Element.ALIGN_CENTER, 1, font);
         EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
         employeeDBAdapter.open();
-        insertCell(headingTable, context.getString(R.string.user_name)+":  " +employeeDBAdapter.getEmployeesName( xReport.getByUser()), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.user_name)+":  " +employeeDBAdapter.getEmployeesName(xReport.getByUser()), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.x_report) + " " +xReport.getxReportId(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable,"----------------------------", Element.ALIGN_CENTER, 1, font);
 
@@ -2327,6 +2329,7 @@ public class PdfUA {
         }else {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, urFontName1);
         }
+
         insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, urFontName1);
 

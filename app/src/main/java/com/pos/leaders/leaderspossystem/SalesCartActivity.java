@@ -520,7 +520,6 @@ public class SalesCartActivity extends AppCompatActivity {
         productDBAdapter = new ProductDBAdapter(this);
         customerDBAdapter = new CustomerDBAdapter(this);
         clubAdapter = new ClubAdapter(this);
-        valueOfPointDB = new ValueOfPointDB(this);
         sum_pointDbAdapter = new Sum_PointDbAdapter(this);
         usedpointDbAdapter = new UsedPointDBAdapter(this);
         usedpointDbAdapter.open();
@@ -530,7 +529,6 @@ public class SalesCartActivity extends AppCompatActivity {
         productDBAdapter.open();
         departmentDBAdapter.open();
         clubAdapter.open();
-        valueOfPointDB.open();
 
         offerDBAdapter = new OfferDBAdapter(this);
         productOfferDBAdapter = new ProductOfferDBAdapter(this);
@@ -681,6 +679,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(SalesCartActivity.this);
                                                         cashPaymentDBAdapter.open();
                                                         cashPaymentDBAdapter.insertEntry(sID,lastOrder.getTotalPrice() * -1,0,new Timestamp(System.currentTimeMillis()),1,1);
+                                                        cashPaymentDBAdapter.close();
                                                         CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(SalesCartActivity.this);
                                                         currencyOperationDBAdapter.open();
                                                         CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(SalesCartActivity.this);
@@ -728,6 +727,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                             e.printStackTrace();
                                                         }
                                                         double SalesWitheTaxCancle=0,SalesWithoutTaxCancle=0,salesaftertaxCancle=0;
+                                                        productDBAdapter.open();
                                                         for (int i=0;i<orderDetailsList.size();i++){
                                                             Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
                                                             if (product.getCurrencyType()==0){
@@ -841,6 +841,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                             }
 
                                                         }
+                                                        productDBAdapter.close();
                                                         Log.d("zReportgetSalesBeforeTax",zReport1.getSalesBeforeTax()+"fji");
                                                         zReport1.setCashTotal(zReport1.getCashTotal()-lastOrder.getTotalPrice());
                                                         zReport1.setShekelAmount(zReport1.getShekelAmount()-lastOrder.getTotalPrice());
@@ -875,9 +876,6 @@ public class SalesCartActivity extends AppCompatActivity {
                                             .setMessage(getString(R.string.print_copy_invoice))
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-
-                                                    CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(SalesCartActivity.this);
-                                                    cashPaymentDBAdapter.open();
                                                     CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(SalesCartActivity.this);
                                                     currencyOperationDBAdapter.open();
                                                     CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(SalesCartActivity.this);
@@ -885,7 +883,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     Order copyOrder = orderDBAdapter.getLast();
                                                     OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
                                                     orderDetailsDBAdapter.open();
-                                                    cashPaymentDBAdapter=new CashPaymentDBAdapter(SalesCartActivity.this);
+                                                 CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(SalesCartActivity.this);
                                                     cashPaymentDBAdapter.open();
                                                     PaymentDBAdapter paymentDBAdapter =new PaymentDBAdapter(SalesCartActivity.this);
                                                     paymentDBAdapter.open();
@@ -895,6 +893,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     currencyReturnsDBAdapter.open();
                                                     List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(copyOrder.getOrderId());
                                                     List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(copyOrder.getOrderId());
+                                                    cashPaymentDBAdapter.close();
                                                     List<Payment> paymentList =paymentDBAdapter.getPaymentBySaleID(copyOrder.getOrderId());
                                                     List<CurrencyOperation>currencyOperationList=currencyOperationDBAdapter.getCurrencyOperationByOrderID(copyOrder.getOrderId());
                                                     List<CurrencyReturns>currencyReturnsList=currencyReturnsDBAdapter.getCurencyReturnBySaleID(copyOrder.getOrderId());
@@ -956,6 +955,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         e.printStackTrace();
                                                     }
                                                     double SalesWitheTaxDuplicute=0,SalesWithoutTaxDuplicute=0,salesaftertaxDuplicute=0;
+                                                    productDBAdapter.open();
                                                     for (int i=0;i<orderDetailsList.size();i++){
                                                         Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
                                                         if (product.getCurrencyType()==0){
@@ -1064,6 +1064,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
                                                     }
+                                                    productDBAdapter.close();
                                                     z.setCashTotal(z.getCashTotal()+copyOrder.getTotalPrice());
                                                     z.setInvoiceReceiptAmount(z.getInvoiceReceiptAmount()+copyOrder.getTotalPrice());
                                                     z.setShekelAmount(z.getShekelAmount()+copyOrder.getTotalPrice());
@@ -1349,8 +1350,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 lvProducts.setAdapter(productCatalogGridViewAdapter);
             }
         });
-
+        departmentDBAdapter.open();
         List<Category> departments = departmentDBAdapter.getAllDepartments();
+        departmentDBAdapter.close();
         final int co = 2;
         for (int k = 0, r = 0, c = 0; k < departments.size(); k++) {
             if (k % 2 == 1) {
@@ -1531,7 +1533,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                 @Override
                                 public void run() {
+                                    productDBAdapter.open();
                                     productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 20));
+                                    productDBAdapter.close();
                                     // Stuff that updates the UI
                                     productCatalogGridViewAdapter.notifyDataSetChanged();
                                 }
@@ -3067,6 +3071,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         JSONObject a =  orderDocJsonObj.getJSONObject("documentsData").getJSONObject("order");
                         Order order = new Order(a.getLong("byUser"),new Timestamp(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getString("date"))),0,false,orderDocJsonObj.getJSONObject("documentsData").getDouble("total"),0);
                         SESSION._EMPLOYEE.setEmployeeId(a.getLong("byUser"));
+                        customerDBAdapter.open();
                         Customer customer = customerDBAdapter.getCustomerByID(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer").getString("customerId")));
                         order.setCustomer(customer);
                         SESSION._ORDERS=order;
@@ -3077,7 +3082,9 @@ public class SalesCartActivity extends AppCompatActivity {
                             if(Long.parseLong(orderDetailsJson.getString("productId"))==-1){
                                 p=new Product(Long.parseLong(String.valueOf(-1)),"General","General",orderDetailsJson.getDouble("unitPrice"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1)));
                             }else {
+                                productDBAdapter.open();
                                 p = productDBAdapter.getProductByID(Long.parseLong(orderDetailsJson.getString("productId")));
+                                productDBAdapter.close();
                             }
                             OrderDetails orderDetails= new OrderDetails(orderDetailsJson.getInt("quantity"),orderDetailsJson.getDouble("userOffer"),p,orderDetailsJson.getDouble("amount"),orderDetailsJson.getDouble("unitPrice"),orderDetailsJson.getDouble("discount"));
                             SESSION._ORDER_DETAILES.add(orderDetails);
@@ -3101,6 +3108,7 @@ public class SalesCartActivity extends AppCompatActivity {
              }
              //str = extras.getString("orderJson");
          }*/
+        customerDBAdapter.close();
         }else {
 
             if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
@@ -3615,6 +3623,7 @@ public class SalesCartActivity extends AppCompatActivity {
         Log.d("testOrderDe",p.toString());
         OrderDetails newOrderDetails = null;
         boolean isMatch = false;
+        productDBAdapter.open();
         //test if cart have this order before insert to cart and order have'nt discount
         for (int i = 0; i < SESSION._ORDER_DETAILES.size(); i++) {
             OrderDetails o = SESSION._ORDER_DETAILES.get(i);
@@ -3649,6 +3658,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
             }
         }
+        productDBAdapter.close();
         if (!isMatch) {
             String currencyType="";
             if(p.getCurrencyType()==0) {
@@ -3762,6 +3772,7 @@ public class SalesCartActivity extends AppCompatActivity {
     private void enterKeyPressed(String barcodeScanned) throws JSONException {
         Product product = new Product();
         char firstChar = barcodeScanned.charAt(0);
+        productDBAdapter.open();
         if(firstChar=='2'&&barcodeScanned.length()==13){
             String productNum = barcodeScanned.substring(1,7);
             Log.d("tttttt",productNum);
@@ -3774,6 +3785,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
             product = productDBAdapter.getProductByBarCode(barcodeScanned);
         }
+        productDBAdapter.close();
         final Intent intent = new Intent(SalesCartActivity.this, ProductsActivity.class);
         intent.putExtra("barcode", barcodeScanned);
         if (product != null) {
@@ -3825,7 +3837,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
     private void loadMoreProduct() {
-
+        productDBAdapter.open();
         productLoadItemOffset += productCountLoad;
         final int id = prseedButtonDepartments.getId();
         final String searchWord = etSearch.getText().toString();
@@ -3892,6 +3904,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 return null;
             }
         }.execute();
+        productDBAdapter.close();
     }
 
 
@@ -4248,12 +4261,16 @@ public class SalesCartActivity extends AppCompatActivity {
             if (SESSION._ORDERS.getCustomer_name() == null) {
 
                 if (customerName_EditText.getText().toString().equals("")) {
+                    customerDBAdapter.open();
                     Customer customer = customerDBAdapter.getCustomerByName("guest");
+                    customerDBAdapter.close();
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
 
                 } else {
+                    customerDBAdapter.open();
                     Customer customer = customerDBAdapter.getCustomerByID(SESSION._ORDERS.getCustomerId());
+                    customerDBAdapter.close();
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
                 }
@@ -4279,6 +4296,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 SESSION._ORDERS.setTotalPaidAmount(SESSION._ORDERS.getTotalPrice());
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
+                sum_pointDbAdapter.open();
+                usedpointDbAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,0,0);
                 Order order = saleDBAdapter.getOrderById(saleID);
@@ -4358,9 +4377,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 //update customer balance
                 if (SESSION._ORDERS.getTotalPrice() < 0 && customer != null) {
+                    customerDBAdapter.open();
                     Customer upDateCustomer = customer;
                     upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice() + customer.getBalance());
                     customerDBAdapter.updateEntry(upDateCustomer);
+                    customerDBAdapter.close();
                 }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
@@ -4405,6 +4426,8 @@ public class SalesCartActivity extends AppCompatActivity {
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
             }
+            usedpointDbAdapter.close();
+            sum_pointDbAdapter.close();
         }
 
         //endregion
@@ -4515,9 +4538,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 //update customer balance
                 if (SESSION._ORDERS.getTotalPrice() < 0 && customer != null) {
+                    customerDBAdapter.open();
                     Customer upDateCustomer = customer;
                     upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice() + customer.getBalance());
                     customerDBAdapter.updateEntry(upDateCustomer);
+                    customerDBAdapter.close();
                 }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
@@ -4574,6 +4599,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 SESSION._ORDERS.setTotalPaidAmount(result);
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 saleDBAdapter.open();
+                sum_pointDbAdapter.open();
                 clubPoint = ((int) (SESSION._ORDERS.getTotalPrice() / clubAmount) * clubPoint);
                 long saleID = saleDBAdapter.insertEntry(SESSION._ORDERS, customerId, customerName,false,0,0);
                 Order order = saleDBAdapter.getOrderById(saleID);
@@ -4643,9 +4669,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 //update customer balance
                 if (SESSION._ORDERS.getTotalPrice() < 0 && customer != null) {
+                    customerDBAdapter.open();
                     Customer upDateCustomer = customer;
                     upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice() + customer.getBalance());
                     customerDBAdapter.updateEntry(upDateCustomer);
+                    customerDBAdapter.close();
                 }
                 orderDBAdapter.close();
 
@@ -4671,6 +4699,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 return;
             }
+            sum_pointDbAdapter.close();
         }
         //endregion
 
@@ -4696,6 +4725,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter.open();
                 orderDBAdapter.open();
                 custmerAssetDB.open();
+                usedpointDbAdapter.open();
+                sum_pointDbAdapter.open();
                 paymentDBAdapter.open();
 
                 // Get data from CashActivityWithOutCurrency
@@ -4773,9 +4804,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 //update customer balance
                 if (SESSION._ORDERS.getTotalPrice() < 0 && customer != null) {
+                    customerDBAdapter.open();
                     Customer upDateCustomer = customer;
                     upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice() + customer.getBalance());
                     customerDBAdapter.updateEntry(upDateCustomer);
+                    customerDBAdapter.close();
                 }
 
                 orderDBAdapter.close();
@@ -4788,7 +4821,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 SESSION._ORDERS.setPayment(payment);
                 SESSION._ORDERS.setCreatedAt(new Timestamp(System.currentTimeMillis()));
                 cashPaymentDBAdapter.insertEntry(saleIDforCash, saleTotalPrice, 0, new Timestamp(System.currentTimeMillis()),1,1);
-
+                cashPaymentDBAdapter.close();
                 paymentDBAdapter.close();
                 printAndOpenCashBox("", "", "", REQUEST_CASH_ACTIVITY_CODE);
                 currencyReturnsCustomDialogActivity.show();
@@ -4796,7 +4829,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 saleDBAdapter.close();
                 return;
             }
-
+            usedpointDbAdapter.close();
+            sum_pointDbAdapter.close();
         }
         //endregion
 
@@ -4812,15 +4846,18 @@ public class SalesCartActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(this);
+
+
+
                 PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(this);
                 saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
                 orderDBAdapter = new OrderDetailsDBAdapter(SalesCartActivity.this);
                 custmerAssetDB = new CustomerAssetDB(SalesCartActivity.this);
-                cashPaymentDBAdapter.open();
                 saleDBAdapter.open();
                 orderDBAdapter.open();
                 custmerAssetDB.open();
+                usedpointDbAdapter.open();
+                sum_pointDbAdapter.open();
                 paymentDBAdapter.open();
                 long tempSaleId = 0;
 
@@ -4845,7 +4882,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 if (secondCurrencyAmount > 0) {
                     //      cashPaymentDBAdapter.insertEntry(saleIDforCash, secondCurrencyAmount, secondCurrencyId, new Timestamp(System.currentTimeMillis()));
                 }
-                cashPaymentDBAdapter.close();
+
 
 
                 // Club with point and amount
@@ -4907,9 +4944,11 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
                 //update customer balance
                 if (SESSION._ORDERS.getTotalPrice() < 0 && customer != null) {
+                    customerDBAdapter.open();
                     Customer upDateCustomer = customer;
                     upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice() + customer.getBalance());
                     customerDBAdapter.updateEntry(upDateCustomer);
+                    customerDBAdapter.close();
                 }
                 orderDBAdapter.close();
                 custmerAssetDB.close();
@@ -4932,6 +4971,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 return;
             }
+            usedpointDbAdapter.close();
+            sum_pointDbAdapter.close();
+
         }
         //endregion
         if (requestCode == REQUEST_MULTI_CURRENCY_ACTIVITY_CODE) {
@@ -5241,9 +5283,11 @@ public class SalesCartActivity extends AppCompatActivity {
                     }
                     //update customer balance
                     if (SESSION._ORDERS.getTotalPrice() < 0 && customer != null) {
+                        customerDBAdapter.open();
                         Customer upDateCustomer = customer;
                         upDateCustomer.setBalance(SESSION._ORDERS.getTotalPrice() + customer.getBalance());
                         customerDBAdapter.updateEntry(upDateCustomer);
+                        customerDBAdapter.close();
                     }
                     orderDBAdapter.close();
                     custmerAssetDB.close();
@@ -5431,8 +5475,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         });
-
+customerDBAdapter.open();
         customerList = customerDBAdapter.getTopCustomer(0, 50);
+        customerDBAdapter.close();
         AllCustmerList = customerList;
 
         custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
@@ -5743,6 +5788,7 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void setCustomer(Customer customer) {
+        clubAdapter.open();
         if(customer==null) return;
         this.customer = customer;
         this.customerName = customer.getFullName();
@@ -5770,7 +5816,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         }
         mainActivity_btnRemoveCustomer.setVisibility(View.VISIBLE);
-
+        clubAdapter.close();
     }
 
     public double getCurrencyRate(String currencyType) {

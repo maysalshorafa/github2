@@ -142,7 +142,7 @@ public class TitleBar {
         ivInternet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SyncMessage.isConnected(context)) {
+               if (SyncMessage.isConnected(context)) {
                     SESSION.internetStatus = InternetStatus.CONNECTED;
                 } else {
                     SESSION.internetStatus = InternetStatus.ERROR;

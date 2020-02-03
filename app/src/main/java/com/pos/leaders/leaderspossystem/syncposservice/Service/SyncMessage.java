@@ -610,7 +610,6 @@ public class SyncMessage extends Service {
                 case MessageType.DELETE_OFFER:
                     Offer deleteOffer = null;
                     deleteOffer = objectMapper.readValue(msgData, Offer.class);
-
                     OfferDBAdapter deleteOfferDBAdapter = new OfferDBAdapter(this);
                     deleteOfferDBAdapter.open();
                     try {
@@ -1315,6 +1314,7 @@ public class SyncMessage extends Service {
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
                     cashPaymentDBAdapter.open();
                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+                    cashPaymentDBAdapter.close();
                     if(cashPaymentList.size()>0){
                         for(int i=0;i<cashPaymentList.size();i++){
                             jsonList.add(cashPaymentList.get(i).toString());
@@ -1323,6 +1323,7 @@ public class SyncMessage extends Service {
                     CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(getApplicationContext());
                     creditCardPaymentDBAdapter.open();
                     creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+                    creditCardPaymentDBAdapter.close();
                     if(creditCardPaymentList.size()>0) {
                         for(int i=0;i<creditCardPaymentList.size();i++){
                             jsonList.add(creditCardPaymentList.get(i).toString());
@@ -1333,6 +1334,7 @@ public class SyncMessage extends Service {
                     ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(getApplicationContext());
                     checksDBAdapter.open();
                     checkList = checksDBAdapter.getPaymentBySaleID(orderId);
+                    checksDBAdapter.close();
                     if(checkList.size()>0) {
                         for(int i=0;i<checkList.size();i++){
                             jsonList.add(checkList.get(i).toString());
@@ -1809,6 +1811,7 @@ public class SyncMessage extends Service {
         Log.i(TAG, "Service onDestroy");
     }
     public void updateCurrency() throws JSONException, IOException {
+
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
         currencyTypeDBAdapter.open();
         List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();

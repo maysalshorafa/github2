@@ -88,9 +88,11 @@ public class HPRT_TP805 {
                             {
                                 HPRTPrinter=null;
                                 Log.i("HPRTSDKSample", "Connect Error!");
+                                HPRT_TP805.setConnected(false);
                                 return;
                             }
                             else {
+                                HPRT_TP805.setConnected(true);
                                 Log.i("HPRTSDKSample", "Connect Success!");
                                 return;
                             }
@@ -108,11 +110,13 @@ public class HPRT_TP805 {
                     if (device != null)
                     {
                         HPRTPrinterHelper.PortClose();
+                        HPRT_TP805.setConnected(false);
                     }
                 }
             }
             catch (Exception e)
             {
+                HPRT_TP805.setConnected(false);
                 Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> mUsbReceiver ")).append(e.getMessage()).toString());
             }
         }

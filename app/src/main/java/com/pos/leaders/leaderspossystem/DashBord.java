@@ -356,7 +356,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                                                 .show();
                                                     }
+                                                    closingReportDBAdapter.close();
                                                 }
+
                                             })
                                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
@@ -451,6 +453,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                                 .show();
                                     }
+                                    closingReportDBAdapter.close();
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -619,7 +622,8 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                        needAReport();
                    }
 
-
+                    closingReportDBAdapter.close();
+                    opiningReportDBAdapter.close();
 
                     break;
 
@@ -647,8 +651,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 case Permissions.PERMISSIONS_USER_CLUB:
                     customerClub.setEnabled(true);
                     break;
+
             }
+
         }
+
     }
 
     @Override
@@ -746,7 +753,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             }
 
         }*/
-
+        closingReportDBAdapter.close();
         return false;
     }
 
@@ -919,6 +926,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         discountDialog.cancel();
                         EnableButtons();
                     }
+                    zReportDBAdapter.close();
+                    zReportCountDbAdapter.close();
+                    aReportDBAdapter.close();
                 }
             });
             discountDialog.show();
@@ -944,6 +954,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             final CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(DashBord.this);
             currencyDBAdapter.open();
             currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+            currencyDBAdapter.close();
             currenciesNames = new ArrayList<String>();
             for (int i = 0; i < currencyTypesList.size(); i++) {
                 currenciesNames.add(currencyTypesList.get(i).getType());
@@ -1285,6 +1296,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                         Util.opiningReport(DashBord.this,opiningReport,hintForCurrencyType,hintForCurrencyAmount);
                        EnableButtons();
                     }
+                    zReportCountDbAdapter.close();
                 }
             });
 

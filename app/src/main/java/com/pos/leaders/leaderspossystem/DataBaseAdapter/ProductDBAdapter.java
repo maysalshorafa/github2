@@ -642,16 +642,7 @@ public class ProductDBAdapter {
     }
 
     public List<Product> getTopProducts(int from ,int count){
-        if(db.isOpen()){
 
-        }else {
-            try {
-                open();
-            }
-            catch (SQLException ex) {
-                Log.d("Exception",ex.toString());
-            }
-        }
         List<Product> productsList =new ArrayList<Product>();
         CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
 
@@ -659,9 +650,28 @@ public class ProductDBAdapter {
         try {
             Cursor cursor=null;
             if(SETTINGS.enableAllBranch) {
+                if(db.isOpen()){
 
+                }else {
+                    try {
+                        open();
+                    }
+                    catch (SQLException ex) {
+                        Log.d("Exception",ex.toString());
+                    }
+                }
                 cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_DISENABLED +"=0 order by id desc limit "+from+","+count, null);
             }else {
+                if(db.isOpen()){
+
+                }else {
+                    try {
+                        open();
+                    }
+                    catch (SQLException ex) {
+                        Log.d("Exception",ex.toString());
+                    }
+                }
                 cursor = db.rawQuery("select * from " + PRODUCTS_TABLE_NAME + " where " + PRODUCTS_COLUMN_BRANCH_ID + " = "+ SETTINGS.branchId+ " and " + PRODUCTS_COLUMN_DISENABLED+"=0 order by id desc limit "+from+","+count, null);
 
             }
