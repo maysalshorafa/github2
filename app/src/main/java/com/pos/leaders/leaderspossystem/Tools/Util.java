@@ -1363,8 +1363,9 @@ public class Util {
 
         double amount = zReportDBAdapter.getZReportAmount(zReport.getStartOrderId(), zReport.getEndOrderId());
         try {
-            ZReport zReport1 = zReportDBAdapter.getLastRow();
-            ZReport z =zReportDBAdapter.getByID(zReport1.getzReportId()-1);
+         //   ZReport zReport1 = zReportDBAdapter.getLastRow();
+            ZReport z =zReportDBAdapter.getByID(zReport.getzReportId()-1);
+            Log.d("zjojo","eoeo"+z.toString());
             totalZReportAmount=z.getTotalPosSales()+amount;
         } catch (Exception e) {
             totalZReportAmount=amount;

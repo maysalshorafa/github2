@@ -34,6 +34,7 @@ public class MessageTransmit {
     private OkHttpClient client;
     OkHttpClient eagerClient;
 
+    public MessageTransmit(){}
     public MessageTransmit(String domainURL){
         if(domainURL.length()>0){
             char c = domainURL.charAt(domainURL.length() - 1);

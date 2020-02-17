@@ -75,6 +75,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
         prseedButtonDepartments = btAll;
         filter_productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
+        productDBAdapter.close();
         productsList = filter_productsList;
         adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
         gvProducts.setAdapter(adapter);
@@ -149,7 +150,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                            productDBAdapter.open();
                             filter_productsList = productDBAdapter.getAllProductsByHint(params[0], productLoadItemOffset, productCountLoad);
+                            productDBAdapter.close();
                             return null;
                         }
 
@@ -175,6 +178,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
         tvCount.setText(getString(R.string.product_count) + productDBAdapter.getProductsCount());
 
         productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
+        productDBAdapter.close();
         filter_productsList = productsList;
         adapter = new ProductCatalogGridViewAdapter(this, productsList);
 
@@ -271,7 +275,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                                     .setMessage(getString(R.string.delete))
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
+                                            productDBAdapter.open();
                                             productDBAdapter.deleteEntry(filter_productsList.get(position).getProductId());
+                                            productDBAdapter.close();
                                             productsList.remove(filter_productsList.get(position));
                                             gvProducts.setAdapter(adapter);
                                             adapter.notifyDataSetChanged();
@@ -357,7 +363,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                     v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
                     final long departmentID = ((Category) v.getTag()).getCategoryId();
                     prseedButtonDepartments = v;
+                    productDBAdapter.open();
                     productsList = productDBAdapter.getAllProductsByCategory(departmentID, productLoadItemOffset, productCountLoad);
+                    productDBAdapter.close();
                     filter_productsList = productsList;
                     adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                     gvProducts.setAdapter(adapter);
@@ -387,8 +395,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                 prseedButtonDepartments = v;
-
+                productDBAdapter.open();
                 filter_productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
+                productDBAdapter.close();
                 productsList = filter_productsList;
                 adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                 gvProducts.setAdapter(adapter);
@@ -404,6 +413,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
     }
 
     protected void LoadMoreProducts(){
+        productDBAdapter.open();
         productLoadItemOffset+=productCountLoad;
         final int id=prseedButtonDepartments.getId();
         final ProgressDialog dialog=new ProgressDialog(ProductCatalogActivity.this);
@@ -434,8 +444,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 return null;
             }
         }.execute();
-
-
+        productDBAdapter.close();
 
     }
 

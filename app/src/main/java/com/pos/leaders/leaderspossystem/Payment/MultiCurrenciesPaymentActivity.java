@@ -93,6 +93,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (excess <= 0 ) {
                     Log.d("PaymentTables",paymentTables.toString());
+                    Log.d("totJoj", String.valueOf(totalPrice));
                     Intent i = new Intent();
                     i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
                     i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
@@ -103,7 +104,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     }
                     setResult(RESULT_OK, i);
                     finish();
-                }
+               }
               /*  if(excess<=0 && totalPrice<0){
                  if( CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote=="") {
                      paymentTables.add(new PaymentTable(spCurrency.getSelectedItem().toString(), Double.parseDouble(Util.makePrice(totalPrice)), 0, 0, "", new CurrencyType(1l, defaultCurrency + ""), 1));
@@ -148,7 +149,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(mcf.paymentMethodSpinner.getSelectedItem().toString().equals(getString(R.string.cash))) {
                     insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
-                    btCheckOut.performClick();
+                   // btCheckOut.performClick();
+                    btCheckOut.post(new Runnable(){
+                        @Override
+                        public void run() {
+                            btCheckOut.performClick();
+                        }
+                    });
 
                 }
                 if(mcf.paymentMethodSpinner.getSelectedItem().toString().equals(getString(R.string.credit_card))) {
@@ -167,8 +174,15 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cashButton.setClickable(false);
                     insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.cash));
-                    btCheckOut.performClick();
+                   // btCheckOut.performClick();
+                btCheckOut.post(new Runnable(){
+                    @Override
+                    public void run() {
+                        btCheckOut.performClick();
+                    }
+                });
 
 
             }
@@ -177,7 +191,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         checkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                     multiCurrencyFromCheckCurrentlyInsert=true;
                     insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.checks));
 
@@ -394,6 +407,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     private void setExcess() {
         excess = Double.parseDouble(Util.makePrice(totalPrice/actualCurrencyRate)) - Double.parseDouble(Util.makePrice(totalPaid/actualCurrencyRate)) ;
+        Log.d("ex", String.valueOf(excess));
         tvExcess.setText(Util.makePrice(excess));
     }
 
@@ -405,6 +419,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         } else {
         llTotalPriceBackground.setBackgroundColor(getResources().getColor(R.color.light_dangers1));
          btCheckOut.setBackground(getResources().getDrawable(R.drawable.bt_dark));
+
 
         }
     }
@@ -507,7 +522,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 multiCurrencyFromCheck=data.getBooleanExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,false);
                 if(multiCurrencyFromCheck){
 
-                    btCheckOut.performClick();
+                  //  btCheckOut.performClick();
+                    btCheckOut.post(new Runnable(){
+                        @Override
+                        public void run() {
+                            btCheckOut.performClick();
+                        }
+                    });
                 }else {
 
                     //get currency rate
@@ -524,14 +545,20 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
                 haveCreditCard="haveCreditCard";
-          CurrencyReturnsCustomDialogActivity.firstCredit =data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY);
+             CurrencyReturnsCustomDialogActivity.firstCredit =data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY);
                 CurrencyReturnsCustomDialogActivity.secondCredit=  data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote);
                 CurrencyReturnsCustomDialogActivity.thirdCredit= data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote);
                 multiCurrencyFromCredit= data.getBooleanExtra(MainCreditCardActivity.LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY,false);
 
                 //get currency rate
                 if(multiCurrencyFromCredit){
-                        btCheckOut.performClick();
+                     //   btCheckOut.performClick();
+                    btCheckOut.post(new Runnable(){
+                        @Override
+                        public void run() {
+                            btCheckOut.performClick();
+                        }
+                    });
 
                 }
                 else {

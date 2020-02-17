@@ -136,7 +136,7 @@ public class SyncMessage extends Service {
     private static String token = SESSION.token;
 
     private Broker broker;
-    private MessageTransmit messageTransmit;
+    private MessageTransmit messageTransmit=new MessageTransmit();
 
     private long LOOP_TIME = 1 * 30 * 1000;
 

@@ -1115,8 +1115,7 @@
             android:gravity="center"
             android:text="@string/cancel" />
 
-        <Button
-            android:id="@+id/reportZDetails_btPrint"
+        <Button android:id="@+id/reportZDetails_btPrint"
             style="@style/AppTheme.bt_green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

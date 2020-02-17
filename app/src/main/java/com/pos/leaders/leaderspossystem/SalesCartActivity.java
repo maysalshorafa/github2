@@ -1,170 +1,170 @@
 package com.pos.leaders.leaderspossystem;
 
-        import android.annotation.SuppressLint;
-        import android.annotation.TargetApi;
-        import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.app.Dialog;
-        import android.app.ProgressDialog;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.graphics.Bitmap;
-        import android.graphics.Canvas;
-        import android.os.AsyncTask;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.os.Environment;
-        import android.support.v4.app.FragmentTransaction;
-        import android.support.v4.widget.DrawerLayout;
-        import android.support.v7.app.ActionBar;
-        import android.support.v7.app.AppCompatActivity;
-        import android.text.Editable;
-        import android.text.TextWatcher;
-        import android.util.Base64;
-        import android.util.Log;
-        import android.util.Pair;
-        import android.view.KeyEvent;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.Window;
-        import android.view.WindowManager;
-        import android.view.inputmethod.EditorInfo;
-        import android.view.inputmethod.InputMethodManager;
-        import android.widget.AbsListView;
-        import android.widget.AdapterView;
-        import android.widget.ArrayAdapter;
-        import android.widget.Button;
-        import android.widget.CompoundButton;
-        import android.widget.EditText;
-        import android.widget.FrameLayout;
-        import android.widget.GridView;
-        import android.widget.HorizontalScrollView;
-        import android.widget.ImageButton;
-        import android.widget.ImageView;
-        import android.widget.LinearLayout;
-        import android.widget.ListView;
-        import android.widget.PopupWindow;
-        import android.widget.ScrollView;
-        import android.widget.Switch;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
+import android.util.Pair;
+import android.view.KeyEvent;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.GridView;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ScrollView;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.fasterxml.jackson.databind.DeserializationFeature;
-        import com.fasterxml.jackson.databind.ObjectMapper;
-        import com.itextpdf.text.DocumentException;
-        import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
-        import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
-        import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
-        import com.pos.leaders.leaderspossystem.Models.BoInvoice;
-        import com.pos.leaders.leaderspossystem.Models.Category;
-        import com.pos.leaders.leaderspossystem.Models.Check;
-        import com.pos.leaders.leaderspossystem.Models.ClosingReport;
-        import com.pos.leaders.leaderspossystem.Models.Club;
-        import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
-        import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-        import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
-        import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
-        import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
-        import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-        import com.pos.leaders.leaderspossystem.Models.Customer;
-        import com.pos.leaders.leaderspossystem.Models.CustomerType;
-        import com.pos.leaders.leaderspossystem.Models.Documents;
-        import com.pos.leaders.leaderspossystem.Models.Employee;
-        import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
-        import com.pos.leaders.leaderspossystem.Models.Offer;
-        import com.pos.leaders.leaderspossystem.Models.OfferCategory;
-        import com.pos.leaders.leaderspossystem.Models.OpiningReport;
-        import com.pos.leaders.leaderspossystem.Models.Order;
-        import com.pos.leaders.leaderspossystem.Models.OrderDetails;
-        import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
-        import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
-        import com.pos.leaders.leaderspossystem.Models.Payment;
-        import com.pos.leaders.leaderspossystem.Models.Product;
-        import com.pos.leaders.leaderspossystem.Models.ProductUnit;
-        import com.pos.leaders.leaderspossystem.Models.ZReport;
-        import com.pos.leaders.leaderspossystem.Models.ZReportCount;
-        import com.pos.leaders.leaderspossystem.Offers.OfferController;
-        import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
-        import com.pos.leaders.leaderspossystem.Payment.PaymentTable;
-        import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
-        import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
-        import com.pos.leaders.leaderspossystem.Printer.PrintTools;
-        import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
-        import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
-        import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
-        import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
-        import com.pos.leaders.leaderspossystem.Tools.CashActivity;
-        import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
-        import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
-        import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
-        import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
-        import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
-        import com.pos.leaders.leaderspossystem.Tools.SESSION;
-        import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
-        import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
-        import com.pos.leaders.leaderspossystem.Tools.TitleBar;
-        import com.pos.leaders.leaderspossystem.Tools.Util;
-        import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
-        import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
-        import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
-        import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
-        import com.sun.pdfview.PDFFile;
-        import com.sun.pdfview.PDFPage;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itextpdf.text.DocumentException;
+import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerAssetDB;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ValueOfPointDB;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
+import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.ClosingReport;
+import com.pos.leaders.leaderspossystem.Models.Club;
+import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
+import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.CustomerType;
+import com.pos.leaders.leaderspossystem.Models.Documents;
+import com.pos.leaders.leaderspossystem.Models.Employee;
+import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
+import com.pos.leaders.leaderspossystem.Models.Offer;
+import com.pos.leaders.leaderspossystem.Models.OfferCategory;
+import com.pos.leaders.leaderspossystem.Models.OpiningReport;
+import com.pos.leaders.leaderspossystem.Models.Order;
+import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.OrderDocumentStatus;
+import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
+import com.pos.leaders.leaderspossystem.Models.Payment;
+import com.pos.leaders.leaderspossystem.Models.Product;
+import com.pos.leaders.leaderspossystem.Models.ProductUnit;
+import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Models.ZReportCount;
+import com.pos.leaders.leaderspossystem.Offers.OfferController;
+import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
+import com.pos.leaders.leaderspossystem.Payment.PaymentTable;
+import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
+import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
+import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
+import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
+import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.CashActivity;
+import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
+import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
+import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
+import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
 
-        import net.sf.andpdf.nio.ByteBuffer;
+import net.sf.andpdf.nio.ByteBuffer;
 
-        import org.json.JSONArray;
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import java.io.ByteArrayOutputStream;
-        import java.io.File;
-        import java.io.IOException;
-        import java.io.RandomAccessFile;
-        import java.sql.Timestamp;
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Locale;
-        import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-        import HPRTAndroidSDK.HPRTPrinterHelper;
-        import POSAPI.POSInterfaceAPI;
-        import POSAPI.POSUSBAPI;
-        import POSSDK.POSSDK;
+import HPRTAndroidSDK.HPRTPrinterHelper;
+import POSAPI.POSInterfaceAPI;
+import POSAPI.POSUSBAPI;
+import POSSDK.POSSDK;
 
-        import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
+import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 /**
  * Created by Karam on 21/11/2016.
@@ -263,7 +263,7 @@ public class SalesCartActivity extends AppCompatActivity {
     double secondPrice = 0.0;
     boolean userScrolled = false;
     int productLoadItemOffset = 0;
-    int productCountLoad = 20;
+    int productCountLoad = 50;
     POSSDK pos;
     Button btn_cancel;
     LinearLayout ll;
@@ -524,9 +524,8 @@ public class SalesCartActivity extends AppCompatActivity {
         usedpointDbAdapter = new UsedPointDBAdapter(this);
         usedpointDbAdapter.open();
         sum_pointDbAdapter.open();
-
-        customerDBAdapter.open();
-        productDBAdapter.open();
+//
+//        productDBAdapter.open();
         departmentDBAdapter.open();
         clubAdapter.open();
 
@@ -1312,8 +1311,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         });
-
-        productList = productDBAdapter.getTopProducts(0, 20);
+        productDBAdapter.open();
+        productList = productDBAdapter.getTopProducts(0, 50);
+        productDBAdapter.close();
         All_productsList = productList;
         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(this, productList);
         gvProducts.setNumColumns(2);
@@ -1342,8 +1342,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 v.setPressed(true);
                 v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
                 prseedButtonDepartments = v;
-
+                productDBAdapter.open();
                 productList = productDBAdapter.getTopProducts(productLoadItemOffset, productCountLoad);
+                productDBAdapter.close();
                 All_productsList = productList;
                 productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                 gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -1379,7 +1380,9 @@ public class SalesCartActivity extends AppCompatActivity {
                         v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                         prseedButtonDepartments = v;
+                        productDBAdapter.open();
                         productList = productDBAdapter.getAllProductsByCategory(((Category) v.getTag()).getCategoryId(), productLoadItemOffset, productCountLoad);
+                        productDBAdapter.close();
                         All_productsList = productList;
                         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                         gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -1403,7 +1406,9 @@ public class SalesCartActivity extends AppCompatActivity {
                         v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                         prseedButtonDepartments = v;
+                        productDBAdapter.open();
                         productList = productDBAdapter.getAllProductsByCategory(((Category) v.getTag()).getCategoryId(), productLoadItemOffset, productCountLoad);
+                        productDBAdapter.close();
                         All_productsList = productList;
                         productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                         gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -1443,7 +1448,9 @@ public class SalesCartActivity extends AppCompatActivity {
                     v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                     prseedButtonDepartments = v;
+                    productDBAdapter.open();
                     productList = productDBAdapter.getAllProductsByCategory(((Category) v.getTag()).getCategoryId(), productLoadItemOffset, productCountLoad);
+                    productDBAdapter.close();
                     All_productsList = productList;
                     productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                     gvProducts.setAdapter(productCatalogGridViewAdapter);
@@ -1534,7 +1541,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     productDBAdapter.open();
-                                    productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 20));
+                                    productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 50));
                                     productDBAdapter.close();
                                     // Stuff that updates the UI
                                     productCatalogGridViewAdapter.notifyDataSetChanged();
@@ -1844,6 +1851,10 @@ public class SalesCartActivity extends AppCompatActivity {
                                         if (!(_count.equals("")))
                                             pid = Integer.parseInt(cashETCash.getText().toString());
                                         int indexOfItem = SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart);
+                                        if ( Long.valueOf(SESSION._ORDER_DETAILES.get(indexOfItem).getProduct().getOfferId())==null){
+                                            Log.d("offerIdNull","cashBTOkClick");
+                                        }
+                                        else {
                                         if( SESSION._ORDER_DETAILES.get(indexOfItem).getProduct().getOfferId()==0) {
                                             SESSION._ORDER_DETAILES.get(indexOfItem).setCount(pid);
                                             orderCount.setText(SESSION._ORDER_DETAILES.get(position).getQuantity() + "");
@@ -1856,7 +1867,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     e.printStackTrace();
                                                 }
                                             }
-                                        }
+                                        }}
                                         calculateTotalPrice();
 
                                         cashDialog.cancel();
@@ -3049,9 +3060,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        refreshCart();
         super.onResume();
-
+        refreshCart();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.containsKey("orderJson")) {
@@ -3111,11 +3121,11 @@ public class SalesCartActivity extends AppCompatActivity {
         customerDBAdapter.close();
         }else {
 
-            if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
+          if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
                 //Log.d("REQUEST_CURRENCY_RETURN_ACTIVITY_CODE",CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE+"");
                 CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
-                SESSION._Rest();
-                clearCart();
+             SESSION._Rest();
+             clearCart();
             }
         }}
 
@@ -3243,7 +3253,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     if (!touchPadPressed.equals("")) {
                         double newValue = Util.convertSign(Double.parseDouble(touchPadPressed));
                         touchPadPressed = String.valueOf(newValue);
-                        Toast.makeText(this, touchPadPressed+"jojo", Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(this, touchPadPressed+"jojo", Toast.LENGTH_LONG).show();
                         tirh.setText(touchPadPressed);
                     }
                 }
@@ -3501,26 +3511,30 @@ public class SalesCartActivity extends AppCompatActivity {
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
             if(o.giftProduct) continue;
             if(!o.scannable) continue;
-
             try {
-                calculateOfferForOrderDetails(o);
+                if (o==null){
+                }
+                else {
+                    calculateOfferForOrderDetails(o);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             if (o.getOffer() != null) {
                 Log.i("hasOffer", "" + o.getOffer() + "" );
             }
-            try{
+           // try{
                 if (o.offerList!=null && !o.offerList.isEmpty()){
                     for (Offer offer : o.offerList) {
                         if(!offers.containsKey(offer.getOfferId())){
                             offers.put(offer.getOfferId(), offer);
                         }
-                    }}}
-            catch(NullPointerException e)
+                    }}
+            //}
+           /* catch(NullPointerException e)
             {
                 Log.d("NullPointerException",e.toString());
-            }
+            }*/
         }
         /**  try {
          if (OfferController.executeCategoryOffers(SESSION._ORDER_DETAILES, validOffer)) {
@@ -3635,8 +3649,12 @@ public class SalesCartActivity extends AppCompatActivity {
                 Log.d("ORDER_DETAILS1", o.toString());
 
                 if(p.getUnit().equals(ProductUnit.QUANTITY)){
-
+                    if (o.getProduct()!=null){
                     if(!o.getProduct().isWithSerialNumber()){
+                        if(Long.valueOf(o.getProduct().getOfferId())==null){
+                            Log.d("offerIdNull","addToCart");
+                        }
+                        else {
                         if (o.getProduct().equals(p) && o.getProduct().getProductId() != -1&&!o.giftProduct&&o.scannable&&o.getProduct().getOfferId()==0) {
                             SESSION._ORDER_DETAILES.get(i).setCount(SESSION._ORDER_DETAILES.get(i).getQuantity() + 1);
                             //getOfferCategoryForProduct
@@ -3652,8 +3670,8 @@ public class SalesCartActivity extends AppCompatActivity {
                             newOrderDetails=SESSION._ORDER_DETAILES.get(i);
                             isMatch = true;
                             break;
-                        }
-                    }
+                        }}
+                    }}
                 }
 
             }
@@ -3737,6 +3755,10 @@ public class SalesCartActivity extends AppCompatActivity {
 
     private void increaseItemOnCart(int index) {
         OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
+        if (Long.valueOf(orderDetails.getProduct().getOfferId())==null){
+            Log.d("offerdIdNull","increaseItemOnCart");
+        }
+        else {
         if(orderDetails.getProduct().getOfferId()==0) {
             SESSION._ORDER_DETAILES.get(index).increaseCount();
         }else {
@@ -3749,10 +3771,14 @@ public class SalesCartActivity extends AppCompatActivity {
         if(!orderDetails.scannable||orderDetails.giftProduct)
             restCategoryOffers();
         calculateTotalPrice();
-    }
+    }}
 
     private void decreaseItemOnCart(int index) {
         OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
+        if (Long.valueOf(orderDetails.getProduct().getOfferId())==null){
+            Log.d("offerdIdNull","decreaseItemOnCart");
+        }
+        else {
         if(orderDetails.getProduct().getOfferId()==0) {
             SESSION._ORDER_DETAILES.get(index).decreaseCount();
         }
@@ -3763,7 +3789,7 @@ public class SalesCartActivity extends AppCompatActivity {
             restCategoryOffers();
         restCategoryOffers();*/
         calculateTotalPrice();
-    }
+    }}
 
     private void refreshCart() {
         calculateTotalPrice();
@@ -3837,7 +3863,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
     private void loadMoreProduct() {
-        productDBAdapter.open();
+
         productLoadItemOffset += productCountLoad;
         final int id = prseedButtonDepartments.getId();
         final String searchWord = etSearch.getText().toString();
@@ -3881,8 +3907,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
-                            productList.addAll(productDBAdapter.getTopProducts( productList.size()-1, 20));
-
+                            productDBAdapter.open();
+                            productList.addAll(productDBAdapter.getTopProducts( productList.size()-1, 50));
+                            productDBAdapter.close();
                             // Stuff that updates the UI
                             productCatalogGridViewAdapter.notifyDataSetChanged();
 
@@ -3893,8 +3920,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
-                            productList.addAll(productDBAdapter.getAllProductsByCategory(id, productList.size()-1, 20));
-
+                            productDBAdapter.open();
+                            productList.addAll(productDBAdapter.getAllProductsByCategory(id, productList.size()-1, 50));
+                            productDBAdapter.close();
                             // Stuff that updates the UI
                             productCatalogGridViewAdapter.notifyDataSetChanged();
 
@@ -3904,7 +3932,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 return null;
             }
         }.execute();
-        productDBAdapter.close();
+
     }
 
 
@@ -4351,11 +4379,20 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
-
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), 0, o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                        }
+                    else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                        }
                     }else {
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), 0, o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                        }
+                        else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                        }
                     }
                     orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
@@ -4513,11 +4550,22 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
+                        if (Long.valueOf(o.getOfferId())==null) {
 
-                    }else {
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(),0, o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                        }
+                        else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(),0, o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                        }
+                    }
+                    else {
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(),0, o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                    }
 
+                        else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                        }
                     }                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
@@ -4644,14 +4692,25 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), 0, o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());}
+                        else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                        }}
 
-                    }else {
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
+                    else {
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), 0, o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                        }
 
-                    }                    orderId.add(orderid);
+                    else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                        }
+                    }
+                    orderId.add(orderid);
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
+
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
                     OrderDetails orderDetails = orderIdList.get(i);
@@ -4732,6 +4791,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 // Get data from CashActivityWithOutCurrency
                 double totalPaidWithOutCurrency = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_TOTAL_PAID, 0.0f);
                 double excess = data.getDoubleExtra(OldCashActivity.LEAD_POS_RESULT_INTENT_CODE_CASH_ACTIVITY_WITHOUT_CURRENCY_EXCESS_VALUE, 0.0f);
+                Log.d("ex", String.valueOf(excess));
                 double totalPrice = data.getDoubleExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, 0.0f);
                 SESSION._ORDERS.setTotalPrice(totalPrice);
                 SESSION._ORDERS.setTotalPaidAmount(totalPaidWithOutCurrency);
@@ -4779,14 +4839,26 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
 
-                    }else {
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),0,o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
+                        }
+                        else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
+                        }
 
-                    }                    orderId.add(orderid);
+                    }
+                    else {
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), 0, o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
+                        }
+                    else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                        }
+
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
                 }
+                    orderId.add(orderid);}
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
                     OrderDetails orderDetails = orderIdList.get(i);
@@ -4919,14 +4991,22 @@ public class SalesCartActivity extends AppCompatActivity {
                 for (OrderDetails o : SESSION._ORDER_DETAILES) {
                     long orderid=0;
                     if(o.getProduct().isWithTax()){
-                        orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
-
-                    }else {
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), 0, o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                        }
+                    else {
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                        }}
+                   else {
+                        if (Long.valueOf(o.getOfferId())==null){
+                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(),0, o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
+                        }
+                    else {
                         orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
 
-                    }                    orderId.add(orderid);
+                    }
                     //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
-                }
+                } orderId.add(orderid);}
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
                     OrderDetails orderDetails = orderIdList.get(i);
@@ -5181,12 +5261,19 @@ public class SalesCartActivity extends AppCompatActivity {
                         if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CASH)) {
                             cashPaymentDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
                             if( getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type"))==0){
-                                zReport.setShekelAmount(zReport.getShekelAmount()+ jsonObject.getDouble("tendered"));
+                                if (jsonObject.getDouble("tendered")<0){
+                                    zReport.setShekelAmount(zReport.getShekelAmount());
+                              }
+                                else {
+                                    zReport.setShekelAmount(zReport.getShekelAmount()+ jsonObject.getDouble("tendered"));
+
+                                }
                                 Log.d("getShekelAmount",zReport.getShekelAmount()+"");
                                 zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
                                 Log.d("ShekelCount",zReportCount.getShekelCount()+1+"");
                             }
-                            zReport.setCashTotal(zReport.getCashTotal()+jsonObject.getDouble("tendered")* getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")));
+                            if (jsonObject.getDouble("tendered")>0){
+                            zReport.setCashTotal(zReport.getCashTotal()+jsonObject.getDouble("tendered")* getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")));}
                             zReportCount.setCashCount(zReportCount.getCashCount()+1);
                         }else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
                             trueCreditCard=true;
@@ -5256,11 +5343,19 @@ public class SalesCartActivity extends AppCompatActivity {
                     for (OrderDetails o : SESSION._ORDER_DETAILES) {
                         long orderid=0;
                         if(o.getProduct().isWithTax()){
-                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(),order.getOrderKey(),o.getOfferId(),o.getProductSerialNumber(),o.getPaidAmount(),o.getSerialNumber());
-
+                            if (Long.valueOf(o.getOfferId())==null) {
+                                orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), 0, o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                            }
+                            else {
+                                orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount(), o.getSerialNumber());
+                            }
                         }else {
-                            orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(),o.getPaidAmount() / (1 + (SETTINGS.tax / 100)),o.getSerialNumber());
-
+                            if (Long.valueOf(o.getOfferId())==null){
+                                orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), 0, o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                            }
+                            else {
+                                orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleIDforCash, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
+                            }
                         }
                         orderId.add(orderid);
                         //   orderDBAdapter.insertEntry(o.getProductSku(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(),o.getCustomer_assistance_id());
@@ -5312,8 +5407,6 @@ public class SalesCartActivity extends AppCompatActivity {
                             currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, saleTotalPrice*-1, order1,CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,
                                     data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
                                     data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
-
-
                         }
                     }else {
                         if(!trueCreditCard) {
@@ -5323,7 +5416,6 @@ public class SalesCartActivity extends AppCompatActivity {
                             currencyReturnsCustomDialogActivity = new CurrencyReturnsCustomDialogActivity(this, change, order1,CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY,
                                     data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
                                     data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
-
 
                         }
                     }
@@ -5781,6 +5873,7 @@ customerDBAdapter.open();
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) // Press Back Icon
         {
+            CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
             finish();
         }
 
@@ -5827,17 +5920,26 @@ customerDBAdapter.open();
         }
         return 1;
     }
-
+   /* @RequiresApi(api = Build.VERSION_CODES.N)
+    private static Long nullToZero(Long value) {
+        return !Objects.isNull(value) ? value : 0;
+    }*/
     public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
         Log.d("validOffer",validOffer.toString());
-        for(int i=0;i<validOffer.size();i++){
-            Log.d("joj","joj");
-            if(orderDetails.getProduct().getOfferId()==validOffer.get(i).getOfferId()){
-                //execute offer
-                orderDetails=  OfferController.execute(validOffer.get(i),orderDetails,this,SESSION._ORDER_DETAILES);
+        Long offerId = null;
+        for(int i=0;i<validOffer.size();i++) {
+            offerId = Long.valueOf(orderDetails.getProduct().getOfferId());
+            if (null == offerId) {
+                Log.d("offerId", "Null offerId");
+            } else {
+                if (orderDetails.getProduct().getOfferId() == validOffer.get(0).getOfferId()) {
+                    //execute offer
+                    orderDetails = OfferController.execute(validOffer.get(0), orderDetails, this, SESSION._ORDER_DETAILES);
 
+                }
             }
         }
+
         //getOfferCategoryForProduct
         /**    OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
          offerCategoryDbAdapter.open();

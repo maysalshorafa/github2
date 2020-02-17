@@ -6,251 +6,280 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:padding="5dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:background="@color/white"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:layout_weight="1"
         android:weightSum="4">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:padding="5dp"
-        android:layout_weight="1"
-        android:weightSum="7">
-        <TextView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/method"
             android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="35dp"/>
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:weightSum="7">
 
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/checks"
-        android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="25dp"/>
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/credit_card"
-        android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="25dp"/>
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/shekel"
-            android:gravity="center"
-        android:layout_weight="1"
-            android:textSize="25dp"/>
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/usd"
-        android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="25dp"/>
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/eur"
-        android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="25dp"/>
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/gbp"
-        android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="25dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/method"
+                android:textSize="35dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/checks"
+                android:textSize="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/credit_card"
+                android:textSize="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/shekel"
+                android:textSize="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/usd"
+                android:textSize="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/eur"
+                android:textSize="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/gbp"
+                android:textSize="25dp" />
 
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bubble"
-        android:orientation="vertical"
-        android:padding="5dp"
-        android:layout_weight="1"
-        android:weightSum="7"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/actual"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="35dp"/>
 
-        <EditText
-            android:id="@+id/actualCheckValue"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/TouchPad_0"
-            android:inputType="number"/>
-        <EditText
-            android:id="@+id/actualCreditValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/TouchPad_0"
-            android:inputType="numberSigned"/>
-        <EditText
-            android:id="@+id/actualShekelValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/TouchPad_0"
-            android:inputType="numberSigned"/>
-        <EditText
-            android:id="@+id/actualUsdValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/TouchPad_0"
-            android:inputType="numberSigned"/>
-        <EditText
-            android:id="@+id/actualEurValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/TouchPad_0"
-            android:inputType="numberSigned"/>
+            android:background="@drawable/bubble"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:weightSum="7">
 
-        <EditText
-            android:id="@+id/actualGbpValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/TouchPad_0"
-            android:inputType="numberSigned"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/actual"
+                android:textSize="35dp" />
+
+            <EditText
+                android:id="@+id/actualCheckValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="@string/TouchPad_0"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/actualCreditValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="@string/TouchPad_0"
+                android:inputType="numberSigned" />
+
+            <EditText
+                android:id="@+id/actualShekelValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="@string/TouchPad_0"
+                android:inputType="numberSigned" />
+
+            <EditText
+                android:id="@+id/actualUsdValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="@string/TouchPad_0"
+                android:inputType="numberSigned" />
+
+            <EditText
+                android:id="@+id/actualEurValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="@string/TouchPad_0"
+                android:inputType="numberSigned" />
+
+            <EditText
+                android:id="@+id/actualGbpValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="@string/TouchPad_0"
+                android:inputType="numberSigned" />
 
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:padding="5dp"
-        android:layout_weight="1"
-        android:weightSum="7">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/expected"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="35dp"/>
-
-        <TextView
-            android:id="@+id/expectedCheckValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/expectedCreditValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/expectedShekelValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/expectedUsdValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/expectedEurValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/expectedGbpValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:padding="5dp"
-        android:layout_weight="1"
-        android:weightSum="7">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/different"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="35dp"/>
-        <TextView
-            android:id="@+id/differentCheckValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/differentCreditValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/differentShekelValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/differentUsdValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/differentEurValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/differentGbpValue"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-
-    </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:weightSum="7">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/expected"
+                android:textSize="35dp" />
+
+            <TextView
+                android:id="@+id/expectedCheckValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/expectedCreditValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/expectedShekelValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/expectedUsdValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/expectedEurValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/expectedGbpValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:weightSum="7">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/different"
+                android:textSize="35dp" />
+
+            <TextView
+                android:id="@+id/differentCheckValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/differentCreditValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/differentShekelValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/differentUsdValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/differentEurValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/differentGbpValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+        </LinearLayout>
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

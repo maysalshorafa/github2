@@ -71,10 +71,10 @@ public class MainCreditCardActivity extends AppCompatActivity {
     static EditText etCCValue;
     EditText etPaymentsNumber;
     Spinner spCreditType;
-
+    boolean isPaused;
     boolean advanceMode = false, byPhoneMode = false,advanceModeForPhone=false;
     double totalPrice = 0;
-
+   ProgressDialog dialog_connection;
     //page 9 on Arkom documents
     //1:normal
     int creditType = CreditCardTransactionType.NORMAL;
@@ -148,6 +148,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
         llByPhone   = (LinearLayout) findViewById(R.id.MainCreditCardActivity_llByPhone);
 
         spCreditType= (Spinner) findViewById(R.id.MainCreditCardActivity_spPaymentType);
+        dialog_connection = new ProgressDialog(MainCreditCardActivity.this);
 
         //check extras
         Bundle extras = getIntent().getExtras();
@@ -359,7 +360,6 @@ public class MainCreditCardActivity extends AppCompatActivity {
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog dialog_connection = new ProgressDialog(MainCreditCardActivity.this);
                 dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
                 dialog_connection.show();
                 String creditCardNumber = etCCValue.getText().toString();
@@ -526,14 +526,17 @@ public class MainCreditCardActivity extends AppCompatActivity {
 
 
     private void doTransaction(final String cardNumber,final int paymentsNumber,final int creditType) {
-        final ProgressDialog dialog_connection = new ProgressDialog(MainCreditCardActivity.this);
+     //   final ProgressDialog dialog_connection = new ProgressDialog(MainCreditCardActivity.this);
         dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
         dialog_connection.show();
 
         new AsyncTask<SoapObject, Void, SoapObject>() {
             @Override
             protected void onPostExecute(SoapObject aVoid) {
-                dialog_connection.dismiss();
+                if(!isPaused && dialog_connection.isShowing()){
+                    dialog_connection.dismiss();
+                }
+
                 returnTo(aVoid);
                 super.onPostExecute(aVoid);
             }
@@ -668,5 +671,19 @@ public class MainCreditCardActivity extends AppCompatActivity {
             });
         }
 
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isPaused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isPaused = false;
+        if(dialog_connection.isShowing()){
+            dialog_connection.dismiss();
+        }
     }
 }

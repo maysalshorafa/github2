@@ -159,8 +159,13 @@ public class PrinterTools {
                 }
                 catch(Exception ignored)
                 {
+                    ignored.printStackTrace();
 
                 }
+                if ((dialog != null) && dialog.isShowing()) {
+                    dialog.cancel();
+                }
+
 
             }
 
@@ -213,9 +218,11 @@ public class PrinterTools {
                 }
                 catch(Exception ignored)
                 {
-
+                    ignored.printStackTrace();
                 }
-
+                if ((dialog != null) && dialog.isShowing()) {
+                    dialog.cancel();
+                }
             }
 
             @Override
@@ -268,7 +275,9 @@ public class PrinterTools {
             }
 
 
-            dialog.cancel();
+            if ((dialog != null) && dialog.isShowing()) {
+                dialog.cancel();
+            }
         } else {
             new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                     .setTitle(context.getString(R.string.printer))
@@ -315,8 +324,9 @@ public class PrinterTools {
 
             }
 
-
-            dialog.cancel();
+            if ((dialog != null) && dialog.isShowing()) {
+                dialog.cancel();
+            }
         } else {
             new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                     .setTitle(context.getString(R.string.printer))
@@ -361,7 +371,9 @@ public class PrinterTools {
                     }
 
 
-                    dialog.cancel();
+                    if ((dialog != null) && dialog.isShowing()) {
+                        dialog.cancel();
+                    }
 
                 }
 
@@ -428,7 +440,9 @@ public class PrinterTools {
                 }
 
 
-                dialog.cancel();
+                if ((dialog != null) && dialog.isShowing()) {
+                    dialog.cancel();
+                }
 
             }
 

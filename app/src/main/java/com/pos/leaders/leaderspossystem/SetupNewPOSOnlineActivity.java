@@ -69,7 +69,7 @@ public class SetupNewPOSOnlineActivity extends Activity {
         context = this;
         //region check internet connection
         if(!SyncMessage.isConnected(this)) {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            AlertDialog alertDialog = new AlertDialog.Builder(SetupNewPOSOnlineActivity.this).create();
             alertDialog.setTitle(getString(R.string.internet_access));
             alertDialog.setMessage(getString(R.string.internet_not_connected));
             alertDialog.setIcon(R.drawable.ic_setting);

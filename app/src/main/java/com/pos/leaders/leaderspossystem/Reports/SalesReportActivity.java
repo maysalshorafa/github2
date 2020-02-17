@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Reports;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -46,16 +47,14 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.DateFormat;
+import java.net.SocketTimeoutException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,7 +68,9 @@ public class SalesReportActivity extends AppCompatActivity {
 
     TextView etFromDate, etToDate,amount,tvCountSale;
     Button btncancleReport,btnCategory,btnproduct,btnAllSales;
-
+    private AlertDialog mAlertDialog;
+    static final int TIME_OUT = 5000;
+    static final int MSG_DISMISS_DIALOG = 0;
     GridView gvCategory,gvProducts;
     CategoryDBAdapter categoryDBAdapter;
     List<Category> listCategory;
@@ -305,8 +306,8 @@ public class SalesReportActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-
                 productIdSelect= filter_productsList.get(position).getProductId();
+                Log.d("idii",productIdSelect+"");
                 flageGridOnClick="gvProducts";
                 setOrder();
 
@@ -348,6 +349,7 @@ public class SalesReportActivity extends AppCompatActivity {
             }
         });*/
     }
+
 
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_FROM_DATE) {
@@ -400,7 +402,6 @@ public class SalesReportActivity extends AppCompatActivity {
                    protected String doInBackground(String... title) {
                     OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
                     orderDBAdapter1.open();
-                    Log.d("OrderListProduct", OrderList.size() + "");
                     OrderList = orderDBAdapter1.getBetweenOrder(from.getTime(), to.getTime());
 
                 return "Sent message.";
@@ -410,7 +411,9 @@ public class SalesReportActivity extends AppCompatActivity {
                 amountReport = amountReport + OrderList.get(i2).getTotalPrice();
                }
                     LAmountRepot.setVisibility(View.VISIBLE);
-                   tvCountSale.setText(OrderList.size() + "");
+                    Log.d("OrderListProduct", OrderList.size() + "");
+                    Log.d("amountReportListProduct",Util.makePrice(amountReport) + "");
+                    tvCountSale.setText(OrderList.size() + "");
                     amount.setText(Util.makePrice(amountReport));}
             };
 
@@ -588,17 +591,19 @@ public class SalesReportActivity extends AppCompatActivity {
 
         else if (flageGridOnClick.equals("gvProducts")){
             objectList = new ArrayList<>();
-            OrderList = new ArrayList<>();
+            List<Order>  OrderList = new ArrayList<>();
             orderProduct = new ArrayList<>();
             OrderDetailsDBAdapter orderDBAdapter = new OrderDetailsDBAdapter(SalesReportActivity.this);
             orderDBAdapter.open();
             orderProduct = orderDBAdapter.getOrderDetailsByIDproduct(productIdSelect);
+            List<Long> l= orderDBAdapter.getOrderDetailsByIDproduct(productIdSelect);
+            Log.d("l",l.toString());
             Set<Long> set = new HashSet<>(orderProduct);
             orderProduct.clear();
             orderProduct.addAll(set);
             OrderDBAdapter orderDBAdapter1 = new OrderDBAdapter(SalesReportActivity.this);
             orderDBAdapter1.open();
-
+            Log.d("OrderListc",orderProduct.size()+"");
             for(int i=0;i<orderProduct.size();i++) {
                 Order o = orderDBAdapter1.getOrderById(orderProduct.get(i));
                 Date date = new Date(o.getCreatedAt().getTime());
@@ -624,14 +629,18 @@ public class SalesReportActivity extends AppCompatActivity {
 
 
         }
+
             List<OrderDetails>orderDetailsListForProduct=new ArrayList<>();
+            int size =0;
             for (int i1=0; i1<OrderList.size();i1++){
                 orderDetailsListForProduct=orderDBAdapter.getOrderBySaleIDAndProductId(OrderList.get(i1).getOrderId(),productIdSelect);
+                Log.d("ListS",orderDetailsListForProduct.size()+"");
                 for (int a=0;a<orderDetailsListForProduct.size();a++){
                     amountReport=amountReport+orderDetailsListForProduct.get(a).getItemTotalPrice();
-
+                  //  size=size+orderDetailsListForProduct.get(a).getQuantity();
                 }
             }
+            Log.d("sizr",size+"");
 
             if (orderProduct.size() > 0) {
                 gvCategory.setVisibility(View.GONE);
@@ -648,6 +657,8 @@ public class SalesReportActivity extends AppCompatActivity {
                 Toast.makeText(SalesReportActivity.this, R.string.there_are_no_sales,
                         Toast.LENGTH_LONG).show();
             }
+            Log.d("amount",Util.makePrice(amountReport));
+
             amount.setText(Util.makePrice(amountReport));
             tvCountSale.setText(OrderList.size()+"");
             objectList.addAll(OrderList);
@@ -849,11 +860,17 @@ class GetALLProductSalesConnection extends AsyncTask<String,Void,String> {
                 Log.d("exception1", e.toString());
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        }
+            catch (SocketTimeoutException se) {
+                se.printStackTrace();
+            }
+
+        catch (IOException e) {
             e.printStackTrace();
         }
+        catch (Exception e) {
+               e.printStackTrace();
+            }
 
         return "";
     }

@@ -2266,8 +2266,8 @@ public class PdfUA {
         document.close();
     }
     public static void createNormalInvoice(Context context  , List<OrderDetails>orderDetailsList, Order order,boolean isCopy,String mainMer) throws IOException, DocumentException {
-        order=SESSION._TEMP_ORDERS;
-        orderDetailsList=SESSION._TEMP_ORDER_DETAILES;
+      order=SESSION._TEMP_ORDERS;
+      orderDetailsList=SESSION._TEMP_ORDER_DETAILES;
 
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
@@ -2527,6 +2527,7 @@ public class PdfUA {
         }
 
         String str = "";
+        Log.d("mainMerCredit",mainMer);
         for (String s : mainMer.split("\n")) {
             if(!s.replaceAll(" ","").equals("")) {
                 if(s.contains("Powered")){

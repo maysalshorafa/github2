@@ -10,7 +10,6 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.Models.BoInventory;
 import com.pos.leaders.leaderspossystem.Models.Inventory;
-import com.pos.leaders.leaderspossystem.Models.ProductInventory;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.HashMap;
@@ -159,8 +158,8 @@ public class InventoryDbAdapter {
             productInventoryDbAdapter.open();
             String key = (String) entry.getKey();
             Integer value = (Integer) entry.getValue();
-           ProductInventory productInventory= productInventoryDbAdapter.getProductInventoryByID(Long.parseLong(key));
-            Log.d("pppppp",productInventory.toString());
+/*           ProductInventory productInventory= productInventoryDbAdapter.getProductInventoryByID(Long.parseLong(key));
+            Log.d("pppppp",productInventory.toString());*/
             productInventoryDbAdapter.updateEntry(Long.parseLong(key),value);
             productInventoryDbAdapter.close();
         }

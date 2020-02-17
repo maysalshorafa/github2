@@ -50,7 +50,7 @@ public class OrderDetails {
 
 	@JsonIgnore
 	private int objectID = 0;
-    private long offerId;
+    private long offerId = 0;
 	private long productSerialNumber;
 	private String serialNumber;
 
