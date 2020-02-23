@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -44,6 +45,7 @@ public class SendLog {
                 myOutWriter.append(SETTINGS.companyName +"  "+ "to POS No:"+SETTINGS.posID+"\n\r"+"Logcat :"+ DateConverter.currentDateTime()+"\n\r"+log.toString());
                 myOutWriter.close();
                 fOut.close();
+                Log.d("file","existsFile");
             } catch(Exception e1)
             {
 
@@ -69,9 +71,12 @@ public class SendLog {
                 myOutWriter.close();
                 myOutWriter.close();
                 fOut.close();
+                Log.d("file"," create File");
             } catch (IOException e1) {
                 e1.printStackTrace();
+                Log.d("file"," not exist File");
             }
+
         }
         File filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename1);
         String file = filelocation.getAbsolutePath();

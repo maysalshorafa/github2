@@ -36,10 +36,12 @@ public class GmailClient {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        Log.d("sendFromGMail","sendFromGMail");
 
         final Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
+                        Log.d("Authenticator","Authenticator");
                         return new PasswordAuthentication(from, pass);
                     }
                 });
@@ -47,6 +49,7 @@ public class GmailClient {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                Log.d("onPreExecute","onPreExecute");
             }
 
             @Override
@@ -57,7 +60,9 @@ public class GmailClient {
                     e.printStackTrace();
                 }
                 try {
+                    Log.d("sessionEmail", String.valueOf(session));
                     Message message = new MimeMessage(session);
+                    Log.d("messageEmail", String.valueOf(message));
                     message.setFrom(new InternetAddress(from));
                     message.setRecipients(Message.RecipientType.TO,
                             InternetAddress.parse(to));
@@ -77,9 +82,12 @@ public class GmailClient {
 
                     Transport.send(message);
 
+                    Log.d("Done","success send log file");
                     System.out.println("Done");
 
+
                 } catch (MessagingException e) {
+                    Log.d("failcatch",e.toString());
                     Log.d("Fail","fail send log file");
                 }
                 return null;
@@ -88,7 +96,7 @@ public class GmailClient {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
+                Log.d("onPostExecute","onPostExecute");
             }
         }.execute();
 

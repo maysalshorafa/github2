@@ -2183,7 +2183,22 @@ public class PdfUA {
         String str = "";
         for (String s : mainMer.split("\n")) {
             if(!s.replaceAll(" ","").equals("")) {
-                if(s.contains("Powered")){
+                if(s.contains("שם מסוף")){
+                    continue;
+                }
+                else if(s.contains("מספר מסוף")){
+                    continue;
+                }
+                else if(s.contains("גרסת תוכנה")){
+                    continue;
+                }
+                else if(s.contains("מספר עסק בחברת האשראי")){
+                    continue;
+                }
+                else if(s.contains("Powered")){
+                    continue;
+                }
+              else if(s.contains("Powered")){
                     continue;
                 }
                 if(s.contains("מספר כרטיס")){
@@ -2268,7 +2283,9 @@ public class PdfUA {
     public static void createNormalInvoice(Context context  , List<OrderDetails>orderDetailsList, Order order,boolean isCopy,String mainMer) throws IOException, DocumentException {
       order=SESSION._TEMP_ORDERS;
       orderDetailsList=SESSION._TEMP_ORDER_DETAILES;
-
+        Log.d("mainMer",mainMer);
+        Log.d("orderDetailsListPdfUA", String.valueOf(SESSION._TEMP_ORDER_DETAILES));
+        Log.d("orderPdfUA", String.valueOf(SESSION._TEMP_ORDERS));
         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
         cashPaymentDBAdapter.open();
         ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
@@ -2529,11 +2546,27 @@ public class PdfUA {
         String str = "";
         Log.d("mainMerCredit",mainMer);
         for (String s : mainMer.split("\n")) {
+
+           /* String[] tokens = s.split("\\s+");
+            Log.i("split0", Arrays.toString(tokens));*/
+
             if(!s.replaceAll(" ","").equals("")) {
-                if(s.contains("Powered")){
+                if(s.contains("שם מסוף")){
                     continue;
                 }
-                if(s.contains("מספר כרטיס")){
+                else if(s.contains("מספר מסוף")){
+                    continue;
+                }
+               else if(s.contains("גרסת תוכנה")){
+                    continue;
+                }
+                else if(s.contains("מספר עסק בחברת האשראי")){
+                    continue;
+                }
+                else if(s.contains("Powered")){
+                    continue;
+                }
+              else  if(s.contains("מספר כרטיס")){
                     if(s.split("\\s+")[1].length()>4){
                         String head = "מספר כרטיס";
                         String ss = "";
@@ -2541,18 +2574,18 @@ public class PdfUA {
                             ss += "*";
                         }
                         ss += s.split("\\s+")[1].substring(s.split("\\s+")[1].length() - 4, s.split("\\s+")[1].length());
-
                         str += "\u200E" + ss + "\t" + head + "\n";
                         continue;
                     }
                 }
                 str += "\u200E" + s + "\n";
             }
+
             Log.i("cc row", s);
         }
+        Log.d("str", str);
         if(str!=""){
             insertCell(creditCard,str, Element.ALIGN_CENTER, 4, urFontName);
-
         }
 
         PdfPTable endOfInvoice = new PdfPTable(2);
