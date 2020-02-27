@@ -4063,26 +4063,29 @@ public class SalesCartActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                try {
-                    HPRTPrinterHelper.OpenCashdrawer(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    try {
-                        HPRTPrinterHelper.OpenCashdrawer(1);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                        try {
-                            HPRTPrinterHelper.OpenCashdrawer(2);
-                        } catch (Exception e2) {
-                            e2.printStackTrace();
-                        }
-                    }
+                try
+                {
+                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                    File file = new File(path,"normalInvoice.pdf");
+                    RandomAccessFile f = new RandomAccessFile(file, "r");
+                    byte[] data = new byte[(int)f.length()];
+                    f.readFully(data);
+                    Log.d("bitmapsize",context.toString()+"");
+
+                    PrinterTools.pdfLoadImages(data,context,"");
+                    MyTaskFour myTaskFour =new MyTaskFour();
+                    myTaskFour.execute();
+
                 }
 
+                catch(Exception ignored)
+                {
 
+                }
                 dialog.cancel();
 
             }
+
 
             @Override
             protected Void doInBackground(Void... params) {
@@ -4098,28 +4101,55 @@ public class SalesCartActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try
-                {
-                    File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
-                    File file = new File(path,"normalInvoice.pdf");
-                    RandomAccessFile f = new RandomAccessFile(file, "r");
-                    byte[] data = new byte[(int)f.length()];
-                    f.readFully(data);
-                    Log.d("bitmapsize",context.toString()+"");
 
-                    PrinterTools.pdfLoadImages(data,context,"");
-
-                }
-                catch(Exception ignored)
-                {
-
-                }
 
                 return null;
             }
         }.execute();
     }
+ private class MyTaskFour extends AsyncTask<Void, Void, Void> {
+        public MyTaskFour() {
+        }
 
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.e("T4", "doInBackground");
+            publishProgress();
+            try {
+                HPRTPrinterHelper.OpenCashdrawer(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    HPRTPrinterHelper.OpenCashdrawer(1);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                    try {
+                        HPRTPrinterHelper.OpenCashdrawer(2);
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.e("T4", "onPostExecute");
+            super.onPostExecute(aVoid);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            Log.e("T4", "onProgressUpdate");
+            super.onProgressUpdate(values);
+        }
+    }
     private void printAndOpenCashBoxSUNMI_T1(String mainAns, final String mainMer, final String mainCli) {
         //AidlUtil.getInstance().connectPrinterService(this);
         if (AidlUtil.getInstance().isConnect()) {

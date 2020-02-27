@@ -649,7 +649,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) // Press Back Icon
-        {
+        {CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
             finish();
         }
 

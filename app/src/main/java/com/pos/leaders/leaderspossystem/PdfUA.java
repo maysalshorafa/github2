@@ -2227,8 +2227,8 @@ public class PdfUA {
         endOfInvoice.deleteBodyRows();
         endOfInvoice.setRunDirection(0);
         insertCell(endOfInvoice,context.getString(R.string.cashier)+":",Element.ALIGN_CENTER,1,urFontName);
-
         insertCell(endOfInvoice,SESSION._EMPLOYEE.getEmployeeName(),Element.ALIGN_CENTER,1,urFontName);
+
         insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
         if(order.getCustomer()!=null) {
 

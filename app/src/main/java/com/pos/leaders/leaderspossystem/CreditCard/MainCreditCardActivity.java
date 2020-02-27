@@ -71,7 +71,6 @@ public class MainCreditCardActivity extends AppCompatActivity {
     static EditText etCCValue;
     EditText etPaymentsNumber;
     Spinner spCreditType;
-    boolean isPaused;
     boolean advanceMode = false, byPhoneMode = false,advanceModeForPhone=false;
     double totalPrice = 0;
    ProgressDialog dialog_connection;
@@ -96,6 +95,16 @@ public class MainCreditCardActivity extends AppCompatActivity {
         } catch (IllegalArgumentException iae) {
 
         }
+            if(dialog_connection.isShowing()){
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        dialog_connection.dismiss();
+                    }
+                });
+            }
+
         super.onDestroy();
     }
 
@@ -533,7 +542,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
         new AsyncTask<SoapObject, Void, SoapObject>() {
             @Override
             protected void onPostExecute(SoapObject aVoid) {
-                if(!isPaused && dialog_connection.isShowing()){
+                if(dialog_connection.isShowing()){
                     dialog_connection.dismiss();
                 }
 
@@ -566,7 +575,8 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 creditCardPayment.setAmount(totalPrice);
                 creditCardPayment.setTransactionType(creditType);
                 creditCardPayment.setTransactionId(soap.getProperty("TransactionID").toString());
-
+                Toast.makeText(this, answer +" anser", Toast.LENGTH_LONG).show();
+                Log.d(" anser", answer);
                 //soap.getProperty("MerchantNote").toString().equals("anyType{}");
                 if(creditReceipt){
                     SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;
@@ -674,16 +684,34 @@ public class MainCreditCardActivity extends AppCompatActivity {
     }
     @Override
     protected void onPause() {
+
+        if(dialog_connection.isShowing()){
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    dialog_connection.dismiss();
+                }
+            });
+        }
         super.onPause();
-        isPaused = true;
     }
+
 
     @Override
     protected void onResume() {
-        super.onResume();
-        isPaused = false;
+
         if(dialog_connection.isShowing()){
-            dialog_connection.dismiss();
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    dialog_connection.dismiss();
+                }
+            });
         }
+        super.onResume();
     }
+
+
 }

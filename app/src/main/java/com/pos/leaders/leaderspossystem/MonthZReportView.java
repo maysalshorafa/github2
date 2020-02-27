@@ -234,7 +234,7 @@ public class MonthZReportView extends AppCompatActivity {
                 totalSales = invoiceReceiptAmount + invoiceAmount + creditInvoiceAmount;
 
                 zReport = new ZReport(0, new Timestamp(System.currentTimeMillis()), zReportList.get(0).getByUser(), 0, 0, totalAmount, totalSales, cashTotal, checkTotal, creditTotal, totalPosSales, zReportList.get(0).getTax(), invoiceAmount, creditInvoiceAmount, shekelAmount, usdAmount, eurAmount, gbpAmount, invoiceReceiptAmount, 0, 0, "close", salesBeforeTax, salesWithTax, totalTax);
-                Log.d("zReportList", zReport.toString());
+                Log.d("MonthzReportList", zReport.toString());
 
 
                 zReportCount = new ZReportCount(0, cashTotalC, checkTotalC, creditTotalC, invoiceAmountC, creditInvoiceAmountC, shekelAmountC, usdAmountC, eurAmountC, gbpAmountC, invoiceReceiptAmountC, 0);
