@@ -853,7 +853,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (salesaftertaxCancle - SalesWitheTaxCancle))));
 
                                                         zReportCount.setCashCount(zReportCount.getCashCount()-1);
-                                                        zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
+                                                    //    zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
                                                         zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
                                                         zReportDBAdapter.updateEntry(zReport1);
                                                         zReportDBAdapter.close();

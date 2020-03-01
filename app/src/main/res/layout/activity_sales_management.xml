@@ -124,22 +124,20 @@
         </LinearLayout>
 
 
-
-            <ListView
-                android:id="@+id/saleManagement_LVSales"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:horizontalSpacing="8dp"
-                android:verticalSpacing="8dp"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="10.0sp"
-                />
+        <ListView
+            android:id="@+id/saleManagement_LVSales"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp"
+            android:gravity="center"
+            android:horizontalSpacing="8dp"
+            android:verticalSpacing="8dp" />
 
     </LinearLayout>
 

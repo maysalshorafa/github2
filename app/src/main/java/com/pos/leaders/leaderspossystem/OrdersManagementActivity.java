@@ -388,7 +388,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                     //region Cancellation ORDER Button
 
-                    Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
+                    final Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
                     if(sale.getCancellingOrderId()>0){
                         btnCan.setVisibility(View.GONE);
                     }else {
@@ -600,7 +600,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                                 zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (salesaftertaxCancle - SalesWitheTaxCancle))));
                                                 zReportCount.setCashCount(zReportCount.getCashCount() - 1);
-                                                zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount() - 1);
+                                           //     zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount() - 1);
                                                 zReportCount.setShekelCount(zReportCount.getShekelCount() - 1);
                                                 zReportDBAdapter.updateEntry(zReport1);
                                                 zReportCountDbAdapter.updateEntry(zReportCount);
@@ -1021,7 +1021,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                     //region Cancellation ORDER Button
 
-                    Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
+                    final Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
                     if(sale.getCancellingOrderId()>0){
                         btnCan.setVisibility(View.GONE);
                     }else {
@@ -1031,6 +1031,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     btnCan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            btnCan.setEnabled(false);
                             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(OrdersManagementActivity.this);
                             zReportDBAdapter.open();
                             ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(OrdersManagementActivity.this);
@@ -1219,7 +1220,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-sale.getTotalPrice());
                             zReport1.setShekelAmount(zReport1.getShekelAmount()-sale.getTotalPrice());
                             zReportCount.setCashCount(zReportCount.getCashCount()-1);
-                            zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
+                         //   zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
                             zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
                             zReportDBAdapter.updateEntry(zReport1);
                             zReportCountDbAdapter.updateEntry(zReportCount);
