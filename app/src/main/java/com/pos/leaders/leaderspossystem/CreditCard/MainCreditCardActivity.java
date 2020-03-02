@@ -575,8 +575,6 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 creditCardPayment.setAmount(totalPrice);
                 creditCardPayment.setTransactionType(creditType);
                 creditCardPayment.setTransactionId(soap.getProperty("TransactionID").toString());
-                Toast.makeText(this, answer +" anser", Toast.LENGTH_LONG).show();
-                Log.d(" anser", answer);
                 //soap.getProperty("MerchantNote").toString().equals("anyType{}");
                 if(creditReceipt){
                     SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;

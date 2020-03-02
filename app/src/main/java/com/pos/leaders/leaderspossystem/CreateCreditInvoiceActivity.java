@@ -564,7 +564,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 RandomAccessFile f = new RandomAccessFile(file, "r");
                                                 byte[] data = new byte[(int)f.length()];
                                                 f.readFully(data);
-                                                pdfLoadImages(data,context);
+                                                pdfLoadImages(data,context,"");
                                             }
                                             catch(Exception ignored)
                                             {

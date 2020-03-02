@@ -91,7 +91,6 @@ import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImag
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesClosingReport;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesOpiningReport;
 
-
 /**
  * Created by KARAM on 19/01/2017.
  */
@@ -1109,7 +1108,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,"");
 
                 }
                 catch(Exception ignored)
@@ -1157,7 +1156,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,"");
 
                 }
                 catch(Exception ignored)
@@ -1203,7 +1202,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,"Pause");
 
                 }
                 catch(Exception ignored)
@@ -1427,7 +1426,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,"");
                     Log.d("tesrr11",bitmapList.size()+"");
 
                 }

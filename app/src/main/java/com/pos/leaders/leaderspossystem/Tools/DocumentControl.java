@@ -66,7 +66,7 @@ public class DocumentControl {
     static JSONObject receiptJsonObject = new JSONObject();
     static Bitmap newBitmap =null;
 
-    public static void pdfLoadImages(final byte[] data, final Context context) {
+    public static void pdfLoadImages(final byte[] data, final Context context, final String pauseClick) {
 
         final ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
         try {
@@ -84,10 +84,12 @@ public class DocumentControl {
                   print(context,bitmapList);
                     //after async close progress dialog
                     progressDialog.dismiss();
-                    ((Activity)context).finish();
-                    //load the html in the webview
-                    //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
-                }
+                    if (pauseClick.equals("Pause")){}
+                    else {
+                    ((Activity)context).finish();}
+                //load the html in the webview
+                //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
+            }
 
                 @Override
                 protected String doInBackground(Void... params) {
@@ -441,7 +443,7 @@ public class DocumentControl {
                             RandomAccessFile f = new RandomAccessFile(file, "r");
                             byte[] data = new byte[(int)f.length()];
                             f.readFully(data);
-                            pdfLoadImages(data,context);
+                            pdfLoadImages(data,context,"");
                             //pdfLoadImages1(data);
                         }
                         catch(Exception ignored)
