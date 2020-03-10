@@ -545,13 +545,19 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 if(dialog_connection.isShowing()){
                     dialog_connection.dismiss();
                 }
-
+                Log.d("tansaction","transaction");
                 returnTo(aVoid);
                 super.onPostExecute(aVoid);
             }
             @Override
             protected SoapObject doInBackground(SoapObject... params) {
+                Log.d("cardNumber",cardNumber);
+                Log.d("paymentsNumber", String.valueOf(paymentsNumber));
+                Log.d("totalPrice", String.valueOf(totalPrice));
+                Log.d("creditType", String.valueOf(creditType));
                 SoapObject soap = Arkom.PassCard(cardNumber, paymentsNumber, totalPrice, "", creditType);
+                Log.d("soap","soap");
+                Log.d("soap1", String.valueOf(soap));
                 // TODO: 11/04/2017 Return to UI main thread this three value on activity result
                 //Log.e("Answer", soap.getProperty("Answer").toString());
                 //Log.e("MerchantNote", soap.getProperty("MerchantNote").toString());
@@ -567,6 +573,8 @@ public class MainCreditCardActivity extends AppCompatActivity {
         if (soap != null) {
 
             String answer = soap.getProperty("Answer").toString();
+            Log.d("answer","answer");
+            Log.d("answer1",answer);
             try {
 
                 CreditCardPayment creditCardPayment = Result.read(answer);

@@ -115,6 +115,7 @@ public class ProductInventoryDbAdapter {
 
         ContentValues val = new ContentValues();
         //Assign values for each row.
+        if (productInventory!=null){
         val.put(PRODUCT_INVENTORY_COLUMN_PRODUCT_ID, productInventory.getProductId());
         val.put(PRODUCT_INVENTORY_OPERATION, productInventory.getOperation());
         val.put(PRODUCT_INVENTORY_COLUMN_BY_EMPLOYEE, productInventory.getByEmployee());
@@ -134,7 +135,7 @@ public class ProductInventoryDbAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        db.update(PRODUCT_INVENTORY_TABLE_NAME, val, where, new String[]{productInventory.getProductInventoryId() + ""});
+        db.update(PRODUCT_INVENTORY_TABLE_NAME, val, where, new String[]{productInventory.getProductInventoryId() + ""});}
         productInventoryDbAdapter.close();
     }
     public ProductInventory getProductInventoryByID(long id) {

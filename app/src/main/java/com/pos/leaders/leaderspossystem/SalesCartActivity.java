@@ -3511,8 +3511,8 @@ public class SalesCartActivity extends AppCompatActivity {
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
             if(o.giftProduct) continue;
             if(!o.scannable) continue;
-            try {
-                if (o==null){
+      try {
+                if (o== null){
                 }
                 else {
                     calculateOfferForOrderDetails(o);
@@ -3523,28 +3523,15 @@ public class SalesCartActivity extends AppCompatActivity {
             if (o.getOffer() != null) {
                 Log.i("hasOffer", "" + o.getOffer() + "" );
             }
-           // try{
+
                 if (o.offerList!=null && !o.offerList.isEmpty()){
                     for (Offer offer : o.offerList) {
                         if(!offers.containsKey(offer.getOfferId())){
                             offers.put(offer.getOfferId(), offer);
                         }
                     }}
-            //}
-           /* catch(NullPointerException e)
-            {
-                Log.d("NullPointerException",e.toString());
-            }*/
+
         }
-        /**  try {
-         if (OfferController.executeCategoryOffers(SESSION._ORDER_DETAILES, validOffer)) {
-         //refreshCart();
-         }
-         } catch (JSONException e) {
-         e.printStackTrace();
-         } catch (IOException e) {
-         e.printStackTrace();
-         }**/
 
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
             String currencyType="";
@@ -5951,23 +5938,31 @@ customerDBAdapter.open();
         return 1;
     }
    /* @RequiresApi(api = Build.VERSION_CODES.N)
-    private static Long nullToZero(Long value) {
-        return !Objects.isNull(value) ? value : 0;
-    }*/
-    public OrderDetails calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
-        Log.d("validOffer",validOffer.toString());
-        Long offerId = null;
-        for(int i=0;i<validOffer.size();i++) {
-            offerId = Long.valueOf(orderDetails.getProduct().getOfferId());
-            if (null == offerId) {
-                Log.d("offerId", "Null offerId");
-            } else {
-                if (orderDetails.getProduct().getOfferId() == validOffer.get(0).getOfferId()) {
-                    //execute offer
-                    orderDetails = OfferController.execute(validOffer.get(0), orderDetails, this, SESSION._ORDER_DETAILES);
 
+    public void calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
+        Log.d("validOffer",validOffer.toString());
+        Log.d("orderDetailsoffer",orderDetails.toString());
+        if (orderDetails.getProduct()!=null ){
+            Log.d("getOfferIdde1","null");
+            if(String.valueOf(orderDetails.getProduct().getOfferId())!= null){
+                Log.d("getOfferIdde","null");
+                if (!String.valueOf(orderDetails.getProduct().getOfferId()).isEmpty()){
+                    Log.d("getOfferId2","null");
+                    if (validOffer!=null){
+                        Log.d("getOfferId3","null");
+                        for(int i=0;i<validOffer.size();i++) {
+                            Log.d("orderDetails4","null");
+                            if (orderDetails.getProduct().getOfferId() == validOffer.get(i).getOfferId()) {
+                                //execute offer
+                                OfferController.execute(validOffer.get(i), orderDetails, this, SESSION._ORDER_DETAILES);
+                            }
+                        }
+                    }
                 }
             }
+        }
+        else {
+            Log.d("orderDetails","null");
         }
 
         //getOfferCategoryForProduct
@@ -6003,7 +5998,7 @@ customerDBAdapter.open();
          }
          return o;
          }**/
-        return orderDetails;
+        return;
     }
     private ZReport getLastZReport() {
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(this);

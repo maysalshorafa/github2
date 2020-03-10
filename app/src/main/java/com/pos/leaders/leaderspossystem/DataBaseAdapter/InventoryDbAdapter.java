@@ -139,12 +139,10 @@ public class InventoryDbAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        InventoryDbAdapter inventoryDbAdapter = new InventoryDbAdapter(context);
-        inventoryDbAdapter.open();
         ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
-        productInventoryDbAdapter.open();
         ContentValues val = new ContentValues();
         //Assign values for each row.
+       if (inventory!=null){
         val.put(INVENTORY_COLUMN_ID, inventory.getId());
         val.put(INVENTORY_COLUMN_NAME, inventory.getName());
         val.put(INVENTORY_COLUMN_INVENTORY_ID, inventory.getInventoryId());
@@ -158,16 +156,18 @@ public class InventoryDbAdapter {
             productInventoryDbAdapter.open();
             String key = (String) entry.getKey();
             Integer value = (Integer) entry.getValue();
-/*           ProductInventory productInventory= productInventoryDbAdapter.getProductInventoryByID(Long.parseLong(key));
-            Log.d("pppppp",productInventory.toString());*/
             productInventoryDbAdapter.updateEntry(Long.parseLong(key),value);
             productInventoryDbAdapter.close();
-        }
+        }}
         try {
+            if (val.size()>0){
             String where = INVENTORY_COLUMN_ID + " = ?";
             db.update(INVENTORY_TABLE_NAME, val, where, new String[]{inventory.getId() + ""});
             close();
-            return 1;
+            return 1;}
+            else {
+                return 0;
+            }
         } catch (SQLException ex) {
             return 0;
         }

@@ -38,7 +38,7 @@ public class Product {
     private double weight;
     private int currencyType;
     private int branchId;
-    private long offerId;
+    private long offerId=0;
     private double lastCostPriceInventory;
     private boolean withSerialNumber;
 

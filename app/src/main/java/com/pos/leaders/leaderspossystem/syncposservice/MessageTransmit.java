@@ -36,11 +36,14 @@ public class MessageTransmit {
 
     public MessageTransmit(){}
     public MessageTransmit(String domainURL){
+        Log.d("MessageTransmit1",domainURL);
         if(domainURL.length()>0){
             char c = domainURL.charAt(domainURL.length() - 1);
             if(c!='/')
                 domainURL += "/";}
+        Log.d("MessageTransmit2",domainURL);
         this.domainURL = domainURL;
+        Log.d("MessageTransmit3", this.domainURL);
         client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
@@ -124,6 +127,8 @@ public class MessageTransmit {
 
         try {
             jsonObject = new JSONObject(json);
+            Log.d("domainURL",domainURL);
+            Log.d("url",url);
             request = new Request.Builder().url(domainURL + url+"/"+id).put(body).addHeader(AUTHORIZATION, token).build();
         } catch (JSONException e) {
             e.printStackTrace();
