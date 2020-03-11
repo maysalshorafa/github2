@@ -104,7 +104,6 @@ public class MessageTransmit {
             Request request = new Request.Builder().url(domainURL + url).post(body).addHeader(AUTHORIZATION, token).addHeader(CONTENT_LENGTH,String.valueOf(body.contentLength()+body.contentType().toString().length())).build();
             Log.d("Message req", request.toString());
             Response response = client.newCall(request).execute();
-
             Log.d("Response Code", response.code()+"");
             return response.body().string();
         }catch (Exception e){

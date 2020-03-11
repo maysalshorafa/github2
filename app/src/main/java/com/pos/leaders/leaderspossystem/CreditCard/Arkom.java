@@ -310,7 +310,6 @@ public class Arkom {
 
                 transactionAcknowledge=PutTransactionAcknowledge(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID);
                 soap.addProperty("TransactionID", TransactionID);
-                Log.d("sopJson","sopJson");
                 return  soap;
             }
             catch (Exception ex){
@@ -326,7 +325,6 @@ public class Arkom {
 
                 transactionAcknowledge=PutTransactionAcknowledge(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID);
                 soap.addProperty("TransactionID", TransactionID);
-                Log.d("sopjson1","sopjson1");
                 return  soap;}
             catch (Exception ex){
                 //  Log.e("error",ex.getMessage());

@@ -222,6 +222,10 @@ public class CreditCardActivity extends AppCompatActivity {
                                 }
                             }
                     );
+                    btCancel.setFocusable(false);
+                    btOK.setFocusable(false);
+                    etNumberOfPayments.setFocusable(false);
+                    sCreditType.setFocusable(false);
                     dialog_connection.show();
                 } else {
 
@@ -230,10 +234,6 @@ public class CreditCardActivity extends AppCompatActivity {
                     numberOfPayments = Integer.parseInt(etNumberOfPayments.getText().toString());
 
                     tvTotalPrice.setFocusable(false);
-                    btCancel.setFocusable(false);
-                    btOK.setFocusable(false);
-                    etNumberOfPayments.setFocusable(false);
-                    sCreditType.setFocusable(false);
 
                     dialog.setContentView(R.layout.dialog_credit_card_reader);
                     dialog.setTitle(CreditCardActivity.this.getString(R.string.transfer_credit_card));
@@ -384,7 +384,6 @@ public class CreditCardActivity extends AppCompatActivity {
 
     public void returnTo(SoapObject soap) {
         if (soap != null) {
-            Log.d("teeestAnswer",soap.getProperty("Answer").toString());
             Intent i = new Intent();
             i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
             i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, soap.getProperty("Answer").toString());

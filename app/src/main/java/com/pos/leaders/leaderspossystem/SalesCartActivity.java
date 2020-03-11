@@ -5937,28 +5937,32 @@ customerDBAdapter.open();
         }
         return 1;
     }
-   /* @RequiresApi(api = Build.VERSION_CODES.N)
 
     public void calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
         Log.d("validOffer",validOffer.toString());
         Log.d("orderDetailsoffer",orderDetails.toString());
         if (orderDetails.getProduct()!=null ){
-            Log.d("getOfferIdde1","null");
             if(String.valueOf(orderDetails.getProduct().getOfferId())!= null){
-                Log.d("getOfferIdde","null");
                 if (!String.valueOf(orderDetails.getProduct().getOfferId()).isEmpty()){
-                    Log.d("getOfferId2","null");
                     if (validOffer!=null){
-                        Log.d("getOfferId3","null");
                         for(int i=0;i<validOffer.size();i++) {
-                            Log.d("orderDetails4","null");
                             if (orderDetails.getProduct().getOfferId() == validOffer.get(i).getOfferId()) {
                                 //execute offer
                                 OfferController.execute(validOffer.get(i), orderDetails, this, SESSION._ORDER_DETAILES);
                             }
                         }
                     }
+                    else {
+                        Log.d("validOffer","null");
+                    }
                 }
+                else {
+                    Log.d("orderDetialsGetOffer","empty");
+                }
+
+            }
+            else {
+                Log.d("orderDetialsGetOffer","null");
             }
         }
         else {
