@@ -3186,6 +3186,20 @@ public class SalesCartActivity extends AppCompatActivity {
 
     public void touchPadClick(View view) throws JSONException {
         TextView tirh = (TextView) this.findViewById(R.id.touchPadFragment_tvView);
+        int count=0;
+        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
+        zReportDBAdapter.open();
+        ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(SalesCartActivity.this);
+        zReportCountDbAdapter.open();
+        ZReportCount zReportCount=null;
+        ZReport zReport1=null;
+        try {
+            zReportCount = zReportCountDbAdapter.getLastRow();
+            zReport1 = zReportDBAdapter.getLastRow();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         switch (view.getId()) {
             case R.id.touchPadFragment_bt0:
                 touchPadPressed += 0;
@@ -3236,6 +3250,13 @@ public class SalesCartActivity extends AppCompatActivity {
                 break;
             case R.id.touchPadFragment_btEnter:
                 if (!touchPadPressed.equals(""))
+                    if (Double.parseDouble(touchPadPressed)<0){
+                        count=count+1;
+                        zReportCount.setMinusGeneralItemCount(zReportCount.getMinusGeneralItemCount()+count);
+                        zReport1.setMinusGeneralItem(zReport1.getMinusGeneralItem()+Double.parseDouble(touchPadPressed));
+                        Log.d("zReportCountMi",zReportCount.getMinusGeneralItemCount()+"");
+                        Log.d("zReport1Minus",zReport1.getMinusGeneralItem()+"");
+                    }
                     addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", ""));
                 touchPadPressed = "";
                 tirh.setText(touchPadPressed);

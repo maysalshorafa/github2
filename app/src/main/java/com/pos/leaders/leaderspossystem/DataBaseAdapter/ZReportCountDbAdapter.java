@@ -33,12 +33,14 @@ public class ZReportCountDbAdapter {
     protected static final String Z_REPORT_COUNT_COLUMN_EUR= "eurCount";
     protected static final String Z_REPORT_COLUMN_COUNT_GBP= "gbpCount";
     protected static final String Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT= "totalInvoiceReceiptCount";
+    protected static final String Z_REPORT_COLUMN_COUNT_MINUS_GENERAL_ITEM= "minusGeneralItemCount";
+
     public static final String DATABASE_CREATE = "CREATE TABLE `" + Z_REPORT_COUNT_TABLE_NAME + "` ( `" + Z_REPORT_COUNT_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT,"
             +"`" + Z_REPORT_COUNT_COLUMN_ZREPORT_ID + "` INTEGER default 0, `" + Z_REPORT_COUNT_COLUMN_CASH + "` INTEGER default 0," +
             " `" + Z_REPORTCOUNT_COLUMN_CHECK + "` INTEGER default 0," +
             " `" + Z_REPORT_COUNT_COLUMN_CREDIT + "` INTEGER default 0,`" + Z_REPORT_COUNT_COLUMN_INVOICE + "` INTEGER,`" +
             Z_REPORT_COUNT_COLUMN_CREDIT_INVOICE + "` INTEGER default 0,`" +  Z_REPORT_COUNT_COLUMN_SHEKEL + "` INTEGER default 0,`" +  Z_REPORT_COUNT_COLUMN_USD + "` INTEGER default 0,`"
-            + Z_REPORT_COUNT_COLUMN_EUR + "` INTEGER default 0,`" + Z_REPORT_COLUMN_COUNT_GBP + "` INTEGER default 0, "+"`" +
+            + Z_REPORT_COUNT_COLUMN_EUR + "` INTEGER default 0,`" +Z_REPORT_COLUMN_COUNT_MINUS_GENERAL_ITEM + "` INTEGER default 0,`" + Z_REPORT_COLUMN_COUNT_GBP + "` INTEGER default 0, "+"`" +
             Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT + "` INTEGER default 0)";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -91,6 +93,7 @@ public class ZReportCountDbAdapter {
         val.put(Z_REPORT_COUNT_COLUMN_EUR,zReport.getEurCount());
         val.put(Z_REPORT_COLUMN_COUNT_GBP,zReport.getGbpCount());
         val.put(Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT,zReport.getInvoiceReceiptCount());
+        val.put(Z_REPORT_COLUMN_COUNT_MINUS_GENERAL_ITEM,zReport.getMinusGeneralItemCount());
         Log.d("testZReportCount",zReport.toString());
 
 
@@ -137,7 +140,7 @@ public class ZReportCountDbAdapter {
                 c.getInt(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_USD)),
                 c.getInt(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_EUR)),  c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_COUNT_GBP)),
                 c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT))
-                ,c.getLong(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_ZREPORT_ID)));
+                ,c.getLong(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_ZREPORT_ID)),c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_COUNT_MINUS_GENERAL_ITEM)));
     }
     public void updateEntry(ZReportCount zReport) {
         if(db.isOpen()){
@@ -161,6 +164,7 @@ public class ZReportCountDbAdapter {
         val.put(Z_REPORT_COUNT_COLUMN_EUR,zReport.getEurCount());
         val.put(Z_REPORT_COLUMN_COUNT_GBP,zReport.getGbpCount());
         val.put(Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT,zReport.getInvoiceReceiptCount());
+        val.put(Z_REPORT_COLUMN_COUNT_MINUS_GENERAL_ITEM,zReport.getMinusGeneralItemCount());
         Log.d("testZReport",zReport.toString());
 
         String where = Z_REPORT_COUNT_COLUMN_ID + " = ?";

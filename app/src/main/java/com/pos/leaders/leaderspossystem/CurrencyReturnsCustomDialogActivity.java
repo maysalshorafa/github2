@@ -107,7 +107,6 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                         ZReport zReport =zReportDBAdapter.getLastRow();
                         if(rCurrency.getId()==0) {
                             zReport.setShekelAmount(zReport.getShekelAmount() - returnCurrencyValue);
-
                         }else if (rCurrency.getId()==1){
                             zReport.setUsdAmount(zReport.getUsdAmount()-returnCurrencyValue);
                         }else if(rCurrency.getId()==2){

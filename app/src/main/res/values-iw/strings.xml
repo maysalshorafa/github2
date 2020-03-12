@@ -212,6 +212,7 @@
     <string name="a_report_amount">קרן</string>
     <string name="total_with_a_report_amount">כה\'\'כ קופה</string>
     <string name="total_sales">סה\'\'כ עסקאות</string>
+    <string name="minus_general_item">פריט כללי במינוס</string>
     <string name="in_put">נכנס</string>
     <string name="out_put">זיכוי</string>
     <string name="details">פריט</string>

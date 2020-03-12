@@ -367,6 +367,7 @@
     <string name="valid_ID">الرجاء ادخال رقم الهوية</string>
     <string name="valid_expired_card">الرجاء ادخال تاريخ الصلاحية</string>
     <string name="total_sales">المجموع الكلي</string>
+    <string name="minus_general_item">Minus general item</string>
     <string name="total_discount">مجموع التخفيضات</string>
     <string name="title_zreports_activity">تقرير z</string>
     <string name="title_user_attendance_report_activity">تقارير الموظفين</string>

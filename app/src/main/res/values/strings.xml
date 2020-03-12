@@ -616,6 +616,7 @@
     <string name="a_report_amount">A Report</string>
     <string name="total_with_a_report_amount">Total Amount</string>
     <string name="total_sales">Total Sales</string>
+    <string name="minus_general_item">Minus general item</string>
     <string name="details">Details</string>
     <string name="cashiers">Cashiers :</string>
     <!-- Activity Label -->

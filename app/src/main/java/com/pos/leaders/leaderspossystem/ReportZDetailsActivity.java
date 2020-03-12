@@ -63,7 +63,8 @@ public class ReportZDetailsActivity extends Activity {
             zReportGbpCount,zReportTotalGbp,zReportCreditCardCount,zReportTotalCreditCard,zReportCheckCount,
             zReportTotalCheck,zReportTotalAmount,zReportOpiningReportAmount,zReportOpiningReportCount,zReportPullReportAmount
             ,zReportDepositReportAmount,zReportShekelAmount,zReportUsdAmount,zReportGbpAmount,zReportEurAmount
-            ,zReportPosSales,zReportSalesWithTax,zReportSalesBeforeTax,zReportTotalPrice,zReportTotalTax;
+            ,zReportPosSales,zReportSalesWithTax,zReportSalesBeforeTax,zReportTotalPrice,zReportTotalTax,minusGeneralItemCount
+            ,zReportMinusGeneralItem;
     POSSDK pos;
     public static  Bitmap p;
     PrintTools pt;
@@ -112,6 +113,7 @@ public class ReportZDetailsActivity extends Activity {
         invoiceCountText=(TextView)findViewById(R.id.invoiceCount);
         zReportInvoice=(TextView)findViewById(R.id.zReportInvoice);
         creditInvoiceCount=(TextView)findViewById(R.id.creditInvoiceCount);
+        minusGeneralItemCount=(TextView) findViewById(R.id.minusGeneralItemCount);
         zReportCreditInvoice=(TextView)findViewById(R.id.zReportCreditInvoice);
         zReportTotalSales=(TextView)findViewById(R.id.zReportTotalSales);
         zReportCashPaymentCount=(TextView)findViewById(R.id.zReportCashPaymentCount);
@@ -142,6 +144,7 @@ public class ReportZDetailsActivity extends Activity {
         zReportSalesBeforeTax=(TextView)findViewById(R.id.zReportSalesBeforeTax);
         zReportTotalTax=(TextView)findViewById(R.id.Tax);
         zReportTotalPrice=(TextView)findViewById(R.id.TotalPrice);
+        zReportMinusGeneralItem=(TextView)findViewById(R.id.zReportMinusGeneralItem);
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             x= getIntent().getExtras().getBoolean(ReportsManagementActivity.COM_LEADPOS_XREPORT_FLAG);
@@ -225,7 +228,6 @@ public class ReportZDetailsActivity extends Activity {
                 zReportSalesBeforeTax.setText(xReport.getSalesBeforeTax()+"");
                 zReportSalesWithTax.setText(xReport.getSalesWithTax()+"");
                 zReportTotalPrice.setText(Util.makePrice(xReport.getSalesBeforeTax()+xReport.getSalesWithTax()+xReport.getTotalTax()));
-
             } catch (Exception e) {
                 e.printStackTrace();
             }

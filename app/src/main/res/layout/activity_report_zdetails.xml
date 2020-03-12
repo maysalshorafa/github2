@@ -43,7 +43,7 @@
             android:orientation="vertical"
             android:padding="5dp"
             android:layout_weight="1"
-            android:weightSum="5">
+            android:weightSum="6">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -82,7 +82,13 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textSize="25dp"/>
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/minus_general_item"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="25dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -91,7 +97,7 @@
             android:orientation="vertical"
             android:padding="5dp"
             android:layout_weight="1"
-            android:weightSum="5">
+            android:weightSum="6">
 
             <TextView
                 android:id="@+id/textView10"
@@ -127,7 +133,13 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="~"/>
-
+            <TextView
+                android:id="@+id/minusGeneralItemCount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -135,7 +147,7 @@
             android:orientation="vertical"
             android:padding="5dp"
             android:layout_weight="1"
-            android:weightSum="5">
+            android:weightSum="6">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -167,7 +179,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"/>
-
+            <TextView
+                android:id="@+id/zReportMinusGeneralItem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"/>
         </LinearLayout>
     </LinearLayout>
             <LinearLayout
