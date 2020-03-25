@@ -173,25 +173,25 @@ public class SettingActivity extends AppCompatActivity {
         JSONObject jsonObject = null;
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
-            String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
-            jsonObject = new JSONObject(res);
-            try {
+            if (messageTransmit.authGet(ApiURL.CompanyCredentials, token)!=null) {
+                String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
+                jsonObject = new JSONObject(res);
+                try {
 
-                if(!jsonObject.getString(MessageKey.status).equals("200"))
-                    return;
-                SettingActivity.jsonObject = jsonObject.getJSONObject(MessageKey.responseBody);
-                Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
+                    if (!jsonObject.getString(MessageKey.status).equals("200"))
+                        return;
+                    SettingActivity.jsonObject = jsonObject.getJSONObject(MessageKey.responseBody);
+                    Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
+
+                } catch (JSONException e) {
+                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
+                    jsonObject = jsonArray.getJSONObject(0);
+                    SettingActivity.jsonObject = jsonObject;
+                    Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
+
+                }
 
             }
-            catch (JSONException e){
-                JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
-                jsonObject = jsonArray.getJSONObject(0);
-                SettingActivity.jsonObject = jsonObject;
-                 Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
-
-            }
-
-
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

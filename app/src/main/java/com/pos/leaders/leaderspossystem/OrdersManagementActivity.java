@@ -1604,36 +1604,37 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
         String customerId=args[0];
         try {
             String url = ApiURL.Documents+"/InvoicesAndCreditInvoice/";
-            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
-            JSONObject jsonObject = new JSONObject(invoiceRes);
-            String msgData = jsonObject.getString(MessageKey.responseBody);
-            if (msgData.startsWith("[")) {
-                try {
-                    JSONArray jsonArray = new JSONArray(msgData);
+            if (messageTransmit.authGet(url,SESSION.token)!=null) {
+                String invoiceRes = messageTransmit.authGet(url, SESSION.token);
+                JSONObject jsonObject = new JSONObject(invoiceRes);
+                String msgData = jsonObject.getString(MessageKey.responseBody);
+                if (msgData.startsWith("[")) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(msgData);
 
-                    for (int i = 0; i < jsonArray.length()-1 ; i++) {
-                        msgData = jsonArray.getJSONObject(i).toString();
-                        JSONObject msgDataJson =new JSONObject(msgData);
-                        if(msgDataJson.getString("type").equals("INVOICE")){
-                            invoice = new BoInvoice(DocumentType.INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
-                            OrdersManagementActivity.invoiceList.add(invoice);
+                        for (int i = 0; i < jsonArray.length() - 1; i++) {
+                            msgData = jsonArray.getJSONObject(i).toString();
+                            JSONObject msgDataJson = new JSONObject(msgData);
+                            if (msgDataJson.getString("type").equals("INVOICE")) {
+                                invoice = new BoInvoice(DocumentType.INVOICE, msgDataJson.getJSONObject("documentsData"), msgDataJson.getString("docNum"));
+                                OrdersManagementActivity.invoiceList.add(invoice);
 
 
-                        }else  if(msgDataJson.getString("type").equals("CREDIT_INVOICE")){
-                            invoice = new BoInvoice(DocumentType.CREDIT_INVOICE,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
-                            OrdersManagementActivity.invoiceList.add(invoice);
+                            } else if (msgDataJson.getString("type").equals("CREDIT_INVOICE")) {
+                                invoice = new BoInvoice(DocumentType.CREDIT_INVOICE, msgDataJson.getJSONObject("documentsData"), msgDataJson.getString("docNum"));
+                                OrdersManagementActivity.invoiceList.add(invoice);
+
+                            }
 
                         }
 
+
+                    } catch (Exception e) {
+                        Log.d("exception1", e.toString());
                     }
 
-
-                } catch (Exception e) {
-                    Log.d("exception1",e.toString());
                 }
-
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

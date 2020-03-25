@@ -4,6 +4,7 @@ package com.pos.leaders.leaderspossystem.syncposservice;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +42,12 @@ public class MessageTransmit {
             char c = domainURL.charAt(domainURL.length() - 1);
             if(c!='/')
                 domainURL += "/";}
+        else {
+            domainURL= SETTINGS.BO_SERVER_URL;
+            char c = domainURL.charAt(domainURL.length() - 1);
+            if(c!='/')
+                domainURL += "/";
+        }
         Log.d("MessageTransmit2",domainURL);
         this.domainURL = domainURL;
         Log.d("MessageTransmit3", this.domainURL);
@@ -138,10 +145,25 @@ public class MessageTransmit {
         return response.body().string();
     }
     public String authGet(String url,String token) throws IOException {
-        Log.i("url", domainURL + url);
-        Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();
-        Response response = client.newCall(request).execute();
-        Log.i("response code", response.code() + "");
+        Log.d("authGEt","authGetFun");
+        Response response=null;
+        if (url!=null){
+            if (domainURL!=null){
+                Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();
+                if (request!=null){
+                    response = client.newCall(request).execute();}
+                else {
+                    Log.d("requestNull","null");
+                }
+                Log.i("response code", response.code() + "");
+                Log.d("response Body",request.body()+"request");}
+            else {
+                Log.d("domainUrlNull","domainIsNull");
+            }
+        }
+        else {
+            Log.d("nullUrlAuthGet","null");}
+        Log.d("finishauthGet","finishAth");
         return response.body().string();
     }
 

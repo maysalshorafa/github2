@@ -909,7 +909,7 @@ public class Util {
             long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                     zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
                     ,Double.parseDouble(Util.makePrice(zReport.getTotalPosSales())),(zReport.getTotalAmount()/(1+SETTINGS.tax/100))*(SETTINGS.tax/100),invoiceAmount,
-                    creditInvoiceAmount,sheqle_plus,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax(),zReport.getMinusGeneralItem());
+                    creditInvoiceAmount,sheqle_plus,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
             zReport.setzReportId(zID);
             zReport.setInvoiceAmount(invoiceAmount);
             zReport.setCreditInvoiceAmount(creditInvoiceAmount);
@@ -1520,6 +1520,7 @@ public class Util {
             protected String doInBackground(Void... params) {
                 MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                 try {
+                    if (messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token)!=null){
                     String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
                     Log.e("CCC", res);
                     Log.e("CCC",SETTINGS.BO_SERVER_URL.toString());
@@ -1530,7 +1531,7 @@ public class Util {
                         JSONArray jsonArray = new JSONArray(res);
                         jsonObject = jsonArray.getJSONObject(0);
                     }
-                } catch (IOException | JSONException e) {
+                }} catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -1623,6 +1624,7 @@ public class Util {
             protected String doInBackground(Void... params) {
                 MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                 try {
+                    if (messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token)!=null){
                     String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
                     Log.e("CCC", res);
 
@@ -1632,7 +1634,7 @@ public class Util {
                         JSONArray jsonArray = new JSONArray(res);
                         jsonObject = jsonArray.getJSONObject(0);
                     }
-                } catch (IOException | JSONException e) {
+                }} catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return null;

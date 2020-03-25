@@ -71,7 +71,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     private Product editableProduct , lastProduct;
     long check;
     long depID;
-    boolean withTax , manageStock ,withSerialNo= false;
+    boolean withTax=true , manageStock ,withSerialNo= false;
     ProductUnit unit ;
     LinearLayout llWeight;
     String currencyType="";
@@ -230,9 +230,9 @@ public class ProductsActivity  extends AppCompatActivity  {
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
 
                 if(isChecked){
-                    withTax=true; //edit here
-                }else{
                     withTax=false; //edit here
+                }else{
+                    withTax=true; //edit here
                 }
 
             }

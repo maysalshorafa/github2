@@ -63,6 +63,8 @@ public class CategoryOfferActivity extends AppCompatActivity {
     ArrayList<String>productIdListForEdit=new ArrayList<String>();
      GridView gvFilterProduct;
     FilterCategoryOfferProductDialog filterCategoryOfferProductDialog;
+    Dialog addProductFromProductDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +74,10 @@ public class CategoryOfferActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_category_offer);
         TitleBar.setTitleBar(this);
+
+        addProductFromProductDialog = new Dialog(CategoryOfferActivity.this);
+        addProductFromProductDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         categoryOfferName = (EditText)findViewById(R.id.etCategoryOfferName);
         cancelAddCategoryOffer = (Button)findViewById(R.id.cancelAddCategoryOffer);
         addCategoryProduct = (Button)findViewById(R.id.addCategoryProduct);
@@ -250,7 +256,14 @@ public class CategoryOfferActivity extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    protected void onDestroy(){
+        if (addProductFromProductDialog!= null && addProductFromProductDialog.isShowing()){
+            addProductFromProductDialog.dismiss();
+            addProductFromProductDialog=null;
+        }
+        super.onDestroy();
+    }
     private void addProductFromCategory() {
         final Dialog addProductFromCategoryDialog = new Dialog(CategoryOfferActivity.this);
         addProductFromCategoryDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -380,8 +393,6 @@ public class CategoryOfferActivity extends AppCompatActivity {
         filter_productList=new ArrayList<>();
         productListName=new ArrayList<>();
         productList=new ArrayList<>();
-        final Dialog addProductFromProductDialog = new Dialog(CategoryOfferActivity.this);
-        addProductFromProductDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addProductFromProductDialog.show();
         addProductFromProductDialog.setContentView(R.layout.add_category_offer_product_from_product_catalog);
        productName = (EditText) addProductFromProductDialog.findViewById(R.id.productName);
@@ -408,7 +419,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
         btn_cancel_add_product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProductFromProductDialog.dismiss();
+                    if (addProductFromProductDialog!= null && addProductFromProductDialog.isShowing()) {
+                        addProductFromProductDialog.dismiss();
+                    }
             }
         });
         final ProductDBAdapter  productDBAdapter = new ProductDBAdapter(this);
@@ -465,7 +478,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
                 if(categoryName.getText().toString().equals("")){
                     Toast.makeText(CategoryOfferActivity.this,"please insert category offer name First then select Product",Toast.LENGTH_LONG).show();
                 }else {
-                    addProductFromProductDialog.dismiss();
+                    if (addProductFromProductDialog!= null && addProductFromProductDialog.isShowing()) {
+                        addProductFromProductDialog.dismiss();
+                    }
                     ArrayList<String>productIdList=new ArrayList<String>();
                     ArrayList<Product>products=new ArrayList<Product>();
 
@@ -489,7 +504,9 @@ public class CategoryOfferActivity extends AppCompatActivity {
                         productIdListForEdit.add(String.valueOf(productList.get(i).getProductId()).replaceAll("\\s+",""));
 
                     }
-                    addProductFromProductDialog.dismiss();
+                    if (addProductFromProductDialog!= null && addProductFromProductDialog.isShowing()) {
+                        addProductFromProductDialog.dismiss();
+                    }
 
                 }
 

@@ -42,14 +42,13 @@ public class ZReport implements Serializable {
     private double salesBeforeTax;
     private double salesWithTax;
     private double totalTax;
-    private double minusGeneralItem;
     public ZReport() {
 
 
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
-                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax, double totalTax ,double minusGeneralItem ) {
+                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax, double totalTax  ) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -75,7 +74,6 @@ public class ZReport implements Serializable {
         this.salesBeforeTax=salesBeforeTax;
         this.salesWithTax=salesWithTax;
         this.totalTax=totalTax;
-        this.minusGeneralItem=minusGeneralItem;
 
     }
 
@@ -359,14 +357,6 @@ public class ZReport implements Serializable {
         this.totalTax = totalTax;
     }
 
-    public double getMinusGeneralItem() {
-        return minusGeneralItem;
-    }
-
-    public void setMinusGeneralItem(double minusGeneralItem) {
-        this.minusGeneralItem = minusGeneralItem;
-    }
-
     @Override
     public String toString() {
         return "ZReport{" +
@@ -398,8 +388,9 @@ public class ZReport implements Serializable {
                 ", salesBeforeTax=" + salesBeforeTax +
                 ", salesWithTax=" + salesWithTax +
                 ", totalTax=" + totalTax +
-                ", minusGeneralItem=" + minusGeneralItem +
                 '}';
     }
-//endregion OpenFormat
+
+
+    //endregion OpenFormat
 }

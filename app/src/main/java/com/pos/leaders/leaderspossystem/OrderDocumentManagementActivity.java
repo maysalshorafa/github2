@@ -245,34 +245,34 @@ class StartOrderDocumentConnection extends AsyncTask<String,Void,String> {
         try {
             String url = ApiURL.Documents+"/readyOrderDocumentForCustomer/"+customerId;
             //   Log.d("invoiceUrl",url);
-            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
-            // Log.d("invoiceRes",invoiceRes);
-            JSONObject jsonObject = new JSONObject(invoiceRes);
-            String msgData = jsonObject.getString(MessageKey.responseBody);
-            Log.d("invoices",msgData+"");
+            if (messageTransmit.authGet(url,SESSION.token)!=null) {
+                String invoiceRes = messageTransmit.authGet(url, SESSION.token);
+                // Log.d("invoiceRes",invoiceRes);
+                JSONObject jsonObject = new JSONObject(invoiceRes);
+                String msgData = jsonObject.getString(MessageKey.responseBody);
+                Log.d("invoices", msgData + "");
 
-            if (msgData.startsWith("[")) {
-                try {
-                    JSONArray jsonArray = new JSONArray(msgData);
+                if (msgData.startsWith("[")) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(msgData);
 
-                    for (int i = 0; i < jsonArray.length() ; i++) {
-                       String msgData1 = jsonArray.getJSONObject(i).toString();
-                        JSONObject msgDataJson =new JSONObject(msgData1);
-                        OrderDocumentManagementActivity.orderNumberList.add(msgDataJson.getString("docNum"));
-                        invoice = new BoInvoice(DocumentType.ORDER_DOCUMENT,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
-                        OrderDocumentManagementActivity.orderDocumentsList.add(invoice);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            String msgData1 = jsonArray.getJSONObject(i).toString();
+                            JSONObject msgDataJson = new JSONObject(msgData1);
+                            OrderDocumentManagementActivity.orderNumberList.add(msgDataJson.getString("docNum"));
+                            invoice = new BoInvoice(DocumentType.ORDER_DOCUMENT, msgDataJson.getJSONObject("documentsData"), msgDataJson.getString("docNum"));
+                            OrderDocumentManagementActivity.orderDocumentsList.add(invoice);
+                        }
+                        Log.d("invoices111", OrderDocumentManagementActivity.orderDocumentsList.toString() + "");
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("exception1", e.toString());
                     }
-                    Log.d("invoices111",OrderDocumentManagementActivity.orderDocumentsList.toString()+"");
 
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.d("exception1",e.toString());
                 }
-
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

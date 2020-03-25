@@ -69,6 +69,7 @@ public class StartBoVersionSettingConnection extends AsyncTask<String,Void,Strin
         JSONObject jsonObject = null;
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
+            if (messageTransmit.authGet(ApiURL.Version, token)!=null){
             String res = messageTransmit.authGet(ApiURL.Version, token);
 
             try {
@@ -84,7 +85,7 @@ public class StartBoVersionSettingConnection extends AsyncTask<String,Void,Strin
             }
 
 
-        } catch (IOException | JSONException e) {
+        } }catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }

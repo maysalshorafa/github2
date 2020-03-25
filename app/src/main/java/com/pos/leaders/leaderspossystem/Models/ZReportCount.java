@@ -17,12 +17,11 @@ public class ZReportCount {
     private int eurCount;
     private int gbpCount;
     private int invoiceReceiptCount;
-    private int minusGeneralItemCount;
 
     public ZReportCount() {
     }
 
-    public ZReportCount(long zReportCountId, int cashCount, int checkCount, int creditCount, int invoiceCount, int creditInvoiceCount, int shekelCount, int usdCount, int eurCount, int gbpCount, int invoiceReceiptCount,long zReportCountZReportId,int minusGeneralItemCount) {
+    public ZReportCount(long zReportCountId, int cashCount, int checkCount, int creditCount, int invoiceCount, int creditInvoiceCount, int shekelCount, int usdCount, int eurCount, int gbpCount, int invoiceReceiptCount,long zReportCountZReportId) {
         this.zReportCountId = zReportCountId;
         this.cashCount = cashCount;
         this.checkCount = checkCount;
@@ -35,7 +34,6 @@ public class ZReportCount {
         this.gbpCount = gbpCount;
         this.invoiceReceiptCount = invoiceReceiptCount;
         this.zReportCountZReportId=zReportCountZReportId;
-        this.minusGeneralItemCount=minusGeneralItemCount;
     }
 
     public long getzReportCountZReportId() {
@@ -134,14 +132,6 @@ public class ZReportCount {
         this.invoiceReceiptCount = invoiceReceiptCount;
     }
 
-    public int getMinusGeneralItemCount() {
-        return minusGeneralItemCount;
-    }
-
-    public void setMinusGeneralItemCount(int minusGeneralItemCount) {
-        this.minusGeneralItemCount = minusGeneralItemCount;
-    }
-
     @Override
     public String toString() {
         return "ZReportCount{" +
@@ -157,7 +147,6 @@ public class ZReportCount {
                 ", eurCount=" + eurCount +
                 ", gbpCount=" + gbpCount +
                 ", invoiceReceiptCount=" + invoiceReceiptCount +
-                ", minusGeneralItemCount=" + minusGeneralItemCount +
                 '}';
     }
 }

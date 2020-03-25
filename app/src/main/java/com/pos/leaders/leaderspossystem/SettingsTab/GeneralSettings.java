@@ -173,6 +173,7 @@ public class GeneralSettings extends Fragment {
         JSONObject jsonObject = null;
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
+            if (messageTransmit.authGet(ApiURL.CompanyCredentials, token)!=null){
             String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
             jsonObject = new JSONObject(res);
             try {
@@ -192,7 +193,7 @@ public class GeneralSettings extends Fragment {
 
             }
 
-        } catch (IOException e1) {
+        }} catch (IOException e1) {
             e1.printStackTrace();
         }
 

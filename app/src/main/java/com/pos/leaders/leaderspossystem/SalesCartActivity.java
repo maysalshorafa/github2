@@ -1726,8 +1726,10 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
         if (SESSION._ORDERS != null) {
+            if (SESSION._EMPLOYEE!=null)
             sale = new Order(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
         } else {
+            if (SESSION._EMPLOYEE!=null)
             SESSION._ORDERS = new Order(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), 0, false, 0, 0);
         }
 
@@ -3250,13 +3252,6 @@ public class SalesCartActivity extends AppCompatActivity {
                 break;
             case R.id.touchPadFragment_btEnter:
                 if (!touchPadPressed.equals(""))
-                    if (Double.parseDouble(touchPadPressed)<0){
-                        count=count+1;
-                        zReportCount.setMinusGeneralItemCount(zReportCount.getMinusGeneralItemCount()+count);
-                        zReport1.setMinusGeneralItem(zReport1.getMinusGeneralItem()+Double.parseDouble(touchPadPressed));
-                        Log.d("zReportCountMi",zReportCount.getMinusGeneralItemCount()+"");
-                        Log.d("zReport1Minus",zReport1.getMinusGeneralItem()+"");
-                    }
                     addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", ""));
                 touchPadPressed = "";
                 tirh.setText(touchPadPressed);
@@ -6207,13 +6202,14 @@ class StartGetCustomerGeneralLedgerConnection extends AsyncTask<String,Void,Stri
         String customerId=args[0];
         try {
             String url = "GeneralLedger/"+customerId;
+            if (messageTransmit.authGet(url,SESSION.token)!=null){
             String invoiceRes = messageTransmit.authGet(url,SESSION.token);
             JSONObject jsonObject = new JSONObject(invoiceRes);
             String msgData = jsonObject.getString(MessageKey.responseBody);
             JSONObject response = new JSONObject(msgData);
             Order.CustomerLedger=response.getDouble("creditAmount");
 
-        } catch (IOException e) {
+        } }catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
