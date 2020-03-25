@@ -90,7 +90,6 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
-import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -138,7 +137,7 @@ public class SyncMessage extends Service {
     private static String token = SESSION.token;
 
     private Broker broker;
-    private MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    private MessageTransmit messageTransmit = new MessageTransmit();
 
     private long LOOP_TIME = 1 * 30 * 1000;
 
@@ -295,16 +294,16 @@ public class SyncMessage extends Service {
             Log.d("multiSync","multiSync");
             Log.d("tokenmultisync",token);
             Log.d("ApiURLSync",ApiURL.Sync);
-            if (messageTransmit.authGet(ApiURL.Sync, token)!=null){
+
             res = messageTransmit.authGet(ApiURL.Sync, token);
-            Log.d("syncResponse",res);
-        }} catch(SocketTimeoutException e){
+            Log.d("syncResponse",res +" "+ "response");
+        } catch(SocketTimeoutException e){
             Log.e("socketTime exception", e.getMessage(), e);
         } catch (IOException e) {
             Log.e("getsync exception", e.getMessage(), e);
         }
         finally {
-            Log.e("finallyGetSync exception","finally block executed");
+            Log.e("getSync exception","finally block executed");
         }
         if (res.length() != 0) {
             if (!res.equals(MessageResult.Invalid)) {
@@ -345,9 +344,9 @@ public class SyncMessage extends Service {
         try {
             Log.i("token", token);
             Log.i("sync", ApiURL.Sync);
-            if (messageTransmit.authGet(ApiURL.Sync, token)!=null){
+
             res = messageTransmit.authGet(ApiURL.Sync, token);
-        }} catch (Exception ex) {
+        } catch (Exception ex) {
             Log.e("getsync exception", ex.getMessage());
         }
 

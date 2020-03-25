@@ -1604,7 +1604,6 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
         String customerId=args[0];
         try {
             String url = ApiURL.Documents+"/InvoicesAndCreditInvoice/";
-            if (messageTransmit.authGet(url,SESSION.token)!=null) {
                 String invoiceRes = messageTransmit.authGet(url, SESSION.token);
                 JSONObject jsonObject = new JSONObject(invoiceRes);
                 String msgData = jsonObject.getString(MessageKey.responseBody);
@@ -1634,7 +1633,7 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
                     }
 
                 }
-            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

@@ -247,7 +247,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
         try {
             String url = ApiURL.Documents+"/unpaidInvoicesForCustomer/"+customerId;
          //   Log.d("invoiceUrl",url);
-            if (messageTransmit.authGet(url,SESSION.token)!=null){
+
            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
         // Log.d("invoiceRes",invoiceRes);
             JSONObject jsonObject = new JSONObject(invoiceRes);
@@ -272,7 +272,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
 
             }
 
-        }} catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();

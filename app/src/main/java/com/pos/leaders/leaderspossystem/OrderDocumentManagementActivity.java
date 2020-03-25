@@ -245,7 +245,7 @@ class StartOrderDocumentConnection extends AsyncTask<String,Void,String> {
         try {
             String url = ApiURL.Documents+"/readyOrderDocumentForCustomer/"+customerId;
             //   Log.d("invoiceUrl",url);
-            if (messageTransmit.authGet(url,SESSION.token)!=null) {
+
                 String invoiceRes = messageTransmit.authGet(url, SESSION.token);
                 // Log.d("invoiceRes",invoiceRes);
                 JSONObject jsonObject = new JSONObject(invoiceRes);
@@ -272,7 +272,7 @@ class StartOrderDocumentConnection extends AsyncTask<String,Void,String> {
                     }
 
                 }
-            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

@@ -250,7 +250,6 @@ class StartConnection extends AsyncTask<String,Void,String> {
 
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
-            if (messageTransmit.authGet(ApiURL.CompanyCredentials, token)!=null){
             String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
             Log.e("CCC", res);
             JSONObject jsonObject;
@@ -293,7 +292,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again)+": ", Toast.LENGTH_SHORT).show();
             }
 
-        }} catch (IOException | JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -302,7 +301,6 @@ class StartConnection extends AsyncTask<String,Void,String> {
 
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
-            if (messageTransmit.authGet(ApiURL.INVENTORY+"/forPos", token)!=null){
             String res = messageTransmit.authGet(ApiURL.INVENTORY+"/forPos", token);
             Log.e("CCC", res);
             JSONObject jsonObject;
@@ -368,7 +366,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again)+": ", Toast.LENGTH_SHORT).show();
             }
 
-        }} catch (IOException | JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 

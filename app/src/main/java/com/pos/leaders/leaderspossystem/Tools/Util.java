@@ -1520,7 +1520,7 @@ public class Util {
             protected String doInBackground(Void... params) {
                 MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                 try {
-                    if (messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token)!=null){
+
                     String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
                     Log.e("CCC", res);
                     Log.e("CCC",SETTINGS.BO_SERVER_URL.toString());
@@ -1531,7 +1531,7 @@ public class Util {
                         JSONArray jsonArray = new JSONArray(res);
                         jsonObject = jsonArray.getJSONObject(0);
                     }
-                }} catch (IOException | JSONException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -1624,7 +1624,7 @@ public class Util {
             protected String doInBackground(Void... params) {
                 MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                 try {
-                    if (messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token)!=null){
+
                     String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
                     Log.e("CCC", res);
 
@@ -1634,7 +1634,7 @@ public class Util {
                         JSONArray jsonArray = new JSONArray(res);
                         jsonObject = jsonArray.getJSONObject(0);
                     }
-                }} catch (IOException | JSONException e) {
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
                 return null;

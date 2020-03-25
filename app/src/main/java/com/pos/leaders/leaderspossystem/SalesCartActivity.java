@@ -6202,14 +6202,14 @@ class StartGetCustomerGeneralLedgerConnection extends AsyncTask<String,Void,Stri
         String customerId=args[0];
         try {
             String url = "GeneralLedger/"+customerId;
-            if (messageTransmit.authGet(url,SESSION.token)!=null){
+
             String invoiceRes = messageTransmit.authGet(url,SESSION.token);
             JSONObject jsonObject = new JSONObject(invoiceRes);
             String msgData = jsonObject.getString(MessageKey.responseBody);
             JSONObject response = new JSONObject(msgData);
             Order.CustomerLedger=response.getDouble("creditAmount");
 
-        } }catch (IOException e) {
+         }catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();

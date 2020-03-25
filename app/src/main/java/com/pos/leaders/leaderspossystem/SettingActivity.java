@@ -173,7 +173,6 @@ public class SettingActivity extends AppCompatActivity {
         JSONObject jsonObject = null;
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
-            if (messageTransmit.authGet(ApiURL.CompanyCredentials, token)!=null) {
                 String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
                 jsonObject = new JSONObject(res);
                 try {
@@ -191,7 +190,7 @@ public class SettingActivity extends AppCompatActivity {
 
                 }
 
-            }
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
