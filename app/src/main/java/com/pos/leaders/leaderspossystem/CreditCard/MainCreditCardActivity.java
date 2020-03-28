@@ -87,6 +87,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
     private MSCardService sendservice;
     ServiceConnection serviceConnection;
     msCardReaderCallBack msCardReaderCallback=new msCardReaderCallBack();
+    boolean doneButtonLock = false;
     @Override
     protected void onDestroy() {
         unbindService(serviceConnection);
@@ -369,75 +370,80 @@ public class MainCreditCardActivity extends AppCompatActivity {
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
-                dialog_connection.show();
-                String creditCardNumber = etCCValue.getText().toString();
-                Log.i(LOG_TAG, creditCardNumber);
-                if(creditCardNumber.isEmpty()){
-                    //input is empty
-                    dialog_connection.dismiss();
-                    Toast.makeText(MainCreditCardActivity.this, getString(R.string.transfer_credit_card), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String str = creditCardNumber;
-
-                if (str.contains("?;")) {
-                    creditCardNumber = str.split(Pattern.quote("?;"))[1];
-                }
-
-                creditCardNumber=creditCardNumber.replace("?", "");
-                creditCardNumber.replace("?", "");
-                creditCardNumber.replace(";", "");
-                creditCardNumber.replace("�", "");
-                creditCardNumber.replace("/", "");
-                String validCCNUM = "";
-                char[] validChars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '='};
-                String validSTR = "1234567890=";
-                for (char c : creditCardNumber.toCharArray()) {
-                    if (validSTR.contains(c + "")) {
-                        validCCNUM = validCCNUM + c;
-                    }
-                }
-                //Log.e("Card Number", validCCNUM);
-                final String CCNum = validCCNUM;
-
-                Log.i(LOG_TAG, CCNum);
-                if (advanceMode) {
-                    String pn = etPaymentsNumber.getText().toString();
-                    //trying to case input
-                    int ipn;
-                    try {
-                        ipn = Integer.parseInt(pn);
-                    }
-                    catch (NumberFormatException nfe){
-                        Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
+                if (!doneButtonLock) {
+                    doneButtonLock=true;
+                    dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
+                    dialog_connection.show();
+                    String creditCardNumber = etCCValue.getText().toString();
+                    Log.i(LOG_TAG, creditCardNumber);
+                    if (creditCardNumber.isEmpty()) {
+                        //input is empty
                         dialog_connection.dismiss();
+                        Toast.makeText(MainCreditCardActivity.this, getString(R.string.transfer_credit_card), Toast.LENGTH_SHORT).show();
+                        doneButtonLock = false;
                         return;
                     }
-                    //check valid number
-                    if (ipn > 1 && ipn < 37) {
-                        numberOfPayments = ipn;
-                        int ccT = spCreditType.getSelectedItemPosition();
+                    String str = creditCardNumber;
+
+                    if (str.contains("?;")) {
+                        creditCardNumber = str.split(Pattern.quote("?;"))[1];
+                    }
+
+                    creditCardNumber = creditCardNumber.replace("?", "");
+                    creditCardNumber.replace("?", "");
+                    creditCardNumber.replace(";", "");
+                    creditCardNumber.replace("�", "");
+                    creditCardNumber.replace("/", "");
+                    String validCCNUM = "";
+                    char[] validChars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '='};
+                    String validSTR = "1234567890=";
+                    for (char c : creditCardNumber.toCharArray()) {
+                        if (validSTR.contains(c + "")) {
+                            validCCNUM = validCCNUM + c;
+                        }
+                    }
+                    //Log.e("Card Number", validCCNUM);
+                    final String CCNum = validCCNUM;
+
+                    Log.i(LOG_TAG, CCNum);
+                    if (advanceMode) {
+                        String pn = etPaymentsNumber.getText().toString();
+                        //trying to case input
+                        int ipn;
+                        try {
+                            ipn = Integer.parseInt(pn);
+                        } catch (NumberFormatException nfe) {
+                            Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
+                            dialog_connection.dismiss();
+                            doneButtonLock = false;
+                            return;
+                        }
+                        //check valid number
+                        if (ipn > 1 && ipn < 37) {
+                            numberOfPayments = ipn;
+                            int ccT = spCreditType.getSelectedItemPosition();
 
                             if (ccT == 0)
-                            creditType = CreditCardTransactionType.PAYMENTS;//תשלומים
-                        else if (ccT == 1)
-                            creditType = CreditCardTransactionType.CREDIT;//קרדיט/קרדיט בתשלומים קבועים
+                                creditType = CreditCardTransactionType.PAYMENTS;//תשלומים
+                            else if (ccT == 1)
+                                creditType = CreditCardTransactionType.CREDIT;//קרדיט/קרדיט בתשלומים קבועים
 
-                        doTransaction(CCNum, numberOfPayments, creditType);
+                            doTransaction(CCNum, numberOfPayments, creditType);
 
+                        } else {
+                            //out of maximum payment number
+                            Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
+                            dialog_connection.dismiss();
+                            doneButtonLock = false;
+                            return;
+                        }
                     } else {
-                        //out of maximum payment number
-                        Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
-                        dialog_connection.dismiss();
-                        return;
+                        //normal mode with 1 payment number and normal credit type
+                        doTransaction(CCNum, 1, 1);
                     }
-                } else {
-                    //normal mode with 1 payment number and normal credit type
-                    doTransaction(CCNum, 1, 1);
-                }
 
-                dialog_connection.dismiss();
+                    dialog_connection.dismiss();
+                }
             }
         });
 
@@ -540,11 +546,21 @@ public class MainCreditCardActivity extends AppCompatActivity {
         dialog_connection.show();
 
         new AsyncTask<SoapObject, Void, SoapObject>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                btDone.setClickable(false);
+                doneButtonLock = true;
+            }
+
             @Override
             protected void onPostExecute(SoapObject aVoid) {
                 if(dialog_connection.isShowing()){
                     dialog_connection.dismiss();
                 }
+                doneButtonLock = false;
+                btDone.setClickable(true);
                 returnTo(aVoid);
                 super.onPostExecute(aVoid);
             }
