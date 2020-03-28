@@ -649,7 +649,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
             // TODO Auto-generated method stub
             try {
                 sendservice.readRawMSCard(20000, msCardReaderCallback);
-            } catch (RemoteException e) {
+            } catch (RemoteException | NullPointerException e) {
                 e.printStackTrace();
             }
         }

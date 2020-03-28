@@ -97,16 +97,14 @@ public class Broker {
     public synchronized List<BrokerMessage> getAllNotSyncedCommand() {
         List<BrokerMessage> bMessages = new ArrayList<BrokerMessage>();
         try {
-            open();
-        Cursor cursor = db.rawQuery("select * from " + BROKER_TABLE_NAME + " where "+BROKER_COLUMN_IS_SYNCED+"=0 order by " + BROKER_COLUMN_ID + " asc ", null);
-        cursor.moveToFirst();
+            Cursor cursor = db.rawQuery("select * from " + BROKER_TABLE_NAME + " where "+BROKER_COLUMN_IS_SYNCED+"=0 order by " + BROKER_COLUMN_ID + " asc ", null);
+            cursor.moveToFirst();
 
-        while (!cursor.isAfterLast()) {
-            bMessages.add(makeBrokerMessage(cursor));
-            cursor.moveToNext();
-        }
+            while (!cursor.isAfterLast()) {
+                bMessages.add(makeBrokerMessage(cursor));
+                cursor.moveToNext();
+            }
             cursor.close();
-            close();
 
         } catch (Exception e) {
 
@@ -131,17 +129,17 @@ public class Broker {
 
     public synchronized void Synced(int id) {
         try {
-            open();
-        ContentValues val = new ContentValues();
-        //Assign values for each row.
-        val.put(BROKER_COLUMN_IS_SYNCED, 1);
 
-        String where = BROKER_COLUMN_ID + " = ?";
-        db.update(BROKER_TABLE_NAME, val, where, new String[]{id + ""});
-            close();
+            ContentValues val = new ContentValues();
+            //Assign values for each row.
+            val.put(BROKER_COLUMN_IS_SYNCED, 1);
+
+            String where = BROKER_COLUMN_ID + " = ?";
+            db.update(BROKER_TABLE_NAME, val, where, new String[]{id + ""});
+
 
         } catch (Exception e) {
-
+            Log.e("Broker.java Synced",e.getMessage(),e);
         }
     }
 
