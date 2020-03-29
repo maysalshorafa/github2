@@ -959,6 +959,7 @@ public class PdfUA {
         headingTable.setRunDirection(0);
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
 
         //end
@@ -1150,6 +1151,7 @@ public class PdfUA {
 
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.date) +":  "+opiningReport.getCreatedAt(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.opening_report) , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.amount) +":"+ opiningReport.getAmount()+"Shekel", Element.ALIGN_CENTER, 1, font);
