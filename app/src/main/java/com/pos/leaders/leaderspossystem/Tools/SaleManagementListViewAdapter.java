@@ -23,7 +23,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by KARAM on 26/10/2016.
@@ -34,6 +33,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 	private int resource;
 	private LayoutInflater inflater;
 	private Context context;
+
 
 	/**
 	 * Constructor
@@ -82,6 +82,9 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 
 		if(salesList.get(position)instanceof Order){
 
+
+
+
 			double price;
 		Order order = (Order)salesList.get(position);
 		price = order.getTotalPrice();
@@ -103,11 +106,18 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 		else {
 			holder.cancelingOrderId.setText("");
 		}
-			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-			holder.tvDate.setText(String.format(new Locale("en"),format.format(order.getCreatedAt())));
-		holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
 
-		holder.tvStatus.setText("INRC");
+
+
+//Increase Date Time
+			//reslt.setHours( reslt.getHours() + timeZ.getHours());
+			String dateOrder=UtilitValidationDate.isValidDate(order.getCreatedAt());
+			Log.d("resultTime",dateOrder);
+			holder.tvDate.setText(String.format(dateOrder));
+
+			holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+
+		  holder.tvStatus.setText("INRC");
 
 		holder.FL.setVisibility(View.GONE);
 
