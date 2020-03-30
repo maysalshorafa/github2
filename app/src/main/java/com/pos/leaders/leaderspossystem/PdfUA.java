@@ -224,16 +224,28 @@ public class PdfUA {
 
         insertCell(dataTable,  Util.makePrice(zReport.getInvoiceReceiptAmount()), Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        insertCell(dataTable, context.getString(R.string.invoice_recipte_company_status), Element.ALIGN_RIGHT, 2, font);}
+        else {
+            insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
+        }
 
         insertCell(dataTable,  Util.makePrice(zReport.getInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(dataTable, context.getString(R.string.invoice_company_status), Element.ALIGN_RIGHT,2, font);
+        }
+        else {
+        insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);}
 
         insertCell(dataTable, Util.makePrice( zReport.getCreditInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
-
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(dataTable, context.getString(R.string.credit_invoice_doc_company_status), Element.ALIGN_RIGHT, 2, font);
+        }
+        else {
+            insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
+        }
         insertCell(dataTable,  Util.makePrice(zReport.getTotalSales() ), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 2, font);
@@ -1069,7 +1081,10 @@ public class PdfUA {
             insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 
         }
-        insertCell(headingTable,  context.getString(R.string.credit_invoice_doc) +" : "+jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(headingTable,  context.getString(R.string.credit_invoice_doc_company_status) +" : "+jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
+        }else {
+        insertCell(headingTable,  context.getString(R.string.credit_invoice_doc) +" : "+jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);}
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
         PdfPTable orderDetailsTable = new PdfPTable(5);
         orderDetailsTable.setRunDirection(0);
@@ -1416,15 +1431,27 @@ public class PdfUA {
 
         insertCell(dataTable, Util.makePrice(xReport.getInvoiceReceiptAmount()), Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(dataTable, context.getString(R.string.invoice_recipte_company_status), Element.ALIGN_RIGHT, 2, font);
+        }
+        else {
+        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);}
 
         insertCell(dataTable,  Util.makePrice(xReport.getInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(dataTable, context.getString(R.string.invoice_company_status), Element.ALIGN_RIGHT,2, font);
+        }
+        else {
+            insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
+        }
 
         insertCell(dataTable, Util.makePrice( xReport.getCreditInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(dataTable, context.getString(R.string.credit_invoice_doc_company_status), Element.ALIGN_RIGHT, 2, font);
+        }else {
+        insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);}
 
         insertCell(dataTable, Util.makePrice( xReport.getTotalSales() ), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
@@ -1777,16 +1804,27 @@ public class PdfUA {
 
         insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(dataTable, context.getString(R.string.invoice_recipte_company_status), Element.ALIGN_RIGHT, 2, font);
+        }
+        else {
+        insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);}
 
         insertCell(dataTable, zReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT,2, font);
-
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(dataTable, context.getString(R.string.invoice_company_status), Element.ALIGN_RIGHT,2, font);
+        }
+        else {
+            insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT, 2, font);
+        }
         insertCell(dataTable, zReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
-
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(dataTable, context.getString(R.string.credit_invoice_doc_company_status), Element.ALIGN_RIGHT, 2, font);
+        }else {
+            insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
+        }
         insertCell(dataTable, zReport.getTotalSales() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 2, font);
@@ -1985,7 +2023,11 @@ public class PdfUA {
         }else {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, urFontName1);
         }
-        insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(headingTable, context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
+        }
+        else {
+        insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);}
         insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, urFontName1);
 
 
@@ -2348,8 +2390,11 @@ public class PdfUA {
         }else {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, urFontName1);
         }
-
-        insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            insertCell(headingTable, context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
+        }
+        else {
+        insertCell(headingTable, context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);}
         insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, urFontName1);
 
 

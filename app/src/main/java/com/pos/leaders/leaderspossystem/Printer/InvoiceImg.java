@@ -191,9 +191,15 @@ public class InvoiceImg {
 
         Block Title = new Block("\u200E" + SETTINGS.companyName, 38.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         Title.Left().Bold();
-
-        Block subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
-                ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block subTitle;
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            subTitle = new Block("\u200E " + context.getString(R.string.privet_company_status) +
+                    ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        }
+        else {
+            subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
+                    ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        }
         if(sale.getCustomer()!=null) {
             if (sale.getCustomer_name() == null) {
                 customerName = context.getString(R.string.general_customer);
@@ -220,9 +226,14 @@ public class InvoiceImg {
 
         Block Title = new Block("\u200E" + SETTINGS.companyName, 38.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         Title.Left().Bold();
-
-        Block subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
-                ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block subTitle;
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+             subTitle = new Block("\u200E " + context.getString(R.string.privet_company_status) +
+                    ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        }
+        else {
+         subTitle = new Block("\u200E " + context.getString(R.string.private_company) +
+                ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);}
 
         Block third_part = new Block("\u200E " + context.getString(R.string.customer_name) +
                 ": " + customerName + "\n" + line, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -255,11 +266,17 @@ public class InvoiceImg {
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         String status=context.getString(R.string.source_invoice);
+        Block inum;
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        Block inum = new Block("\u200E"+ context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", id) + "\n"
-                + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+         inum = new Block("\u200E"+ context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", id) + "\n"
+                + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
+        else {
+            inum = new Block("\u200E"+ context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", id) + "\n"
+                    + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        }
         blocks.add(bStatus);
         blocks.add(inum);
         Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
@@ -600,6 +617,7 @@ public class InvoiceImg {
         Log.d("testSeesin",orders.toString());
         Log.d("testssss",sale.toString());
         int count =0;
+        Block inum;
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -608,8 +626,13 @@ public class InvoiceImg {
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        Block inum = new Block("\u200E"+ context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", id) + "\n"
-                + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        inum = new Block("\u200E"+ context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", id) + "\n"
+                + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
+        else {
+            inum = new Block("\u200E"+ context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", id) + "\n"
+                    + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        }
         blocks.add(bStatus);
         blocks.add(inum);
         Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
@@ -945,11 +968,17 @@ public class InvoiceImg {
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         String status=context.getString(R.string.source_invoice);
+        Block inum;
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        Block inum = new Block("\u200E"+ context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", id) + "\n"
-                + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+         inum = new Block("\u200E"+ context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", id) + "\n"
+                + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
+        else {
+            inum = new Block("\u200E"+ context.getString(R.string.invoice_receipt)+": " +String.format(" %06d ", id) + "\n"
+                    + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH)  ;
+        }
         blocks.add(bStatus);
         blocks.add(inum);
         Block name = new Block("\u200E" + context.getString(R.string.product) + newLineL, 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.35));
@@ -1627,6 +1656,7 @@ public class InvoiceImg {
     public Bitmap Invoice( List<OrderDetails> orders, Order sale, boolean isCopy, Employee user , String invoiceNum,double customerGeneralLedger) {
         int count =0;
         List<Block> blocks = new ArrayList<Block>();
+        Block inum;
         blocks.addAll(Head(sale));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
@@ -1634,8 +1664,13 @@ public class InvoiceImg {
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        Block inum = new Block("\u200E"+ context.getString(R.string.invoice)+": " +invoiceNum
-                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            inum = new Block("\u200E"+ context.getString(R.string.invoice_company_status)+": " +invoiceNum
+                    , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        }
+        else {
+         inum = new Block("\u200E"+ context.getString(R.string.invoice)+": " +invoiceNum
+                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
         blocks.add(bStatus);
         blocks.add(inum);
         blocks.add(lineR);
@@ -1871,14 +1906,20 @@ public class InvoiceImg {
         String invoiceNum= boInvoice.getDocNum();
         JSONArray cartDetailsList = documentsData.getJSONArray("cartDetailsList");
         int count =0;
+        Block inum;
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(HeadCopyInvoice(customerJson.getString("firstName")));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         String status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        Block inum = new Block("\u200E"+ context.getString(R.string.invoice)+": " +invoiceNum
-                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+         inum = new Block("\u200E"+ context.getString(R.string.invoice_company_status)+": " +invoiceNum
+                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
+        else {
+            inum = new Block("\u200E"+ context.getString(R.string.invoice)+": " +invoiceNum
+                    , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        }
         blocks.add(bStatus);
         blocks.add(inum);
         blocks.add(lineR);
@@ -1998,14 +2039,20 @@ public class InvoiceImg {
         String invoiceNum= boInvoice.getDocNum();
         JSONArray cartDetailsList = documentsData.getJSONArray("cartDetailsList");
         int count =0;
+        Block inum;
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(HeadCopyInvoice(customerJson.getString("firstName")));
         Block lineR = new Block("\u200E" + line + "\u200E", 30.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         String status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        Block inum = new Block("\u200E"+ context.getString(R.string.invoice)+": " +invoiceNum
-                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        inum = new Block("\u200E"+ context.getString(R.string.invoice_company_status)+": " +invoiceNum
+                , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
+        else {
+            inum = new Block("\u200E"+ context.getString(R.string.invoice)+": " +invoiceNum
+                    , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
+        }
         blocks.add(bStatus);
         blocks.add(inum);
         blocks.add(lineR);

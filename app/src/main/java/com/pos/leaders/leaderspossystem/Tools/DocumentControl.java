@@ -451,21 +451,41 @@ public class DocumentControl {
 
                         }
                         }else {
-                            new android.support.v7.app.AlertDialog.Builder(context)
-                                    .setTitle(context.getString(R.string.invoice))
-                                    .setMessage(context.getString(R.string.cant_make_invoice_check_internet_connection))
-                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                            if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+                                new android.support.v7.app.AlertDialog.Builder(context)
+                                        .setTitle(context.getString(R.string.invoice_company_status))
+                                        .setMessage(context.getString(R.string.cant_make_invoice_check_internet_connection))
+                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                        }
-                                    })
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                    .show();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            }
+                            else {
+                                new android.support.v7.app.AlertDialog.Builder(context)
+                                        .setTitle(context.getString(R.string.invoice))
+                                        .setMessage(context.getString(R.string.cant_make_invoice_check_internet_connection))
+                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            }
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

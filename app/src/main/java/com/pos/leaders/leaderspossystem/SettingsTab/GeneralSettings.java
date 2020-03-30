@@ -104,14 +104,25 @@ public class GeneralSettings extends Fragment {
                                     final String TerminalPassword = jsonObject.getString(MessageKey.CCPW);
                                     final int InvoiceNote = jsonObject.getInt(MessageKey.endOfReturnNote);
                                     final String ReturnNote = jsonObject.getString(MessageKey.returnNote);
+                                    if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+                                        s = getContext().getString(R.string.company_name) + ":" + CompanyName + "\n"
+                                                + getContext().getString(R.string.privet_company_status) + ":" + PrivateCompany + "\n" +
+                                                getContext().getString(R.string.invoice_note) + ":" + InvoiceNote  +  "\n"
+                                                +"Return Note" + ":" + ReturnNote + "\n"+
+                                                getContext().getString(R.string.tax) + ":" + Tax + "\n"
+                                                + getContext().getString(R.string.terminal_number) + ":" + TerminalNumber + "\n"+
+                                                getContext().getString(R.string.terminal_password) + ":" + TerminalPassword + "\n" ;
+                                    }
+                                   else {
+                                        s = getContext().getString(R.string.company_name) + ":" + CompanyName + "\n"
+                                                + getContext().getString(R.string.private_company) + ":" + PrivateCompany + "\n" +
+                                                getContext().getString(R.string.invoice_note) + ":" + InvoiceNote  +  "\n"
+                                                +"Return Note" + ":" + ReturnNote + "\n"+
+                                                getContext().getString(R.string.tax) + ":" + Tax + "\n"
+                                                + getContext().getString(R.string.terminal_number) + ":" + TerminalNumber + "\n"+
+                                                getContext().getString(R.string.terminal_password) + ":" + TerminalPassword + "\n" ;
+                                    }
 
-                                    s = getContext().getString(R.string.company_name) + ":" + CompanyName + "\n"
-                                            + getContext().getString(R.string.private_company) + ":" + PrivateCompany + "\n" +
-                                             getContext().getString(R.string.invoice_note) + ":" + InvoiceNote  +  "\n"
-                                            +"Return Note" + ":" + ReturnNote + "\n"+
-                                            getContext().getString(R.string.tax) + ":" + Tax + "\n"
-                                            + getContext().getString(R.string.terminal_number) + ":" + TerminalNumber + "\n"+
-                                             getContext().getString(R.string.terminal_password) + ":" + TerminalPassword + "\n" ;
                                     new AlertDialog.Builder(getContext())
                                             .setTitle(getString(R.string.update_general_setting))
                                             .setMessage(getString(R.string.if_you_want_to_update_general_setting_click_ok) + "\n" + s)

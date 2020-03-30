@@ -149,6 +149,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
         };
         final ArrayList<Integer> idForSearchType = new ArrayList<Integer>();
+
         final ArrayList<String> hintForSearchType = new ArrayList<String>();
         hintForSearchType.add(getString(R.string.all));
         hintForSearchType.add(getString(R.string.customer));
@@ -156,7 +157,11 @@ public class OrdersManagementActivity extends AppCompatActivity {
         hintForSearchType.add(getString(R.string.date));
         hintForSearchType.add(getString(R.string.price));
         hintForSearchType.add(getString(R.string.type));
-        hintForSearchType.add(getString(R.string.invoice));
+        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            hintForSearchType.add(getString(R.string.invoice_company_status));
+        }
+        else {
+        hintForSearchType.add(getString(R.string.invoice));}
         hintForSearchType.add(getString(R.string.serial_no));
 
         idForSearchType.add(0);
@@ -1327,6 +1332,21 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     lvOrders.setAdapter(adapter);
 
                 }
+                else if (searchSpinner.getSelectedItem().toString().equals(getString(R.string.invoice_company_status))){
+                    StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
+                    startInvoiceConnection.execute("1");
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    objectList=new ArrayList<>();
+                    objectList.addAll(invoiceList);
+                    Log.d("testinvoiceList",invoiceList.toString());
+                    adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+
+                    lvOrders.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -1370,7 +1390,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             filterOrderList = new ArrayList<Order>();
                             orderDBAdapter.open();
                             Log.d("teeest",params[0]);
-                            if(type!= getString(R.string.invoice)){
+                            if((type!= getString(R.string.invoice)) || (type != getString(R.string.invoice_company_status))){
                                 List<Order>nerOrderWithSerialNo=new ArrayList<Order>();
                                 if(type.equals(getString(R.string.serial_no))){
                                     nerOrderWithSerialNo = orderDBAdapter.search(params[0], loadItemOffset,countLoad,getString(R.string.all));

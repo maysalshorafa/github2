@@ -126,10 +126,17 @@ public class SettingActivity extends AppCompatActivity {
             final String TerminalNumber =   jsonObject.getString(MessageKey.CCUN);
             final String TerminalPassword =jsonObject.getString(MessageKey.CCPW);
             final int InvoiceNote =jsonObject.getInt(MessageKey.endOfReturnNote);
+            if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+                s =SettingActivity.context.getString(R.string.company_name)
+                        + ":"+CompanyName +"\n"+SettingActivity.context.getString(R.string.privet_company_status)+":"+PrivateCompany +"\n"+SettingActivity.context.getString(R.string.tax)+":"+Tax+"\n"+SettingActivity.context.getString(R.string.terminal_number)+":"+TerminalNumber +"\n"
+                        +SettingActivity.context.getString(R.string.terminal_password)+":"+TerminalPassword +"\n"+ SettingActivity.context.getString(R.string.invoice_note)+ ":"+InvoiceNote;
+            }
+            else {
+                s =SettingActivity.context.getString(R.string.company_name)
+                        + ":"+CompanyName +"\n"+SettingActivity.context.getString(R.string.private_company)+":"+PrivateCompany +"\n"+SettingActivity.context.getString(R.string.tax)+":"+Tax+"\n"+SettingActivity.context.getString(R.string.terminal_number)+":"+TerminalNumber +"\n"
+                        +SettingActivity.context.getString(R.string.terminal_password)+":"+TerminalPassword +"\n"+ SettingActivity.context.getString(R.string.invoice_note)+ ":"+InvoiceNote;
+            }
 
-            s =SettingActivity.context.getString(R.string.company_name)
-                    + ":"+CompanyName +"\n"+SettingActivity.context.getString(R.string.private_company)+":"+PrivateCompany +"\n"+SettingActivity.context.getString(R.string.tax)+":"+Tax+"\n"+SettingActivity.context.getString(R.string.terminal_number)+":"+TerminalNumber +"\n"
-                    +SettingActivity.context.getString(R.string.terminal_password)+":"+TerminalPassword +"\n"+ SettingActivity.context.getString(R.string.invoice_note)+ ":"+InvoiceNote;
             new AlertDialog.Builder(SettingActivity.this)
                     .setTitle(getString(R.string.update_general_setting))
                     .setMessage(getString(R.string.if_you_want_to_update_general_setting_click_ok)+"\n"+s)

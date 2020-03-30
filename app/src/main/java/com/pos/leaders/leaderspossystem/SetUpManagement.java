@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.Models.PosSetting;
+import com.pos.leaders.leaderspossystem.Tools.CompanyStatus;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.ServerUrl;
@@ -31,7 +33,7 @@ import java.util.List;
 
 public class SetUpManagement extends AppCompatActivity {
     CheckBox currencyCheckBox, creditCardCheckBox,cbPinpad, customerMeasurementCheckBox;
-    Spinner printerTypeSpinner, floatPointSpinner , branchSpinner,SelectServer;
+    Spinner printerTypeSpinner, floatPointSpinner , branchSpinner,SelectServer,CompanyStatusSpinner;
     Button saveButton, editButton;
     ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
@@ -45,10 +47,11 @@ public class SetUpManagement extends AppCompatActivity {
 
     boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false;
     int noOfPoint;
-    String printerType , serverUrl;
+    String printerType , serverUrl,CompanyStatusSelect;
     ArrayAdapter<String> spinnerArrayAdapter;
     ArrayAdapter<Integer> floatPointSpinnerArrayAdapter;
     Integer floatPoint[];
+    String [] CompanyStautsList;
     String printer[];
     public final static String POS_Management = "POS_Management";
     public static Context context = null;
@@ -77,16 +80,24 @@ public class SetUpManagement extends AppCompatActivity {
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
         SelectServer=(Spinner) findViewById(R.id.setUpServer);
         branchSpinner = (Spinner) findViewById(R.id.setUpManagementBranchSpinner);
+        CompanyStatusSpinner =(Spinner) findViewById(R.id.setUpCompanyStatus);
         saveButton = (Button) findViewById(R.id.setUpManagementSaveButton);
         editButton = (Button) findViewById(R.id.setUpManagementEditButton);
         currencyImage = (ImageView) findViewById(R.id.currencyImage);
+
 
         creditCardImage = (ImageView) findViewById(R.id.creditCardImage);
         ivPinpad = (ImageView) findViewById(R.id.creditCardPinPadImage);
 
         customerMeasurementImage = (ImageView) findViewById(R.id.customerMeasurementImage);
         printer = new String[]{PrinterType.BTP880.name(), PrinterType.HPRT_TP805.name(), PrinterType.SUNMI_T1.name(), PrinterType.SM_S230I.name(), PrinterType.WINTEC_BUILDIN.name()};
+         ;
+
+        CompanyStautsList =new String[]{CompanyStatus.BO_COMPANY.getString(SetUpManagement.this),
+                CompanyStatus.BO_AUTHORIZED_DEALER.getString(SetUpManagement.this),
+                CompanyStatus.BO_EXEMPT_DEALER.getString(SetUpManagement.this)};
         floatPoint = new Integer[]{2, 0, 1, 3};
+        CompanyStatusSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item,CompanyStautsList));
         spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, printer);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
 
@@ -202,8 +213,18 @@ public class SetUpManagement extends AppCompatActivity {
             }
         });
 
+     CompanyStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+         @Override
+         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+             CompanyStatusSelect=CompanyStatusSpinner.getSelectedItem().toString();
+             Log.d("CompanyStatusSelect",CompanyStatusSelect);
+         }
 
+         @Override
+         public void onNothingSelected(AdapterView<?> parent) {
 
+         }
+     });
         SelectServer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -231,6 +252,7 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branchId+"");
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL, serverUrl);
                 SETTINGS.BO_SERVER_URL=serverUrl;
+                SETTINGS.companyStatus=CompanyStatusSelect;
 
                 editor.apply();
 

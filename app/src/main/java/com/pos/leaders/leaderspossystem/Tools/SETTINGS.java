@@ -68,8 +68,7 @@ public class SETTINGS {
 	public static Bitmap copyInvoiceBitMap ; // add here to avoid recycle bitmap exception when used reference between two different activity
 	public static JSONObject orderDocument;
 
-
-
+	public static  String companyStatus;
 
 }
 

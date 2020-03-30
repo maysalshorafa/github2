@@ -38,7 +38,7 @@
     <!--Invoice-->
     <string name="source_invoice">- מקור -</string>
     <string name="copy_invoice">- עותק -</string>
-    <string name="private_company">ע.פ.</string>
+    <string name="private_company">ח.פ. / ע.מ.</string>
     <!--\u0190-->
     <string name="invoice_with_tax">חש\' מס-קבלה</string>
     <string name="credit_invoice">חש\' זיכוי</string>
@@ -589,7 +589,7 @@
     <string name="receipt">קבלה</string>
     <string name="product_code">מק\"ט</string>
     <string name="order_document">הזמנת לקוח</string>
-    <string name="create_credit_invoice_doc">ערוך חשבונית מס זיכוי</string>
+    <string name="create_credit_invoice_doc">חשבונית מס זיכוי</string>
     <string name="create_credit_invoice_management_activity">Create Credit Invoice ManagementActivity</string>
     <string name="actual">ספירת קופה</string>
     <string name="are_you_want_to_print_and_save_closing_report">אתה רוצה להדפיס ולשמור סגירת משמרת?</string>
@@ -600,7 +600,7 @@
     <string name="create_closing_report">הפקת סגירת משמרת</string>
     <string name="expected">מחושב</string>
     <string name="log_out">יציאה</string>
-    <string name="invoice_receipt">חשבון קבלה</string>
+    <string name="invoice_receipt">חשבונית מס קבלה</string>
     <string name="invoice_management_activity">Invoice ManagementActivity</string>
     <string name="edit_max_customer_credit">מקסימום אובליגו ללקוח</string>
     <string name="customer_type">סוג לקוח</string>
@@ -610,14 +610,14 @@
     <string name="opining_report">Opining Report</string>
     <string name="order_document_management_activity">Order Document ManagementActivity</string>
     <string name="view_credit_invoice_management_activity">View Credit Invoice ManagementActivity</string>
-    <string name="view_credit_invoice_doc">צפה בחשבונית מס זיכוי</string>
+    <string name="view_credit_invoice_doc">חשבון זיכוי</string>
     <string name="no_of_items">מס\' פריטים</string>
     <string name="cant_make_invoice_check_internet_connection">לא ניתן להנפיק חשבונית מס, בדוק חיבור אינטרניט</string>
     <string name="user_password_is_not_available_try_to_use_another_user_password">סיסמת משתמש אינה נכונה, נסה עם סיסמה אחרת</string>
     <string name="checks_amount_more_than_amount_need">הסכום שהוכנס גדול מהסכום המבוקש</string>
     <string name="create_order_document">הפקת הזמנת לקוח</string>
     <string name="view_order_document">הצגת הזמנת לקוח</string>
-    <string name="invoice">חשבון</string>
+    <string name="invoice">חשבונית מס</string>
     <string name="reference_invoice">עבור חשבונית מס</string>
     <string name="receipt_numbers">קבלה מספר</string>
     <string name="cancel_invoice_id"> ביטול חשבונית</string>
@@ -650,7 +650,7 @@
     <string name="pin_pad">פין פאד</string>
     <string name="inventory_doc">תעודת כניסה למחסן</string>
     <string name="inventory_in">הכנסת מוצרים למחסן</string>
-    <string name="inventory_management_activity">ניהול מחסנים</string>
+    <string name="inventory_management_activity">ניהול מחסנים</string>f
     <string name="inventory_out">הוצאת מוצרים ממחסן</string>
     <string name="please_choose_your_provider">בחירת ספק</string>
     <string name="please_enable_credit_card">נא לעדכן הגדרות ספק אשראי</string>
@@ -684,4 +684,15 @@
     <string name="loadingdata">טוען נתונים</string>
 
 
+
+    <!--SetUp Managment Activity-->
+    <string name="company_status">מעמד חברה</string>
+    <string name="exempt_dealer">עוסק פטור</string>
+    <string name="company">חברה</string>
+    <string name="authorized_dealer">עוסק מורשה</string>
+
+    <string name="invoice_recipte_company_status">חשבון זיכוי</string>
+    <string name="invoice_company_status">חשבון</string>
+    <string name="privet_company_status" >ע.פ</string>
+    <string name="credit_invoice_doc_company_status">ערוך חשבונית מס זיכוי</string>
 </resources>

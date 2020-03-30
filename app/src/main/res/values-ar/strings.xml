@@ -664,5 +664,18 @@
     <string name="Sales_Without_tax">اسعار المنتوجات الغير شاملة الضريبة</string>
     <string name="plzwait"> الرجاء الانتظار</string>
     <string name="loadingdata">جاري تحميل البيانات</string>
+
+    <!--SetUp Managment Activity-->
+    <string name="company_status">Company Status</string>
+    <string name="exempt_dealer">exempt dealer</string>
+    <string name="company">company</string>
+    <string name="authorized_dealer">Authorized dealer</string>
+
+
+    <string name="invoice_recipte_company_status">فاتورة وصل</string>
+    <string name="invoice_company_status">الفواتير</string>
+    <string name="privet_company_status" >رقم معرف الشركة</string>
+    <string name="credit_invoice_doc_company_status">انشاء وصل ارجاع</string>
+
 </resources>
 

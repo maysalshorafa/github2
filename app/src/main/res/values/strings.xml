@@ -759,6 +759,21 @@
     <string name="all_sales">All Sales</string>
     <string name="plzwait">Please Wait</string>
     <string name="loadingdata">Loading Data</string>
+
+
+    <!--SetUp Managment Activity-->
+    <string name="company_status">Company Status</string>
+    <string name="exempt_dealer">exempt dealer</string>
+    <string name="company">company</string>
+    <string name="authorized_dealer">Authorized dealer</string>
+
+
+    <string name="invoice_recipte_company_status">InvoiceReceipt</string>
+    <string name="invoice_company_status">invoice</string>
+    <string name="privet_company_status" >P.C</string>
+    <string name="credit_invoice_doc_company_status">Credit Invoice</string>
+
+
 </resources>
 
 
