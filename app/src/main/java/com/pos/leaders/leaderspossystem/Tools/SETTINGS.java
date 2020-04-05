@@ -25,10 +25,13 @@ public class SETTINGS {
 	public static String customer_name ;
 	public static int branchId;
 	public static PrinterType printer ;
+	public static CompanyStatus company;
 	public static boolean enableCurrencies ;
 	public static int decimalNumbers  ;
 	public static boolean enableAllBranch;
-
+	public static boolean enableExemptDealer;
+	public static boolean enableAuthorizedDealer;
+	public static int companyStatusEnable;
 	public static boolean enableCustomerMeasurement;
 
 	public static boolean creditCardEnable;

@@ -126,7 +126,7 @@ public class SettingActivity extends AppCompatActivity {
             final String TerminalNumber =   jsonObject.getString(MessageKey.CCUN);
             final String TerminalPassword =jsonObject.getString(MessageKey.CCPW);
             final int InvoiceNote =jsonObject.getInt(MessageKey.endOfReturnNote);
-            if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+            if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
                 s =SettingActivity.context.getString(R.string.company_name)
                         + ":"+CompanyName +"\n"+SettingActivity.context.getString(R.string.privet_company_status)+":"+PrivateCompany +"\n"+SettingActivity.context.getString(R.string.tax)+":"+Tax+"\n"+SettingActivity.context.getString(R.string.terminal_number)+":"+TerminalNumber +"\n"
                         +SettingActivity.context.getString(R.string.terminal_password)+":"+TerminalPassword +"\n"+ SettingActivity.context.getString(R.string.invoice_note)+ ":"+InvoiceNote;

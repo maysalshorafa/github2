@@ -531,6 +531,14 @@
         <item>WINTEC_BUILDIN</item>
 
     </string-array>
+
+
+    <string-array name="Company_status_list_preference">
+        <item>BO_COMPANY</item>
+        <item>BO_AUTHORIZED_DEALER</item>
+        <item>BO_EXEMPT_DEALER</item>
+    </string-array>
+
     <string-array name="float_point_list_preference">
         <item>0</item>
         <item>1</item>
@@ -677,5 +685,7 @@
     <string name="privet_company_status" >رقم معرف الشركة</string>
     <string name="credit_invoice_doc_company_status">انشاء وصل ارجاع</string>
 
+
+    <string name="date_end_zreport">تاريخ اغلاق تقرير z</string>
 </resources>
 

@@ -62,6 +62,7 @@ import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PREF
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     public final static String POS_Management = "POS_Management";
+    public final static String POS_Company_status="Company_Status";
     private ActionBar actionBar;
     private static Clock clock=null;
     private static ImageView ivInternet;
@@ -299,7 +300,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
                 || POSManagmentPreferenceFragment.class.getName().equals(fragmentName)
-                || PinPadPreferenceFragment.class.getName().equals(fragmentName) || BackUpPreferenceFragment.class.getName().equals(fragmentName);
+                || PinPadPreferenceFragment.class.getName().equals(fragmentName) || BackUpPreferenceFragment.class.getName().equals(fragmentName)
+                || CompanyStatusPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -457,6 +459,35 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class CompanyStatusPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            getPreferenceManager().setSharedPreferencesName(POS_Company_status);
+            addPreferencesFromResource(R.xml.pref_pos_company_status);
+            setHasOptionsMenu(true);
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+        }
+
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class BackUpPreferenceFragment extends PreferenceFragment {
         @Override

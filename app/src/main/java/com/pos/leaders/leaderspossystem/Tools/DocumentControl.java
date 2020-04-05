@@ -451,7 +451,7 @@ public class DocumentControl {
 
                         }
                         }else {
-                            if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+                            if (SETTINGS.company.equals("BO_EXEMPT_DEALER")){
                                 new android.support.v7.app.AlertDialog.Builder(context)
                                         .setTitle(context.getString(R.string.invoice_company_status))
                                         .setMessage(context.getString(R.string.cant_make_invoice_check_internet_connection))

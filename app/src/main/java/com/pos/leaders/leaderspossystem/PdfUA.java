@@ -58,6 +58,7 @@ import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.UtilitValidationDate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -201,12 +202,18 @@ public class PdfUA {
         headingTable.setRunDirection(0);
         insertCell(headingTable,  SETTINGS.companyName+"" , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+
         if(source) {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, font);
         }else {
             insertCell(headingTable, context.getString(R.string.copy_invoice), Element.ALIGN_CENTER, 1, font);
         }
+        Log.d("zReportDate",zReport.getCreatedAt()+"");
+        String zReportDate= UtilitValidationDate.isValidDate(zReport.getCreatedAt());
+        String zReportDateEnd= String.valueOf(new Timestamp(System.currentTimeMillis()));
+        Log.d("zReportDateEnd",zReportDateEnd);
         insertCell(headingTable, context.getString(R.string.date) +":  "+zReport.getCreatedAt(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.date_end_zreport) +":  "+zReportDateEnd, Element.ALIGN_CENTER, 1, font);
         EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
         employeeDBAdapter.open();
         insertCell(headingTable, context.getString(R.string.user_name)+":  " +employeeDBAdapter.getEmployeesName( zReport.getByUser()), Element.ALIGN_CENTER, 1, font);
@@ -224,7 +231,7 @@ public class PdfUA {
 
         insertCell(dataTable,  Util.makePrice(zReport.getInvoiceReceiptAmount()), Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
         insertCell(dataTable, context.getString(R.string.invoice_recipte_company_status), Element.ALIGN_RIGHT, 2, font);}
         else {
             insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);
@@ -232,7 +239,7 @@ public class PdfUA {
 
         insertCell(dataTable,  Util.makePrice(zReport.getInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.invoice_company_status), Element.ALIGN_RIGHT,2, font);
         }
         else {
@@ -240,7 +247,7 @@ public class PdfUA {
 
         insertCell(dataTable, Util.makePrice( zReport.getCreditInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.credit_invoice_doc_company_status), Element.ALIGN_RIGHT, 2, font);
         }
         else {
@@ -1081,7 +1088,7 @@ public class PdfUA {
             insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
 
         }
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(headingTable,  context.getString(R.string.credit_invoice_doc_company_status) +" : "+jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);
         }else {
         insertCell(headingTable,  context.getString(R.string.credit_invoice_doc) +" : "+jsonObject.getString("docNum") , Element.ALIGN_CENTER, 1, font);}
@@ -1166,7 +1173,8 @@ public class PdfUA {
 
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.date) +":  "+opiningReport.getCreatedAt(), Element.ALIGN_CENTER, 1, font);
+        String opiningReportDate= UtilitValidationDate.isValidDate(opiningReport.getCreatedAt());
+        insertCell(headingTable, context.getString(R.string.date) +":  "+opiningReportDate, Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.opening_report) , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.amount) +":"+ opiningReport.getAmount()+"Shekel", Element.ALIGN_CENTER, 1, font);
@@ -1413,7 +1421,8 @@ public class PdfUA {
         headingTable.setRunDirection(0);
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, context.getString(R.string.date) +":  "+xReport.getCreatedAt(), Element.ALIGN_CENTER, 1, font);
+        String xReportDate= UtilitValidationDate.isValidDate(xReport.getCreatedAt());
+        insertCell(headingTable, context.getString(R.string.date) +":  "+xReportDate, Element.ALIGN_CENTER, 1, font);
         EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
         employeeDBAdapter.open();
         insertCell(headingTable, context.getString(R.string.user_name)+":  " +employeeDBAdapter.getEmployeesName(xReport.getByUser()), Element.ALIGN_CENTER, 1, font);
@@ -1431,7 +1440,7 @@ public class PdfUA {
 
         insertCell(dataTable, Util.makePrice(xReport.getInvoiceReceiptAmount()), Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.invoice_recipte_company_status), Element.ALIGN_RIGHT, 2, font);
         }
         else {
@@ -1439,7 +1448,7 @@ public class PdfUA {
 
         insertCell(dataTable,  Util.makePrice(xReport.getInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if(SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.invoice_company_status), Element.ALIGN_RIGHT,2, font);
         }
         else {
@@ -1448,7 +1457,7 @@ public class PdfUA {
 
         insertCell(dataTable, Util.makePrice( xReport.getCreditInvoiceAmount()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.credit_invoice_doc_company_status), Element.ALIGN_RIGHT, 2, font);
         }else {
         insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);}
@@ -1804,7 +1813,7 @@ public class PdfUA {
 
         insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.invoice_recipte_company_status), Element.ALIGN_RIGHT, 2, font);
         }
         else {
@@ -1812,7 +1821,7 @@ public class PdfUA {
 
         insertCell(dataTable, zReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.invoice_company_status), Element.ALIGN_RIGHT,2, font);
         }
         else {
@@ -1820,7 +1829,7 @@ public class PdfUA {
         }
         insertCell(dataTable, zReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.credit_invoice_doc_company_status), Element.ALIGN_RIGHT, 2, font);
         }else {
             insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
@@ -2023,7 +2032,8 @@ public class PdfUA {
         }else {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, urFontName1);
         }
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(headingTable, context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
         }
         else {
@@ -2390,7 +2400,8 @@ public class PdfUA {
         }else {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, urFontName1);
         }
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+Log.d("CompanySettingPDF",SETTINGS.company.name());
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(headingTable, context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", order.getOrderId()), Element.ALIGN_CENTER, 1, urFontName1);
         }
         else {
@@ -2653,8 +2664,9 @@ public class PdfUA {
         insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
 
         insertCell(endOfInvoice, context.getString(R.string.date) + ":", Element.ALIGN_CENTER, 1, urFontName);
+        String dateOrderEndInvoice=UtilitValidationDate.isValidDate(order.getCreatedAt());
 
-            insertCell(endOfInvoice,  DateConverter.DateToString(order.getCreatedAt())+"", Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(endOfInvoice,  dateOrderEndInvoice, Element.ALIGN_CENTER, 1, urFontName);
         insertCell(endOfInvoice, " ", Element.ALIGN_CENTER,2, urFontName);
 
         if(isCopy) {
@@ -2731,7 +2743,10 @@ public class PdfUA {
         employeeDBAdapter.open();
         Employee employee = employeeDBAdapter.getEmployeeByID(documentsData.getLong("byEmployee"));
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
+            insertCell(headingTable,context.getString(R.string.privet_company_status)  + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        }else {
+        insertCell(headingTable, context.getString(R.string.private_company) + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);}
         if(employee!=null) {
             insertCell(headingTable, context.getString(R.string.cashiers) + employee.getFullName(), Element.ALIGN_CENTER, 1, font);
         }
@@ -2818,7 +2833,13 @@ public class PdfUA {
         dataTable.setRunDirection(0);
 
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
-        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
+            insertCell(headingTable, context.getString(R.string.privet_company_status) + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        }
+        else {
+            insertCell(headingTable,context.getString(R.string.private_company) + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        }
+
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         if(type.equals(context.getString(R.string.pull_report))){
             insertCell(headingTable, context.getString(R.string.pull_report) , Element.ALIGN_CENTER, 1, font);

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
+import com.pos.leaders.leaderspossystem.Tools.CompanyStatus;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -344,7 +345,9 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
                     String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
                     int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
+                    String companyStatus = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, CompanyStatus.BO_AUTHORIZED_DEALER.name());
                     PackageInfo pInfo = null;
+                    Log.d("CompanyStatus4",companyStatus);
                     try {
                         pInfo = SetupNewPOSOnlineActivity.context.getPackageManager().getPackageInfo(SetupNewPOSOnlineActivity.context.getPackageName(), 0);
                     } catch (PackageManager.NameNotFoundException e) {
@@ -353,7 +356,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     String verCode = pInfo.versionName;
                     PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(SetupNewPOSOnlineActivity.context);
                     posSettingDbAdapter.open();
-                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,verCode, DbHelper.DATABASE_VERSION+"",branchI);
+                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI);
                     Util.isFirstLaunch(SetupNewPOSOnlineActivity.context, true);
                     //finish();
                 } else {

@@ -2339,10 +2339,10 @@ public class SalesCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final String[] items;
-                if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+                if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
                  items = new String[]{
                          getString(R.string.invoice_company_status),
-                         getString(R.string.receipt), getString(R.string.create_order_document), getString(R.string.view_order_document), getString(R.string.credit_invoice_doc_company_status), getString(R.string.view_credit_invoice_doc)
+                         getString(R.string.receipt), getString(R.string.create_order_document), getString(R.string.view_order_document), getString(R.string.credit_invoice_doc_company_status), getString(R.string.view_credit_invoice_doc_company_status)
 
                  };}
                 else {
@@ -2401,7 +2401,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         Toast.makeText(SalesCartActivity.this,"Customer  not found",Toast.LENGTH_LONG).show();
                                                     }
                                                     else {
-                                                        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")) {
+                                                        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
                                                             new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
                                                                     .setTitle(getString(R.string.invoice_company_status))
                                                                     .setMessage(getString(R.string.cant_make_invoice_check_internet_connection))
@@ -2707,7 +2707,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                                     }
                                                     else {
-                                                        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")) {
+                                                        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")) {
                                                             new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
                                                                     .setTitle(getString(R.string.invoice_company_status))
                                                                     .setMessage(getString(R.string.cant_make_invoice_check_internet_connection))

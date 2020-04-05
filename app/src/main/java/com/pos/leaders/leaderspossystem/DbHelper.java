@@ -84,7 +84,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 9;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -408,6 +408,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportDBAdapter.addColumnReal("salesBeforeTaxReport"));
                     db.execSQL(ZReportDBAdapter.addColumnReal("salesWithTaxReport"));
                     db.execSQL(ZReportDBAdapter.addColumnReal("totalTaxReport"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
                     db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (12 , 'inventoryManagement');");
                     db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(13,2,12);");
                     ClearSync clearSync3 = new ClearSync(context);
@@ -426,6 +427,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(XReportDBAdapter.addColumnReal("salesWithTaxReport"));
                     db.execSQL(XReportDBAdapter.addColumnReal("totalTaxReport"));
                     db.execSQL(OrderDetailsDBAdapter.addColumnText("SerialNo"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
                     break;
                 case 7:
                     db.execSQL(OrderDBAdapter.addColumnReal("salesBeforeTax"));
@@ -437,6 +439,11 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(XReportDBAdapter.addColumnReal("salesWithTaxReport"));
                     db.execSQL(XReportDBAdapter.addColumnReal("totalTaxReport"));
                     db.execSQL(OrderDetailsDBAdapter.addColumnText("SerialNo"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
+                    break;
+
+                case 8:
+                    db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
                     break;
 
 

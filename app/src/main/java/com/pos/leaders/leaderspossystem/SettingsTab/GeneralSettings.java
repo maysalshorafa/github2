@@ -104,7 +104,7 @@ public class GeneralSettings extends Fragment {
                                     final String TerminalPassword = jsonObject.getString(MessageKey.CCPW);
                                     final int InvoiceNote = jsonObject.getInt(MessageKey.endOfReturnNote);
                                     final String ReturnNote = jsonObject.getString(MessageKey.returnNote);
-                                    if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+                                    if (SETTINGS.company.equals("BO_EXEMPT_DEALER")){
                                         s = getContext().getString(R.string.company_name) + ":" + CompanyName + "\n"
                                                 + getContext().getString(R.string.privet_company_status) + ":" + PrivateCompany + "\n" +
                                                 getContext().getString(R.string.invoice_note) + ":" + InvoiceNote  +  "\n"

@@ -15,11 +15,12 @@ public class PosSetting {
     private String posVersionNo;
     private String posDbVersionNo;
     private int branchId;
+    private  String companyStatus;
 
     public PosSetting() {
     }
 
-    public PosSetting(long posSettingId, boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType, String posVersionNo, String posDbVersionNo, int branchId) {
+    public PosSetting(long posSettingId, boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId) {
         this.posSettingId = posSettingId;
         this.enableCurrency = enableCurrency;
         this.enableCreditCard = enableCreditCard;
@@ -27,20 +28,23 @@ public class PosSetting {
         this.enableCustomerMeasurement = enableCustomerMeasurement;
         this.noOfFloatPoint = noOfFloatPoint;
         this.printerType = printerType;
+        this.companyStatus=companyStatus;
         this.posVersionNo = posVersionNo;
         this.posDbVersionNo = posDbVersionNo;
         this.branchId = branchId;
     }
-    public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType, String posVersionNo, String posDbVersionNo, int branchId) {
+    public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId) {
         this.enableCurrency = enableCurrency;
         this.enableCreditCard = enableCreditCard;
         this.enablePinPad = enablePinPad;
         this.enableCustomerMeasurement = enableCustomerMeasurement;
         this.noOfFloatPoint = noOfFloatPoint;
         this.printerType = printerType;
+        this.companyStatus=companyStatus;
         this.posVersionNo = posVersionNo;
         this.posDbVersionNo = posDbVersionNo;
         this.branchId = branchId;
+
     }
     public long getPosSettingId() {
         return posSettingId;
@@ -122,6 +126,14 @@ public class PosSetting {
         this.branchId = branchId;
     }
 
+    public String getCompanyStatus() {
+        return companyStatus;
+    }
+
+    public void setCompanyStatus(String companyStatus) {
+        this.companyStatus = companyStatus;
+    }
+
     @Override
     public String toString() {
         return "PosSetting{" +
@@ -135,6 +147,8 @@ public class PosSetting {
                 ", posVersionNo='" + posVersionNo + '\'' +
                 ", posDbVersionNo='" + posDbVersionNo + '\'' +
                 ", branchId=" + branchId +
+                ", companyStatus='" + companyStatus + '\'' +
                 '}';
     }
+
 }

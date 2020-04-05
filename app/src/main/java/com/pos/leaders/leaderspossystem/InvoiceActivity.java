@@ -42,7 +42,7 @@ public class InvoiceActivity extends Activity {
 
         //init invoice
         tvTitle.setText(SETTINGS.companyName);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             tvID.setText(getString(R.string.privet_company_status)+ " " +SETTINGS.companyID);
         }
        else {

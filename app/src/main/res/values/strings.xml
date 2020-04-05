@@ -373,6 +373,13 @@
         <item>PosBranch</item>
     </string-array>
 
+    <string-array name="Company_status_list_preference">
+        <item>BO_COMPANY</item>
+        <item>BO_AUTHORIZED_DEALER</item>
+        <item>BO_EXEMPT_DEALER</item>
+    </string-array>
+
+
     <string-array name="multi_select_list_preference_default_value" />
 
     <string name="pref_title_system_sync_settings" translatable="false">System sync settings</string>
@@ -772,6 +779,10 @@
     <string name="invoice_company_status">invoice</string>
     <string name="privet_company_status" >P.C</string>
     <string name="credit_invoice_doc_company_status">Credit Invoice</string>
+
+
+
+    <string name="date_end_zreport">Closing date zReport</string>
 
 
 </resources>

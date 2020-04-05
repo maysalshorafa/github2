@@ -330,7 +330,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String[] items;
-                if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+                if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
                 items = new String[]{
                         getString(R.string.invoice_company_status),
                         getString(R.string.receipt), getString(R.string.order_document), getString(R.string.credit_invoice_doc_company_status), getString(R.string.view_credit_invoice_doc)

@@ -157,7 +157,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         hintForSearchType.add(getString(R.string.date));
         hintForSearchType.add(getString(R.string.price));
         hintForSearchType.add(getString(R.string.type));
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             hintForSearchType.add(getString(R.string.invoice_company_status));
         }
         else {

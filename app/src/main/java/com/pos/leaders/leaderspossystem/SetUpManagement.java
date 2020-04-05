@@ -44,18 +44,20 @@ public class SetUpManagement extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL= "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS= "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS";
 
     boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false;
     int noOfPoint;
     String printerType , serverUrl,CompanyStatusSelect;
-    ArrayAdapter<String> spinnerArrayAdapter;
+    ArrayAdapter<String> spinnerArrayAdapter,companyStatusArryAdapter;
     ArrayAdapter<Integer> floatPointSpinnerArrayAdapter;
     Integer floatPoint[];
     String [] CompanyStautsList;
     String printer[];
     public final static String POS_Management = "POS_Management";
+    public final static String POS_Company_status ="Company_Status";
     public static Context context = null;
-    int branchId;
+    int branchId,companyStatusID=0;
     final List<String> branch = new ArrayList<String>();
     final List<String> ServerUrL = new ArrayList<String>();
     @Override
@@ -93,11 +95,13 @@ public class SetUpManagement extends AppCompatActivity {
         printer = new String[]{PrinterType.BTP880.name(), PrinterType.HPRT_TP805.name(), PrinterType.SUNMI_T1.name(), PrinterType.SM_S230I.name(), PrinterType.WINTEC_BUILDIN.name()};
          ;
 
-        CompanyStautsList =new String[]{CompanyStatus.BO_COMPANY.getString(SetUpManagement.this),
-                CompanyStatus.BO_AUTHORIZED_DEALER.getString(SetUpManagement.this),
-                CompanyStatus.BO_EXEMPT_DEALER.getString(SetUpManagement.this)};
+        CompanyStautsList =new String[]{CompanyStatus.BO_COMPANY.name(),
+                CompanyStatus.BO_AUTHORIZED_DEALER.name(),
+                CompanyStatus.BO_EXEMPT_DEALER.name()};
         floatPoint = new Integer[]{2, 0, 1, 3};
-        CompanyStatusSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item,CompanyStautsList));
+        companyStatusArryAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, CompanyStautsList);
+        companyStatusArryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view);
+        CompanyStatusSpinner.setAdapter(companyStatusArryAdapter);
         spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, printer);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
 
@@ -216,7 +220,8 @@ public class SetUpManagement extends AppCompatActivity {
      CompanyStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
          @Override
          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-             CompanyStatusSelect=CompanyStatusSpinner.getSelectedItem().toString();
+
+             CompanyStatusSelect=companyStatusArryAdapter.getItem(position);
              Log.d("CompanyStatusSelect",CompanyStatusSelect);
          }
 
@@ -251,10 +256,17 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branchId+"");
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL, serverUrl);
+              // Log.d("companySelectd",CompanyStatusSelect);
                 SETTINGS.BO_SERVER_URL=serverUrl;
-                SETTINGS.companyStatus=CompanyStatusSelect;
+            //    SETTINGS.companyStatus=CompanyStatusSelect;
 
                 editor.apply();
+
+
+                SharedPreferences preferencesCompany= getSharedPreferences(POS_Company_status, MODE_PRIVATE);
+                final SharedPreferences.Editor editorCompany = preferencesCompany.edit();
+                editorCompany.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS,CompanyStatusSelect);
+                editorCompany.apply();
 
                 if (Util.isFirstLaunch(SetUpManagement.this, false)) {
                     Intent i = new Intent(SetUpManagement.this, SetupNewPOSOnlineActivity.class);
@@ -362,7 +374,30 @@ public class SetUpManagement extends AppCompatActivity {
                         }
 
                     }
+
+
+
+
+
+
                 }
+
+                SharedPreferences SharedPreferencesCompanyStatus = getSharedPreferences(POS_Company_status, MODE_PRIVATE);
+                final SharedPreferences.Editor editorCompanyStatus = SharedPreferencesCompanyStatus.edit();
+                if (SharedPreferencesCompanyStatus != null) {
+                    //CompanyStatus
+                    if (SharedPreferencesCompanyStatus.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS)) {
+                        String companyStatus = CompanyStatusSelect;
+                        Log.d("CompanyStauts2","2");
+                        Log.d("CompanyStauts2",companyStatus);
+                        editorCompanyStatus.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, companyStatus);
+                        CompanyStatus companyStatus1 = CompanyStatus.valueOf(companyStatus);
+                        SETTINGS.company = companyStatus1;
+
+                    }
+                }
+
+                editorCompanyStatus.apply();
                 editor.apply();
                 //    public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType, String posVersionNo, String posDbVersionNo, int branchId) {
 
@@ -376,7 +411,7 @@ public class SetUpManagement extends AppCompatActivity {
                 }
                 String verCode = pInfo.versionName;
 
-                PosSetting posSetting = new PosSetting(currencyEnable,creditCardEnable,pinpadEnable,customerMeasurementEnable,noOfPoint,printerType,pInfo.versionName,String.valueOf(DbHelper.DATABASE_VERSION),branchId);
+                PosSetting posSetting = new PosSetting(currencyEnable,creditCardEnable,pinpadEnable,customerMeasurementEnable,noOfPoint,printerType,CompanyStatusSelect,pInfo.versionName,String.valueOf(DbHelper.DATABASE_VERSION),branchId);
                posSettingDbAdapter.updateEntry(posSetting);
                 posSettingDbAdapter.close();
                 Toast.makeText(SetUpManagement.this, R.string.success_edit_POS_setting, Toast.LENGTH_LONG).show();
@@ -463,9 +498,27 @@ public class SetUpManagement extends AppCompatActivity {
                     }
             }
 
+
             //end
 
 
+        }
+
+        SharedPreferences SharedPreferencesCompany = getSharedPreferences(POS_Company_status, MODE_PRIVATE);
+        if (SharedPreferencesCompany != null) {
+            //CompanyStatus
+            if (SharedPreferencesCompany.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS)) {
+                String companyStatus =SharedPreferencesCompany.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS,CompanyStatus.BO_AUTHORIZED_DEALER.name());
+                Log.d("CompanyStatus3",companyStatus);
+                CompanyStatus companyStatus1=CompanyStatus.valueOf(companyStatus);
+                for (int i = 0; i < CompanyStautsList.length; i++) {
+                    if (CompanyStautsList[i] == companyStatus1.name()) {
+                        int spinnerPosition = spinnerArrayAdapter.getPosition(companyStatus1.name());
+                        CompanyStatusSpinner.setSelection(spinnerPosition);
+
+                    }
+                }
+            }
         }
     }
 }

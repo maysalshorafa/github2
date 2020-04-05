@@ -14,6 +14,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.SettingsTab.BOPOSVersionSettings;
 import com.pos.leaders.leaderspossystem.SettingsTab.StartBoVersionSettingConnection;
+import com.pos.leaders.leaderspossystem.Tools.CompanyStatus;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Company_status;
 import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Management;
 import static com.pos.leaders.leaderspossystem.SettingsTab.BOPOSVersionSettings.BO_SETTING;
 
@@ -41,10 +43,11 @@ public class SplashScreenActivity extends Activity {
     private ZReport lastZReport = null;
     public static boolean  currencyEnable , creditCardEnable , pinpadEnable , customerMeasurementEnable ;
     public static int floatPoint , branchId;
-    public static String printerType , serverUrl ;
+    public static String printerType , serverUrl ,companyStatus;
     public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_VERSION";
     public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_BO_DB_VERSION";
     public static final String LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_FE_VERSION = "LEAD_POS_RESULT_INTENT_BO_SETTING_ACTIVITY_FE_VERSION";
+    Context contextActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class SplashScreenActivity extends Activity {
         //Fabric.with(this, new Crashlytics());
         setContentView(R.layout.splash_screen);
         ImageView iv=(ImageView)findViewById(R.id.splashScreen_iv);
+        contextActivity=SplashScreenActivity.this;
 
 
         iv.setImageResource(R.drawable.white_color_logo);
@@ -484,6 +488,8 @@ public class SplashScreenActivity extends Activity {
     public static boolean readSettings(Context context) {
         /// sharedPreferences for Setting
         Log.i("POS Managment", "Reading file...");
+
+
         SharedPreferences cSharedPreferences = context.getSharedPreferences(POS_Management, MODE_PRIVATE);
         if (cSharedPreferences != null) {
             //CreditCard
@@ -536,6 +542,11 @@ public class SplashScreenActivity extends Activity {
                 Intent i = new Intent(context, SetUpManagement.class);
                 context.startActivity(i);
             }
+
+
+
+
+
             //SERVER
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL)) {
                 serverUrl = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL, SETTINGS.BO_SERVER_URL);
@@ -559,7 +570,23 @@ public class SplashScreenActivity extends Activity {
                 context.startActivity(i);
             }
 
-        } else {
+        }
+        SharedPreferences sharedPreferencesCompanyStatus= context.getSharedPreferences(POS_Company_status, MODE_PRIVATE);
+        if (sharedPreferencesCompanyStatus != null) {
+            //CompanyStatus
+            if (sharedPreferencesCompanyStatus.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS)) {
+                companyStatus = sharedPreferencesCompanyStatus.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, CompanyStatus.BO_AUTHORIZED_DEALER.name());
+                CompanyStatus companyStatusValue = CompanyStatus.valueOf(companyStatus);
+                Log.d("companyStatus5","5");
+                // Log.d("compnyStatus6",companyStatusValue.toString());
+                SETTINGS.company = companyStatusValue;
+                //     Log.d("SETTINGSStatus",SETTINGS.companyStatus);
+            } else {
+                Intent i = new Intent(context, SetUpManagement.class);
+                context.startActivity(i);
+            }
+        }
+        else {
             Intent i = new Intent(context, SetUpManagement.class);
             context.startActivity(i);
         }

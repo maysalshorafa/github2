@@ -81,7 +81,7 @@ public class BitmapInvoice {
         head.setTextSize(40);
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             sHead = new StaticLayout(context.getString(R.string.privet_company_status) + ":" + SETTINGS.companyID + "\n\r" + status, head,
                     PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         }
@@ -366,7 +366,7 @@ public class BitmapInvoice {
         StaticLayout sHead;
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if(SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
         sHead = new StaticLayout(context.getString(R.string.privet_company_status) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(zReport.getCreatedAt().getTime()) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                 PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);}
         else {
@@ -441,7 +441,7 @@ public class BitmapInvoice {
         StaticLayout checkHead =new StaticLayout("\u200F"+context.getString(R.string.checks) +  "\t\t\t\t\t\t\t\t\t\t" + context.getString(R.string.date)+  "\t\t\t\t\t\t" + context.getString(R.string.amount) , invoiceD,
                 PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
 
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             names +="\u200F"+ context.getString(R.string.invoice_recipte_company_status) +"\n" + "\u200F"+context.getString(R.string.invoice_company_status) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc_company_status) + "\n"+"\u200F"+context.getString(R.string.total_sales);
         }
         else {
@@ -788,7 +788,7 @@ public class BitmapInvoice {
 
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+       if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
              sHead = new StaticLayout(context.getString(R.string.privet_company_status) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" + DateConverter.dateToString(xReport.getCreatedAt().getTime()) + "\n\r" + "קןפאי : " + xReport.getUser().getFullName()+ status , head,
                     PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         }
@@ -841,7 +841,7 @@ public class BitmapInvoice {
 
 
         String names = "", in = "", out = "", total = "";
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             names +="\u200F"+ context.getString(R.string.invoice_recipte_company_status) +"\n" + "\u200F"+context.getString(R.string.invoice_company_status) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc_company_status) + "\n"+"\u200F"+context.getString(R.string.total_sales);
         }
         else {
@@ -973,7 +973,7 @@ public class BitmapInvoice {
         head.setTypeface(normal);
         head.setTextSize(38);
         StaticLayout sHead;
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             sHead = new StaticLayout(context.getString(R.string.privet_company_status) + ":" + SETTINGS.companyID + "\n\r" + DateConverter.dateToString(new Date().getTime()) + "\n\r" + "קןפאי : " + "sadsd", head,
                     PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         }
@@ -1082,7 +1082,7 @@ public class BitmapInvoice {
         StaticLayout sHead;
         if (isCopy)
             status = context.getString(R.string.copy_invoice);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
              sHead = new StaticLayout(context.getString(R.string.privet_company_status) + ":" + SETTINGS.companyID + "\n\r" + status + "\n\r" +context.getString(R.string.from)+"  "+DateConverter.geDate(from) +"\n\r" +context.getString(R.string.to)+"  "+DateConverter.geDate(to) + "\n\r" + "קןפאי : " + zReport.getUser().getFullName()+ status , head,
                     PAGE_WIDTH, Layout.Alignment.ALIGN_CENTER, 1.0f, 1.0f, true);
         }
@@ -1132,7 +1132,7 @@ public class BitmapInvoice {
 
 
         String names = "", in = "", out = "", total = "";
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             names +="\u200F"+ context.getString(R.string.invoice_recipte_company_status) +"\n" + "\u200F"+context.getString(R.string.invoice_company_status) + "\n" + "\u200F"+context.getString(R.string.credit_invoice_doc_company_status) + "\n"+"\u200F"+context.getString(R.string.total_sales);
         }
         else {

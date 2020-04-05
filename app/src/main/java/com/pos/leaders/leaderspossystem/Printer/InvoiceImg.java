@@ -192,7 +192,7 @@ public class InvoiceImg {
         Block Title = new Block("\u200E" + SETTINGS.companyName, 38.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         Title.Left().Bold();
         Block subTitle;
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             subTitle = new Block("\u200E " + context.getString(R.string.privet_company_status) +
                     ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         }
@@ -227,7 +227,7 @@ public class InvoiceImg {
         Block Title = new Block("\u200E" + SETTINGS.companyName, 38.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         Title.Left().Bold();
         Block subTitle;
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
              subTitle = new Block("\u200E " + context.getString(R.string.privet_company_status) +
                     ": " + SETTINGS.companyID, 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         }
@@ -270,7 +270,7 @@ public class InvoiceImg {
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
          inum = new Block("\u200E"+ context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", id) + "\n"
                 + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
         else {
@@ -626,7 +626,7 @@ public class InvoiceImg {
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
         inum = new Block("\u200E"+ context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", id) + "\n"
                 + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
         else {
@@ -972,7 +972,7 @@ public class InvoiceImg {
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
          inum = new Block("\u200E"+ context.getString(R.string.invoice_recipte_company_status)+": " +String.format(" %06d ", id) + "\n"
                 + line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
         else {
@@ -1664,7 +1664,7 @@ public class InvoiceImg {
         if(isCopy)
             status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             inum = new Block("\u200E"+ context.getString(R.string.invoice_company_status)+": " +invoiceNum
                     , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         }
@@ -1913,7 +1913,7 @@ public class InvoiceImg {
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         String status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
          inum = new Block("\u200E"+ context.getString(R.string.invoice_company_status)+": " +invoiceNum
                 , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
         else {
@@ -2046,7 +2046,7 @@ public class InvoiceImg {
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         String status=context.getString(R.string.copy_invoice);
         Block bStatus = new Block("\u200F" + status, 35.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        if (SETTINGS.companyStatus.equalsIgnoreCase("exempt dealer")){
+        if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
         inum = new Block("\u200E"+ context.getString(R.string.invoice_company_status)+": " +invoiceNum
                 , 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);}
         else {

@@ -61,6 +61,7 @@ import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Settings.SettingsActivity;
 import com.pos.leaders.leaderspossystem.SettingsTab.SettingsTab;
+import com.pos.leaders.leaderspossystem.Tools.CompanyStatus;
 import com.pos.leaders.leaderspossystem.Tools.InternetStatus;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -677,7 +678,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
         EnableButtons();
 
-
+        if (SETTINGS.company == null) {
+            SETTINGS.company = CompanyStatus.BO_AUTHORIZED_DEALER;
+        }
         if (SETTINGS.printer == null) {
             SETTINGS.printer = PrinterType.HPRT_TP805;
         }

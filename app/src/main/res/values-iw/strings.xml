@@ -523,6 +523,15 @@
         <item>WINTEC_BUILDIN</item>
 
     </string-array>
+
+
+
+    <string-array name="Company_status_list_preference">
+        <item>BO_COMPANY</item>
+        <item>BO_AUTHORIZED_DEALER</item>
+        <item>BO_EXEMPT_DEALER</item>
+    </string-array>
+
     <string-array name="float_point_list_preference">
         <item>0</item>
         <item>1</item>
@@ -610,7 +619,7 @@
     <string name="opining_report">Opining Report</string>
     <string name="order_document_management_activity">Order Document ManagementActivity</string>
     <string name="view_credit_invoice_management_activity">View Credit Invoice ManagementActivity</string>
-    <string name="view_credit_invoice_doc">חשבון זיכוי</string>
+    <string name="view_credit_invoice_doc">הצגת חשבונית זיכוי</string>
     <string name="no_of_items">מס\' פריטים</string>
     <string name="cant_make_invoice_check_internet_connection">לא ניתן להנפיק חשבונית מס, בדוק חיבור אינטרניט</string>
     <string name="user_password_is_not_available_try_to_use_another_user_password">סיסמת משתמש אינה נכונה, נסה עם סיסמה אחרת</string>
@@ -691,8 +700,11 @@
     <string name="company">חברה</string>
     <string name="authorized_dealer">עוסק מורשה</string>
 
-    <string name="invoice_recipte_company_status">חשבון זיכוי</string>
+    <string name="invoice_recipte_company_status">חשבון קבלה</string>
     <string name="invoice_company_status">חשבון</string>
     <string name="privet_company_status" >ע.פ</string>
-    <string name="credit_invoice_doc_company_status">ערוך חשבונית מס זיכוי</string>
+    <string name="credit_invoice_doc_company_status">חשבון זיכוי</string>
+
+    <string name="date_end_zreport">תאריך סגירת דו"ח Z</string>
+    <string name="view_credit_invoice_doc_company_status">הצגת חשבון זיכוי</string>
 </resources>
