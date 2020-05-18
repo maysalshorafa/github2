@@ -34,6 +34,7 @@ import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -88,7 +89,7 @@ public class PinpadActivity extends AppCompatActivity {
             if (extras.containsKey("creditReceipt")) {
                 creditReceipt = true;
                 totalPrice = (double) extras.get("_Price");
-                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
                 try {
                     invoiceJson = new JSONObject(extras.getString("invoice"));
                     JSONObject docJson = invoiceJson.getJSONObject("documentsData");
@@ -103,7 +104,7 @@ public class PinpadActivity extends AppCompatActivity {
             } else {
                 creditReceipt=false;
                 totalPrice = (double) extras.get(LEADERS_POS_PIN_PAD_TOTAL_PRICE);
-                tvTotalPrice.append(" " + Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+                tvTotalPrice.append(" " + Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
             }
         }else {
             finish();

@@ -40,9 +40,13 @@ public class PosSettingDbAdapter {
     public static final String POS_SETTING_COLUMN_POS_DB_VERSION_NO = "posDbVersionNo";
     protected static final String POS_SETTING_COLUMN_BRANCH_ID= "branchId";
     protected static final String POS_SETTING_COLUMN_COMPANY_STATUS= "companyStatus";
+    protected static final String POS_SETTING_COLUMN_CURRENCY_CODE= "currencyCode";
+    protected static final String POS_SETTING_COLUMN_CURRENCY_SYMBOL= "currencySymbol";
+    protected static final String POS_SETTING_COLUMN_COUNTRY= "country";
+
     public static final String DATABASE_CREATE = "CREATE TABLE PosSetting ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`enableCurrency` INTEGER DEFAULT 0 , `enableCreditCard` INTEGER DEFAULT 0, " +
-            "`enablePinPad` INTEGER DEFAULT 0, `enableCustomerMeasurement` INTEGER DEFAULT 0,`noOfFloatPoint` INTEGER DEFAULT 0,`posVersionNo` TEXT ,`posDbVersionNo` TEXT , `printerType` TEXT  , `companyStatus` TEXT  ,`branchId` INTEGER DEFAULT 0 )";
+            "`enablePinPad` INTEGER DEFAULT 0, `enableCustomerMeasurement` INTEGER DEFAULT 0,`noOfFloatPoint` INTEGER DEFAULT 0,`posVersionNo` TEXT ,`posDbVersionNo` TEXT , `printerType` TEXT  , `companyStatus` TEXT  ,`branchId` INTEGER DEFAULT 0 , `currencyCode` TEXT  , `currencySymbol` TEXT ,`country` TEXT )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
@@ -75,7 +79,7 @@ public class PosSettingDbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId){
+    public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String currencyCode,String currencySymbol,String country){
         if(db.isOpen()){
 
         }else {
@@ -86,7 +90,7 @@ public class PosSettingDbAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,companyStatus,posVersionNo,posDbVersionNo,branchId);
+        PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,companyStatus,posVersionNo,posDbVersionNo,branchId,currencyCode,currencySymbol,country);
         sendToBroker(MessageType.ADD_POS_SETTING, posSetting, this.context);
 
         try {
@@ -122,6 +126,9 @@ public class PosSettingDbAdapter {
         val.put(POS_SETTING_COLUMN_BRANCH_ID,posSetting.getBranchId());
         val.put(POS_SETTING_COLUMN_PRINTER_TYPE,posSetting.getPrinterType());
         val.put(POS_SETTING_COLUMN_COMPANY_STATUS,posSetting.getCompanyStatus());
+        val.put(POS_SETTING_COLUMN_CURRENCY_CODE,posSetting.getCurrencyCode());
+        val.put(POS_SETTING_COLUMN_CURRENCY_SYMBOL,posSetting.getCurrencySymbol());
+        val.put(POS_SETTING_COLUMN_COUNTRY,posSetting.getCountry());
         try {
 
             return db.insert(POS_SETTING_TABLE_NAME, null, val);
@@ -154,6 +161,9 @@ public class PosSettingDbAdapter {
         val.put(POS_SETTING_COLUMN_BRANCH_ID,posSetting.getBranchId());
         val.put(POS_SETTING_COLUMN_PRINTER_TYPE,posSetting.getPrinterType());
         val.put(POS_SETTING_COLUMN_COMPANY_STATUS,posSetting.getCompanyStatus());
+        val.put(POS_SETTING_COLUMN_CURRENCY_CODE,posSetting.getCurrencyCode());
+        val.put(POS_SETTING_COLUMN_CURRENCY_SYMBOL,posSetting.getCurrencySymbol());
+        val.put(POS_SETTING_COLUMN_COUNTRY,posSetting.getCountry());
 
         SharedPreferences cSharedPreferences = context.getSharedPreferences(POS_Management, MODE_PRIVATE);
         final SharedPreferences.Editor editor = cSharedPreferences.edit();
@@ -256,6 +266,9 @@ public class PosSettingDbAdapter {
         val.put(POS_SETTING_COLUMN_BRANCH_ID,posSetting.getBranchId());
         val.put(POS_SETTING_COLUMN_PRINTER_TYPE,posSetting.getPrinterType());
         val.put(POS_SETTING_COLUMN_COMPANY_STATUS,posSetting.getCompanyStatus());
+        val.put(POS_SETTING_COLUMN_CURRENCY_CODE,posSetting.getCurrencyCode());
+        val.put(POS_SETTING_COLUMN_CURRENCY_SYMBOL,posSetting.getCurrencySymbol());
+        val.put(POS_SETTING_COLUMN_COUNTRY,posSetting.getCountry());
 
         String where = POS_SETTING_COLUMN_ID + " = ?";
         db.update(POS_SETTING_TABLE_NAME, val, where, new String[]{posSetting.getPosSettingId() + ""});
@@ -293,7 +306,9 @@ public class PosSettingDbAdapter {
                         Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_FLOAT_POINT))),
                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_PRINTER_TYPE)),
                 cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COMPANY_STATUS)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_VERSION_NO)),
-                        cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_DB_VERSION_NO)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_BRANCH_ID))));
+                        cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_DB_VERSION_NO)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_BRANCH_ID))),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_CODE)),
+                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_SYMBOL)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COUNTRY))
+                );
         cursor.close();
   close();
         return posSetting;

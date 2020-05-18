@@ -166,7 +166,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
             if(extras.containsKey("creditReceipt")){
                 creditReceipt=true;
                 totalPrice = (double) extras.get("_Price");
-                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
                 try {
                     invoiceJson=new JSONObject(extras.getString("invoice"));
                     JSONObject docJson = invoiceJson.getJSONObject("documentsData");
@@ -182,7 +182,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 creditReceipt=false;
                 fromMultiCurrency=extras.getBoolean(LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY);
                 totalPrice = (double) extras.get(LEADERS_POS_CREDIT_CARD_TOTAL_PRICE);
-                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
             }
         } else {
             finish();

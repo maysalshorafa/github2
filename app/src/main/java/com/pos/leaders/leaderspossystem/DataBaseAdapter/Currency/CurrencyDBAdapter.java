@@ -162,6 +162,7 @@ public class CurrencyDBAdapter {
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
+        val.put(CURRENCY_COLUMN_ID, currency.getId());
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode());
@@ -169,6 +170,52 @@ public class CurrencyDBAdapter {
 
         String where = CURRENCY_COLUMN_ID + " = ?";
         db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
+    }
+
+
+
+    public void updateRate(Currency currency) {
+        if (db.isOpen()){
+
+        }
+        else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(CURRENCY_COLUMN_ID, currency.getId());
+
+
+        val.put(CURRENCY_COLUMN_NAME, currency.getName());
+        val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode() );
+        val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
+        val.put(CURRENCYCOLUMN_RATE, currency.getRate());
+        Cursor cursor=null;
+        cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME + " where  "+ CURRENCY_COLUMN_CURRENCYCODE +"='" + currency.getCurrencyCode() + "'" + " order by id desc LIMIT 1", null);
+        if(!cursor.isAfterLast()){
+            String where = CURRENCY_COLUMN_ID + " = ?";
+            try {
+                db.update(CURRENCY_TABLE_NAME, val, where, new String[]{currency.getId() + ""});
+            }
+            catch (Exception ex) {
+                Log.e("Currency DB Update", "update Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
+            }
+            cursor.moveToNext();}
+        else {
+            try {
+
+             db.insert(CURRENCY_TABLE_NAME, null, val);}
+            catch (Exception ex) {
+                Log.e("Currency DB insert", "inserting Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
+            }
+
+            }
+
     }
 
     public List<Currency> getAllCurrencyLastUpdate(List<CurrencyType> currency) {
@@ -222,8 +269,9 @@ public class CurrencyDBAdapter {
         Cursor cursor=null;
         cursor = db.rawQuery("SELECT * FROM "+CURRENCY_TABLE_NAME+" ORDER BY id DESC LIMIT 1", null);
         cursor.moveToFirst();
+        if (cursor != null && cursor.getCount() != 0){
         currency=build(cursor);
-        Log.d("Currency",currency.toString());
+        Log.d("Currency",currency.toString());}
         return currency;
     }
     public void deleteCurrencyList(){
@@ -279,6 +327,8 @@ public class CurrencyDBAdapter {
 
         return currency;
     }
+
+
 
 }
 

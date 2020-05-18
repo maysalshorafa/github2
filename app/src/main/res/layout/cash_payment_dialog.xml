@@ -12,11 +12,12 @@
         android:layout_marginRight="16dp"
 
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/cashPaymentDialog_TECash"
@@ -27,16 +28,15 @@
             android:layout_weight="1"
             android:background="@drawable/catalogproduct_item_bg"
             android:inputType="number"
-            android:textAlignment="center"
-             />
+            android:textAlignment="center" />
 
         <Switch
             android:id="@+id/cashPaymentDialog_SwitchProportion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/proportion"
             android:layout_margin="4dp"
-            android:textAlignment="textEnd"/>
+            android:text="@string/proportion"
+            android:textAlignment="textEnd" />
 
 
     </LinearLayout>

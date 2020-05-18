@@ -62,10 +62,12 @@ import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.ConverterCurrency;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
@@ -128,6 +130,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sales_management);
         TitleBar.setTitleBar(this);
+        ThisApp.setCurrentActivity(this);
         context=this;
         lvOrders = (ListView) findViewById(R.id.saleManagement_LVSales);
 
@@ -311,11 +314,16 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                     sale.setOrders(orders);
                     sale.setUser(SESSION._EMPLOYEE);
+
+
+
                     //region Print Button
                     final Button print = (Button) view.findViewById(R.id.listSaleManagement_BTPrint);
+
                     print.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                             //send customerName copy from the in voice
                             new AlertDialog.Builder(OrdersManagementActivity.this)
                                     .setTitle(getString(R.string.copyinvoice))
@@ -428,7 +436,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                 if(payments.size()>0) {
                                                     sale.setPayment(new Payment(payments.get(0)));
                                                 }
-                                                long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(), sale.getCartDiscount(), sale.getNumberDiscount(), sale.getOrderId(),0,0);
+                                                long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(), sale.getCartDiscount(), sale.getNumberDiscount(), sale.getOrderId(),0,0,0);
                                                 Order order = saleDBAdapter.getOrderById(sID);
                                                 sale.setCancellingOrderId(sID);
                                                 saleDBAdapter.updateEntry(sale);
@@ -452,7 +460,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                     try {
                                                         Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                                         sale.setOrderId(sID);
-                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order, false, checks);
+                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order,orderDetailsList, false, checks);
                                                         startActivity(i);
                                                     } catch (Exception e) {
                                                         Log.d("exception", order.toString());
@@ -463,7 +471,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                     try {
                                                         Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                                         sale.setOrderId(sID);
-                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order, false, null);
+                                                        SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order,orderDetailsList, false, null);
                                                         startActivity(i);
                                                     } catch (Exception e) {
                                                         Log.d("exception", order.toString());
@@ -475,15 +483,16 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                 for (int i=0;i<orderDetailsList.size();i++){
                                                     productDBAdapter.open();
                                                     Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
-                                                    if (product.getCurrencyType()==0){
-                                                    if(product.isWithTax()){
+//                                                    if (product.getCurrencyType()==0){
+                                                        double rateCurrency= ConverterCurrency.getRateCurrency(product.getCurrencyType(),OrdersManagementActivity.this);
+                                                    if(!product.isWithTax()){
                                                         if(order.getCartDiscount()>0){
                                                             orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100))))));
-                                                            SalesWithoutTaxCancle+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                                            SalesWithoutTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                             Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
                                                         }else {
                                                             orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
-                                                            SalesWithoutTaxCancle += orderDetailsList.get(i).getPaidAmountAfterTax();
+                                                            SalesWithoutTaxCancle += (orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                             Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
                                                         }
                                                     }else {
@@ -491,19 +500,19 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                                             orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
                                                             Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order.getCartDiscount()/100));
-                                                            salesaftertaxCancle+=(orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)));
+                                                            salesaftertaxCancle+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))*rateCurrency);
                                                             Log.d("salesaftertax",salesaftertaxCancle+"ko22222");
-                                                            SalesWitheTaxCancle+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                                            SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                         }else {
                                                             orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                                            salesaftertaxCancle+=orderDetailsList.get(i).getPaidAmount();
+                                                            salesaftertaxCancle+=(orderDetailsList.get(i).getPaidAmount()*rateCurrency);
                                                             Log.d("salesaftertax",salesaftertaxCancle+"ko");
-                                                            SalesWitheTaxCancle+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                                            SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                         }
                                                     }
-                                                }
+                                           //     }
 
-                                                 else    if (product.getCurrencyType()==1){
+                                             /*    else    if (product.getCurrencyType()==1){
                                                         if(product.isWithTax()){
                                                             if(order.getCartDiscount()>0){
                                                                 orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100))))));
@@ -589,14 +598,14 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                                 SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.1002);
                                                             }
                                                         }
-                                                    }
+                                                    }*/
 
 
 
                                                 }
                                                 zReport1.setCashTotal(zReport1.getCashTotal() - sale.getTotalPrice());
                                                 zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount() - sale.getTotalPrice());
-                                                zReport1.setShekelAmount(zReport1.getShekelAmount() - sale.getTotalPrice());
+                                                zReport1.setFirstTypeAmount(zReport1.getFirstTypeAmount() - sale.getTotalPrice());
                                                 zReport1.setSalesWithTax(zReport1.getSalesWithTax()-SalesWitheTaxCancle);
 
                                                 zReport1.setSalesBeforeTax(zReport1.getSalesBeforeTax()-SalesWithoutTaxCancle);
@@ -606,7 +615,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                 zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (salesaftertaxCancle - SalesWitheTaxCancle))));
                                                 zReportCount.setCashCount(zReportCount.getCashCount() - 1);
                                            //     zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount() - 1);
-                                                zReportCount.setShekelCount(zReportCount.getShekelCount() - 1);
+                                                zReportCount.setFirstTYpeCount(zReportCount.getFirstTYpeCount() - 1);
                                                 zReportDBAdapter.updateEntry(zReport1);
                                                 zReportCountDbAdapter.updateEntry(zReportCount);
                                                 //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way
@@ -789,15 +798,16 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             for (int i=0;i<orderDetailsList.size();i++){
                                                 productDBAdapter.open();
                                                 Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
-                                                if (product.getCurrencyType()==0){
-                                                if(product.isWithTax()){
+                                           //     if (product.getCurrencyType()==0){
+                                                    double rateCurrency=ConverterCurrency.getRateCurrency(product.getCurrencyType(),OrdersManagementActivity.this);
+                                                if(!product.isWithTax()){
                                                     if(order1.getCartDiscount()>0){
                                                         orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100))))));
-                                                        SalesWithoutTaxDuplicute+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                                        SalesWithoutTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                         Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
                                                     }else {
                                                         orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
-                                                        SalesWithoutTaxDuplicute += orderDetailsList.get(i).getPaidAmountAfterTax();
+                                                        SalesWithoutTaxDuplicute += (orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                         Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
                                                     }
                                                 }else {
@@ -805,19 +815,19 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                                         orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
                                                         Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order1.getCartDiscount()/100));
-                                                        salesaftertaxDuplicute+=(orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)));
+                                                        salesaftertaxDuplicute+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))*rateCurrency);
                                                         Log.d("salesaftertax",salesaftertaxDuplicute+"ko22222");
-                                                        SalesWitheTaxDuplicute+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                                        SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                     }else {
                                                         orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                                        salesaftertaxDuplicute+=orderDetailsList.get(i).getPaidAmount();
+                                                        salesaftertaxDuplicute+=(orderDetailsList.get(i).getPaidAmount()*rateCurrency);
                                                         Log.d("salesaftertax",salesaftertaxDuplicute+"ko");
-                                                        SalesWitheTaxDuplicute+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                                        SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                     }
                                                 }
-                                            }
+                                        //    }
 
-                                              else   if (product.getCurrencyType()==1){
+                                            /*  else   if (product.getCurrencyType()==1){
                                                     if(product.isWithTax()){
                                                         if(order1.getCartDiscount()>0){
                                                             orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100))))));
@@ -900,19 +910,19 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                             SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.1002);
                                                         }
                                                     }
-                                                }
+                                                }*/
 
 
                                             }
                                             z.setCashTotal(z.getCashTotal()+sale.getTotalPrice());
                                             z.setInvoiceReceiptAmount(z.getInvoiceReceiptAmount()+sale.getTotalPrice());
-                                            z.setShekelAmount(z.getShekelAmount()+sale.getTotalPrice());
+                                            z.setFirstTypeAmount(z.getFirstTypeAmount()+sale.getTotalPrice());
                                             z.setSalesWithTax(Double.parseDouble(Util.makePrice(z.getSalesWithTax()+SalesWitheTaxDuplicute)));
                                             z.setSalesBeforeTax(Double.parseDouble(Util.makePrice(z.getSalesBeforeTax()+SalesWithoutTaxDuplicute)));
                                             z.setTotalTax(Double.parseDouble(Util.makePrice(z.getTotalTax()+(salesaftertaxDuplicute - SalesWitheTaxDuplicute))));
                                             zReportCount1.setCashCount(zReportCount1.getCashCount()+1);
                                             zReportCount1.setInvoiceReceiptCount(zReportCount1.getInvoiceReceiptCount()+1);
-                                            zReportCount1.setShekelCount(zReportCount1.getShekelCount()+1);
+                                            zReportCount1.setFirstTYpeCount(zReportCount1.getFirstTYpeCount()+1);
                                             zReportDBAdapter1.updateEntry(z);
                                             zReportCountDbAdapter1.updateEntry(zReportCount1);
                                             Activity a=getParent();
@@ -1055,7 +1065,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             if(payments.size()>0) {
                                 sale.setPayment(new Payment(payments.get(0)));
                             }
-                            long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId(),0,0);
+                            long sID = saleDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), sale.getReplacementNote(), true, sale.getTotalPrice() * -1, sale.getTotalPaidAmount() * -1, sale.getCustomerId(), sale.getCustomer_name(),sale.getCartDiscount(),sale.getNumberDiscount(),sale.getOrderId(),0,0,0);
                             Order order = saleDBAdapter.getOrderById(sID);
                             sale.setCancellingOrderId(sID);
                             saleDBAdapter.updateEntry(sale);
@@ -1078,7 +1088,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             if (checks.size() > 0)
                                 try {
                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(order,false,checks);
+                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(order,orderDetailsList,false,checks);
                                     startActivity(i);
                                 }catch (Exception e){
                                     Log.d("exception",order.toString());
@@ -1088,7 +1098,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             else
                                 try {
                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
-                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(order,false,null);
+                                    SETTINGS.copyInvoiceBitMap =invoiceImg.cancelingInvoice(order,orderDetailsList,false,null);
                                     startActivity(i);
                                 }catch (Exception e){
                                     Log.d("exception",order.toString());
@@ -1099,15 +1109,16 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             for (int i=0;i<orderDetailsList.size();i++){
                                 productDBAdapter.open();
                                 Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
-                                if (product.getCurrencyType()==0){
-                                if(product.isWithTax()){
+                               // if (product.getCurrencyType()==0){
+                                double rateCurrency=ConverterCurrency.getRateCurrency(product.getCurrencyType(),OrdersManagementActivity.this);
+                                if(!product.isWithTax()){
                                     if(order.getCartDiscount()>0){
                                         orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100))))));
-                                        SalesWithoutTaxCancle+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                        SalesWithoutTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                         Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
                                     }else {
                                         orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
-                                        SalesWithoutTaxCancle += orderDetailsList.get(i).getPaidAmountAfterTax();
+                                        SalesWithoutTaxCancle += (orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                         Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
                                     }
                                 }else {
@@ -1115,21 +1126,22 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                         orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
                                         Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order.getCartDiscount()/100));
-                                        salesaftertaxCancle+=(orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)));
+                                        salesaftertaxCancle+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))*rateCurrency);
                                         Log.d("salesaftertax",salesaftertaxCancle+"ko22222");
-                                        SalesWitheTaxCancle+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                        SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                     }else {
                                         orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                        salesaftertaxCancle+=orderDetailsList.get(i).getPaidAmount();
+                                        salesaftertaxCancle+=(orderDetailsList.get(i).getPaidAmount()*rateCurrency);
                                         Log.d("salesaftertax",salesaftertaxCancle+"ko");
-                                        SalesWitheTaxCancle+=orderDetailsList.get(i).getPaidAmountAfterTax();
+                                        SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                     }
-                                }}
+                                }
+                            //}
 
 
 
 
-                            else     if (product.getCurrencyType()==1){
+                      /*      else     if (product.getCurrencyType()==1){
                                     if(product.isWithTax()){
                                         if(order.getCartDiscount()>0){
                                             orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100))))));
@@ -1209,7 +1221,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             Log.d("salesaftertax",salesaftertaxCancle+"ko");
                                             SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.1002);
                                         }
-                                    }}
+                                    }}*/
 
 
                             }
@@ -1223,10 +1235,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                             zReport1.setCashTotal(zReport1.getCashTotal()-sale.getTotalPrice());
                             zReport1.setInvoiceReceiptAmount(zReport1.getInvoiceReceiptAmount()-sale.getTotalPrice());
-                            zReport1.setShekelAmount(zReport1.getShekelAmount()-sale.getTotalPrice());
+                            zReport1.setFirstTypeAmount(zReport1.getFirstTypeAmount()-sale.getTotalPrice());
                             zReportCount.setCashCount(zReportCount.getCashCount()-1);
                          //   zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
-                            zReportCount.setShekelCount(zReportCount.getShekelCount()-1);
+                            zReportCount.setFirstTYpeCount(zReportCount.getFirstTYpeCount()-1);
                             zReportDBAdapter.updateEntry(zReport1);
                             zReportCountDbAdapter.updateEntry(zReportCount);
                             //// TODO: 19/01/2017 cancel this sale and print return note and mony back by the payment way

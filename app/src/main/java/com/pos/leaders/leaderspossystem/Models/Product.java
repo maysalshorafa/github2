@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.sql.Timestamp;
@@ -19,7 +20,7 @@ public class Product {
     private String description;
     private double price;
     private double costPrice;
-    private boolean withTax;
+    private boolean withTax=true;
     private Timestamp createdAt;
     private boolean hide;
     private long categoryId;
@@ -36,7 +37,9 @@ public class Product {
     private boolean inStock;
     private ProductUnit unit;
     private double weight;
-    private int currencyType;
+
+    private String currencyType= SETTINGS.currencyCode;
+
     private int branchId;
     private long offerId=0;
     private double lastCostPriceInventory;
@@ -81,7 +84,7 @@ public class Product {
 
 
 
-    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPriceInventory,boolean withSerialNumber) {
+    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,String currencyType,int branchId,long offerId,double lastCostPriceInventory,boolean withSerialNumber) {
         this.productId = productId;
         this.productCode = productCode;
         this.barCode = barCode;
@@ -111,7 +114,7 @@ public class Product {
         this.withSerialNumber=withSerialNumber;
     }
 
-    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPriceInventory,boolean withSerialNumber) {
+    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,String currencyType,int branchId,long offerId,double lastCostPriceInventory,boolean withSerialNumber) {
 
         this.productId = productId;
         this.productCode =productCode;
@@ -217,7 +220,7 @@ public class Product {
         this.offerId = offerId;
     }
 
-    public int getCurrencyType() {
+    public String getCurrencyType() {
         return currencyType;
     }
     public int getBranchId() {
@@ -312,7 +315,7 @@ public class Product {
 
 
 
-    public void setCurrencyType(int currencyType) {
+    public void setCurrencyType(String currencyType) {
         this.currencyType = currencyType;
     }
     public void setBranchId(int branchId) {
@@ -416,6 +419,7 @@ public class Product {
         this.unit = unit;
     }
 
+
     @Override
     public String toString() {
         return "Product{" +
@@ -440,13 +444,14 @@ public class Product {
                 ", manageStock=" + manageStock +
                 ", inStock=" + inStock +
                 ", unit=" + unit +
+                ", weight=" + weight +
+                ", currencyType='" + currencyType + '\'' +
+                ", branchId=" + branchId +
+                ", offerId=" + offerId +
+                ", lastCostPriceInventory=" + lastCostPriceInventory +
+                ", withSerialNumber=" + withSerialNumber +
                 ", offersIDs=" + offersIDs +
-                        ", currencyType=" + currencyType +
-                ", branchId=" + branchId+
-
-                ", offerId=" + offerId+
-                        ", lastCostPriceInventory=" + lastCostPriceInventory +
-                        ", withSerialNumber=" + withSerialNumber +
+                ", groupsId=" + groupsId +
                 '}';
     }
 

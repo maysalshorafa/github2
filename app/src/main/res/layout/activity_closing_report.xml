@@ -50,35 +50,35 @@
                 android:textSize="25dp" />
 
             <TextView
+                android:id="@+id/firstType"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/shekel"
                 android:textSize="25dp" />
 
             <TextView
+                android:id="@+id/secondType"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/usd"
                 android:textSize="25dp" />
 
             <TextView
+                android:id="@+id/thirdType"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/eur"
                 android:textSize="25dp" />
 
             <TextView
+                android:id="@+id/fourthType"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/gbp"
                 android:textSize="25dp" />
 
         </LinearLayout>
@@ -119,7 +119,7 @@
                 android:inputType="numberSigned" />
 
             <EditText
-                android:id="@+id/actualShekelValue"
+                android:id="@+id/actualFirstTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -128,7 +128,7 @@
                 android:inputType="numberSigned" />
 
             <EditText
-                android:id="@+id/actualUsdValue"
+                android:id="@+id/actualSecondTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -137,7 +137,7 @@
                 android:inputType="numberSigned" />
 
             <EditText
-                android:id="@+id/actualEurValue"
+                android:id="@+id/actualTirdTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -146,7 +146,7 @@
                 android:inputType="numberSigned" />
 
             <EditText
-                android:id="@+id/actualGbpValue"
+                android:id="@+id/actualFourthTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -189,28 +189,28 @@
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/expectedShekelValue"
+                android:id="@+id/expectedFirstTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/expectedUsdValue"
+                android:id="@+id/expectedSecondTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/expectedEurValue"
+                android:id="@+id/expectedThirdTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/expectedGbpValue"
+                android:id="@+id/expectedFourthTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -250,28 +250,28 @@
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/differentShekelValue"
+                android:id="@+id/differentFirstTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/differentUsdValue"
+                android:id="@+id/differentSecondTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/differentEurValue"
+                android:id="@+id/differentThirdTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/differentGbpValue"
+                android:id="@+id/differentFourthTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

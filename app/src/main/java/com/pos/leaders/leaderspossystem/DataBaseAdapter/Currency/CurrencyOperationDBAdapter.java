@@ -127,6 +127,7 @@ public class CurrencyOperationDBAdapter {
         }
     }
     public long insertEntryDuplicate(CurrencyOperation currency) {
+        Log.d("currencyDublicate",currency.toString());
         if (db.isOpen()){
 
         }
@@ -146,12 +147,15 @@ public class CurrencyOperationDBAdapter {
         val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperationId());
         val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperationType());
         val.put(CurrencyOperationCOLUMN_AMOUNT, currency.getAmount());
-        val.put(CurrencyOperation_COLUMN_Currency_Type, currency.getCurrencyType());
-        val.put(CurrencyOperation_COLUMN_PAYMENT_WAY, currency.getPaymentWay());
+        val.put(CurrencyOperation_COLUMN_PAYMENT_WAY,currency.getCurrencyType() );
+        val.put(CurrencyOperation_COLUMN_Currency_Type, currency.getPaymentWay());
+
 
         try {
             sendToBroker(MessageType.ADD_CURRENCY_OPERATION, currency, this.context);
+            Log.d("valDublicate",val.toString());
             return db.insert(CurrencyOperation_TABLE_NAME, null, val);
+
         } catch (SQLException ex) {
             Log.e(CurrencyOperation_TABLE_NAME, "inserting Entry at " + CurrencyOperation_TABLE_NAME + ": " + ex.getMessage());
             return -1;
@@ -183,6 +187,7 @@ public class CurrencyOperationDBAdapter {
         } catch (Exception e) {
 Log.d("exception",e.toString());
         }
+        Log.d("currencyOpPdf",saleReturns.toString());
         return saleReturns;
     }
 

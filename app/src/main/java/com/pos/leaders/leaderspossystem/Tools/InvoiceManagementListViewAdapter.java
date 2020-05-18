@@ -159,9 +159,9 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
             }
         });
         try {
-            holder.tvTotalAmount.setText(invoicesList.get(position).getDocumentsData().getDouble("total")+getContext().getString(R.string.ins));
+            holder.tvTotalAmount.setText(invoicesList.get(position).getDocumentsData().getDouble("total")+SETTINGS.currencySymbol);
             holder.tvID.setText(invoiceNumbers.get(position)+"");
-            holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("totalPaid")+getContext().getString(R.string.ins));
+            holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("totalPaid")+SETTINGS.currencySymbol);
         } catch (JSONException e) {
             e.printStackTrace();
         }

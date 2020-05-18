@@ -27,6 +27,7 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.SaleDetailsListViewAdapter;
 
 import java.sql.Timestamp;
@@ -349,7 +350,7 @@ public class MainScreenActivity extends Activity {
 												cashDialog.cancel();
 											}
 											else{
-												Toast.makeText(MainScreenActivity.this, "not enough cash :It subtracts "+(-1*(pid-tot))+" "+getApplicationContext().getString(R.string.ins)+
+												Toast.makeText(MainScreenActivity.this, "not enough cash :It subtracts "+(-1*(pid-tot))+" "+ SETTINGS.currencySymbol+
 														" to complete the transaction.", Toast.LENGTH_LONG).show();
 											}
 										}
@@ -494,7 +495,7 @@ public class MainScreenActivity extends Activity {
 			saleTotalPrice += o.getItemTotalPrice();
 		}
 		SESSION._ORDERS.setTotalPrice(saleTotalPrice);
-		tvTotalPrice.setText(saleTotalPrice + " " + getString(R.string.ins));
+		tvTotalPrice.setText(saleTotalPrice + " " +SETTINGS.currencySymbol);
 	}
 
 	/**

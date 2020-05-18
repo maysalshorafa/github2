@@ -71,14 +71,16 @@ public class ProductsActivity  extends AppCompatActivity  {
     private Product editableProduct , lastProduct;
     long check;
     long depID;
-    boolean withTax=true , manageStock ,withSerialNo= false;
+
+    /////Defualt new product withTax and manageStock
+    boolean withTax=true , manageStock=true ,withSerialNo= false;
     ProductUnit unit ;
     LinearLayout llWeight;
     String currencyType="";
     List<Currency> currenciesList;
     private List<CurrencyType> currencyTypesList = null;
     private List<String> currenciesNames = null;
-    int branchId=0;
+    int branchId=0,positionItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +117,8 @@ public class ProductsActivity  extends AppCompatActivity  {
         swWithSerialNo=(Switch)findViewById(R.id.SWWithSerialNo);
         productUnitSp = (Spinner)findViewById(R.id.SpProductUnit);
         SpProductCurrency = (Spinner)findViewById(R.id.SpProductCurrency);
+        if (!SETTINGS.enableCurrencies){
+            SpProductCurrency.setEnabled(false);}
         llWeight = (LinearLayout)findViewById(R.id.llWeight);
         etProductWeight = (EditText)findViewById(R.id.ETWeight);
         SpProductBranch = (Spinner)findViewById(R.id.SpBranchId);
@@ -156,13 +160,21 @@ public class ProductsActivity  extends AppCompatActivity  {
             currenciesNames.add(currencyTypesList.get(i).getType());
         }
 
+
+        for (int i=0;i<currenciesNames.size();i++){
+            if (currenciesNames.get(i).equals(SETTINGS.currencyCode))
+                positionItem=i;
+        }
+
         // Creating adapter for spinner
         final ArrayAdapter<String> dataAdapterCurrency = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currenciesNames);
-
         // Drop down layout style - list view with radio button
         // attaching data adapter to spinner
         dataAdapterCurrency.setDropDownViewResource(R.layout.simple_spinner_dropdown);
         SpProductCurrency.setAdapter(dataAdapterCurrency);
+        SpProductCurrency.setSelection(positionItem);
+
+
         //region Add product button
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,11 +264,20 @@ public class ProductsActivity  extends AppCompatActivity  {
 
         swManageStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                manageStock = b;
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    manageStock=false;
+                    Log.d("manageStock",manageStock+"");
+                }
+                else {
+                    manageStock=true;
+                    Log.d("manageStock",manageStock+"");
+                }
+
+
             }
         });
-
+        Log.d("manageStockdefult",manageStock+"");
         productUnitSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -322,7 +343,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                     }
                     for (int i = 0; i < currencyTypesList.size(); i++) {
                         CurrencyType currencyType1 = currencyTypesList.get(i);
-                        if (currencyType1.getCurrencyTypeId() == editableProduct.getCurrencyType()) {
+                        if (currencyType1.getType() == editableProduct.getCurrencyType()) {
                             SpProductCurrency.setSelection(i);
 
                         }
@@ -401,10 +422,10 @@ public class ProductsActivity  extends AppCompatActivity  {
 
         if (editableProduct == null) {
             String currency = SpProductCurrency.getSelectedItem().toString();
-            int currencyId=0;
+            String currencyId=null;
             for(int i=0; i<currencyTypesList.size();i++) {
                 if (currencyTypesList.get(i).getType() == currency) {
-                    currencyId = (int) currencyTypesList.get(i).getCurrencyTypeId();
+                    currencyId = currencyTypesList.get(i).getType();
                 }
             }
             if(SpProductBranch.getSelectedItem().toString().equals(getString(R.string.all))){
@@ -499,10 +520,10 @@ public class ProductsActivity  extends AppCompatActivity  {
         } else {
 
             String currency = SpProductCurrency.getSelectedItem().toString();
-            int currencyId=0;
+            String currencyId=null;
             for(int i=0; i<currencyTypesList.size();i++){
                 if(currencyTypesList.get(i).getType()==currency){
-                    currencyId= (int) currencyTypesList.get(i).getCurrencyTypeId();
+                    currencyId=  currencyTypesList.get(i).getType();
                 }
             }
 

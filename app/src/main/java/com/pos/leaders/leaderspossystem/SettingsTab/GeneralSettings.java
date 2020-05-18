@@ -20,6 +20,7 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SettingActivity;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -48,6 +49,8 @@ public class GeneralSettings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context=getContext();
+        ThisApp.setCurrentActivity(getActivity());
+
         View v= inflater.inflate(R.layout.general_setting_fragment, container, false);
         etCompanyName = (TextView) v.findViewById(R.id.settings_etCompanyName);
         etCompanyName.setEnabled(false);

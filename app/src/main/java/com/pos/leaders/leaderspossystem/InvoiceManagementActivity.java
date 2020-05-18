@@ -32,6 +32,7 @@ import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -72,6 +73,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         TitleBar.setTitleBar(this);
         Log.d("token",SESSION.token+"");
         context=this;
+        ThisApp.setCurrentActivity(this);
         Bundle bundle = getIntent().getExtras();
 
         invoiceListView = (ListView)findViewById(R.id.invoiceManagement_LVInvoice);

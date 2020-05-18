@@ -692,10 +692,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                                 depositAndPullReportDetailsDbAdapter.insertEntry(pullReportId, forthCurrencyInDefaultValue, forthCurrency.getName());
                                             }
                                             z.setPullReportAmount(z.getPullReportAmount()-pullReport.getAmount());
-                                            z.setShekelAmount(z.getShekelAmount()-firstCurrencyInDefaultValue);
-                                            z.setUsdAmount(z.getUsdAmount()-secondCurrencyInDefaultValue);
-                                            z.setGbpAmount(z.getGbpAmount()-thirdCurrencyInDefaultValue);
-                                            z.setEurAmount(z.getEurAmount()-forthCurrencyInDefaultValue);
+                                            z.setFirstTypeAmount(z.getFirstTypeAmount()-firstCurrencyInDefaultValue);
+                                            z.setSecondTypeAmount(z.getSecondTypeAmount()-secondCurrencyInDefaultValue);
+                                            z.setThirdTypeAmount(z.getThirdTypeAmount()-thirdCurrencyInDefaultValue);
+                                            z.setFourthTypeAmount(z.getFourthTypeAmount()-forthCurrencyInDefaultValue);
                                             zreportDbAdapter.updateEntry(z);
 
                                             pullReportDialog.cancel();
@@ -1025,10 +1025,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             pullReportDBAdapter.close();
                                             depositAndPullReportDetailsDbAdapter.close();
                                             z.setDepositReportAmount(z.getDepositReportAmount()+pullReport.getAmount());
-                                            z.setShekelAmount(z.getShekelAmount()+firstCurrencyInDefaultValue);
-                                            z.setUsdAmount(z.getUsdAmount()+secondCurrencyInDefaultValue);
-                                            z.setGbpAmount(z.getGbpAmount()+thirdCurrencyInDefaultValue);
-                                            z.setEurAmount(z.getEurAmount()+forthCurrencyInDefaultValue);
+                                            z.setFirstTypeAmount(z.getFirstTypeAmount()+firstCurrencyInDefaultValue);
+                                            z.setSecondTypeAmount(z.getSecondTypeAmount()+secondCurrencyInDefaultValue);
+                                            z.setThirdTypeAmount(z.getThirdTypeAmount()+thirdCurrencyInDefaultValue);
+                                            z.setFourthTypeAmount(z.getFourthTypeAmount()+forthCurrencyInDefaultValue);
                                             zreportDbAdapter.updateEntry(z);
                                             final ArrayList<String> hintForCurrencyType = new ArrayList<String>();
                                             final ArrayList<Double> hintForCurrencyAmount = new ArrayList<Double>();

@@ -16,11 +16,14 @@ public class PosSetting {
     private String posDbVersionNo;
     private int branchId;
     private  String companyStatus;
+    private String currencyCode;
+    private String currencySymbol;
+    private String country;
 
     public PosSetting() {
     }
 
-    public PosSetting(long posSettingId, boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId) {
+    public PosSetting(long posSettingId, boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String currencyCode,String currencySymbol,String country) {
         this.posSettingId = posSettingId;
         this.enableCurrency = enableCurrency;
         this.enableCreditCard = enableCreditCard;
@@ -32,6 +35,9 @@ public class PosSetting {
         this.posVersionNo = posVersionNo;
         this.posDbVersionNo = posDbVersionNo;
         this.branchId = branchId;
+        this.currencyCode=currencyCode;
+        this.currencySymbol=currencySymbol;
+        this.country=country;
     }
     public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId) {
         this.enableCurrency = enableCurrency;
@@ -134,6 +140,30 @@ public class PosSetting {
         this.companyStatus = companyStatus;
     }
 
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public String getCurrencySymbol() {
+        return currencySymbol;
+    }
+
+    public void setCurrencySymbol(String currencySymbol) {
+        this.currencySymbol = currencySymbol;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     @Override
     public String toString() {
         return "PosSetting{" +
@@ -148,7 +178,9 @@ public class PosSetting {
                 ", posDbVersionNo='" + posDbVersionNo + '\'' +
                 ", branchId=" + branchId +
                 ", companyStatus='" + companyStatus + '\'' +
+                ", currencyCode='" + currencyCode + '\'' +
+                ", currencySymbol='" + currencySymbol + '\'' +
+                ", country='" + country + '\'' +
                 '}';
     }
-
 }

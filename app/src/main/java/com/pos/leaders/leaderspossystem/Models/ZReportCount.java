@@ -12,26 +12,26 @@ public class ZReportCount {
     private  int creditCount;
     private int invoiceCount;
     private int creditInvoiceCount;
-    private int shekelCount;
-    private int usdCount;
-    private int eurCount;
-    private int gbpCount;
+    private int firstTYpeCount;
+    private int secondTypeCount;
+    private int thirdTypeCount;
+    private int fourthTypeCount;
     private int invoiceReceiptCount;
 
     public ZReportCount() {
     }
 
-    public ZReportCount(long zReportCountId, int cashCount, int checkCount, int creditCount, int invoiceCount, int creditInvoiceCount, int shekelCount, int usdCount, int eurCount, int gbpCount, int invoiceReceiptCount,long zReportCountZReportId) {
+    public ZReportCount(long zReportCountId, int cashCount, int checkCount, int creditCount, int invoiceCount, int creditInvoiceCount, int firstTYpeCount, int secondTypeCount, int thirdTypeCount, int fourthTypeCount, int invoiceReceiptCount,long zReportCountZReportId) {
         this.zReportCountId = zReportCountId;
         this.cashCount = cashCount;
         this.checkCount = checkCount;
         this.creditCount = creditCount;
         this.invoiceCount = invoiceCount;
         this.creditInvoiceCount = creditInvoiceCount;
-        this.shekelCount = shekelCount;
-        this.usdCount = usdCount;
-        this.eurCount = eurCount;
-        this.gbpCount = gbpCount;
+        this.firstTYpeCount = firstTYpeCount;
+        this.secondTypeCount = secondTypeCount;
+        this.thirdTypeCount = thirdTypeCount;
+        this.fourthTypeCount = fourthTypeCount;
         this.invoiceReceiptCount = invoiceReceiptCount;
         this.zReportCountZReportId=zReportCountZReportId;
     }
@@ -92,36 +92,36 @@ public class ZReportCount {
         this.creditInvoiceCount = creditInvoiceCount;
     }
 
-    public int getShekelCount() {
-        return shekelCount;
+    public int getFirstTYpeCount() {
+        return firstTYpeCount;
     }
 
-    public void setShekelCount(int shekelCount) {
-        this.shekelCount = shekelCount;
+    public void setFirstTYpeCount(int firstTYpeCount) {
+        this.firstTYpeCount = firstTYpeCount;
     }
 
-    public int getUsdCount() {
-        return usdCount;
+    public int getSecondTypeCount() {
+        return secondTypeCount;
     }
 
-    public void setUsdCount(int usdCount) {
-        this.usdCount = usdCount;
+    public void setSecondTypeCount(int secondTypeCount) {
+        this.secondTypeCount = secondTypeCount;
     }
 
-    public int getEurCount() {
-        return eurCount;
+    public int getThirdTypeCount() {
+        return thirdTypeCount;
     }
 
-    public void setEurCount(int eurCount) {
-        this.eurCount = eurCount;
+    public void setThirdTypeCount(int thirdTypeCount) {
+        this.thirdTypeCount = thirdTypeCount;
     }
 
-    public int getGbpCount() {
-        return gbpCount;
+    public int getFourthTypeCount() {
+        return fourthTypeCount;
     }
 
-    public void setGbpCount(int gbpCount) {
-        this.gbpCount = gbpCount;
+    public void setFourthTypeCount(int fourthTypeCount) {
+        this.fourthTypeCount = fourthTypeCount;
     }
 
     public int getInvoiceReceiptCount() {
@@ -142,10 +142,10 @@ public class ZReportCount {
                 ", creditCount=" + creditCount +
                 ", invoiceCount=" + invoiceCount +
                 ", creditInvoiceCount=" + creditInvoiceCount +
-                ", shekelCount=" + shekelCount +
-                ", usdCount=" + usdCount +
-                ", eurCount=" + eurCount +
-                ", gbpCount=" + gbpCount +
+                ", firstTYpeCount=" + firstTYpeCount +
+                ", secondTypeCount=" + secondTypeCount +
+                ", thirdTypeCount=" + thirdTypeCount +
+                ", fourthTypeCount=" + fourthTypeCount +
                 ", invoiceReceiptCount=" + invoiceReceiptCount +
                 '}';
     }

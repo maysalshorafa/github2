@@ -77,7 +77,7 @@ public class ProductDBAdapter {
             "`" + PRODUCTS_COLUMN_BYUSER + "` INTEGER NOT NULL, `" + PRODUCTS_COLUMN_STATUS + "` TEXT NOT NULL DEFAULT 'PUBLISHED' , " +
             "`" + PRODUCTS_COLUMN_with_pos + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_with_point_system + "` INTEGER NOT NULL DEFAULT 1 ,`"+
             PRODUCTS_COLUMN_UNIT + "` TEXT NOT NULL DEFAULT 'quantity' , `"+ PRODUCTS_COLUMN_CURRENCY_TYPE
-            + "` INTEGER NOT NULL DEFAULT 0, '"+PRODUCTS_COLUMN_BRANCH_ID+"' INTEGER NOT NULL DEFAULT 0 , '" +
+            + "` TEXT NOT NULL, '"+PRODUCTS_COLUMN_BRANCH_ID+"' INTEGER NOT NULL DEFAULT 0 , '" +
             PRODUCTS_COLUMN_WEIGHT+"' REAL DEFAULT 0.0, '" +PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY+"' REAL DEFAULT 0.0, '"
             + PRODUCTS_COLUMN_WITH_SERIAL_NUMBER + "' INTEGER NOT NULL DEFAULT 1 , `" +PRODUCTS_COLUMN_OFFER_ID +"` INTEGER NOT NULL DEFAULT 0 )";
 
@@ -115,7 +115,7 @@ public class ProductDBAdapter {
     public long insertEntry(String name, String barCode, String description, double price, double costPrice,
                             boolean withTax, long categoryId, long byUser , int pos, int point_system,
 
-                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,int currencyType,int branchId,long offerId,double lastCostPrice,boolean withSerialNumber) {
+                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,String currencyType,int branchId,long offerId,double lastCostPrice,boolean withSerialNumber) {
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price,
                 costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType,branchId,offerId,lastCostPrice,withSerialNumber);
 
@@ -748,7 +748,7 @@ public class ProductDBAdapter {
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_MANAGE_STOCK))),
 
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_IN_STOCK))), ProductUnit.valueOf(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_UNIT)).toUpperCase()),Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_WEIGHT))),
-                Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BRANCH_ID))),
+                cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BRANCH_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_OFFER_ID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY))),
                 withSerialNoValue);

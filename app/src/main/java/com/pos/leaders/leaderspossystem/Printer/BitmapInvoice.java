@@ -9,10 +9,13 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
@@ -24,7 +27,9 @@ import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
@@ -53,7 +58,8 @@ import static com.pos.leaders.leaderspossystem.Tools.Util.paymentList;
  */
 
 public class BitmapInvoice {
-    static  int invoiceReceiptCount=0 ,invoiceCount=0 , CreditInvoiceCount=0 , ShekelCount=0 ,UsdCount=0 , EurCount=0,GbpCount=0 ,checkCount=0 , creditCardCount=0 ,receiptInvoiceAmountCheck=0 , cashCount=0,receiptInvoiceAmount=0;
+    static  int invoiceReceiptCount=0 ,invoiceCount=0 , CreditInvoiceCount=0 ,
+            firstTypeCount=0 ,secondTypeCount=0 , thirdTypeCount=0,fourthTypeCount=0 ,checkCount=0 , creditCardCount=0 ,receiptInvoiceAmountCheck=0 , cashCount=0,receiptInvoiceAmount=0;
     static  double cashAmount=0;
    static List<List<Check>> checkList = new ArrayList<>();
     static List<OpiningReport> opiningReportList=new ArrayList<>();
@@ -317,6 +323,11 @@ public class BitmapInvoice {
     }
 
     public static Bitmap zPrint(Context context, ZReport zReport ,  boolean isCopy) {
+        List<CurrencyType> currencyTypesList = null;
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(context);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
         int layOutHight=0;
         int layOutCurrencyHight=0;
 
@@ -387,13 +398,13 @@ public class BitmapInvoice {
             String currencyType="" , currencyAmount="";
             currencyType +="\u200F"+ "ILS"+"\n"+"\u200F"+ "USD" +"\n" + "\u200F"+"GBP" + "\n" + "\u200F"+"EUR";
             currencyAmount+="\u200F"+ aReportDetailsForFirstCurrency+"\n"+"\u200F"+ aReportDetailsForSecondCurrency +"\n" + "\u200F"+aReportDetailsForThirdCurrency + "\n" + "\u200F"+aReportDetailsForForthCurrency;
-            StaticLayout firstCurrencyLayOut =new StaticLayout("\u200F"+"ILS" +  "\t\t\t\t\t"+aReportDetailsForFirstCurrency  , opiningReportStyle,
+            StaticLayout firstCurrencyLayOut =new StaticLayout("\u200F"+currencyTypesList.get(0).getType()+  "\t\t\t\t\t"+aReportDetailsForFirstCurrency  , opiningReportStyle,
                      PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
-            StaticLayout secondCurrencyLayOut =new StaticLayout("\u200F"+"USD" +  "\t\t\t\t\t"+aReportDetailsForSecondCurrency  , opiningReportStyle,
+            StaticLayout secondCurrencyLayOut =new StaticLayout("\u200F"+currencyTypesList.get(1).getType() +  "\t\t\t\t\t"+aReportDetailsForSecondCurrency  , opiningReportStyle,
                     PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
-            StaticLayout thirdCurrencyLayOut =new StaticLayout("\u200F"+"GBP" +  "\t\t\t\t\t"+aReportDetailsForThirdCurrency  , opiningReportStyle,
+            StaticLayout thirdCurrencyLayOut =new StaticLayout("\u200F"+currencyTypesList.get(2).getType()+  "\t\t\t\t\t"+aReportDetailsForThirdCurrency  , opiningReportStyle,
                     PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
-            StaticLayout fourthCurrencyLayOut =new StaticLayout("\u200F"+"EUR" +  "\t\t\t\t\t"+aReportDetailsForForthCurrency  , opiningReportStyle,
+            StaticLayout fourthCurrencyLayOut =new StaticLayout("\u200F"+currencyTypesList.get(3).getType() +  "\t\t\t\t\t"+aReportDetailsForForthCurrency  , opiningReportStyle,
                     PAGE_WIDTH , Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
            currencyDetailsLayOut.add(firstCurrencyLayOut);
             currencyDetailsLayOut.add(secondCurrencyLayOut);
@@ -472,16 +483,18 @@ public class BitmapInvoice {
 
         String cIn = "", cOut = "", cTotal = "";
         if(SETTINGS.enableCurrencies) {
-            names = "\u200F"+ context.getString(R.string._cash)+"\n"+"\u200F"+context.getString(R.string.shekel) + "\n"+"\u200F"+ context.getString(R.string.usd) + "\n" +"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
-            cIn =cashCount+"\n"+ ShekelCount + "\n" + UsdCount + "\n" +EurCount + "\n" + GbpCount + "\n" + checkCount+ "\n" +creditCardCount+ "\n" + "~";
+            names = "\u200F"+ context.getString(R.string._cash)+"\n"+"\u200F"+currencyTypesList.get(0).getType() + "\n"+"\u200F"+
+                    currencyTypesList.get(1).getType()+ "\n" +"\u200F"+ currencyTypesList.get(2).getType() + "\n" +"\u200F"+
+                    currencyTypesList.get(3).getType()+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            cIn =cashCount+"\n"+ firstTypeCount + "\n" + secondTypeCount + "\n" +thirdTypeCount + "\n" + fourthTypeCount + "\n" + checkCount+ "\n" +creditCardCount+ "\n" + "~";
             cOut =  " " + "\n"+ " " + "\n" +  " " + "\n" +  " " + "\n" +  " "+ "\n" + " " + "\n"+ " " + "\n" +  " ";
-            cTotal = "\n" + Util.makePrice(cashAmount) +"\n" + Util.makePrice(zReport.getShekelAmount()) + "\n" + Util.makePrice(zReport.getUsdAmount()) + "\n" + Util.makePrice(zReport.getEurAmount()) + "\n" + Util.makePrice(zReport.getGbpAmount())
+            cTotal = "\n" + Util.makePrice(cashAmount) +"\n" + Util.makePrice(zReport.getFirstTypeAmount()) + "\n" + Util.makePrice(zReport.getSecondTypeAmount()) + "\n" + Util.makePrice(zReport.getThirdTypeAmount()) + "\n" + Util.makePrice(zReport.getFourthTypeAmount())
                     + "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
         }else {
-            names = "\u200F"+context.getString(R.string._cash)+"\n"+"\u200F"+context.getString(R.string.shekel)+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
-            cIn =cashCount+"\n"+ ShekelCount + "\n" + checkCount+"\n" + creditCardCount + "\n" + "~";
+            names = "\u200F"+context.getString(R.string._cash)+"\n"+"\u200F"+currencyTypesList.get(0).getType()+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            cIn =cashCount+"\n"+ firstTypeCount + "\n" + checkCount+"\n" + creditCardCount + "\n" + "~";
             cOut =  "\n"+  " "+ " " + "\n"+  " " + "\n" + " " + "\n" +  " ";
-            cTotal = "\n" + Util.makePrice(cashAmount)+"\n" + Util.makePrice(zReport.getShekelAmount())+ "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
+            cTotal = "\n" + Util.makePrice(cashAmount)+"\n" + Util.makePrice(zReport.getFirstTypeAmount())+ "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
         }
         StaticLayout cSlNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
@@ -600,6 +613,24 @@ public class BitmapInvoice {
     }
 
     public static void getCountForZReport(Context context, ZReport z) {
+        List<CurrencyType> currencyTypesList = null;
+        List<Currency> currencyList=new ArrayList<>();
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(context);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        Log.d("currencyTypesListooo",currencyTypesList.toString());
+
+        for (int i=0;i<currencyTypesList.size();i++){
+            CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(context);
+            currencyDBAdapter.open();
+            currencyList.add(currencyDBAdapter.getCurrencyByCode(currencyTypesList.get(i).getType()));
+            currencyDBAdapter.close();
+        }
+        Log.d("currencyKdd",currencyList.toString());
+        Log.d("hyyg",currencyList.get(0).getId()+"");
+
+        currencyTypeDBAdapter.close();
+
         aReportAmount=0;
         opiningReportList=new ArrayList<>();
          aReportDetailsForFirstCurrency=0;
@@ -619,16 +650,25 @@ public class BitmapInvoice {
             for (int a=0 ;a<opiningReportList.size();a++) {
                 //aReportAmount+=opiningReportList.get(a).getAmount();
                 OpiningReport opiningReport = opiningReportList.get(a);
-                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
-                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
-                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
-                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
+                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(1).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(2).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(3).getId(), opiningReport.getOpiningReportId());
             }
 
         }
+        /*else {
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
+            for (int a=0 ;a<opiningReportList.size();a++) {
+                OpiningReport opiningReport = opiningReportList.get(a);
+                aReportDetailsForFirstCurrency += aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+            }
+        }*/
         checkList=new ArrayList<>();
         cashAmount=0;
-        invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
+        invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; firstTypeCount=0 ;secondTypeCount=0 ;thirdTypeCount=0;
+        fourthTypeCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
         OrderDBAdapter orderDb = new OrderDBAdapter(context);
         orderDb.open();
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
@@ -712,9 +752,14 @@ public class BitmapInvoice {
         }
         //with Currency
         if (SETTINGS.enableCurrencies) {
+            List<CurrencyType> currencyTypesList1 = null;
+            CurrencyTypeDBAdapter currencyTypeDBAdapter1 = new CurrencyTypeDBAdapter(context);
+            currencyTypeDBAdapter1.open();
+            currencyTypesList1 = currencyTypeDBAdapter1.getAllCurrencyType();
+            currencyTypeDBAdapter1.close();
             List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
             for (CurrencyOperation cp : currencyOperationList) {
-                switch (cp.getCurrencyType()) {
+              /*  switch (cp.getCurrencyType()) {
                     case "ILS":
                         ShekelCount+=1;
                         break;
@@ -728,6 +773,21 @@ public class BitmapInvoice {
                     case "GBP":
                         GbpCount+=1;
                         break;
+                }*/
+
+
+                if (cp.getCurrencyType().equals(currencyTypesList1.get(0).getType())){
+
+                    firstTypeCount+=1;
+                }
+                else   if (cp.getCurrencyType().equals(currencyTypesList1.get(1).getType())){
+                    secondTypeCount+=1;
+                }
+                else   if (cp.getCurrencyType().equals(currencyTypesList1.get(2).getType())){
+                    thirdTypeCount+=1;
+                }
+                else if (cp.getCurrencyType().equals(currencyTypesList1.get(3).getType())){
+                    fourthTypeCount+=1;
                 }
             }
 
@@ -751,12 +811,17 @@ public class BitmapInvoice {
             receiptInvoiceAmount+=posReceiptList.size();
 
         }
-        ShekelCount+=receiptInvoiceAmount;
+        firstTypeCount+=receiptInvoiceAmount;
         checkCount+=receiptInvoiceAmountCheck;
 
     }
 
     public static Bitmap xPrint(Context context, XReport xReport , boolean isCopy) {
+        List<CurrencyType> currencyTypesList = null;
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(context);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
         XReportDBAdapter xReportDBAdapter =new XReportDBAdapter(context);
         xReportDBAdapter.open();
         EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
@@ -870,16 +935,18 @@ public class BitmapInvoice {
 
         String cIn = "", cOut = "", cTotal = "";
         if(SETTINGS.enableCurrencies) {
-            names = "\u200F"+context.getString(R.string.shekel) + "\n"+"\u200F"+ context.getString(R.string.usd) + "\n" +"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            names = "\u200F"+currencyTypesList.get(0).getType() + "\n"+"\u200F"+ currencyTypesList.get(1).getType()
+                    + "\n" +"\u200F"+ currencyTypesList.get(2).getType() + "\n" +"\u200F"+
+                    currencyTypesList.get(3).getType() +  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
             cIn = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~"+ "\n" + "~";
             cOut = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n"+ "~" + "\n" + "~";
-            cTotal = "\n" + Util.makePrice(xReport.getShekelAmount()) + "\n" + Util.makePrice(xReport.getUsdAmount()) + "\n" + Util.makePrice(xReport.getEurAmount()) + "\n" + Util.makePrice(xReport.getGbpAmount())
+            cTotal = "\n" + Util.makePrice(xReport.getFirstTypeAmount()) + "\n" + Util.makePrice(xReport.getSecondTypeAmount()) + "\n" + Util.makePrice(xReport.getThirdTypeAmount()) + "\n" + Util.makePrice(xReport.getFourthTypeAmount())
                     + "\n" + Util.makePrice(xReport.getCheckTotal()) + "\n" + Util.makePrice(xReport.getCreditTotal()) + "\n" + Util.makePrice(xReport.getTotalAmount());
         }else {
-            names = "\u200F"+context.getString(R.string.shekel)+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+            names = "\u200F"+currencyTypesList.get(0).getType() + "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
             cIn = "~" + "\n" + "~"+"\n" + "~" + "\n" + "~";
             cOut = "~" + "\n"+ "~" + "\n" +"~" + "\n" + "~";
-            cTotal = "\n" + Util.makePrice(xReport.getShekelAmount())+ "\n" + Util.makePrice(xReport.getCheckTotal()) + "\n" + Util.makePrice(xReport.getCreditTotal()) + "\n" + Util.makePrice(xReport.getTotalAmount());
+            cTotal = "\n" + Util.makePrice(xReport.getFirstTypeAmount())+ "\n" + Util.makePrice(xReport.getCheckTotal()) + "\n" + Util.makePrice(xReport.getCreditTotal()) + "\n" + Util.makePrice(xReport.getTotalAmount());
         }
         StaticLayout cSlNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
@@ -1058,6 +1125,11 @@ public class BitmapInvoice {
         return null;//invoiceImg.make();
     }
     public static Bitmap monthZPrint(Context context, ZReport zReport ,  boolean isCopy ,Date from , Date to) {
+        List<CurrencyType> currencyTypesList = null;
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(context);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         EmployeeDBAdapter employeeDBAdapter = new EmployeeDBAdapter(context);
@@ -1161,16 +1233,17 @@ public class BitmapInvoice {
 
         String cIn = "", cOut = "", cTotal = "";
             if(SETTINGS.enableCurrencies) {
-                names = "\u200F"+context.getString(R.string.shekel) + "\n"+"\u200F"+ context.getString(R.string.usd) + "\n" +"\u200F"+ context.getString(R.string.eur) + "\n" +"\u200F"+ context.getString(R.string.gbp)+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+                names = "\u200F"+currencyTypesList.get(0).getType() + "\n"+"\u200F"+ currencyTypesList.get(1).getType()+ "\n" +"\u200F"+
+                        currencyTypesList.get(2).getType() + "\n" +"\u200F"+ currencyTypesList.get(3).getType()+  "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
                 cIn = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~"+ "\n" + "~";
                 cOut = "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n" + "~" + "\n"+ "~" + "\n" + "~";
-                cTotal = "\n" + Util.makePrice(zReport.getShekelAmount()) + "\n" + Util.makePrice(zReport.getUsdAmount()) + "\n" + Util.makePrice(zReport.getEurAmount()) + "\n" + Util.makePrice(zReport.getGbpAmount())
+                cTotal = "\n" + Util.makePrice(zReport.getFirstTypeAmount()) + "\n" + Util.makePrice(zReport.getSecondTypeAmount()) + "\n" + Util.makePrice(zReport.getThirdTypeAmount()) + "\n" + Util.makePrice(zReport.getFourthTypeAmount())
                         + "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
             }else {
-                names = "\u200F"+context.getString(R.string.shekel)+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
+                names = "\u200F"+currencyTypesList.get(0).getType()+ "\n" +"\u200F"+ context.getString(R.string.checks)+ "\n" +"\u200F"+ context.getString(R.string.credit_card)+"\n" + "\u200F"+context.getString(R.string.total_with_a_report_amount);
                 cIn = "~" + "\n" + "~"+"\n" + "~" + "\n" + "~";
                 cOut = "~" + "\n"+ "~" + "\n" +"~" + "\n" + "~";
-                cTotal = "\n" + Util.makePrice(zReport.getShekelAmount())+ "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
+                cTotal = "\n" + Util.makePrice(zReport.getFirstTypeAmount())+ "\n" + Util.makePrice(zReport.getCheckTotal()) + "\n" + Util.makePrice(zReport.getCreditTotal()) + "\n" + Util.makePrice(zReport.getTotalAmount());
             }
         StaticLayout cSlNames = new StaticLayout(names, orderTP,
                 (int) (PAGE_WIDTH * 0.30), Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);

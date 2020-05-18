@@ -531,7 +531,25 @@
         <item>WINTEC_BUILDIN</item>
 
     </string-array>
+    <string-array name="currency_code_list_preference">
+        <item>USD</item>
+        <item>GBP</item>
+        <item>JPY</item>
+        <item>EUR</item>
+        <item>AUD</item>
 
+        <item>CAD</item>
+        <item>DKK</item>
+        <item>NOK</item>
+        <item>SEK</item>
+        <item>CHF</item>
+
+        <item>JOD</item>
+        <item>ZAR</item>
+        <item>LBP</item>
+        <item>EGP</item>
+
+    </string-array>
 
     <string-array name="Company_status_list_preference">
         <item>BO_COMPANY</item>
@@ -559,7 +577,7 @@
     <string name="printer_connect_error">الرجاء فحص توصيلات الطابعة ونوعها.</string>
     <string name="a_report">A تقرير</string>
     <string name="display_name">اسم العرض</string>
-    <string name="manage_stock">ادارة المخزون</string>
+    <string name="manage_stock"> عدم ادارة المخزون</string>
     <string name="stock_quantity">كمية المخزون</string>
     <string name="insert_product_dispaly_name">الرجاء ادخال اسم للعرض</string>
     <string name="insert_product_sku">الرجاء ادخال رقم تعريف المنتوج</string>
@@ -678,6 +696,8 @@
     <string name="exempt_dealer">exempt dealer</string>
     <string name="company">company</string>
     <string name="authorized_dealer">Authorized dealer</string>
+    <string name="currency_code">Currency Code</string>
+    <string name="currency_Symbol">Symbol Currency</string>
 
 
     <string name="invoice_recipte_company_status">فاتورة وصل</string>
@@ -687,5 +707,8 @@
 
 
     <string name="date_end_zreport">تاريخ اغلاق تقرير z</string>
+
+    <string name="due_date">تاريخ الاستحقاق</string>
+    <string name="text_dialog_lincess">انتهى تاريخ الليسنز, يرجى الاتصال بالشركة للتفعيل</string>
 </resources>
 

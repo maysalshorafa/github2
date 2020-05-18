@@ -38,6 +38,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.DrawerDepositAndPullRepo
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
@@ -90,6 +91,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -253,13 +255,13 @@ public class SyncMessage extends Service {
                         //Log.i("date", DateConverter.toDate(timestamp.getTime()));
                         //if(!(DateConverter.toDate(currency.getLastUpdate().getTime()) == DateConverter.toDate(timestamp.getTime()))){
 
-                       /* try {
+                        try {
                             updateCurrency();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }*/
+                        }
                         //}
 
                         try {
@@ -828,7 +830,6 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_PRODUCT:
                     Product p = null;
                     p = objectMapper.readValue(msgData, Product.class);
-
                     ProductDBAdapter productDBAdapter = new ProductDBAdapter(this);
                     productDBAdapter.open();
                     try {
@@ -1103,10 +1104,27 @@ public class SyncMessage extends Service {
                     JSONObject respnse = new JSONObject(msgData);
                     int i = settingsDBAdapter.updateEntry(respnse.getString(MessageKey.companyID), respnse.getString(MessageKey.companyName), SESSION.POS_ID_NUMBER + "",
                             (float) respnse.getDouble(MessageKey.tax), respnse.getString(MessageKey.returnNote), respnse.getInt(MessageKey.endOfReturnNote),
-                            respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW),respnse.getInt(MessageKey.branchId));
+                            respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW),respnse.getInt(MessageKey.branchId),respnse.getString(MessageKey.currencyCode),
+                            respnse.getString(MessageKey.currencySymbol),respnse.getString(MessageKey.country));
                     settingsDBAdapter.close();
                     break;
                 //end
+
+
+                case MessageType.UPDATE_COMPANY_LICENSE:
+                    LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(this);
+                    lincessDBAdapter.open();
+                    if (SETTINGS.statusLincess==null){
+                      boolean getStatusLincess= lincessDBAdapter.GetLincess();
+                    }
+                    JSONObject respnseLincess = new JSONObject(msgData);
+                    long idLincess=lincessDBAdapter.GetLincessID().getId();
+                    lincessDBAdapter.updateEntry(idLincess,SETTINGS.statusLincess,respnseLincess.getString(MessageKey.activationDate),respnseLincess.getString(MessageKey.dueDate),
+                            respnseLincess.getString(MessageKey.branchId),respnseLincess.getString(MessageKey.companyId),respnseLincess.getString(MessageKey.note));
+
+                    break;
+
+
 
                 case MessageType.ADD_OFFER_CATEGORY:
                     OfferCategory offerCategory = null;
@@ -1829,15 +1847,17 @@ public class SyncMessage extends Service {
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
         currencyTypeDBAdapter.open();
         List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
-        currencyTypeDBAdapter.close();
+        //currencyTypeDBAdapter.close();
         CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
         currencyDBAdapter.open();
         Currency lastCurrency =currencyDBAdapter.getLastCurrency();
         Timestamp timestamp =new Timestamp(System.currentTimeMillis());
-        if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
+        if (lastCurrency.getLastUpdate()!=null){
+       if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
             //do nothing
         }else {
             String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
+            Log.d("tokenn",SESSION.token);
             Log.i("Currency", currencyRes);
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
@@ -1849,27 +1869,89 @@ public class SyncMessage extends Service {
             try {
                 String msgData = jsonObject.getString(MessageKey.responseBody);
 
-                if (msgData.startsWith("[")) {
+
                     try {
                         JSONArray jsonArray = new JSONArray(msgData);
-
-                        for (int i = 0; i < jsonArray.length() - 1; i++) {
+                        Log.d("jsonArraySize",jsonArray.length()+"Size");
+                        Log.d("jsonArrayCurrency",jsonArray.toString());
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             msgData = jsonArray.getJSONObject(i).toString();
                             Currency currency = null;
                             currency = objectMapper.readValue(msgData, Currency.class);
                             currencyDBAdapter.insertEntry(currency);
+                          //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
                         }
                     } catch (Exception e) {
                     }
 
-                }
+
 
             } catch (JSONException e) {
 
             }
+            /*Currency currencyBoss=new Currency();
+           currencyBoss.setId(6725999);
+           currencyBoss.setName("Dollar");
+           currencyBoss.setCurrencyCode("USD");
+           currencyBoss.setCountry("USA");
+           currencyBoss.setRate(1.0);
+            currencyDBAdapter.insertEntry(currencyBoss);*/
             currencyDBAdapter.deleteOldRate(currencyTypesList);
 
 
         }
+
+
+  }
+        else {
+            String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
+            Log.d("tokenn",SESSION.token);
+            Log.i("Currency", currencyRes);
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            objectMapper.setDateFormat(dateFormat);
+            JSONObject jsonObject = null;
+            Log.i("Currency", currencyRes);
+
+            jsonObject = new JSONObject(currencyRes);
+            try {
+                String msgData = jsonObject.getString(MessageKey.responseBody);
+
+
+                try {
+                    JSONArray jsonArray = new JSONArray(msgData);
+                    Log.d("jsonArraySize",jsonArray.length()+"Size");
+                    Log.d("jsonArrayCurrency",jsonArray.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        Log.d("i",i+" ");
+                        msgData = jsonArray.getJSONObject(i).toString();
+                        Currency currency = null;
+                        currency = objectMapper.readValue(msgData, Currency.class);
+                        currencyDBAdapter.insertEntry(currency);
+                        //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
+                    }
+                } catch (Exception e) {
+                }
+
+
+
+            } catch (JSONException e) {
+
+            }
+           /* Currency currencyBoss=new Currency();
+            currencyBoss.setId(6725999);
+            currencyBoss.setName("Dollar");
+            currencyBoss.setCurrencyCode("USD");
+            currencyBoss.setCountry("USA");
+            currencyBoss.setRate(1.0);
+            currencyDBAdapter.insertEntry(currencyBoss);*/
+         //   currencyDBAdapter.deleteOldRate(currencyTypesList);
+
+
+        }
+
+
+
+
     }
 }

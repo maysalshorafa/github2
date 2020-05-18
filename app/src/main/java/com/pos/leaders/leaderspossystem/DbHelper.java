@@ -34,6 +34,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InvoiceDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
@@ -161,7 +162,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(InvoiceDBAdapter.DATABASE_CREATE);
         db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
         db.execSQL(ZReportCountDbAdapter.DATABASE_CREATE);
-        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0',0);");
+        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0',0,'','','');");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35,0);");
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (2,'master','master','master','"+new Timestamp(System.currentTimeMillis())+"','123456',0,046316969,20,35,0);");
@@ -202,6 +203,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(ProductInventoryDbAdapter.DATABASE_CREATE);
         db.execSQL(DrawerDepositAndPullReportDbAdapter.DATABASE_CREATE);
         db.execSQL(DepositAndPullReportDetailsDbAdapter.DATABASE_CREATE);
+        db.execSQL(LincessDBAdapter.DATABASE_CREATE);
 
 
         // Currency Statment
@@ -209,16 +211,16 @@ public class DbHelper extends SQLiteOpenHelper {
         Date date=new Date();
 
 
-        db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel Shekel',1,'"+new Timestamp(System.currentTimeMillis())+"');");
+    /*   db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel Shekel',1,'"+new Timestamp(System.currentTimeMillis())+"');");
         db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (1 , 'Dollar','USD','USA',3.491,'"+new Timestamp(System.currentTimeMillis())+"');");
         db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+new Timestamp(System.currentTimeMillis())+"');");
-        db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (3 , 'Euro','EUR','Euro Member Countries',4.1002,'"+new Timestamp(System.currentTimeMillis())+"');");
+        db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (3 , 'Euro','EUR','Euro Member Countries',4.1002,'"+new Timestamp(System.currentTimeMillis())+"');");*/
 
         //Currency Type
-        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
+        /*db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (1 , 'USD');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (2 , 'GBP');");
-        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");*/
 
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Timestamp(System.currentTimeMillis())+"');");
 //        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0,0.0,0.0);");

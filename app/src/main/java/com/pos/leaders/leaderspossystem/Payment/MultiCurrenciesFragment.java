@@ -2,7 +2,6 @@ package com.pos.leaders.leaderspossystem.Payment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.util.ArrayList;
@@ -58,6 +58,8 @@ public class MultiCurrenciesFragment extends Fragment {
         btConfirmation=(Button)v.findViewById(R.id.multiCurrenciesFragment_btAddPayment);
         amount=(TextView)v.findViewById(R.id.multiCurrenciesFragment_amount);
         currencySpinner=(Spinner)v.findViewById(R.id.multiCurrenciesFragment_currenciesSpinner);
+        if (!SETTINGS.enableCurrencies){
+            currencySpinner.setEnabled(false);}
         paymentMethodSpinner=(Spinner)v.findViewById(R.id.multiCurrenciesFragment_paymentWaySpinner);
         //Getting default currencies name and values
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(getContext());

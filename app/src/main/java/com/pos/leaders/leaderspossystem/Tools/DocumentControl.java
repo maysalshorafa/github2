@@ -532,9 +532,9 @@ public class DocumentControl {
                                     posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId() - 1, DocumentType.RECEIPT.getValue(), "", invoiceNum, CONSTANT.CHECKS);
                                 }
                                 if (paymentWays.equals(CASH)){
-                                    zReport.setShekelAmount(zReport.getShekelAmount() + totalPaid);
+                                    zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() + totalPaid);
                                 zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
-                                    zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
+                                    zReportCount.setFirstTYpeCount(zReportCount.getFirstTYpeCount()+1);
                                 zReportDBAdapter.updateEntry(zReport);
 
                             }else {
@@ -553,9 +553,9 @@ public class DocumentControl {
 
                                 }
                                 if (paymentWays.equals(CASH)){
-                                    zReport.setShekelAmount(zReport.getShekelAmount() + totalPaid);
+                                    zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() + totalPaid);
                                     zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
-                                    zReportCount.setShekelCount(zReportCount.getShekelCount()+1);
+                                    zReportCount.setFirstTYpeCount(zReportCount.getFirstTYpeCount()+1);
                                     zReportCountDbAdapter.updateEntry(zReportCount);
                                     zReportDBAdapter.updateEntry(zReport);
                                 }else {

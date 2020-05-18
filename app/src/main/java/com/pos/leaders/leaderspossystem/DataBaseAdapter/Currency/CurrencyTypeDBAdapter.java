@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -93,6 +94,20 @@ public class CurrencyTypeDBAdapter {
         return new CurrencyType(Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyType_COLUMN_ID)))
                 , cursor.getString(cursor.getColumnIndex(CurrencyType_COLUMN_Name)));
     }
+    public void delete() {
+        if (db.isOpen()){
+
+        }
+        else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
+        db.execSQL("delete from "+ CurrencyType_TABLE_NAME);
+    }
     public long insertEntry(String name) {
         if (db.isOpen()){
 
@@ -110,6 +125,31 @@ public class CurrencyTypeDBAdapter {
         sendToBroker(MessageType.ADD_CURRENCY_TYPE, boCurrencyType, this.context);
 
         return 1;
+    }
+
+    public long insertEntry(CurrencyType currency){
+        if (db.isOpen()){
+
+        }
+        else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+
+        val.put(CurrencyType_COLUMN_ID, currency.getCurrencyTypeId());
+        val.put(CurrencyType_COLUMN_Name, currency.getType());
+        try {
+            return db.insert(CurrencyType_TABLE_NAME, null, val);
+        } catch (Exception ex) {
+            Log.e("Currency DB insert", "inserting Entry at " + CurrencyType_TABLE_NAME + ": " + ex.getMessage());
+            return -1;
+        }
     }
     public  long getCurrencyIdByType(String type){
         if (db.isOpen()){
@@ -130,6 +170,24 @@ public class CurrencyTypeDBAdapter {
         return  currencyType.getCurrencyTypeId();
     }
 
+    public void deleteOldRate(List<CurrencyType> currency) {
+        if (db.isOpen()){
 
+        }
+        else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
+        String name="";
+        for (int i=0;i<currency.size();i++) {
+            name = currency.get(i).getType();
+            db.execSQL("delete from " + CurrencyType_TABLE_NAME + " where " + CurrencyType_COLUMN_ID + " not in ( select " + CurrencyType_COLUMN_ID + " from " + CurrencyType_TABLE_NAME + " where " + CurrencyType_COLUMN_Name + "='" + name + "'" + " order by " + CurrencyType_COLUMN_ID + " desc LIMIT 1) AND type ='"+name+"'");
+        }
+
+    }
 }
 

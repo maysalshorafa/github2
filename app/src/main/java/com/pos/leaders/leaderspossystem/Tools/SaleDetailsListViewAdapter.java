@@ -97,11 +97,12 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         productDBAdapter.open();
         Product product =productDBAdapter.getProductByID(orderList.get(position).getProductId());
         productDBAdapter.close();
-        String currencyType = "";
+
+        String currencyType = String.valueOf(symbolWithCodeHashMap.valueOf(product.getCurrencyType()).getValue());
         try {
 
             holder.tvName.setText(_Substring(product.getDisplayName()));
-            if (product.getCurrencyType() == 0) {
+          /*  if (product.getCurrencyType() == 0) {
                 currencyType = context.getString(R.string.ins);
             }
             if (product.getCurrencyType() == 1) {
@@ -112,7 +113,7 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
             }
             if (product.getCurrencyType() == 3) {
                 currencyType = context.getString(R.string.eur);
-            }
+            }*/
 
         }
         catch(NullPointerException e)

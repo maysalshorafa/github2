@@ -201,10 +201,10 @@ public class MonthZReportView extends AppCompatActivity {
                     creditTotalC += zReportCountList.get(i).getCreditCount();
                     invoiceAmountC += zReportCountList.get(i).getInvoiceCount();
                     creditInvoiceAmountC += zReportCountList.get(i).getCreditInvoiceCount();
-                    shekelAmountC += zReportCountList.get(i).getShekelCount();
-                    usdAmountC += zReportCountList.get(i).getUsdCount();
-                    eurAmountC += zReportCountList.get(i).getEurCount();
-                    gbpAmountC += zReportCountList.get(i).getGbpCount();
+                    shekelAmountC += zReportCountList.get(i).getFirstTYpeCount();
+                    usdAmountC += zReportCountList.get(i).getSecondTypeCount();
+                    eurAmountC += zReportCountList.get(i).getThirdTypeCount();
+                    gbpAmountC += zReportCountList.get(i).getFourthTypeCount();
                     invoiceReceiptAmountC += zReportCountList.get(i).getInvoiceReceiptCount();
                 }
             }
@@ -221,10 +221,10 @@ public class MonthZReportView extends AppCompatActivity {
                     totalPosSales += zReportList.get(i).getTotalPosSales();
                     invoiceAmount += zReportList.get(i).getInvoiceAmount();
                     creditInvoiceAmount += zReportList.get(i).getCreditInvoiceAmount();
-                    shekelAmount += zReportList.get(i).getShekelAmount();
-                    usdAmount += zReportList.get(i).getUsdAmount();
-                    eurAmount += zReportList.get(i).getEurAmount();
-                    gbpAmount += zReportList.get(i).getGbpAmount();
+                    shekelAmount += zReportList.get(i).getFirstTypeAmount();
+                    usdAmount += zReportList.get(i).getSecondTypeAmount();
+                    eurAmount += zReportList.get(i).getThirdTypeAmount();
+                    gbpAmount += zReportList.get(i).getFourthTypeAmount();
                     salesBeforeTax += zReportList.get(i).getSalesBeforeTax();
                     salesWithTax += zReportList.get(i).getSalesWithTax();
                     totalTax += zReportList.get(i).getTotalTax();

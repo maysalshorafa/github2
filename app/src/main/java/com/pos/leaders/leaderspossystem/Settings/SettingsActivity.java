@@ -15,11 +15,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.text.format.Time;
@@ -30,11 +32,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.BackupActivity;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.LogInActivity;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.Clock;
 import com.pos.leaders.leaderspossystem.Tools.OnClockTickListner;
@@ -43,8 +48,12 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static com.pos.leaders.leaderspossystem.SettingsTab.BOPOSVersionSettings.BO_SETTING;
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PREFERENCES;
@@ -327,8 +336,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             findPreference("private_company").setSummary(SETTINGS.companyID);
             findPreference("tax").setSummary(Util.makePrice(SETTINGS.tax) + " %");
             findPreference("terminal_number").setSummary(getString(R.string.terminal_number) + " " + SETTINGS.posID);
-
             findPreference("invoice_note").setSummary(SETTINGS.returnNote);
+            findPreference("currency_code").setSummary(SETTINGS.currencyCode);
+            findPreference("currency_symbol").setSummary(SETTINGS.currencySymbol);
+            findPreference("country").setSummary(SETTINGS.country);
         }
 
         @Override
@@ -364,11 +375,100 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 settingsDBAdapter.readSetting();
 
             }
+            final MultiSelectListPreference multiSelectListPreference=(MultiSelectListPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST");
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
+            SwitchPreference passwordEnabled = (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY");
+           final Set<Set<String>> entries=null;
+
+           if (passwordEnabled.isChecked()){
+               multiSelectListPreference.setEnabled(false);
+           }
+           else {
+               multiSelectListPreference.setEnabled(false);
+           }
+
+
+            passwordEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                 //   if (newValue.toString().equals("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY")) {
+                        boolean test = (Boolean) newValue;
+                        if (test) {
+                            multiSelectListPreference.setEnabled(true);
+
+                        } else {
+                            multiSelectListPreference.setEnabled(false);
+                            ;
+                        }
+
+                   // }
+                    return true;
+                }
+            });
+           final CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(getContext());
+            currencyTypeDBAdapter.open();
+            List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+            final List<String> currenciesNames;
+
+            currenciesNames = new ArrayList<String>();
+
+            for (int i = 0; i < currencyTypesList.size(); i++) {
+                currenciesNames.add(currencyTypesList.get(i).getType());
+            }
+
+            final int[] correct = {0};
+
+            multiSelectListPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                  List<String>  list=convertObjectToList(newValue);
+
+                    if (list.size()==3){
+                    Log.d("Najldda", list.size()+"");
+                    Log.d("joo",list.toString());
+                        List<String>  currenciesChoose=new ArrayList<String>();
+                        currenciesChoose.add(SETTINGS.currencyCode);
+                        for (int i=0;i<list.size();i++)  {
+                            if (list.get(i).equals(SETTINGS.currencyCode)) {
+
+                            }
+                            else {
+                                   currenciesChoose.add(list.get(i));
+                            }
+                        }
+
+                             currencyTypeDBAdapter.delete();
+                              Log.d("sizrkjj",currencyTypeDBAdapter.getAllCurrencyType().size()+"");
+                              for (int i=0;i<currenciesChoose.size();i++)     {
+                                currencyTypeDBAdapter.insertEntry(new CurrencyType(i,currenciesChoose.get(i)));     }
+                              //    currencyTyhhhpeDBAdapter.insertEntry(currenciesChoose.get(i));   }
+                                   Log.d("sizrjjjjkjj",currencyTypeDBAdapter.getAllCurrencyType().get(0).getType()+" "+
+                                   currencyTypeDBAdapter.getAllCurrencyType().get(1).getType()+""+
+                                   currencyTypeDBAdapter.getAllCurrencyType().get(2).getType()+""+
+                                   currencyTypeDBAdapter.getAllCurrencyType().get(3).getType()+"");
+
+                       Log.d("currencirsChoose",currenciesChoose.toString());
+                        multiSelectListPreference.setEnabled(false);
+                   }
+                   else {
+                       Toast.makeText(getContext(), "يرجى اختيار ثلث عملات ", Toast.LENGTH_SHORT).show();
+                   }
+                   return false;
+               }
+            });
+
+
+
+        }
+        public static List<String> convertObjectToList(Object obj) {
+            List<?> list = new ArrayList<>();
+            if (obj.getClass().isArray()) {
+                list = Arrays.asList((Object[])obj);
+            } else if (obj instanceof Collection) {
+                list = new ArrayList<>((Collection<?>)obj);
+            }
+            return (List<String>) list;
         }
 
         @Override

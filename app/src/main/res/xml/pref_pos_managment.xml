@@ -5,7 +5,21 @@
     <SwitchPreference
         android:defaultValue="false"
         android:key="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY"
-        android:title="@string/currency" />
+    android:title="@string/currency" />
+
+
+    <!--<ListPreference android:key="default_category"
+            android:title="Dynamic categories" android:summary="Dynamic categories summary"
+            android:defaultValue="0" />-->
+
+    <MultiSelectListPreference
+        android:entries="@array/currency_code_list_preference"
+        android:entryValues="@array/currency_code_list_preference"
+        android:key="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST"
+        android:summary="Choose the currencies you want to work in"
+        android:title="Choose Currency"
+        />
+
 
     <SwitchPreference
         android:defaultValue="false"

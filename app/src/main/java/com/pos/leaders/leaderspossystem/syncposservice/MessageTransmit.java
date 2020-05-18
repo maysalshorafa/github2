@@ -3,7 +3,10 @@ package com.pos.leaders.leaderspossystem.syncposservice;
 
 import android.util.Log;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
+import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,10 +36,11 @@ public class MessageTransmit {
     private String domainURLQuery;
     private OkHttpClient client;
     OkHttpClient eagerClient;
+    // variable to hold context
 
     public MessageTransmit(){}
     public MessageTransmit(String domainURL){
-        Log.d("MessageTransmit1",domainURL);
+      Log.d("MessageTransmit1",domainURL);
         if(domainURL.length()>0){
             char c = domainURL.charAt(domainURL.length() - 1);
             if(c!='/')
@@ -90,7 +94,7 @@ public class MessageTransmit {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder().url(domainURL + url).post(body).build();
         Response response = client.newCall(request).execute();
-
+        updateLincessStatus(response);
         return response.body().string();
     }
 
@@ -105,6 +109,7 @@ public class MessageTransmit {
             Log.d("Message req", request.toString());
             Response response = client.newCall(request).execute();
             Log.d("Response Code", response.code()+"");
+            updateLincessStatus(response);
             return response.body().string();
         }catch (Exception e){
             Log.d("Toooken",token.toString());
@@ -134,7 +139,7 @@ public class MessageTransmit {
             return "Error";
         }
         Response response = client.newCall(request).execute();
-
+        updateLincessStatus(response);
         return response.body().string();
     }
     public String authGet(String url,String token) throws IOException {
@@ -145,33 +150,36 @@ public class MessageTransmit {
 
                 Log.i("response code", response.code() + "");
                 Log.d("response Body",request.body()+"request");
-
-        Log.d("finishauthGet","finishAth");
+        updateLincessStatus(response);
         return response.body().string();
     }
 
     public String authDelete(String url,String id,String token) throws IOException {
         Request request = new Request.Builder().url(domainURL + url + "/" + id).delete().addHeader(AUTHORIZATION, token).build();
         Response response = client.newCall(request).execute();
-
+        updateLincessStatus(response);
         return response.body().string();
     }
     public String getALLSalesProduct(String url,String token) throws IOException {
         Request request = new Request.Builder().url(domainURLQuery + url).addHeader(AUTHORIZATION, token).build();
         Response response =eagerClient.newCall(request).execute();
+        updateLincessStatus(response);
         return response.body().string();
     }
 
     public String get(String url) throws IOException {
         Request request = new Request.Builder().url(domainURL + url).build();
         Response response = client.newCall(request).execute();
-
+        updateLincessStatus(response);
         return response.body().string();
     }
     public String getCurrency(String url,String token) throws IOException {
+        Log.d("url",domainURL+url);
+        Log.d("LogIn",token);
         Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();
+        Log.d("Request",request.toString());
         Response response = client.newCall(request).execute();
-
+        updateLincessStatus(response);
         return response.body().string();
     }
     public String authPutInvoice(String url, String json,String token, String id) throws IOException {
@@ -187,17 +195,25 @@ public class MessageTransmit {
             return "Error";
         }
         Response response = client.newCall(request).execute();
-
+        updateLincessStatus(response);
         return response.body().string();
     }
     public String authUpdateGeneralLedger(String url,String id,String token,double amount) throws IOException {
         RequestBody body = RequestBody.create(JSON, "");
         Request request = new Request.Builder().url(domainURL + url + "/" + id+"/"+amount).put(body).addHeader(AUTHORIZATION, token).build();
         Response response = client.newCall(request).execute();
-
+        updateLincessStatus(response);
         return response.body().string();
     }
 
+public void updateLincessStatus(Response response){
+    if (response.code()==402){
+    LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(ThisApp.getCurrentActivity());
+    lincessDBAdapter.open();
+    long idLincess=lincessDBAdapter.GetLincessID().getId();
+    lincessDBAdapter.updateEntry(CONSTANT.INACTIVE,idLincess);}
+    return;
 
+}
 }
 

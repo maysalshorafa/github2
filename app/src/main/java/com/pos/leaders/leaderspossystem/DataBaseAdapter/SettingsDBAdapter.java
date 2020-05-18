@@ -29,7 +29,11 @@ public class SettingsDBAdapter {
     protected static final String SETTINGS_COLUMN_CREDIT_CARD_PASSWORD = "cc_pw";
     protected static final String SETTINGS_COLUMN_BRANCH_ID = "branchId";
 
-    public static final String DATABASE_CREATE= "CREATE TABLE tbl_settings ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`company_id` TEXT NOT NULL,"+"`company_name` TEXT NOT NULL,"+" `pos_number` TEXT,"+"`tax` REAL NOT NULL,"+" `return_note` TEXT NOT NULL,"+" `eorn` TEXT NOT NULL,"+" `cc_un` TEXT NOT NULL,"+"`cc_pw` TEXT NOT NULL,"+"`branchId` INTEGER NOT NULL  )";
+    protected static final String SETTINGS_COLUMN_CURRENCY_CODE="currency_code";
+    protected static final String SETTINGS_COLUMN_CURRENCY_SYMBOL="currency_symbol";
+    protected static final String SETTINGS_COLUMN_COUNTRY="country";
+
+    public static final String DATABASE_CREATE= "CREATE TABLE tbl_settings ( `id` INTEGER PRIMARY KEY AUTOINCREMENT,"+"`company_id` TEXT NOT NULL,"+"`company_name` TEXT NOT NULL,"+" `pos_number` TEXT,"+"`tax` REAL NOT NULL,"+" `return_note` TEXT NOT NULL,"+" `eorn` TEXT NOT NULL,"+" `cc_un` TEXT NOT NULL,"+"`cc_pw` TEXT NOT NULL,"+"`branchId` INTEGER NOT NULL,"+" `currency_code` TEXT NOT NULL,"+" `currency_symbol` TEXT NOT NULL,"+" `country` TEXT NOT NULL)";
 
 
     // Variable to hold the database instance
@@ -103,7 +107,8 @@ public class SettingsDBAdapter {
         return cursor.getCount();
     }
 
-    public int insertEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId){
+    public int insertEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId,String currencyCode,
+                           String currencySymbol,String country){
         if(db.isOpen()){
 
         }else {
@@ -125,6 +130,9 @@ public class SettingsDBAdapter {
         val.put(SETTINGS_COLUMN_CREDIT_CARD_USERNAME, ccUserName);
         val.put(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD, ccPass);
         val.put(SETTINGS_COLUMN_BRANCH_ID, branchId);
+        val.put(SETTINGS_COLUMN_CURRENCY_CODE,currencyCode);
+        val.put(SETTINGS_COLUMN_CURRENCY_SYMBOL,currencySymbol);
+        val.put(SETTINGS_COLUMN_COUNTRY,country);
 
         try {
 
@@ -136,7 +144,8 @@ public class SettingsDBAdapter {
         }
     }
 
-    public int updateEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId){
+    public int updateEntry(String companyID,String companyName,String posNumber,float tax,String returnNote,int eorn,String ccUserName,String ccPass,int branchId,String currencyCode
+    ,String currencySymbol,String country){
         if(db.isOpen()){
 
         }else {
@@ -158,6 +167,9 @@ public class SettingsDBAdapter {
         val.put(SETTINGS_COLUMN_CREDIT_CARD_USERNAME, ccUserName);
         val.put(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD, ccPass);
         val.put(SETTINGS_COLUMN_BRANCH_ID, branchId);
+        val.put(SETTINGS_COLUMN_CURRENCY_CODE,currencyCode);
+        val.put(SETTINGS_COLUMN_CURRENCY_SYMBOL,currencySymbol);
+        val.put(SETTINGS_COLUMN_COUNTRY,country);
 
         try {
             db.update(SETTINGS_TABLE_NAME,val,null,null);
@@ -191,6 +203,9 @@ public class SettingsDBAdapter {
         SETTINGS.ccNumber = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_USERNAME));
         SETTINGS.ccPassword = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD));
         SETTINGS.branchId=cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_BRANCH_ID));
+        SETTINGS.currencyCode=cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CURRENCY_CODE));
+        SETTINGS.currencySymbol=cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CURRENCY_SYMBOL));
+        SETTINGS.country=cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_COUNTRY));
         cursor.close();
         close();
     }
@@ -221,6 +236,9 @@ public class SettingsDBAdapter {
         SETTINGS.ccNumber = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_USERNAME));
         SETTINGS.ccPassword = cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CREDIT_CARD_PASSWORD));
         SETTINGS.branchId=cursor.getInt(cursor.getColumnIndex(SETTINGS_COLUMN_BRANCH_ID));
+        SETTINGS.currencyCode=cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CURRENCY_CODE));
+        SETTINGS.currencySymbol=cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_CURRENCY_SYMBOL));
+        SETTINGS.country=cursor.getString(cursor.getColumnIndex(SETTINGS_COLUMN_COUNTRY));
         cursor.close();
         close();
     }

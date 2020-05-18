@@ -362,6 +362,43 @@
         <item>WINTEC_BUILDIN</item>
 
     </string-array>
+    <string-array name="catos">
+        <item >Movies</item>
+        <item >Test</item>
+        <item >TEst23</item>
+    </string-array>
+    <string-array name="catovalues">
+        <item >0</item>
+        <item >1</item>
+        <item >2</item>
+    </string-array>
+    <string-array name="catodefault">
+        <item >movies-default</item>
+        <item >test-default</item>
+        <item >TEST23-default</item>
+    </string-array>
+
+    <string-array name="currency_code_list_preference">
+        <item>USD</item>
+        <item>GBP</item>
+        <item>JPY</item>
+        <item>EUR</item>
+        <item>AUD</item>
+
+        <item>CAD</item>
+        <item>DKK</item>
+        <item>NOK</item>
+        <item>SEK</item>
+        <item>CHF</item>
+
+        <item>JOD</item>
+        <item>ZAR</item>
+        <item>LBP</item>
+        <item>EGP</item>
+
+    </string-array>
+
+
     <string-array name="float_point_list_preference">
         <item>0</item>
         <item>1</item>
@@ -703,7 +740,7 @@
     <string name="a_report">A Report</string>
     <string name="display_name">Display Name</string>
     <string name="sku" translatable="false">sku</string>
-    <string name="manage_stock">Manage Stock</string>
+    <string name="manage_stock"> Not Manage Stock</string>
     <string name="with_serial_no">With Serial No</string>
     <string name="stock_quantity">Stock Quantity</string>
     <string name="insert_product_dispaly_name">Please insert Product Display Name.</string>
@@ -773,6 +810,9 @@
     <string name="exempt_dealer">exempt dealer</string>
     <string name="company">company</string>
     <string name="authorized_dealer">Authorized dealer</string>
+    <string name="currency_code">Currency Code</string>
+    <string name="currency_Symbol">Symbol Currency</string>
+
 
 
     <string name="invoice_recipte_company_status">InvoiceReceipt</string>
@@ -783,6 +823,12 @@
 
 
     <string name="date_end_zreport">Closing date zReport</string>
+
+    <string name="due_date">Due Date</string>
+    <string name="text_dialog_lincess">The history of the license is over, please contact the company to activate.</string>
+
+
+
 
 
 </resources>

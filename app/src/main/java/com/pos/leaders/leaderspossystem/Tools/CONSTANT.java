@@ -18,4 +18,6 @@ public class CONSTANT {
     public static final int USD = 1;
     public static final int GBP = 2 ;
     public static final int EUR = 3;
+    public static final String ACTIVE="active";
+    public static final String INACTIVE="inActive";
 }

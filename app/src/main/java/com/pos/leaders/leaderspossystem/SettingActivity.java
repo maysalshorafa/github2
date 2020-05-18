@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -52,6 +53,7 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         TitleBar.setTitleBar(this);
+        ThisApp.setCurrentActivity(this);
         context = this;
         etCompanyName = (EditText) findViewById(R.id.settings_etCompanyName);
         etCompanyName.setEnabled(false);

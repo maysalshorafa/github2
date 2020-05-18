@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
-import com.pos.leaders.leaderspossystem.Models.Invoice;
 import com.pos.leaders.leaderspossystem.R;
 
 import org.json.JSONException;
@@ -61,7 +60,7 @@ public class OrderDocumentManagementListViewAdapter extends ArrayAdapter {
         }
 
         try {
-            holder.tvTotalAmount.setText(invoicesList.get(position).getDocumentsData().getDouble("total")+getContext().getString(R.string.ins));
+            holder.tvTotalAmount.setText(invoicesList.get(position).getDocumentsData().getDouble("total")+SETTINGS.currencySymbol);
           //  holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("totalPaidAmount")+getContext().getString(R.string.ins));
             holder.tvID.setText(invoiceNumbers.get(position)+"");
 

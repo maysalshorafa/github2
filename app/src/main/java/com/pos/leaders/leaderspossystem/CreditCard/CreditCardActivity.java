@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 
 import org.ksoap2.serialization.SoapObject;
 
@@ -110,7 +111,7 @@ public class CreditCardActivity extends AppCompatActivity {
             custmerName = (String) extras.get(LEADERS_POS_CREDIT_CARD_CUSTOMER);
 
 
-            tvTotalPrice.setText(totalPrice + " " + getResources().getText(R.string.ins));
+            tvTotalPrice.setText(totalPrice + " " + SETTINGS.currencySymbol);
             tvCustomerName.setText(custmerName);
         } else {
             finish();

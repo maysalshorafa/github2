@@ -31,10 +31,10 @@ public class ZReport implements Serializable {
     private double totalPosSales;
     private double invoiceAmount;
     private double creditInvoiceAmount;
-    private double shekelAmount;
-    private double usdAmount;
-    private double eurAmount;
-    private double gbpAmount;
+    private double firstTypeAmount;
+    private double secondTypeAmount;
+    private double thirdTypeAmount;
+    private double fourthTypeAmount;
     private double invoiceReceiptAmount;
     private double pullReportAmount;
     private double depositReportAmount;
@@ -47,8 +47,9 @@ public class ZReport implements Serializable {
 
     }
 
-    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
-                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax, double totalTax  ) {
+    public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,
+                   double firstTypeAmount,double secondTypeAmount, double thirdTypeAmount,
+                   double fourthTypeAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax, double totalTax  ) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -63,10 +64,10 @@ public class ZReport implements Serializable {
         this.totalPosSales=totalPosSales;
         this.invoiceAmount=invoiceAmount;
         this.creditInvoiceAmount=creditInvoiceAmount;
-        this.shekelAmount=shekelAmount;
-        this.usdAmount=usdAmount;
-        this.eurAmount=eurAmount;
-        this.gbpAmount=gbpAmount;
+        this.firstTypeAmount=firstTypeAmount;
+        this.secondTypeAmount=secondTypeAmount;
+        this.thirdTypeAmount=thirdTypeAmount;
+        this.fourthTypeAmount=fourthTypeAmount;
         this.invoiceReceiptAmount=invoiceReceiptAmount;
         this.pullReportAmount=pullReportAmount;
         this.depositReportAmount=depositReportAmount;
@@ -259,28 +260,37 @@ public class ZReport implements Serializable {
         this.creditInvoiceAmount = creditInvoiceAmount;
     }
 
-    public double getShekelAmount() {
-        return shekelAmount;
+
+    public double getFirstTypeAmount() {
+        return firstTypeAmount;
     }
 
-    public void setShekelAmount(double shekelAmount) {
-        this.shekelAmount = shekelAmount;
+    public void setFirstTypeAmount(double firstTypeAmount) {
+        this.firstTypeAmount = firstTypeAmount;
     }
 
-    public double getUsdAmount() {
-        return usdAmount;
+    public double getSecondTypeAmount() {
+        return secondTypeAmount;
     }
 
-    public void setUsdAmount(double usdAmount) {
-        this.usdAmount = usdAmount;
+    public void setSecondTypeAmount(double secondTypeAmount) {
+        this.secondTypeAmount = secondTypeAmount;
     }
 
-    public double getEurAmount() {
-        return eurAmount;
+    public double getThirdTypeAmount() {
+        return thirdTypeAmount;
     }
 
-    public void setEurAmount(double eurAmount) {
-        this.eurAmount = eurAmount;
+    public void setThirdTypeAmount(double thirdTypeAmount) {
+        this.thirdTypeAmount = thirdTypeAmount;
+    }
+
+    public double getFourthTypeAmount() {
+        return fourthTypeAmount;
+    }
+
+    public void setFourthTypeAmount(double fourthTypeAmount) {
+        this.fourthTypeAmount = fourthTypeAmount;
     }
 
     public String getCloseOpenReport() {
@@ -291,13 +301,7 @@ public class ZReport implements Serializable {
         this.closeOpenReport = closeOpenReport;
     }
 
-    public double getGbpAmount() {
-        return gbpAmount;
-    }
 
-    public void setGbpAmount(double gbpAmount) {
-        this.gbpAmount = gbpAmount;
-    }
 
     public double getInvoiceReceiptAmount() {
         return invoiceReceiptAmount;
@@ -377,10 +381,10 @@ public class ZReport implements Serializable {
                 ", totalPosSales=" + totalPosSales +
                 ", invoiceAmount=" + invoiceAmount +
                 ", creditInvoiceAmount=" + creditInvoiceAmount +
-                ", shekelAmount=" + shekelAmount +
-                ", usdAmount=" + usdAmount +
-                ", eurAmount=" + eurAmount +
-                ", gbpAmount=" + gbpAmount +
+                ", firstTypeAmount=" + firstTypeAmount +
+                ", secondTypeAmount=" + secondTypeAmount +
+                ", thirdTypeAmount=" + thirdTypeAmount +
+                ", fourthTypeAmount=" + fourthTypeAmount +
                 ", invoiceReceiptAmount=" + invoiceReceiptAmount +
                 ", pullReportAmount=" + pullReportAmount +
                 ", depositReportAmount=" + depositReportAmount +
@@ -392,5 +396,5 @@ public class ZReport implements Serializable {
     }
 
 
-    //endregion OpenFormat
+//endregion OpenFormat
 }

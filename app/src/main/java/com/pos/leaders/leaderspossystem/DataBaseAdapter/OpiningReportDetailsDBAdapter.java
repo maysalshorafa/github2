@@ -64,6 +64,7 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(long a_report_id, double amount, long type, double amount_in_basic_currency) {
+        Log.d("type",type+"");
         if(db.isOpen()){
 
         }else {

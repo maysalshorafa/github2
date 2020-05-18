@@ -94,7 +94,9 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 
 		tvName.setText(products.get(position).getDisplayName());
 		tvBarcode.setText(products.get(position).getSku());
-		if(products.get(position).getCurrencyType()==0) {
+		String currencyType = String.valueOf(symbolWithCodeHashMap.valueOf(products.get(position).getCurrencyType()).getValue());
+		tvPrice.setText(products.get(position).getPrice() + " " + currencyType);
+		/*if(products.get(position).getCurrencyType()==0) {
 			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.ins));
 		}
 		if(products.get(position).getCurrencyType()==1) {
@@ -105,7 +107,7 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 		}
 		if(products.get(position).getCurrencyType()==3) {
 			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.gbp));
-		}
+		}*/
 
 		return gridView;
 	}

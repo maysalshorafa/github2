@@ -23,6 +23,9 @@ public interface MessageKey {
     String endOfReturnNote = "endOfReturnNote";
     String returnNote = "returnNote";
     String tax = "tax";
+    String currencyCode="currencyCode";
+    String currencySymbol="currencySymbol";
+    String country="country";
 
     String syncNumber = "syncNumber";
 
@@ -38,6 +41,10 @@ public interface MessageKey {
     String False="false";
     String branchId="branchId";
 
+    String activationDate="activationDate";
+    String dueDate="dueDate";
+    String note="note";
+    String companyId="companyId";
 
 
 }

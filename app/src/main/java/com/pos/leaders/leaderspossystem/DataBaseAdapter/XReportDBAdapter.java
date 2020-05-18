@@ -146,9 +146,10 @@ public class XReportDBAdapter {
         val.put(X_REPORT_COLUMN_TOTAL_POS_SALES,xReport.getTotalPosSales());
         val.put(X_REPORT_COLUMN_INVOICE_AMOUNT,xReport.getInvoiceAmount());
         val.put(X_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT,xReport.getCreditInvoiceAmount());
-        val.put(X_REPORT_COLUMN_SHEKEL_AMOUNT,xReport.getShekelAmount());
-        val.put(X_REPORT_COLUMN_USD_AMOUNT,xReport.getUsdAmount());
-        val.put(X_REPORT_COLUMN_EUR_AMOUNT,xReport.getEurAmount());
+        val.put(X_REPORT_COLUMN_SHEKEL_AMOUNT,xReport.getFirstTypeAmount());
+        val.put(X_REPORT_COLUMN_USD_AMOUNT,xReport.getSecondTypeAmount());
+        val.put(X_REPORT_COLUMN_EUR_AMOUNT,xReport.getThirdTypeAmount());
+        val.put(X_REPORT_COLUMN_GBP_AMOUNT,xReport.getFourthTypeAmount());
         val.put(X_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT,xReport.getInvoiceReceiptAmount());
         val.put(X_REPORT_COLUMN_PULL_REPORT_AMOUNT,xReport.getPullReportAmount());
         val.put(X_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT,xReport.getDepositReportAmount());

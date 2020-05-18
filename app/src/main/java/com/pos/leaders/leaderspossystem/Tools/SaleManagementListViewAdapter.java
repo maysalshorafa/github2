@@ -115,7 +115,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			Log.d("resultTime",dateOrder);
 			holder.tvDate.setText(String.format(dateOrder));
 
-			holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+			holder.tvPrice.setText(Util.makePrice(price) + " " + SETTINGS.currencySymbol);
 
 		  holder.tvStatus.setText("INRC");
 
@@ -157,7 +157,7 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			Date date = DateConverter.stringToDate(doc.getString("date"));
 
 			holder.tvDate.setText(DateConverter.geDate(date));
-			holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+			holder.tvPrice.setText(Util.makePrice(price) + " " + SETTINGS.currencySymbol);
 			JSONObject customerJson= doc.getJSONObject("customer");
 			holder.tvCustomerName.setText(customerJson.get("firstName")+" "+customerJson.get("lastName"));
 			int count =0;
