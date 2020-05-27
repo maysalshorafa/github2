@@ -449,6 +449,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     break;
 
                 case 9:
+                    db.execSQL(LincessDBAdapter.DATABASE_CREATE);
                     db.execSQL(PosSettingDbAdapter.addColumnInteger("duplicateInvoice"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
