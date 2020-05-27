@@ -3855,6 +3855,7 @@ public class SalesCartActivity extends AppCompatActivity {
         calculateTotalPrice();
     }}
 
+
     private void refreshCart() {
         calculateTotalPrice();
     }
@@ -3891,7 +3892,7 @@ public class SalesCartActivity extends AppCompatActivity {
             List<Integer> employeePermition =employeeDBAdapter.getPermissions(SESSION._EMPLOYEE.getEmployeeId());
 
             if(employeePermition.contains(3)){
-              AlertDialog najla = new AlertDialog.Builder(SalesCartActivity.this)
+              final AlertDialog addNewProductDialog = new AlertDialog.Builder(SalesCartActivity.this)
                         .setTitle("Add Product")
                         .setCancelable(false)
                         .setMessage("Are you want to add this product?")
@@ -3908,16 +3909,24 @@ public class SalesCartActivity extends AppCompatActivity {
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
-                najla.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                addNewProductDialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
                     @Override
-                    public void onCancel(DialogInterface dialog) {
-                        // dialog dismisses
-                        // Do your function here
+                    public boolean onKey(DialogInterface arg0, int keyCode,
+                                         KeyEvent event) {
+                        // TODO Auto-generated method stub
+                        if (keyCode == KeyEvent.ACTION_DOWN) {
+
+                        }
+                        else if (keyCode==KeyEvent.ACTION_UP){}
+                        return true;
                     }
                 });
+
+
             }
             else {
-                new AlertDialog.Builder(SalesCartActivity.this)
+                final AlertDialog addNewProductDialog=    new AlertDialog.Builder(SalesCartActivity.this)
                         .setTitle("Add Product").setCancelable(false)
                         .setMessage(context.getString(R.string.this_product_not_in_your_permission))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -3931,13 +3940,26 @@ public class SalesCartActivity extends AppCompatActivity {
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();            }
+                        .show();
+                addNewProductDialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
+                    @Override
+                    public boolean onKey(DialogInterface arg0, int keyCode,
+                                         KeyEvent event) {
+                        // TODO Auto-generated method stub
+                        if (keyCode == KeyEvent.ACTION_DOWN) {
+
+                        }
+                        else if (keyCode==KeyEvent.ACTION_UP){}
+                        return true;
+                    }
+                });
+            }
 
         }
         barcodeScanned="";
         etSearch.setText("");
     }
-
 
     private void loadMoreProduct() {
 
