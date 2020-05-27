@@ -93,7 +93,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -242,7 +241,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             StrictMode.setThreadPolicy(policy);
         }
         try {
+          //  if (SETTINGS.enableCurrencies){
             updateCurrency();
+        //}
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -645,11 +646,38 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         salesCart.setEnabled(false);
     }
 public void checkLincess(){
+
     LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(this);
     lincessDBAdapter.open();
     lincessDBAdapter.GetLincess();
     if (SETTINGS.statusLincess.equals(CONSTANT.INACTIVE))
-    {
+    { String sDate1=SETTINGS.dueDate;
+        String[] parts = sDate1.split("-");
+        String dateYear=new SimpleDateFormat("yyyy", Locale.US).format(new Date());
+        String dateMonth=new SimpleDateFormat("MM", Locale.US).format(new Date());
+        String dateDay=new SimpleDateFormat("dd", Locale.US).format(new Date());
+        if (dateYear.equals(parts[0])){
+            if (dateMonth.equals(parts[1])){
+                if(dateDay.equals(parts[2])){
+                    report.setEnabled(false);
+                    product.setEnabled(false);
+                    schedule_workers.setEnabled(false);
+                    inventoryManagement.setEnabled(false);
+                    users.setEnabled(false);
+                    closingReport.setEnabled(false);
+                    category.setEnabled(false);
+                    category.setEnabled(false);
+                    customerClub.setEnabled(false);
+                    settings.setEnabled(false);
+                    btAReport.setEnabled(false);
+                    btZReport.setEnabled(false);
+                    salesCart.setEnabled(false);
+                    ViewDialogLincess alert = new ViewDialogLincess();
+                    alert.showDialog(ThisApp.getCurrentActivity(), getResources().getString(R.string.text_dialog_lincess));
+                }
+
+            }}
+        else{
         report.setEnabled(false);
         product.setEnabled(false);
         schedule_workers.setEnabled(false);
@@ -662,9 +690,8 @@ public void checkLincess(){
         settings.setEnabled(false);
         btAReport.setEnabled(false);
         btZReport.setEnabled(false);
-        salesCart.setEnabled(false);
-        ViewDialogLincess alert = new ViewDialogLincess();
-    alert.showDialog(ThisApp.getCurrentActivity(), getResources().getString(R.string.text_dialog_lincess));
+        salesCart.setEnabled(false);}
+
 }
 else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 

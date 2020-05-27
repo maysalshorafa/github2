@@ -63,6 +63,11 @@ public class SetUpManagement extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_COUNTRY="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_COUNTRY";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_LIST_CURRENCY_TYPE="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_LIST_CURRENCY_LIST";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE";
+
+
+
+
     boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false;
     int noOfPoint;
     String printerType , serverUrl,CompanyStatusSelect,currencySymbolSelect,currencyCodeSelect,currencyCountrySelect,codeDebendCountry;
@@ -129,7 +134,7 @@ public class SetUpManagement extends AppCompatActivity {
                 CompanyStatus.BO_AUTHORIZED_DEALER.name(),
                 CompanyStatus.BO_EXEMPT_DEALER.name()};
 
-       codeList =new String[]{countryWithCodeHasMap.Australia.getValue(),countryWithCodeHasMap.Canada.getValue(),countryWithCodeHasMap.Denmark.getValue(),
+       codeList =new String[]{countryWithCodeHasMap.Israel.getValue(),countryWithCodeHasMap.Australia.getValue(),countryWithCodeHasMap.Canada.getValue(),countryWithCodeHasMap.Denmark.getValue(),
                countryWithCodeHasMap.Egypt.getValue(),countryWithCodeHasMap.EMU.getValue(),countryWithCodeHasMap.GreatBritain.getValue(),
                countryWithCodeHasMap.Japan.getValue(),countryWithCodeHasMap.Jordan.getValue(),countryWithCodeHasMap.Lebanon.getValue(),
                countryWithCodeHasMap.Norway.getValue(),countryWithCodeHasMap.SouthAfrica.getValue(),countryWithCodeHasMap.USA.getValue(),
@@ -137,7 +142,7 @@ public class SetUpManagement extends AppCompatActivity {
 
         floatPoint = new Integer[]{2, 0, 1, 3};
 
-        countryList=new String[]{String.valueOf(countryWithCodeHasMap.Australia), String.valueOf(countryWithCodeHasMap.Canada), String.valueOf(countryWithCodeHasMap.Denmark),
+        countryList=new String[]{String.valueOf(countryWithCodeHasMap.Israel),String.valueOf(countryWithCodeHasMap.Australia), String.valueOf(countryWithCodeHasMap.Canada), String.valueOf(countryWithCodeHasMap.Denmark),
                 String.valueOf(countryWithCodeHasMap.Egypt), String.valueOf(countryWithCodeHasMap.EMU), String.valueOf(countryWithCodeHasMap.GreatBritain),
                 String.valueOf(countryWithCodeHasMap.Japan), String.valueOf(countryWithCodeHasMap.Jordan),
                 String.valueOf(countryWithCodeHasMap.Lebanon), String.valueOf(countryWithCodeHasMap.Norway),
@@ -355,6 +360,7 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branchId+"");
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL, serverUrl);
+                //editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE,)
               // Log.d("companySelectd",CompanyStatusSelect);
                 SETTINGS.BO_SERVER_URL=serverUrl;
             //    SETTINGS.companyStatus=CompanyStatusSelect;

@@ -640,7 +640,8 @@ public class SalesCartActivity extends AppCompatActivity {
                         getString(R.string.copyinvoice),
                         getString(R.string.replacement_invoice),getString(R.string.print)
 
-                };;
+                };
+
                 final OrderDBAdapter orderDBAdapter =new OrderDBAdapter(context);
                 orderDBAdapter.open();
                 final  OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(context);
@@ -766,92 +767,6 @@ public class SalesCartActivity extends AppCompatActivity {
                                                                         SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
                                                               }
                                                                 }
-                                                      //      }
-
-                                                           /* else if (product.getCurrencyType()==1){
-                                                                      double rateCurrency=ConverterCurrency.getRateCurrency("USD",SalesCartActivity.this);
-                                                                if(product.isWithTax()){
-                                                                    if(order.getCartDiscount()>0){
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100))))));
-                                                                        SalesWithoutTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                        Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
-                                                                    }else {
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
-                                                                        SalesWithoutTaxCancle += (orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                        Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
-                                                                    }
-                                                                }else {
-                                                                    if(order.getCartDiscount()>0){
-
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
-                                                                        Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order.getCartDiscount()/100));
-                                                                        salesaftertaxCancle+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))*rateCurrency);
-                                                                        Log.d("salesaftertax",salesaftertaxCancle+"ko22222");
-                                                                        SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                    }else {
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                                                        salesaftertaxCancle+=(orderDetailsList.get(i).getPaidAmount()*rateCurrency);
-                                                                        Log.d("salesaftertax",salesaftertaxCancle+"ko");
-                                                                        SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                    }
-                                                                }
-                                                            }
-                                                            else if (product.getCurrencyType()==2){
-                                                                double rateCurrency=ConverterCurrency.getRateCurrency("GBP",SalesCartActivity.this);
-                                                                if(product.isWithTax()){
-                                                                    if(order.getCartDiscount()>0){
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100))))));
-                                                                        SalesWithoutTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                        Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
-                                                                    }else {
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
-                                                                        SalesWithoutTaxCancle += (orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                        Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
-                                                                    }
-                                                                }else {
-                                                                    if(order.getCartDiscount()>0){
-
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
-                                                                        Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order.getCartDiscount()/100));
-                                                                        salesaftertaxCancle+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))*rateCurrency);
-                                                                        Log.d("salesaftertax",salesaftertaxCancle+"ko22222");
-                                                                        SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                    }else {
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                                                        salesaftertaxCancle+=(orderDetailsList.get(i).getPaidAmount()*rateCurrency);
-                                                                        Log.d("salesaftertax",salesaftertaxCancle+"ko");
-                                                                        SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                    }
-                                                                }
-                                                            }
-                                                            else if (product.getCurrencyType()==3){
-                                                                double rateCurrency=ConverterCurrency.getRateCurrency("EUR",SalesCartActivity.this);
-                                                                if(product.isWithTax()){
-                                                                    if(order.getCartDiscount()>0){
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100))))));
-                                                                        SalesWithoutTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                        Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
-                                                                    }else {
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
-                                                                        SalesWithoutTaxCancle += (orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                        Log.d("SalesWithoutTaxCancle",SalesWithoutTaxCancle+"f");
-                                                                    }
-                                                                }else {
-                                                                    if(order.getCartDiscount()>0){
-
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
-                                                                        Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order.getCartDiscount()/100));
-                                                                        salesaftertaxCancle+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order.getCartDiscount()/100)))*rateCurrency);
-                                                                        Log.d("salesaftertax",salesaftertaxCancle+"ko22222");
-                                                                        SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                    }else {
-                                                                        orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                                                        salesaftertaxCancle+=(orderDetailsList.get(i).getPaidAmount()*rateCurrency);
-                                                                        Log.d("salesaftertax",salesaftertaxCancle+"ko");
-                                                                        SalesWitheTaxCancle+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                                                    }
-                                                                }
-                                                            }*/
 
                                                         }
                                                         productDBAdapter.close();
@@ -886,6 +801,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                     }
                                     break;
                                 case 1:
+                                    if (SETTINGS.enableDuplicateInvoice){
                                     new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
                                             .setTitle(getString(R.string.copyinvoice))
                                             .setMessage(getString(R.string.print_copy_invoice))
@@ -1188,7 +1104,24 @@ public class SalesCartActivity extends AppCompatActivity {
                                                 }
                                             })
                                             .setIcon(android.R.drawable.ic_dialog_alert)
-                                            .show();
+                                            .show();}
+                                    else{
+                                        new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
+                                                .setTitle(getString(R.string.copyinvoice))
+                                                .setMessage("يرجى تفعيلها من اعدادات النظام")
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // do nothing
+                                                    }
+                                                })
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .show();
+                                    }
                                     break;
                                 case 2:
                                     OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
@@ -3642,7 +3575,7 @@ public class SalesCartActivity extends AppCompatActivity {
         tempSaleTotalPrice = 0;
         String a = tvTotalPrice.getText().toString();
         Log.d("tvTotalPrice",tvTotalPrice.getText().toString());
-        String b = a.replace(SETTINGS.currencySymbol, "");
+       // String b = a.replace(SETTINGS.currencySymbol, "");
         double SaleOriginalityPrice = 0;
 
 
@@ -3693,12 +3626,14 @@ public class SalesCartActivity extends AppCompatActivity {
                 currencyDBAdapter.open();
                 Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
                 currencyDBAdapter.close();
-                Log.d("RateDollar",currency.getRate()+"");
+
 
                     saleTotalPrice += o.getItemTotalPrice() * currency.getRate();
+
                     Log.d("saleTotalPrice", String.valueOf(saleTotalPrice));
                     SaleOriginalityPrice += (o.getUnitPrice() * o.getQuantity() * currency.getRate());
                     Log.d("SaleOriginalityPrice", String.valueOf(SaleOriginalityPrice));
+
 
             }
         }
@@ -3928,16 +3863,21 @@ public class SalesCartActivity extends AppCompatActivity {
         Product product = new Product();
         char firstChar = barcodeScanned.charAt(0);
         productDBAdapter.open();
+
         if(firstChar=='2'&&barcodeScanned.length()==13){
+            product = productDBAdapter.getProductByBarCode(barcodeScanned);
+            if (product!=null&& !product.getUnit().equals("BARCODEWITHPRICE") ){
+                product = productDBAdapter.getProductByBarCode(barcodeScanned);
+            }
+            else {
             String productNum = barcodeScanned.substring(1,7);
             Log.d("tttttt",productNum);
             Double newPrice = Double.parseDouble(barcodeScanned.substring(7))/1000;
             product = productDBAdapter.getProductByBarCode(productNum);
             if(product!=null){
-                product.setPrice(newPrice);
+                product.setPrice(newPrice);}
             }
         } else {
-
             product = productDBAdapter.getProductByBarCode(barcodeScanned);
         }
         productDBAdapter.close();
@@ -3951,8 +3891,9 @@ public class SalesCartActivity extends AppCompatActivity {
             List<Integer> employeePermition =employeeDBAdapter.getPermissions(SESSION._EMPLOYEE.getEmployeeId());
 
             if(employeePermition.contains(3)){
-                new AlertDialog.Builder(SalesCartActivity.this)
+              AlertDialog najla = new AlertDialog.Builder(SalesCartActivity.this)
                         .setTitle("Add Product")
+                        .setCancelable(false)
                         .setMessage("Are you want to add this product?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -3967,10 +3908,17 @@ public class SalesCartActivity extends AppCompatActivity {
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
+                najla.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        // dialog dismisses
+                        // Do your function here
+                    }
+                });
             }
             else {
                 new AlertDialog.Builder(SalesCartActivity.this)
-                        .setTitle("Add Product")
+                        .setTitle("Add Product").setCancelable(false)
                         .setMessage(context.getString(R.string.this_product_not_in_your_permission))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

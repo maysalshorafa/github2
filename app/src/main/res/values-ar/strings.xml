@@ -27,7 +27,7 @@
     <string name="qty">كمية</string>
     <string name="refresh">تحديث</string>
     <string name="returned">باقي</string>
-    <string name="total_price">السعر الكلي</string>
+    <string name="total_price">مجمل المبيعات</string>
     <string name="total_saved">وفر</string>
     <string name="transfer_credit_card">مرر البطاقة الممغنطة</string>
     <string name="try_again">حاول مرة اخرى</string>
@@ -686,8 +686,8 @@
     <string name="SelectServer">اختر السيرفر</string>
     <string name="product_count">  كمية المنتجات : </string>
     <string name="accounting_information">المعلومات المحاسبية</string>
-    <string name="Sales_With_tax">اسعار المنتوجات شامل الضريبة</string>
-    <string name="Sales_Without_tax">اسعار المنتوجات الغير شاملة الضريبة</string>
+    <string name="Sales_With_tax">مبيعات ملزمة بالضريبة</string>
+    <string name="Sales_Without_tax">مبيعات معافاه من الضريبة</string>
     <string name="plzwait"> الرجاء الانتظار</string>
     <string name="loadingdata">جاري تحميل البيانات</string>
 

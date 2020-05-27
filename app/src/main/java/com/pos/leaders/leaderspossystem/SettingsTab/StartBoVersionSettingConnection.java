@@ -73,8 +73,9 @@ public class StartBoVersionSettingConnection extends AsyncTask<String,Void,Strin
             String res = messageTransmit.authGet(ApiURL.Version, token);
 
             try {
+                if(res!=null && !res.isEmpty() ){
                 jsonObject = new JSONObject(res);
-                BOPOSVersionSettings.jsonObject = jsonObject;
+                BOPOSVersionSettings.jsonObject = jsonObject;}
 
             }
             catch (JSONException e){

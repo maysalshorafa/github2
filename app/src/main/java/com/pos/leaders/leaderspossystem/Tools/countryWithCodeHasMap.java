@@ -8,6 +8,7 @@ import java.util.Map;
  */
 
 public enum countryWithCodeHasMap {
+    Israel("ILS"),
     USA("USD"),
     GreatBritain("GBP"),
     Japan("JPY"),

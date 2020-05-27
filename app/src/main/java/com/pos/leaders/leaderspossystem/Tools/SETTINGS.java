@@ -27,6 +27,7 @@ public class SETTINGS {
 	public static PrinterType printer ;
 	public static CompanyStatus company;
 	public static boolean enableCurrencies ;
+	public static boolean enableDuplicateInvoice;
 	public static int decimalNumbers  ;
 	public static boolean enableAllBranch;
 	public static boolean enableExemptDealer;
@@ -39,7 +40,7 @@ public class SETTINGS {
 	public static boolean timerState = false;
 	public static boolean BufferEmail = false;
 	public static String BO_SERVER_URLV3 = "http://apiv3.leadpos.net/";
-	public static String BO_SERVER_URL = "http://9b4b9d30.ngrok.io/";
+	public static String BO_SERVER_URL = "http://6f2c3917.ngrok.io/";
 	public static String BO_SERVER_URL_V1 = "http://api.leadpos.net/webapi";
 	public static String BO_SERVER_URL_V2 = "http://apiv2.leadpos.net";
 	public static String FEEDBACK_SERVER = "http://report.leadpos.net/api";

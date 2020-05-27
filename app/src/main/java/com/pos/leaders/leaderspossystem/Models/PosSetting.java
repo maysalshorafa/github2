@@ -7,6 +7,7 @@ package com.pos.leaders.leaderspossystem.Models;
 public class PosSetting {
     private long posSettingId;
     private boolean enableCurrency;
+    private boolean enableDuplicateInvoice;
     private boolean enableCreditCard;
     private boolean enablePinPad;
     private boolean enableCustomerMeasurement;
@@ -23,7 +24,8 @@ public class PosSetting {
     public PosSetting() {
     }
 
-    public PosSetting(long posSettingId, boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String currencyCode,String currencySymbol,String country) {
+    public PosSetting(long posSettingId, boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String currencyCode,String currencySymbol,String country
+    ,boolean enableDuplicateInvoice) {
         this.posSettingId = posSettingId;
         this.enableCurrency = enableCurrency;
         this.enableCreditCard = enableCreditCard;
@@ -38,6 +40,7 @@ public class PosSetting {
         this.currencyCode=currencyCode;
         this.currencySymbol=currencySymbol;
         this.country=country;
+        this.enableDuplicateInvoice=enableDuplicateInvoice;
     }
     public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId) {
         this.enableCurrency = enableCurrency;
@@ -164,11 +167,20 @@ public class PosSetting {
         this.country = country;
     }
 
+    public boolean isEnableDuplicateInvoice() {
+        return enableDuplicateInvoice;
+    }
+
+    public void setEnableDuplicateInvoice(boolean enableDuplicateInvoice) {
+        this.enableDuplicateInvoice = enableDuplicateInvoice;
+    }
+
     @Override
     public String toString() {
         return "PosSetting{" +
                 "posSettingId=" + posSettingId +
                 ", enableCurrency=" + enableCurrency +
+                ", enableDuplicateInvoice=" + enableDuplicateInvoice +
                 ", enableCreditCard=" + enableCreditCard +
                 ", enablePinPad=" + enablePinPad +
                 ", enableCustomerMeasurement=" + enableCustomerMeasurement +

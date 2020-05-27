@@ -85,7 +85,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 10;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -448,6 +448,13 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
                     break;
 
+                case 9:
+                    db.execSQL(PosSettingDbAdapter.addColumnInteger("duplicateInvoice"));
+                    db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
+                    db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
+                    db.execSQL(SettingsDBAdapter.addColumnText("country"));
+                    db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
+                    break;
 
 
 

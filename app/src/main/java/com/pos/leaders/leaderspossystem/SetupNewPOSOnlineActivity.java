@@ -237,8 +237,8 @@ class StartConnection extends AsyncTask<String,Void,String> {
 
 
             }
-            Log.d("messageResultONSTART",initRes);
-            Log.d("jsonObjectOnStart",responseBody.toString());
+           /* Log.d("messageResultONSTART",initRes);
+            Log.d("jsonObjectOnStart",responseBody.toString());*/
 
 
         } catch (IOException | JSONException e) {
@@ -520,7 +520,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     String verCode = pInfo.versionName;
                     PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                     posSettingDbAdapter.open();
-                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SetupNewPOSOnlineActivity.currencyCode,SetupNewPOSOnlineActivity.currencySymbol,SetupNewPOSOnlineActivity.country);
+                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SetupNewPOSOnlineActivity.currencyCode,SetupNewPOSOnlineActivity.currencySymbol,SetupNewPOSOnlineActivity.country,SETTINGS.enableDuplicateInvoice);
                     Util.isFirstLaunch(context, true);
                     //finish();
                 } else {

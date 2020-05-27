@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -334,8 +335,15 @@ public class MonthZReportView extends AppCompatActivity {
                     if(newBitmap!=null){
                     newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
                     }
-                    newBitmap= combineImageIntoOne(bitmapList);
-                    imageView.setImageBitmap(newBitmap);
+
+                    imageView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            newBitmap= combineImageIntoOne(bitmapList);
+                            imageView.setImageBitmap(newBitmap);
+                        }
+                    });
+                   // imageView.setImageBitmap(newBitmap);
 
                     //after async close progress dialog
                     progressDialog.dismiss();
@@ -399,7 +407,12 @@ public class MonthZReportView extends AppCompatActivity {
         }
     }
     private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
-        int w = 0, h = 0;
+       // int w = 0, h = 0;
+
+        Display display = getWindowManager().getDefaultDisplay();
+        int w = display.getWidth();  // deprecated
+        int h = display.getHeight();
+
         for (int i = 0; i < bitmap.size(); i++) {
             if (i < bitmap.size() - 1) {
                 w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();

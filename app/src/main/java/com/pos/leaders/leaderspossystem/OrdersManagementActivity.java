@@ -399,6 +399,258 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     });
                     //endregion Replacement Note Button
 
+                    final Button duplicate = (Button) view.findViewById(R.id.listSaleManagement_BTDuplicate);
+
+                    duplicate.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //send customerName copy from the in voice
+
+                            if (SETTINGS.enableDuplicateInvoice){
+                                new AlertDialog.Builder(OrdersManagementActivity.this)
+                                        .setTitle(getString(R.string.copyinvoice))
+                                        .setMessage(getString(R.string.print_copy_invoice))
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                OrderDBAdapter oDb = new OrderDBAdapter(OrdersManagementActivity.this);
+                                                oDb.open();
+                                                OrderDetailsDBAdapter orderDetailsDBAdapter = new OrderDetailsDBAdapter(OrdersManagementActivity.this);
+                                                orderDetailsDBAdapter.open();
+                                                CashPaymentDBAdapter cashPaymentDBAdapter=new CashPaymentDBAdapter(OrdersManagementActivity.this);
+                                                cashPaymentDBAdapter.open();
+                                                PaymentDBAdapter paymentDBAdapter =new PaymentDBAdapter(OrdersManagementActivity.this);
+                                                paymentDBAdapter.open();
+                                                CurrencyOperationDBAdapter  currencyOperationDBAdapter=new CurrencyOperationDBAdapter(OrdersManagementActivity.this);
+                                                currencyOperationDBAdapter.open();
+                                                CurrencyReturnsDBAdapter  currencyReturnsDBAdapter=new CurrencyReturnsDBAdapter(OrdersManagementActivity.this);
+                                                currencyReturnsDBAdapter.open();
+                                                List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(sale.getOrderId());
+
+                                                List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
+                                                List<Payment> paymentList =paymentDBAdapter.getPaymentBySaleID(sale.getOrderId());
+                                                List<CurrencyOperation>currencyOperationList=currencyOperationDBAdapter.getCurrencyOperationByOrderID(sale.getOrderId());
+                                                List<CurrencyReturns>currencyReturnsList=currencyReturnsDBAdapter.getCurencyReturnBySaleID(sale.getOrderId());
+                                                Log.d("copyOrder",sale.toString());
+                                                long orderId= oDb.insertEntryDuplicate(sale);
+                                                for (int i=0;i<orderDetailsList.size();i++){
+                                                    orderDetailsDBAdapter.open();
+                                                    OrderDetails o =orderDetailsList.get(i);
+                                                    o.setOrderId(orderId);
+                                                    orderDetailsDBAdapter.insertEntryDuplicate(o);
+                                                    orderDetailsDBAdapter.close();
+                                                }
+                                                for (int i=0;i<cashPaymentList.size();i++){
+                                                    cashPaymentDBAdapter.open();
+                                                    CashPayment cashPayment=cashPaymentList.get(i);
+                                                    cashPayment.setOrderId(orderId);
+                                                    cashPaymentDBAdapter.insertEntryDuplicate(cashPayment);
+                                                    cashPaymentDBAdapter.close();
+                                                }
+                                                for (int i=0;i<paymentList.size();i++){
+                                                    paymentDBAdapter.open();
+                                                    Payment payment=paymentList.get(i);
+                                                    payment.setOrderId(orderId);
+                                                    paymentDBAdapter.insertEntryDuplicate(payment);
+                                                    paymentDBAdapter.close();
+                                                }
+                                                for (int i=0;i<currencyOperationList.size();i++){
+                                                    currencyOperationDBAdapter.open();
+                                                    CurrencyOperation currencyOperation=currencyOperationList.get(i);
+                                                    currencyOperation.setOperationId(orderId);
+                                                    currencyOperationDBAdapter.insertEntryDuplicate(currencyOperation);
+                                                    currencyOperationDBAdapter.close();
+                                                }
+                                                for (int i=0;i<currencyReturnsList.size();i++){
+                                                    currencyReturnsDBAdapter.open();
+                                                    CurrencyReturns currencyReturns=currencyReturnsList.get(i);
+                                                    currencyReturns.setOrderId(orderId);
+                                                    currencyReturnsDBAdapter.insertEntryDuplicate(currencyReturns);
+                                                    currencyReturnsDBAdapter.close();
+                                                }
+                                                oDb.open();
+                                                orderDetailsDBAdapter.open();
+                                                Order order1 = oDb.getOrderById(orderId);
+                                                SESSION._TEMP_ORDERS=order1;
+                                                SESSION._TEMP_ORDER_DETAILES=orderDetailsDBAdapter.getOrderBySaleID(order1.getOrderId());
+                                                ZReportDBAdapter zReportDBAdapter1 = new ZReportDBAdapter(OrdersManagementActivity.this);
+                                                zReportDBAdapter1.open();
+                                                ZReportCountDbAdapter zReportCountDbAdapter1 = new ZReportCountDbAdapter(OrdersManagementActivity.this);
+                                                zReportCountDbAdapter1.open();
+                                                ZReportCount zReportCount1=null;
+                                                ZReport z=null;
+                                                try {
+                                                    zReportCount1 = zReportCountDbAdapter1.getLastRow();
+                                                    z= zReportDBAdapter1.getLastRow();
+
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
+
+                                                double SalesWitheTaxDuplicute=0,SalesWithoutTaxDuplicute=0,salesaftertaxDuplicute=0;
+                                                for (int i=0;i<orderDetailsList.size();i++){
+                                                    productDBAdapter.open();
+                                                    Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
+                                                    //     if (product.getCurrencyType()==0){
+                                                    double rateCurrency=ConverterCurrency.getRateCurrency(product.getCurrencyType(),OrdersManagementActivity.this);
+                                                    if(!product.isWithTax()){
+                                                        if(order1.getCartDiscount()>0){
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100))))));
+                                                            SalesWithoutTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
+                                                            Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
+                                                        }else {
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
+                                                            SalesWithoutTaxDuplicute += (orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
+                                                            Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
+                                                        }
+                                                    }else {
+                                                        if(order1.getCartDiscount()>0){
+
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
+                                                            Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order1.getCartDiscount()/100));
+                                                            salesaftertaxDuplicute+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))*rateCurrency);
+                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko22222");
+                                                            SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
+                                                        }else {
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
+                                                            salesaftertaxDuplicute+=(orderDetailsList.get(i).getPaidAmount()*rateCurrency);
+                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko");
+                                                            SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*rateCurrency);
+                                                        }
+                                                    }
+                                                    //    }
+
+                                            /*  else   if (product.getCurrencyType()==1){
+                                                    if(product.isWithTax()){
+                                                        if(order1.getCartDiscount()>0){
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100))))));
+                                                            SalesWithoutTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*3.491);
+                                                            Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
+                                                        }else {
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
+                                                            SalesWithoutTaxDuplicute += (orderDetailsList.get(i).getPaidAmountAfterTax()*3.491);
+                                                            Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
+                                                        }
+                                                    }else {
+                                                        if(order1.getCartDiscount()>0){
+
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
+                                                            Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order1.getCartDiscount()/100));
+                                                            salesaftertaxDuplicute+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))*3.491);
+                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko22222");
+                                                            SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*3.491);
+                                                        }else {
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
+                                                            salesaftertaxDuplicute+=(orderDetailsList.get(i).getPaidAmount()*3.491);
+                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko");
+                                                            SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*3.491);
+                                                        }
+                                                    }
+                                                }
+
+                                                else   if (product.getCurrencyType()==2){
+                                                    if(product.isWithTax()){
+                                                        if(order1.getCartDiscount()>0){
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100))))));
+                                                            SalesWithoutTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.5974);
+                                                            Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
+                                                        }else {
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
+                                                            SalesWithoutTaxDuplicute += (orderDetailsList.get(i).getPaidAmountAfterTax()*4.5974);
+                                                            Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
+                                                        }
+                                                    }else {
+                                                        if(order1.getCartDiscount()>0){
+
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
+                                                            Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order1.getCartDiscount()/100));
+                                                            salesaftertaxDuplicute+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))*3.491);
+                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko22222");
+                                                            SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.5974);
+                                                        }else {
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
+                                                            salesaftertaxDuplicute+=(orderDetailsList.get(i).getPaidAmount()*4.5974);
+                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko");
+                                                            SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.5974);
+                                                        }
+                                                    }
+                                                }
+
+
+                                                else   if (product.getCurrencyType()==3){
+                                                    if(product.isWithTax()){
+                                                        if(order1.getCartDiscount()>0){
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100))))));
+                                                            SalesWithoutTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.1002);
+                                                            Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
+                                                        }else {
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount())));
+                                                            SalesWithoutTaxDuplicute += (orderDetailsList.get(i).getPaidAmountAfterTax()*4.1002);
+                                                            Log.d("SalesWithoutTaxCancle",SalesWithoutTaxDuplicute+"f");
+                                                        }
+                                                    }else {
+                                                        if(order1.getCartDiscount()>0){
+
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
+                                                            Log.d("salesaftertax", orderDetailsList.get(i).getPaidAmountAfterTax()+"ko2333"+orderDetailsList.get(i).getPaidAmount()+"ko2333"+(order1.getCartDiscount()/100));
+                                                            salesaftertaxDuplicute+=((orderDetailsList.get(i).getPaidAmount()-(orderDetailsList.get(i).getPaidAmount()*(order1.getCartDiscount()/100)))*3.491);
+                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko22222");
+                                                            SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.1002);
+                                                        }else {
+                                                            orderDetailsList.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(orderDetailsList.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
+                                                            salesaftertaxDuplicute+=(orderDetailsList.get(i).getPaidAmount()*4.1002);
+                                                            Log.d("salesaftertax",salesaftertaxDuplicute+"ko");
+                                                            SalesWitheTaxDuplicute+=(orderDetailsList.get(i).getPaidAmountAfterTax()*4.1002);
+                                                        }
+                                                    }
+                                                }*/
+
+
+                                                }
+                                                z.setCashTotal(z.getCashTotal()+sale.getTotalPrice());
+                                                z.setInvoiceReceiptAmount(z.getInvoiceReceiptAmount()+sale.getTotalPrice());
+                                                z.setFirstTypeAmount(z.getFirstTypeAmount()+sale.getTotalPrice());
+                                                z.setSalesWithTax(Double.parseDouble(Util.makePrice(z.getSalesWithTax()+SalesWitheTaxDuplicute)));
+                                                z.setSalesBeforeTax(Double.parseDouble(Util.makePrice(z.getSalesBeforeTax()+SalesWithoutTaxDuplicute)));
+                                                z.setTotalTax(Double.parseDouble(Util.makePrice(z.getTotalTax()+(salesaftertaxDuplicute - SalesWitheTaxDuplicute))));
+                                                zReportCount1.setCashCount(zReportCount1.getCashCount()+1);
+                                                zReportCount1.setInvoiceReceiptCount(zReportCount1.getInvoiceReceiptCount()+1);
+                                                zReportCount1.setFirstTYpeCount(zReportCount1.getFirstTYpeCount()+1);
+                                                zReportDBAdapter1.updateEntry(z);
+                                                zReportCountDbAdapter1.updateEntry(zReportCount1);
+                                                Activity a=getParent();
+                                                PrinterTools.printAndOpenCashBox("", "", "", 600,OrdersManagementActivity.this,a);
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } else {
+                                new android.support.v7.app.AlertDialog.Builder(OrdersManagementActivity.this)
+                                        .setTitle(getString(R.string.copyinvoice))
+                                        .setMessage("يرجى تفعيلها من اعدادات النظام")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            }
+                        }
+                    });
+
+
+
                     //region Cancellation ORDER Button
 
                     final Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
@@ -710,10 +962,13 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     sale.setUser(SESSION._EMPLOYEE);
 
                     final Button duplicate = (Button) view.findViewById(R.id.listSaleManagement_BTDuplicate);
+
                     duplicate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             //send customerName copy from the in voice
+
+                            if (SETTINGS.enableDuplicateInvoice){
                             new AlertDialog.Builder(OrdersManagementActivity.this)
                                     .setTitle(getString(R.string.copyinvoice))
                                     .setMessage(getString(R.string.print_copy_invoice))
@@ -936,6 +1191,23 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                     })
                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                     .show();
+                            } else {
+                                new android.support.v7.app.AlertDialog.Builder(OrdersManagementActivity.this)
+                                        .setTitle(getString(R.string.copyinvoice))
+                                        .setMessage("يرجى تفعيلها من اعدادات النظام")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            }
                         }
                     });
                     //region Print Button

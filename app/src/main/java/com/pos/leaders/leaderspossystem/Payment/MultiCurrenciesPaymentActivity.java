@@ -209,6 +209,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                     multiCurrencyFromCheckCurrentlyInsert=true;
+                Log.d("ghghhe",mcf.currencySpinner.getSelectedItem().toString());
                     insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.checks));
 
             }
@@ -403,9 +404,8 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(),beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CHECK, new CurrencyType(1, currency + ""), actualCurrencyRate));
                 updateLastRow();
                 lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-                Log.d("cyrrr",currencyType);
                 Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ChecksActivity.class);
-                intent.putExtra("_CurrencyType", currencyType);
+                intent.putExtra("_CurrencyType", currency);
                 intent.putExtra("_Price", val);
                 intent.putExtra("_custmer", "general");
                 intent.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,true);

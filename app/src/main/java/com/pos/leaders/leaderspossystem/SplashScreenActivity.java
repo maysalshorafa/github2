@@ -17,6 +17,7 @@ import com.pos.leaders.leaderspossystem.SettingsTab.StartBoVersionSettingConnect
 import com.pos.leaders.leaderspossystem.Tools.CompanyStatus;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 
@@ -55,7 +56,9 @@ public class SplashScreenActivity extends Activity {
         //Fabric.with(this, new Crashlytics());
         setContentView(R.layout.splash_screen);
         ImageView iv=(ImageView)findViewById(R.id.splashScreen_iv);
+        ThisApp.setCurrentActivity(this);
         contextActivity=SplashScreenActivity.this;
+
 
 
         iv.setImageResource(R.drawable.white_color_logo);

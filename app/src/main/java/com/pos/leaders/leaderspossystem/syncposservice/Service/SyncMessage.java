@@ -256,7 +256,9 @@ public class SyncMessage extends Service {
                         //if(!(DateConverter.toDate(currency.getLastUpdate().getTime()) == DateConverter.toDate(timestamp.getTime()))){
 
                         try {
+                         //   if (SETTINGS.enableCurrencies){
                             updateCurrency();
+                        //}
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -1187,7 +1189,6 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_POS_SETTING:
                     PosSetting posSetting = null;
                     posSetting = objectMapper.readValue(msgData, PosSetting.class);
-
                     PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(this);
                     posSettingDbAdapter.open();
                     rID = posSettingDbAdapter.insertEntry(posSetting);

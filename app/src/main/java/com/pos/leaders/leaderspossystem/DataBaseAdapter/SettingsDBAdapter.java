@@ -248,4 +248,9 @@ public class SettingsDBAdapter {
         return dbc;
     }
 
+    public static String addColumnText(String columnName) {
+        String dbc = "ALTER TABLE " + SETTINGS_TABLE_NAME
+                + " add column " + columnName + " TEXT  DEFAULT '' ;";
+        return dbc;
+    }
 }

@@ -1557,7 +1557,7 @@ public class Util {
                             String verCode = pInfo.versionName;
                             PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                             posSettingDbAdapter.open();
-                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SETTINGS.currencyCode,SETTINGS.currencySymbol,SETTINGS.country);
+                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SETTINGS.currencyCode,SETTINGS.currencySymbol,SETTINGS.country,SETTINGS.enableDuplicateInvoice);
                             //finish();
                         } else {
                             Log.e("setup",jsonObject.getString(MessageKey.responseType));

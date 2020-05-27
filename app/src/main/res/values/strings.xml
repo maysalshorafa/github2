@@ -203,7 +203,7 @@
     <string name="tendered">Tendered</string>
     <string name="total_return">Total Return</string>
     <string name="total_paid"> TOTAL PAID</string>
-    <string name="total_price"> TOTAL PRICE</string>
+    <string name="total_price">total sales i cluding vat </string>
     <string name="total_required"> Required</string>
 
     <!--Checks Activity pop-up-->
@@ -439,7 +439,7 @@
     <string name="do_you_want_to_restore_the_system">Do You Want To Restore The System.</string>
     <string name="company_name">Company Name</string>
     <string name="POS_ID">POS Id</string>
-    <string name="tax">Tax</string>
+    <string name="tax">Vat</string>
     <string name="price_before_tax">Price Before Tax</string>
 
     <string name="invoice_note">Invoice note</string>
@@ -798,8 +798,8 @@
     <string name="title_sales_report_activity">Sales Report</string>
     <string name="there_are_no_sales">There are no sales</string>
     <string name="accounting_information">Accounting Information</string>
-    <string name="Sales_Without_tax">Sales Without Tax</string>
-    <string name="Sales_With_tax">Sales Whit Tax</string>
+    <string name="Sales_Without_tax">sales exempted vat</string>
+    <string name="Sales_With_tax">sales owed vat</string>
     <string name="all_sales">All Sales</string>
     <string name="plzwait">Please Wait</string>
     <string name="loadingdata">Loading Data</string>

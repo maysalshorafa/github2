@@ -78,7 +78,7 @@
     <string name="cant_do_this_function_discount">לא תוכל לתת את ההנחה הזו</string>
     <string name="card_expiry">תאריך הכרטיס</string>
     <string name="check_number">מס\' צ\'ק</string>
-    <string name="tax">מע\'\'מ</string>
+    <string name="tax">מע"מ</string>
     <string name="general">כללי</string>
     <string name="extracting_files">הפקת קבצים</string>
     <string name="credit">-</string>
@@ -704,8 +704,8 @@
     <string name="there_are_no_sales">אין מכירות</string>
     <string name="product_count">כמות מוצרים</string>
     <string name="accounting_information">מידע חשבונאי</string>
-    <string name="Sales_Without_tax">מכירות ללא מע"מ</string>
-    <string name="Sales_With_tax">מכירות עם מע"מ</string>
+    <string name="Sales_Without_tax">סה"כ מכירות </string>
+    <string name="Sales_With_tax">מכירות חייבות מע"מ</string>
     <string name="all_sales">כל המכירות</string>
     <string name="plzwait">אנא המתן</string>
     <string name="loadingdata">טוען נתונים</string>

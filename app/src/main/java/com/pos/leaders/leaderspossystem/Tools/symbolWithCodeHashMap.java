@@ -8,6 +8,7 @@ import java.util.Map;
  */
 
 public enum symbolWithCodeHashMap {
+    ILS("₪"),
     USD("$"),
     GBP("£"),
     JPY("¥"),

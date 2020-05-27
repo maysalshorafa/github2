@@ -43,9 +43,10 @@ public class PosSettingDbAdapter {
     protected static final String POS_SETTING_COLUMN_CURRENCY_CODE= "currencyCode";
     protected static final String POS_SETTING_COLUMN_CURRENCY_SYMBOL= "currencySymbol";
     protected static final String POS_SETTING_COLUMN_COUNTRY= "country";
+    protected static final String POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE="duplicateInvoice";
 
     public static final String DATABASE_CREATE = "CREATE TABLE PosSetting ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "`enableCurrency` INTEGER DEFAULT 0 , `enableCreditCard` INTEGER DEFAULT 0, " +
+            "`enableCurrency` INTEGER DEFAULT 0 ,`duplicateInvoice` INTEGER DEFAULT 0, `enableCreditCard` INTEGER DEFAULT 0, " +
             "`enablePinPad` INTEGER DEFAULT 0, `enableCustomerMeasurement` INTEGER DEFAULT 0,`noOfFloatPoint` INTEGER DEFAULT 0,`posVersionNo` TEXT ,`posDbVersionNo` TEXT , `printerType` TEXT  , `companyStatus` TEXT  ,`branchId` INTEGER DEFAULT 0 , `currencyCode` TEXT  , `currencySymbol` TEXT ,`country` TEXT )";
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -79,7 +80,8 @@ public class PosSettingDbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String currencyCode,String currencySymbol,String country){
+    public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String currencyCode,String currencySymbol,String country,
+    boolean  enableDuplicateInvoice){
         if(db.isOpen()){
 
         }else {
@@ -90,7 +92,7 @@ public class PosSettingDbAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,companyStatus,posVersionNo,posDbVersionNo,branchId,currencyCode,currencySymbol,country);
+        PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,companyStatus,posVersionNo,posDbVersionNo,branchId,currencyCode,currencySymbol,country,enableDuplicateInvoice);
         sendToBroker(MessageType.ADD_POS_SETTING, posSetting, this.context);
 
         try {
@@ -129,6 +131,7 @@ public class PosSettingDbAdapter {
         val.put(POS_SETTING_COLUMN_CURRENCY_CODE,posSetting.getCurrencyCode());
         val.put(POS_SETTING_COLUMN_CURRENCY_SYMBOL,posSetting.getCurrencySymbol());
         val.put(POS_SETTING_COLUMN_COUNTRY,posSetting.getCountry());
+        val.put(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE, posSetting.isEnableDuplicateInvoice() ? 1 : 0);
         try {
 
             return db.insert(POS_SETTING_TABLE_NAME, null, val);
@@ -307,17 +310,93 @@ public class PosSettingDbAdapter {
                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_PRINTER_TYPE)),
                 cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COMPANY_STATUS)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_VERSION_NO)),
                         cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_DB_VERSION_NO)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_BRANCH_ID))),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_CODE)),
-                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_SYMBOL)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COUNTRY))
+                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_SYMBOL)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COUNTRY)),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE)))
                 );
         cursor.close();
   close();
         return posSetting;
     }
 
+    public PosSetting getPosSettingID() {
+        if (db.isOpen()) {
+
+        } else {
+            try {
+                open();
+            } catch (SQLException ex) {
+                Log.d("Exception", ex.toString());
+            }
+        }
+        PosSetting posSetting = new PosSetting();
+        Cursor cursor = null;
+        cursor = db.rawQuery("SELECT * FROM " + POS_SETTING_TABLE_NAME + " ORDER BY id DESC LIMIT 1", null);
+        cursor.moveToFirst();
+        if (cursor != null && cursor.getCount() != 0) {
+            posSetting = build(cursor);
+            Log.d("posSetting", posSetting.toString());
+        }
+        return posSetting;
+    }
+
+
+
 
     public static String addColumnText(String columnName) {
         String dbc = "ALTER TABLE " + POS_SETTING_TABLE_NAME
                 + " add column " + columnName + " TEXT  DEFAULT '' ;";
+        return dbc;
+    }
+
+
+    private PosSetting build(Cursor cursor) {
+        return new PosSetting(Long.parseLong(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ID))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_CURRENCY))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_CREDIT_CARD))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_PIN_PAD))),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_CUSTOMER_MEASUREMENT))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_FLOAT_POINT))),
+                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_PRINTER_TYPE)),
+                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COMPANY_STATUS)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_VERSION_NO)),
+                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_DB_VERSION_NO)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_BRANCH_ID))),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_CODE)),
+                cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_SYMBOL)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COUNTRY)),
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE)))
+        );
+    }
+
+
+
+
+    public int updateDuplicateInvoice(boolean enableDuplicateInvoice,long idPosSetting) {
+        if (db.isOpen()) {
+
+        } else {
+            try {
+                open();
+            } catch (SQLException ex) {
+                Log.d("Exception", ex.toString());
+            }
+        }
+        ContentValues updatedValues = new ContentValues();
+        //Assign values for each row.
+        String where = POS_SETTING_COLUMN_ID + " = ?";
+        updatedValues.put(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE, enableDuplicateInvoice);
+
+        try {
+            db.update(POS_SETTING_TABLE_NAME, updatedValues, where, new String[]{idPosSetting + ""});
+            //   db.update(POS_LINCESS_TABLE_NAME, val, null, null);
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("posSetting update", "update Entry at " + POS_SETTING_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+
+    }
+
+
+    public static String addColumnInteger(String columnName) {
+        String dbc = "ALTER TABLE " + POS_SETTING_TABLE_NAME
+                + " add column " + columnName + " INTEGER  DEFAULT 0 ;";
         return dbc;
     }
 }

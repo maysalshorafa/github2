@@ -154,7 +154,7 @@ public class InventoryDbAdapter {
         while(itr.hasNext()){
             Map.Entry entry = (Map.Entry) itr.next();
             productInventoryDbAdapter.open();
-            String key = (String) entry.getKey();
+            String key = String.valueOf(entry.getKey());
             Integer value = (Integer) entry.getValue();
             productInventoryDbAdapter.updateEntry(Long.parseLong(key),value);
             productInventoryDbAdapter.close();

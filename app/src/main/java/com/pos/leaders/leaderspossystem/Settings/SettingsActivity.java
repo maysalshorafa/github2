@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.BackupActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.LogInActivity;
@@ -375,12 +376,39 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 settingsDBAdapter.readSetting();
 
             }
+          final   PosSettingDbAdapter posSettingDbAdapter=new PosSettingDbAdapter(getContext());
+            posSettingDbAdapter.open();
+            SwitchPreference enableDuplicateInvoice= (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE");
+
+            enableDuplicateInvoice.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    //   if (newValue.toString().equals("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY")) {
+                    boolean test = (Boolean) newValue;
+                    if (test) {
+                        long idPosSetting=posSettingDbAdapter.getPosSettingID().getPosSettingId();
+                        SETTINGS.enableDuplicateInvoice=true;
+                        posSettingDbAdapter.updateDuplicateInvoice(SETTINGS.enableDuplicateInvoice,idPosSetting);
+
+                    } else {
+                        long idPosSetting=posSettingDbAdapter.getPosSettingID().getPosSettingId();
+                        SETTINGS.enableDuplicateInvoice=false;
+                        posSettingDbAdapter.updateDuplicateInvoice(SETTINGS.enableDuplicateInvoice,idPosSetting);
+                    }
+
+                    // }
+                    return true;
+                }
+            });
+
+
             final MultiSelectListPreference multiSelectListPreference=(MultiSelectListPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST");
 
-            SwitchPreference passwordEnabled = (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY");
+            SwitchPreference enabledCurrency= (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY");
            final Set<Set<String>> entries=null;
 
-           if (passwordEnabled.isChecked()){
+           if (enabledCurrency.isChecked()){
                multiSelectListPreference.setEnabled(false);
            }
            else {
@@ -388,7 +416,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
            }
 
 
-            passwordEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            enabledCurrency.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
