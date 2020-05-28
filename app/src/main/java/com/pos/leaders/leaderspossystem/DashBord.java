@@ -86,8 +86,6 @@ import com.sunmi.aidl.MSCardService;
 
 import net.sf.andpdf.nio.ByteBuffer;
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,6 +93,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -724,9 +724,14 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
     }else {
         String activationDate="2020-06-01";
          String dueDateLicencess="2021-06-01";
-
-        Timestamp ts = new Timestamp(Long.parseLong(dueDateLicencess));
-        Timestamp ts2=new Timestamp(Long.parseLong(activationDate));
+        Timestamp ts=null,ts2 = null;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+             ts = new Timestamp(((Date)df.parse(activationDate)).getTime());
+             ts2 = new Timestamp(((Date)df.parse(dueDateLicencess)).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         long LincesID = lincessDBAdapter.insertEntry(SETTINGS.companyID,"yearly",Integer.toString(SETTINGS.branchId), ts2 , ts, CONSTANT.ACTIVE);
     }
 }
