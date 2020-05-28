@@ -732,7 +732,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        long LincesID = lincessDBAdapter.insertEntry(SETTINGS.companyID,"yearly",Integer.toString(SETTINGS.branchId), ts2 , ts, CONSTANT.ACTIVE);
+        long LincesID = lincessDBAdapter.insertEntry(SETTINGS.companyID,"yearly",Integer.toString(SETTINGS.branchId), ts , ts2, CONSTANT.ACTIVE);
     }
 }
 
