@@ -614,4 +614,11 @@ public class ZReportDBAdapter {
                 + " add column " + columnName + " TEXT  DEFAULT '' ;";
         return dbc;
     }
+
+    public static String changeColumnName(String oldColumnName,String newColumnName){
+        String dbc = "ALTER TABLE " + Z_REPORT_TABLE_NAME
+                + " CHANGE COLUMN " + oldColumnName + newColumnName + " REAL default 0.0;";
+        return dbc;
+
+    }
 }

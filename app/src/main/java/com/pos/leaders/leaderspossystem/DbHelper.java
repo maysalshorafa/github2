@@ -451,6 +451,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 case 9:
                     db.execSQL(LincessDBAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(LincessDBAdapter.POS_LINCESS_TABLE_NAME));
+                    db.execSQL(ZReportDBAdapter.changeColumnName("shekelAmount","firstTypeAmount"));
+                    db.execSQL(ZReportDBAdapter.changeColumnName("usdAmount","secondTypeAmount"));
+                    db.execSQL(ZReportDBAdapter.changeColumnName("eurAmount","thirdTypeAmount"));
+                    db.execSQL(ZReportDBAdapter.changeColumnName("gbpAmount","fourthTypeAmount"));
                     db.execSQL(PosSettingDbAdapter.addColumnInteger("duplicateInvoice"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
