@@ -86,6 +86,8 @@ import com.sunmi.aidl.MSCardService;
 
 import net.sf.andpdf.nio.ByteBuffer;
 
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -650,6 +652,7 @@ public void checkLincess(){
     LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(this);
     lincessDBAdapter.open();
     lincessDBAdapter.GetLincess();
+    if (SETTINGS.dueDate!=null){
     if (SETTINGS.statusLincess.equals(CONSTANT.INACTIVE))
     { String sDate1=SETTINGS.dueDate;
         String[] parts = sDate1.split("-");
@@ -692,7 +695,7 @@ public void checkLincess(){
         btZReport.setEnabled(false);
         salesCart.setEnabled(false);}
 
-}
+    }
 else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 
         String sDate1=SETTINGS.dueDate;
@@ -718,7 +721,15 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         }
         }
 
+    }else {
+        String activationDate="2020-06-01";
+         String dueDateLicencess="2021-06-01";
+
+        Timestamp ts = new Timestamp(Long.parseLong(dueDateLicencess));
+        Timestamp ts2=new Timestamp(Long.parseLong(activationDate));
+        long LincesID = lincessDBAdapter.insertEntry(SETTINGS.companyID,"yearly",Integer.toString(SETTINGS.branchId), ts2 , ts, CONSTANT.ACTIVE);
     }
+}
 
 
     public void EnableButtons() {
