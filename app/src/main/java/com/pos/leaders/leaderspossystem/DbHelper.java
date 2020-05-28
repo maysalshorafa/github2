@@ -451,10 +451,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 case 9:
                     db.execSQL(LincessDBAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(LincessDBAdapter.POS_LINCESS_TABLE_NAME));
-                    db.execSQL(ZReportDBAdapter.changeColumnName("shekelAmount","firstTypeAmount"));
-                    db.execSQL(ZReportDBAdapter.changeColumnName("usdAmount","secondTypeAmount"));
-                    db.execSQL(ZReportDBAdapter.changeColumnName("eurAmount","thirdTypeAmount"));
-                    db.execSQL(ZReportDBAdapter.changeColumnName("gbpAmount","fourthTypeAmount"));
                     db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel Shekel',1,'"+new Timestamp(System.currentTimeMillis())+"');");
                     db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
                     db.execSQL(PosSettingDbAdapter.addColumnInteger("duplicateInvoice"));
@@ -462,6 +458,10 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
                     db.execSQL(SettingsDBAdapter.addColumnText("country"));
                     db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
+                    db.execSQL(ZReportDBAdapter.changeColumnName("shekelAmount","firstTypeAmount"));
+                    db.execSQL(ZReportDBAdapter.changeColumnName("usdAmount","secondTypeAmount"));
+                    db.execSQL(ZReportDBAdapter.changeColumnName("eurAmount","thirdTypeAmount"));
+                    db.execSQL(ZReportDBAdapter.changeColumnName("gbpAmount","fourthTypeAmount"));
                     break;
 
 
