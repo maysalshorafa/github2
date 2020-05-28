@@ -455,6 +455,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportDBAdapter.changeColumnName("usdAmount","secondTypeAmount"));
                     db.execSQL(ZReportDBAdapter.changeColumnName("eurAmount","thirdTypeAmount"));
                     db.execSQL(ZReportDBAdapter.changeColumnName("gbpAmount","fourthTypeAmount"));
+                    db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel Shekel',1,'"+new Timestamp(System.currentTimeMillis())+"');");
+                    db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
                     db.execSQL(PosSettingDbAdapter.addColumnInteger("duplicateInvoice"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
