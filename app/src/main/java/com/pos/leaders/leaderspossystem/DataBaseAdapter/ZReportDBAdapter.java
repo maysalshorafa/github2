@@ -618,7 +618,7 @@ public class ZReportDBAdapter {
     public static String changeColumnName(String oldColumnName,String newColumnName){
         Log.d("hhffhghf",oldColumnName+" "+newColumnName);
         String dbc = "ALTER TABLE " + Z_REPORT_TABLE_NAME
-                + " RENAME COLUMN " + oldColumnName +"to"+ newColumnName ;
+                + " rename column " + oldColumnName +"to"+ newColumnName ;
         return dbc;
 
     }
