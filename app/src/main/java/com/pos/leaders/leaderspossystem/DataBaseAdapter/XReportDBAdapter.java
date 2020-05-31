@@ -65,6 +65,11 @@ public class XReportDBAdapter {
             "` REAL default 0.0,`" +
             X_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT + "` REAL default 0.0)";
 
+
+    public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table x_report rename to x_report_v10;", DATABASE_CREATE + "; ",
+            "insert into z_report (id,createDate,byUser,startOrderId,endOrderId,amount,totalSales,tax,,cashTotal,checkTotal,creditTotal,totalPosSales,totalInvoiceAmount,totalCreditInvoiceAmount,firstTypeAmount,secondTypeAmount,thirdTypeAmount,fourthTypeAmount,totalInvoiceReceiptAmount,pullReportAmount,depositReportAmount,salesBeforeTaxReport,salesWithTaxReport,totalTaxReport) " +
+                    "select id,createDate,byUser,startOrderId,endOrderId,amount,totalSales,tax,cashTotal,checkTotal,creditTotal,totalPosSales,totalInvoiceAmount,totalCreditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,totalInvoiceReceiptAmount,pullReportAmount,depositReportAmount,salesBeforeTaxReport,salesWithTaxReport,totalTaxReport from x_report_v10;"};
+
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
