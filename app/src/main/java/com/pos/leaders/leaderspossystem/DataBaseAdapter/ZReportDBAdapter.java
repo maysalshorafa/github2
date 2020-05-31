@@ -72,6 +72,12 @@ public class ZReportDBAdapter {
     public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table z_report rename to z_report_v3;", DATABASE_CREATE + "; ",
             "insert into z_report (id,createDate,startOrderId,endOrderId,amount,byUser,totalInvoiceReceiptAmount,shekelAmount,totalPosSales) " +
                     "select id,createDate,startOrderId,endOrderId,amount,byUser,amount,amount,total_amount from z_report_v3;"};
+
+
+    public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table z_report rename to z_report_v10;", DATABASE_CREATE + "; ",
+            "insert into z_report (id,createDate,byUser,startOrderId,endOrderId,amount,totalSales,tax,,cashTotal,checkTotal,creditTotal,totalPosSales,totalInvoiceAmount,totalCreditInvoiceAmount,firstTypeAmount,secondTypeAmount,thirdTypeAmount,fourthTypeAmount,totalInvoiceReceiptAmount,pullReportAmount,depositReportAmount,closeOpenReport,salesBeforeTaxReport,salesWithTaxReport,totalTaxReport) " +
+                    "select id,createDate,byUser,startOrderId,endOrderId,amount,totalSales,tax,cashTotal,checkTotal,creditTotal,totalPosSales,totalInvoiceAmount,totalCreditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,totalInvoiceReceiptAmount,pullReportAmount,depositReportAmount,closeOpenReport,salesBeforeTaxReport,salesWithTaxReport,totalTaxReport from z_report_v10;"};
+
     // Variable to hold the database instance
     private SQLiteDatabase db;
     // Context of the application using the database.
