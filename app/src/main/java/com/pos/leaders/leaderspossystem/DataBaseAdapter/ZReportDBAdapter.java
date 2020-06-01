@@ -28,7 +28,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class ZReportDBAdapter {
     // Table Name
-    protected static final String Z_REPORT_TABLE_NAME = "z_report_v10";
+    protected static final String Z_REPORT_TABLE_NAME = "z_report_v";
     // Column Names
     protected static final String Z_REPORT_COLUMN_ID = "id";
     protected static final String Z_REPORT_COLUMN_CREATEDATE = "createDate";
