@@ -18,7 +18,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 
 public class ZReportCountDbAdapter {
     // Table Name
-    protected static final String Z_REPORT_COUNT_TABLE_NAME = "z_report";
+    protected static final String Z_REPORT_COUNT_TABLE_NAME = "z_report_Count";
     // Column Names
     protected static final String Z_REPORT_COUNT_COLUMN_ID = "id";
     protected static final String Z_REPORT_COUNT_COLUMN_ZREPORT_ID = "zreport_id";
@@ -44,7 +44,7 @@ public class ZReportCountDbAdapter {
 
 
     public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table z_report rename to z_reportCount_v;", DATABASE_CREATE + "; ",
-            "insert into z_report (id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,firstTypeCount,secondTypeCount,thirdTypeCount,fourthTypeCount,totalInvoiceReceiptCount) " +
+            "insert into z_report_Count (id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,firstTypeCount,secondTypeCount,thirdTypeCount,fourthTypeCount,totalInvoiceReceiptCount) " +
                     "select id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,shekelCount,usdCount,eurCount,gbpCount,totalInvoiceReceiptCount from z_reportCount_v;"};
 
 
