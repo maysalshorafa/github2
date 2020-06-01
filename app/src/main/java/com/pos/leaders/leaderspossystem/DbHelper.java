@@ -478,6 +478,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL("update tbl_settings set currency_code='ILS';");
                     db.execSQL("update tbl_settings set currency_symbol='₪';");
                     db.execSQL("update tbl_settings set country='Israel';");
+                    db.execSQL("update PosSetting set enableCurrency='0';");
                     db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
 
                     break;
