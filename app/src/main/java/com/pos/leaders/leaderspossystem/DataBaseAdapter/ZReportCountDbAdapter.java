@@ -44,8 +44,8 @@ public class ZReportCountDbAdapter {
 
 
     public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table z_report rename to z_reportCount_v;", DATABASE_CREATE + "; ",
-            "insert into z_report (id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,firstTypeCount,cashTotal,checkTotal,creditTotal,totalPosSales,totalInvoiceAmount,totalCreditInvoiceAmount,firstTypeAmount,secondTypeAmount,thirdTypeAmount,fourthTypeAmount) " +
-                    "select id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,tax,cashTotal,checkTotal,creditTotal,totalPosSales,totalInvoiceAmount,totalCreditInvoiceAmount,shekelCount,usdCount,eurCount,gbpCount,totalInvoiceReceiptCount from z_reportCount_v;"};
+            "insert into z_report (id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,firstTypeCount,secondTypeCount,thirdTypeCount,fourthTypeCount,totalInvoiceReceiptCount) " +
+                    "select id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,shekelCount,usdCount,eurCount,gbpCount,totalInvoiceReceiptCount from z_reportCount_v;"};
 
 
     // Variable to hold the database instance
