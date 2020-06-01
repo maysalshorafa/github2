@@ -18,7 +18,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 
 public class ZReportCountDbAdapter {
     // Table Name
-    protected static final String Z_REPORT_COUNT_TABLE_NAME = "z_report_Count";
+    protected static final String Z_REPORT_COUNT_TABLE_NAME = "z_report_count";
     // Column Names
     protected static final String Z_REPORT_COUNT_COLUMN_ID = "id";
     protected static final String Z_REPORT_COUNT_COLUMN_ZREPORT_ID = "zreport_id";
@@ -43,8 +43,8 @@ public class ZReportCountDbAdapter {
             Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT + "` INTEGER default 0)";
 
 
-    public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table z_report rename to z_reportCount_v;", DATABASE_CREATE + "; ",
-            "insert into z_report_Count (id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,firstTypeCount,secondTypeCount,thirdTypeCount,fourthTypeCount,totalInvoiceReceiptCount) " +
+    public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table z_report_count rename to z_reportCount_v;", DATABASE_CREATE + "; ",
+            "insert into z_report_count (id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,firstTypeCount,secondTypeCount,thirdTypeCount,fourthTypeCount,totalInvoiceReceiptCount) " +
                     "select id,zreport_id,cashCount,checkCount,creditCount,totalInvoiceCount,totalCreditInvoiceCount,shekelCount,usdCount,eurCount,gbpCount,totalInvoiceReceiptCount from z_reportCount_v;"};
 
 
