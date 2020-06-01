@@ -484,6 +484,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     if (cSharedPreferences != null) {
                         if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
                             editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
+                            editor.apply();
                             SETTINGS.enableCurrencies = false;
                             db.execSQL("update PosSetting set enableCurrency='0';");
                         }

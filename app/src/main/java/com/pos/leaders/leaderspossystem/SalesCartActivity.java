@@ -5375,6 +5375,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     }else {
                         for (int i = 0 ;i<paymentTableArrayList.size();i++){
                             currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getPaymentMethod(),paymentTableArrayList.get(i).getCurrency().getType());
+                          Log.d("enableCurrency",SETTINGS.enableCurrencies+"");
                            if (SETTINGS.enableCurrencies){
                             if(paymentTableArrayList.get(i).getCurrency().getType().equalsIgnoreCase(currencyTypesList.get(1).getType())) {
                                 zReport.setSecondTypeAmount(zReport.getSecondTypeAmount() + paymentTableArrayList.get(i).getTendered());
