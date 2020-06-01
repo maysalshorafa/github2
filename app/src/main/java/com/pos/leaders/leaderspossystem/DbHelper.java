@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -478,7 +479,16 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL("update tbl_settings set currency_code='ILS';");
                     db.execSQL("update tbl_settings set currency_symbol='₪';");
                     db.execSQL("update tbl_settings set country='Israel';");
-                    db.execSQL("update PosSetting set enableCurrency='0';");
+                    SharedPreferences cSharedPreferences = context.getSharedPreferences("POS_Management", context.MODE_PRIVATE);
+                    final SharedPreferences.Editor editor = cSharedPreferences.edit();
+                    if (cSharedPreferences != null) {
+                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
+                            editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
+                            SETTINGS.enableCurrencies = false;
+                            db.execSQL("update PosSetting set enableCurrency='0';");
+                        }
+                    }
+
                     db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
 
                     break;

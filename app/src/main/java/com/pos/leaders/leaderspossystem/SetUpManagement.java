@@ -424,8 +424,8 @@ public class SetUpManagement extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
-                final SharedPreferences.Editor editor = cSharedPreferences.edit();
-                if (cSharedPreferences != null) {
+                    final SharedPreferences.Editor editor = cSharedPreferences.edit();
+                    if (cSharedPreferences != null) {
                     //CreditCard
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
                         if(creditCardCheckBox.isChecked()){
