@@ -18,7 +18,7 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 
 public class ZReportCountDbAdapter {
     // Table Name
-    protected static final String Z_REPORT_COUNT_TABLE_NAME = "z_report_count";
+    protected static final String Z_REPORT_COUNT_TABLE_NAME = "z_report";
     // Column Names
     protected static final String Z_REPORT_COUNT_COLUMN_ID = "id";
     protected static final String Z_REPORT_COUNT_COLUMN_ZREPORT_ID = "zreport_id";
