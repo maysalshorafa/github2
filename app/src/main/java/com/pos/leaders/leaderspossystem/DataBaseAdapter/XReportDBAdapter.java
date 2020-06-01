@@ -28,7 +28,7 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 
 public class XReportDBAdapter {
     // Table Name
-    protected static final String X_REPORT_TABLE_NAME = "x_report";
+    protected static final String X_REPORT_TABLE_NAME = "x_report_v10";
     // Column Names
     protected static final String X_REPORT_COLUMN_ID = "id";
     protected static final String X_REPORT_COLUMN_CREATEDATE = "createDate";
@@ -44,10 +44,10 @@ public class XReportDBAdapter {
     protected static final String X_REPORT_COLUMN_TOTAL_POS_SALES = "totalPosSales";
     protected static final String X_REPORT_COLUMN_INVOICE_AMOUNT = "totalInvoiceAmount";
     protected static final String X_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT = "totalCreditInvoiceAmount";
-    protected static final String X_REPORT_COLUMN_SHEKEL_AMOUNT = "shekelAmount";
-    protected static final String X_REPORT_COLUMN_USD_AMOUNT = "usdAmount";
-    protected static final String X_REPORT_COLUMN_EUR_AMOUNT = "eurAmount";
-    protected static final String X_REPORT_COLUMN_GBP_AMOUNT = "gbpAmount";
+    protected static final String X_REPORT_COLUMN_SHEKEL_AMOUNT = "firstTypeAmount";
+    protected static final String X_REPORT_COLUMN_USD_AMOUNT = "secondTypeAmount";
+    protected static final String X_REPORT_COLUMN_EUR_AMOUNT = "thirdTypeAmount";
+    protected static final String X_REPORT_COLUMN_GBP_AMOUNT = "fourthTypeAmount";
     protected static final String X_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT = "totalInvoiceReceiptAmount";
     protected static final String X_REPORT_COLUMN_PULL_REPORT_AMOUNT= "pullReportAmount";
     protected static final String X_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT= "depositReportAmount";

@@ -453,8 +453,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(LincessDBAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(LincessDBAdapter.POS_LINCESS_TABLE_NAME));
                     db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
-                    /*db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel Shekel',1,'"+new Timestamp(System.currentTimeMillis())+"');");
-                    db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");*/
                     db.execSQL(XReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
                     db.execSQL("drop table Currency;");
                     db.execSQL(CurrencyDBAdapter.DATABASE_CREATE);
