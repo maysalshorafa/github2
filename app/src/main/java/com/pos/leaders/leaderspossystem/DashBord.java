@@ -183,7 +183,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
          /*   SESSION.syncStatus = SyncStatus.ENABLED;
         }*/
-        TitleBar.setTitleBar(this);
+
         //run MSR Service
         Intent intent = new Intent();
         intent.setPackage("com.sunmi.mscardservice");
@@ -266,8 +266,9 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         customerClub = (IButton) findViewById(R.id.coustmerClub);
         settings = (IButton) findViewById(R.id.settings);
+        checkLincess();
+        TitleBar.setTitleBar(this);
 
-          checkLincess();
        // EnableButtons();
 
         /**  logOut.setOnClickListener(new View.OnClickListener() {
