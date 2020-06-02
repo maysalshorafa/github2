@@ -129,7 +129,6 @@ public class ChecksActivity extends AppCompatActivity {
 			Log.d("totalPricekkk",totalPrice+"");
 			customer_name =(String)extras.get("_custmer");
 			fromMultiCurrency=extras.getBoolean(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY);
-			Log.d("currencyTypell",currencyType);
 			if(currencyType.equalsIgnoreCase(currencyTypesList.get(0).getType())){
             tv.setText(Util.makePrice(totalPrice) + " " +String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(0).getType()).getValue()));
 			}

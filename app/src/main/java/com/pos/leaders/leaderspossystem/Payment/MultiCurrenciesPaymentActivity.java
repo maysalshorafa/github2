@@ -432,7 +432,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     double beforeChangeExcess = excess;
                     setExcess();
                     updateView();
-                    paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(), beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CREDIT_CARD, new CurrencyType(1, currencyRow + ""), actualCurrencyRate));
+                    paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(), beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CREDIT_CARD, new CurrencyType(1, currency + ""), actualCurrencyRate));
                     updateLastRow();
                     lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
                     Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, MainCreditCardActivity.class);
