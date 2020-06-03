@@ -100,8 +100,8 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
 
         String currencyType = String.valueOf(symbolWithCodeHashMap.valueOf(product.getCurrencyType()).getValue());
         try {
-
-            holder.tvName.setText(_Substring(product.getDisplayName()));
+              if (product.getDisplayName()!=null){
+            holder.tvName.setText(_Substring(product.getDisplayName()));}
           /*  if (product.getCurrencyType() == 0) {
                 currencyType = context.getString(R.string.ins);
             }

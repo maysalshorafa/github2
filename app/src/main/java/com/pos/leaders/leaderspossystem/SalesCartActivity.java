@@ -697,7 +697,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                             currencyReturnsDBAdapter.insertEntry(lastOrder.getOrderId(),(lastOrder.getTotalPaidAmount()-lastOrder.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
                                                         }
                                                         Log.d("CncelInvoice",order.toString());
-                                            if (checks.size() > 0) {
+                                                  if (checks.size() > 0) {
                                                             try {
                                                                 Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
                                                                 SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order,orderDetailsList, false, checks);
@@ -5716,8 +5716,8 @@ public class SalesCartActivity extends AppCompatActivity {
 customerDBAdapter.open();
         customerList = customerDBAdapter.getTopCustomer(0, 50);
         customerDBAdapter.close();
-        AllCustmerList = customerList;
-
+      //  AllCustmerList = customerList;
+        AllCustmerList = new ArrayList<Customer>(customerList);
         custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
 
         gvCustomer.setAdapter(custmerCatalogGridViewAdapter);
@@ -5751,17 +5751,18 @@ customerDBAdapter.open();
                 String word = customer_id.getText().toString();
 
                 if (!word.equals("")) {
-                    for (Customer c : AllCustmerList) {
-                        Log.d("testCustomer",c.toString());
-                        if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
-                                c.getLastName().toLowerCase().contains(word.toLowerCase())||
-                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase())||
-                                String.valueOf(c.getCustomerIdentity()).contains(word.toLowerCase())) {
-                            customerList.add(c);
+                    if (AllCustmerList.size()!=0 && !AllCustmerList.isEmpty()) {
+                        for (Customer c : AllCustmerList) {
+                            if (c.getFirstName()!=null){
+                            if(c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
+                                    c.getLastName().toLowerCase().contains(word.toLowerCase()) ||
+                                    c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
+                                    String.valueOf(c.getCustomerIdentity()).contains(word.toLowerCase())) {
+                                customerList.add(c);
 
-                        }
+                            }}
                     }
-                } else {
+                }} else {
                     customerList = AllCustmerList;
                 }
                 CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);

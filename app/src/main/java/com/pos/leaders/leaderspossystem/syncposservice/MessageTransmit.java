@@ -104,11 +104,8 @@ public class MessageTransmit {
         }
         try {
             RequestBody body = RequestBody.create(JSON, json);
-
             Request request = new Request.Builder().url(domainURL + url).post(body).addHeader(AUTHORIZATION, token).addHeader(CONTENT_LENGTH,String.valueOf(body.contentLength()+body.contentType().toString().length())).build();
-            Log.d("Message req", request.toString());
             Response response = client.newCall(request).execute();
-            Log.d("Response Code", response.code()+"");
             updateLincessStatus(response);
             return response.body().string();
         }catch (Exception e){
@@ -131,8 +128,6 @@ public class MessageTransmit {
 
         try {
             jsonObject = new JSONObject(json);
-            Log.d("domainURL",domainURL);
-            Log.d("url",url);
             request = new Request.Builder().url(domainURL + url+"/"+id).put(body).addHeader(AUTHORIZATION, token).build();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -143,13 +138,9 @@ public class MessageTransmit {
         return response.body().string();
     }
     public String authGet(String url,String token) throws IOException {
-        Log.d("authGEt","authGetFun");
                 Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();
 
                     Response response = client.newCall(request).execute();
-
-                Log.i("response code", response.code() + "");
-                Log.d("response Body",request.body()+"request");
         updateLincessStatus(response);
         return response.body().string();
     }
@@ -174,10 +165,7 @@ public class MessageTransmit {
         return response.body().string();
     }
     public String getCurrency(String url,String token) throws IOException {
-        Log.d("url",domainURL+url);
-        Log.d("LogIn",token);
         Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();
-        Log.d("Request",request.toString());
         Response response = client.newCall(request).execute();
         updateLincessStatus(response);
         return response.body().string();
