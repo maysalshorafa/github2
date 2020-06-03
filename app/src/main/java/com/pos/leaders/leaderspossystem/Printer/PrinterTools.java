@@ -84,13 +84,13 @@ public class PrinterTools {
     private static void Print_BTB880(Bitmap _bitmap,Context context) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
-        final ProgressDialog dialog = new ProgressDialog(context);
+      //  final ProgressDialog dialog = new ProgressDialog(context);
         final Bitmap bitmap = _bitmap;
-        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+        //dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
-                dialog.show();
+                //dialog.show();
                 ////Hebrew 15 Windows-1255
 
                 int i = posInterfaceAPI.OpenDevice();
@@ -115,7 +115,7 @@ public class PrinterTools {
                 // pos.cashdrawerOpen(0,20,20);
 
                 posInterfaceAPI.CloseDevice();
-                dialog.cancel();
+            //    dialog.cancel();
 
             }
 

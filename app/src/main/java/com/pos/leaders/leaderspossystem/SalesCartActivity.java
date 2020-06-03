@@ -3606,10 +3606,10 @@ public class SalesCartActivity extends AppCompatActivity {
         }
 
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
-            String currencyType=o.getProduct().getCurrencyType();
             if(o.getProduct()==null) {
                 clearCart();
             }else {
+                String currencyType=o.getProduct().getCurrencyType();
                 /*if (o.getProduct().getCurrencyType() == 0) {
                     currencyType = "ILS";
                 }
