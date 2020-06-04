@@ -46,7 +46,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -114,6 +116,12 @@ public class SetupNewPOSOnlineActivity extends Activity {
 
                 } catch (JSONException e) {
 
+                }
+            }
+
+            for (int i=0;i<SetupNewPOSOnlineActivity.ArrayCurrencySelect.size();i++){
+                if (SetupNewPOSOnlineActivity.ArrayCurrencySelect.get(i).equals(SetupNewPOSOnlineActivity.currencyCode)){
+                    SetupNewPOSOnlineActivity.ArrayCurrencySelect.remove(i);
                 }
             }
 
