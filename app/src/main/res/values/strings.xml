@@ -203,7 +203,7 @@
     <string name="tendered">Tendered</string>
     <string name="total_return">Total Return</string>
     <string name="total_paid"> TOTAL PAID</string>
-    <string name="total_price">total sales i cluding vat </string>
+    <string name="total_price">Total sales </string>
     <string name="total_required"> Required</string>
 
     <!--Checks Activity pop-up-->

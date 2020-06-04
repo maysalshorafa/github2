@@ -549,7 +549,7 @@ public class ZReportDBAdapter {
                     Log.d("Exception",ex.toString());
                 }
             }
-        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where " + Z_REPORT_COLUMN_CREATEDATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch')", null);
+        Cursor cursor = db.rawQuery("select * from " + Z_REPORT_TABLE_NAME + " where " + Z_REPORT_COLUMN_CREATEDATE + " between datetime("+from+"/1000, 'unixepoch') and datetime("+to+"/1000, 'unixepoch') ORDER BY "+ Z_REPORT_COLUMN_CREATEDATE +" DESC ", null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {

@@ -1173,6 +1173,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                             SESSION._ORDER_DETAILES=orderDetailsList;
                                                             SESSION._ORDERS=lastOrder;
                                                             PrinterTools.printAndOpenCashBox("", "", "", 600,SalesCartActivity.this,getParent());
+                                                            callClearCart();
                                                             /**Customer customer1 =sale.getCustomer();
                                                              Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                                              SETTINGS.copyInvoiceBitMap =invoiceImg.copyInvoice(sale.getOrderId(), orders, sale, true, SESSION._EMPLOYEE, null);

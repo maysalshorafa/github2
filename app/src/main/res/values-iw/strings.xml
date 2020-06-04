@@ -53,7 +53,7 @@
     <string name="qty">כמות</string>
     <string name="refresh">רענון</string>
     <string name="returned">עודף</string>
-    <string name="total_price">סה\'\'כ מחיר</string>
+    <string name="total_price">סה"כ מכירות</string>
     <string name="total_paid">סה\'\'כ הוכנס</string>
     <string name="total_saved">חסכת</string>
     <string name="transfer_credit_card">תעביר כרטיס אשראי</string>
@@ -704,7 +704,7 @@
     <string name="there_are_no_sales">אין מכירות</string>
     <string name="product_count">כמות מוצרים</string>
     <string name="accounting_information">מידע חשבונאי</string>
-    <string name="Sales_Without_tax">סה"כ מכירות </string>
+    <string name="Sales_Without_tax">מכירות פטורות ממע"מ</string>
     <string name="Sales_With_tax">מכירות חייבות מע"מ</string>
     <string name="all_sales">כל המכירות</string>
     <string name="plzwait">אנא המתן</string>
