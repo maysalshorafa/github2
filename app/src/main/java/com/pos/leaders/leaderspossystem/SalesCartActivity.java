@@ -782,7 +782,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
 
                                                         zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (salesaftertaxCancle - SalesWitheTaxCancle))));
-
+                                                        zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()+1);
                                                         zReportCount.setCashCount(zReportCount.getCashCount()-1);
                                                     //    zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
                                                         zReportCount.setFirstTYpeCount(zReportCount.getFirstTYpeCount()-1);
