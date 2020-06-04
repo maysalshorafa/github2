@@ -401,14 +401,16 @@ public class PdfUA {
         accountInformation.setRunDirection(0);
         insertCell(accountInformation, context.getString(R.string.accounting_information), Element.ALIGN_RIGHT, 4, font);
 
-        insertCell(accountInformation,Util.makePrice(zReport.getSalesBeforeTax()) + " ", Element.ALIGN_RIGHT, 2, font);
-        insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()) + " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
 
         insertCell(accountInformation,Util.makePrice(zReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
 
-        insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()) + " ", Element.ALIGN_RIGHT, 2, font);
-        insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesBeforeTax()) + " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
+
+
         insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax()+zReport.getTotalTax()) + " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.total_price), Element.ALIGN_RIGHT,2, font);
         insertCell(accountInformation, "----------------------------", Element.ALIGN_CENTER, 4, font);
@@ -1643,12 +1645,15 @@ public class PdfUA {
         accountInformation.deleteBodyRows();
         accountInformation.setRunDirection(0);
         insertCell(accountInformation, context.getString(R.string.accounting_information), Element.ALIGN_RIGHT, 4, font);
+
+        insertCell(accountInformation,Util.makePrice(xReport.getSalesWithTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
+
         insertCell(accountInformation,Util.makePrice(xReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
         insertCell(accountInformation,Util.makePrice(xReport.getSalesBeforeTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
-        insertCell(accountInformation,Util.makePrice(xReport.getSalesWithTax())+ " ", Element.ALIGN_RIGHT, 2, font);
-        insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
+
         insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax() +zReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.total_price), Element.ALIGN_RIGHT,2, font);
         insertCell(accountInformation, "----------------------------", Element.ALIGN_CENTER, 4, font);
@@ -2032,11 +2037,15 @@ public class PdfUA {
         accountInformation.setRunDirection(0);
         insertCell(accountInformation, context.getString(R.string.accounting_information), Element.ALIGN_RIGHT, 4, font);
         insertCell(accountInformation,Util.makePrice(zReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
-        insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
-        insertCell(accountInformation,Util.makePrice(zReport.getSalesBeforeTax())+ " ", Element.ALIGN_RIGHT, 2, font);
-        insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
+
         insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
+
+        insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesBeforeTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
+
         insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax()+zReport.getTotalTax()) + " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.total_price), Element.ALIGN_RIGHT,2, font);
         insertCell(accountInformation, "----------------------------", Element.ALIGN_CENTER, 4, font);
