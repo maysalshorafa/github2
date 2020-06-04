@@ -854,13 +854,16 @@ public class PdfUA {
         document.close();
         //end :)
     }
-    public static void  printReceiptReport(Context context, String res) throws IOException, DocumentException, JSONException {
+    public static void  printReceiptReport(Context context, String res,String mainMer) throws IOException, DocumentException, JSONException {
+        String str="";
         Log.d("rrrr",res);
         JSONObject jsonObject = new JSONObject(res);
         String documentsData = jsonObject.getString("documentsData");
         JSONObject customerJson = new JSONObject(documentsData);
         JSONArray refNumber = customerJson.getJSONArray("invoicesNumbers");
-        JSONArray payment = customerJson.getJSONArray("payments");
+        JSONArray payments = customerJson.getJSONArray("payments");
+        JSONObject payment = payments.getJSONObject(0);
+        JSONArray paymentDetails = payment.getJSONArray("paymentDetails");
         JSONObject customerInfo = new JSONObject(customerJson.getJSONObject("customer").toString());
 
         // create file , document region
@@ -885,8 +888,11 @@ public class PdfUA {
         Font dateFont = new Font(urName, 24);
         //heading table
         PdfPTable headingTable = new PdfPTable(1);
+        PdfPTable creditCard = new PdfPTable(4);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
+        creditCard.deleteBodyRows();
+        creditCard.setRunDirection(0);
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
@@ -912,13 +918,7 @@ public class PdfUA {
         orderDetailsTable.setRunDirection(0);
         orderDetailsTable.setWidthPercentage(108f);
         Log.d("customerJson",customerJson.toString());
-        if (payment.getJSONObject(0).getString("paymentWay").equals("checks")) {
-            insertCell(orderDetailsTable, context.getString(R.string.payment)+": "+context.getString(R.string.checks), Element.ALIGN_LEFT, 3, dateFont);
             insertCell(orderDetailsTable, context.getString(R.string.total_paid)+": "+customerJson.getDouble("paidAmount"), Element.ALIGN_LEFT, 3, dateFont);
-        }else {
-            insertCell(orderDetailsTable, context.getString(R.string.payment)+": "+context.getString(R.string.cash), Element.ALIGN_LEFT, 3, dateFont);
-            insertCell(orderDetailsTable, context.getString(R.string.total_paid) + ": " + payment.getJSONObject(0).getDouble("amount"), Element.ALIGN_LEFT, 3, dateFont);
-        }
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
         insertCell(orderDetailsTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 3, font);
         insertCell(orderDetailsTable, context.getString(R.string.date)+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 3, dateFont);
@@ -927,11 +927,10 @@ public class PdfUA {
 
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
 
-        if (payment.getJSONObject(0).getString("paymentWay").equals("checks")) {
+        if (paymentDetails.getJSONObject(0).getString("@type").equalsIgnoreCase("check")) {
             insertCell(orderDetailsTable, context.getString(R.string.amount), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, context.getString(R.string.date), Element.ALIGN_LEFT, 1, dateFont);
             insertCell(orderDetailsTable, context.getString(R.string.checks), Element.ALIGN_LEFT, 1, dateFont);
-            JSONArray paymentDetails= payment.getJSONObject(0).getJSONArray("paymentDetails");
             for(int i =0 ; i<paymentDetails.length();i++){
                 JSONObject jsonObject1 = paymentDetails.getJSONObject(i);
                 insertCell(orderDetailsTable, jsonObject1.getDouble("amount")+"", Element.ALIGN_LEFT, 1, dateFont);
@@ -945,9 +944,54 @@ public class PdfUA {
 
             //end :)
         }
+        Log.d("mainMerCredit",mainMer);
+        for (String s : mainMer.split("\n")) {
+
+           /* String[] tokens = s.split("\\s+");
+            Log.i("split0", Arrays.toString(tokens));*/
+
+            if(!s.replaceAll(" ","").equals("")) {
+                if(s.contains("שם מסוף")){
+                    continue;
+                }
+                else if(s.contains("מספר מסוף")){
+                    continue;
+                }
+                else if(s.contains("גרסת תוכנה")){
+                    continue;
+                }
+                else if(s.contains("מספר עסק בחברת האשראי")){
+                    continue;
+                }
+                else if(s.contains("Powered")){
+                    continue;
+                }
+                else  if(s.contains("מספר כרטיס")){
+                    if(s.split("\\s+")[1].length()>4){
+                        String head = "מספר כרטיס";
+                        String ss = "";
+                        for(int i=0;i<s.split("\\s+")[1].length()-4;i++) {
+                            ss += "*";
+                        }
+                        ss += s.split("\\s+")[1].substring(s.split("\\s+")[1].length() - 4, s.split("\\s+")[1].length());
+                        str += "\u200E" + ss + "\t" + head + "\n";
+                        continue;
+                    }
+                }
+                str += "\u200E" + s + "\n";
+            }
+
+            Log.i("cc row", s);
+        }
+        Log.d("str", str);
+        if(str!=""){
+            insertCell(creditCard,str, Element.ALIGN_CENTER, 4, font);
+        }
         document.add(headingTable);
         document.add(dateTable);
         document.add(orderDetailsTable);
+        document.add(creditCard);
+
         document.close();
     }
     public static void  printClosingReport(Context context, String res) throws IOException, DocumentException, JSONException {

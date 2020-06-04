@@ -228,6 +228,7 @@ public class PrinterTools {
             @Override
             protected Void doInBackground(Void... params) {
                 PdfUA pdfUA = new PdfUA();
+                Log.d("exception55555",SESSION._TEMP_ORDERS_COPY.toString());
 
                 try {
                     pdfUA.createNormalInvoiceForCopy(context,SESSION._TEMP_ORDER_DETAILES_COPY,SESSION._TEMP_ORDERS_COPY,false,mainMer);

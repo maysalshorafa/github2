@@ -63,7 +63,7 @@ public class ChecksActivity extends AppCompatActivity {
 	static final int DELTA = 50;
     private double totalPrice;
 	String customer_name;
-	String currencyType;
+	String currencyType="ILS";
 	LinearLayout LlCustomer;
 	enum Direction {LEFT, RIGHT;}
 	double requiredAmount=0;
@@ -104,9 +104,8 @@ public class ChecksActivity extends AppCompatActivity {
 
 		 extras = getIntent().getExtras();
         if (extras != null) {
-			Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
 			if(!extras.containsKey("checksReceipt")) {
-				currencyType = (String) extras.get("_CurrencyType");
+				//currencyType = (String) extras.get("_CurrencyType");
 			}
 
 			totalPrice = (double) extras.get("_Price");
@@ -262,7 +261,7 @@ public class ChecksActivity extends AppCompatActivity {
 								finalCheckList.add(_check);
 							}
 							SESSION._CHECKS_HOLDER = finalCheckList;
-							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice);
+							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice,"");
 						}else {
 
 							 List<Check> finalCheckList = new ArrayList<Check>();
@@ -325,7 +324,9 @@ public class ChecksActivity extends AppCompatActivity {
 							finalCheckList.add(_check);
 						}
 						SESSION._CHECKS_HOLDER = finalCheckList;
-						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,t);
+						finish();
+						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,t,"");
+
 					}else {
 						double d = getTotalPid() - checkList.get(checkList.size() - 1).getAmount();
 						double needAmount = totalPrice - d;

@@ -1405,7 +1405,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                     }
 
                                 }else {
-                                filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
+                                    if(type.equals(context.getString(R.string.customer))){
+
+                                    }
+                                    filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
                             }
                                 runOnUiThread(new Runnable() {
 

@@ -224,7 +224,7 @@ public class PinpadActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             SESSION._TEMP_CREDITCARD_PAYMNET=ccp;
-            DocumentControl.sendDoc(PinpadActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice);
+            DocumentControl.sendDoc(PinpadActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice,"");
 
         }else {
             Intent i = new Intent();
