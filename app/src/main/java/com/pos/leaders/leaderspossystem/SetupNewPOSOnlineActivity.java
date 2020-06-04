@@ -119,11 +119,11 @@ public class SetupNewPOSOnlineActivity extends Activity {
                 }
             }
 
-            for (int i=0;i<SetupNewPOSOnlineActivity.ArrayCurrencySelect.size();i++){
+         /*   for (int i=0;i<SetupNewPOSOnlineActivity.ArrayCurrencySelect.size();i++){
                 if (SetupNewPOSOnlineActivity.ArrayCurrencySelect.get(i).equals(SetupNewPOSOnlineActivity.currencyCode)){
                     SetupNewPOSOnlineActivity.ArrayCurrencySelect.remove(i);
                 }
-            }
+            }*/
 
         Log.d("finalArraySelectList",SetupNewPOSOnlineActivity.ArrayCurrencySelect.toString());
 
