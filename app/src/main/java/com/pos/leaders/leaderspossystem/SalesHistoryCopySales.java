@@ -16,7 +16,7 @@ public class SalesHistoryCopySales extends AppCompatActivity {
     Button btCancel, btPrint;
     ImageView invoiceImageView;
     String status;
-    Bitmap invoiceBitMab = null;
+    Bitmap invoiceBitMab = null,invoiceCancle=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,9 @@ public class SalesHistoryCopySales extends AppCompatActivity {
         btPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                invoiceCancle=invoiceBitMab;
                 PrintTools printTools = new PrintTools(SalesHistoryCopySales.this);
-                printTools.PrintReport(invoiceBitMab);
+                printTools.PrintReport(invoiceCancle);
                 onBackPressed();
             }
         });
