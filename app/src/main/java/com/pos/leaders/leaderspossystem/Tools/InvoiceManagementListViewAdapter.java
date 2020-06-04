@@ -91,7 +91,7 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                         if(!checkStr.matches("")){
                             try {
                                 if(Double.parseDouble(etAmount.getText().toString())>=Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))) {
-                                    DocumentControl.sendDoc(getContext(), invoicesList.get(position), CONSTANT.CASH,Double.parseDouble(etAmount.getText().toString()));
+                                    DocumentControl.sendDoc(getContext(), invoicesList.get(position), CONSTANT.CASH,Double.parseDouble(etAmount.getText().toString()),"");
                                     cashReceiptDialog.dismiss();
                                 }else {
                                     Toast.makeText(getContext(),"Inserted amount not equal to required amount",Toast.LENGTH_LONG).show();
@@ -111,16 +111,40 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
         holder.checkReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getContext(),ChecksActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("checksReceipt", "checksReceipt");
-                try {
-                    intent.putExtra("_Price",Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))));
-                    intent.putExtra("_custmer", "");
-                    intent.putExtra("invoice",invoicesList.get(position).toString());
-                    v.getContext().startActivity(intent);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                final Dialog checkReceiptDialog = new Dialog(getContext());
+                checkReceiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                checkReceiptDialog.show();
+                checkReceiptDialog.setContentView(R.layout.cash_receipt_dialog);
+                final EditText etAmount = (EditText) checkReceiptDialog.findViewById(R.id.cashReceiptDialog_TECash);
+                Button btnOk = (Button)checkReceiptDialog.findViewById(R.id.cashReceiptDialog_BTOk);
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String checkStr = etAmount.getText().toString();
+                        if(!checkStr.matches("")){
+                            try {
+                                if(Double.parseDouble(etAmount.getText().toString())>=Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))) {
+                                    checkReceiptDialog.dismiss();
+                                    Intent intent=new Intent(getContext(),ChecksActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtra("checksReceipt", "checksReceipt");
+                                        intent.putExtra("_Price",Double.parseDouble(etAmount.getText().toString()));
+                                        intent.putExtra("_custmer", "");
+                                        intent.putExtra("invoice",invoicesList.get(position).toString());
+                                        v.getContext().startActivity(intent);
+
+
+                                }else {
+                                    Toast.makeText(getContext(),"Inserted amount not equal to required amount",Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                });
+
+
 
 
             }
@@ -131,28 +155,81 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
                 Intent intent;
                 if(SETTINGS.creditCardEnable) {
                     if (SETTINGS.pinpadEnable) {//pinpad is active
-                        intent=new Intent(getContext(),PinpadActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("creditReceipt", "creditsReceipt");
-                        try {
-                            intent.putExtra("_Price",Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))));
-                            intent.putExtra("_custmer", "");
-                            intent.putExtra("invoice",invoicesList.get(position).toString());
-                            v.getContext().startActivity(intent);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        final Dialog checkReceiptDialog = new Dialog(getContext());
+                        checkReceiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        checkReceiptDialog.show();
+                        checkReceiptDialog.setContentView(R.layout.cash_receipt_dialog);
+                        final EditText etAmount = (EditText) checkReceiptDialog.findViewById(R.id.cashReceiptDialog_TECash);
+                        Button btnOk = (Button)checkReceiptDialog.findViewById(R.id.cashReceiptDialog_BTOk);
+                        btnOk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String checkStr = etAmount.getText().toString();
+                                if(!checkStr.matches("")){
+                                    try {
+                                        if(Double.parseDouble(etAmount.getText().toString())>=Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))) {
+                                            checkReceiptDialog.dismiss();
+                                           Intent intent=new Intent(getContext(),PinpadActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.putExtra("creditReceipt", "creditsReceipt");
+                                                intent.putExtra("_Price",Double.parseDouble(etAmount.getText().toString()));
+                                                intent.putExtra("_custmer", "");
+                                            intent.putExtra("_CurrencyType", "ILS");
+
+                                            intent.putExtra("invoice",invoicesList.get(position).toString());
+                                                v.getContext().startActivity(intent);
+
+
+
+                                        }else {
+                                            Toast.makeText(getContext(),"Inserted amount not equal to required amount",Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                        });
+
 
                     } else {
-                        intent=new Intent(getContext(),MainCreditCardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("creditReceipt", "creditsReceipt");
-                        try {
-                            intent.putExtra("_Price",Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total"))));
-                            intent.putExtra("_custmer", "");
-                            intent.putExtra("invoice",invoicesList.get(position).toString());
-                            v.getContext().startActivity(intent);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        final Dialog checkReceiptDialog = new Dialog(getContext());
+                        checkReceiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        checkReceiptDialog.show();
+                        checkReceiptDialog.setContentView(R.layout.cash_receipt_dialog);
+                        final EditText etAmount = (EditText) checkReceiptDialog.findViewById(R.id.cashReceiptDialog_TECash);
+                        Button btnOk = (Button)checkReceiptDialog.findViewById(R.id.cashReceiptDialog_BTOk);
+                        btnOk.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String checkStr = etAmount.getText().toString();
+                                if(!checkStr.matches("")){
+                                    try {
+                                        if(Double.parseDouble(etAmount.getText().toString())>=Double.parseDouble(String.valueOf(invoicesList.get(position).getDocumentsData().getDouble("total")))) {
+                                            checkReceiptDialog.dismiss();
+                                          Intent  intent=new Intent(getContext(),MainCreditCardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.putExtra("creditReceipt", "creditsReceipt");
+                                                intent.putExtra("_Price",Double.parseDouble(etAmount.getText().toString()));
+                                                intent.putExtra("_custmer", "");
+                                                intent.putExtra("invoice",invoicesList.get(position).toString());
+                                                v.getContext().startActivity(intent);
+
+
+
+
+
+                                        }else {
+                                            Toast.makeText(getContext(),"Inserted amount not equal to required amount",Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                        });
+
+
 
                     }
                 }

@@ -32,6 +32,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
+import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -374,7 +375,7 @@ public class DocumentControl {
 
     }
 
-    public static void sendDoc(final Context context, final BoInvoice invoice, final String paymentWays, final double totalPaid){
+    public static void sendDoc(final Context context, final BoInvoice invoice, final String paymentWays, final double totalPaid, final String mainmer){
         List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
         List<Payment> paymentList = new ArrayList<Payment>();
         List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
@@ -410,7 +411,10 @@ public class DocumentControl {
                 newJsonObject.put("paymentDetails",jsonArray);
             }
            if(paymentWays.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
-                JSONArray jsonArray = new JSONArray(SESSION._TEMP_CREDITCARD_PAYMNET.toString());
+               JSONObject obj = new JSONObject(SESSION._TEMP_CREDITCARD_PAYMNET.toString());
+               JSONArray jsonArray = new JSONArray();
+               jsonArray.put(obj);
+              //  JSONArray jsonArray = new JSONArray(SESSION._TEMP_CREDITCARD_PAYMNET.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
             }
             if(paymentWays.equalsIgnoreCase(CONSTANT.CHECKS)){
@@ -443,7 +447,7 @@ public class DocumentControl {
                             RandomAccessFile f = new RandomAccessFile(file, "r");
                             byte[] data = new byte[(int)f.length()];
                             f.readFully(data);
-                            pdfLoadImages(data,context,"");
+                            PrinterTools.pdfLoadImages(data,context,"");
                             //pdfLoadImages1(data);
                         }
                         catch(Exception ignored)
@@ -596,7 +600,7 @@ public class DocumentControl {
                             PdfUA pdfUA = new PdfUA();
 
                             try {
-                                pdfUA.printReceiptReport(context,msgData);
+                                pdfUA.printReceiptReport(context,msgData,mainmer);
                             } catch (DocumentException e) {
                                 e.printStackTrace();
                             }

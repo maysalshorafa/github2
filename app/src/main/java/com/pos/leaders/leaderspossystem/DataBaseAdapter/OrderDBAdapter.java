@@ -537,6 +537,7 @@ Log.d("eee",e.toString());
 					" order by id desc limit " + from + "," + count, null);
 
 		}else if(type.equals(context.getString(R.string.customer))){
+			Log.d("teeest1111",hint+"");
 
 					cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
 							hint + "%' "+" and " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
@@ -564,8 +565,10 @@ Log.d("eee",e.toString());
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
+			Log.d("teeest1111",orderList.toString()+"");
 
-       close();
+
+			close();
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());

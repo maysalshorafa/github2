@@ -17,17 +17,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -48,9 +46,8 @@ import java.util.List;
 
 public class InvoiceManagementActivity extends AppCompatActivity {
     public static ListView invoiceListView;
-    EditText etSearch;
-    ImageView chooseCustomer;
-    TextView customerName;
+     EditText customer_id ;
+    public static  GridView gvCustomer ;
    boolean userScrolled =false;
     public static  Customer customer;
     List<Customer> customerList = new ArrayList<>();
@@ -60,6 +57,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
     public static ArrayList<String>invoiceNumberList=new ArrayList<>();
     View previousView = null;
     public static  List<String>orderIds=new ArrayList<>();
+    public static  LinearLayout customerLayOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,25 +69,18 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_invoice_management);
         TitleBar.setTitleBar(this);
+        CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(this);
+        customerDBAdapter.open();
         Log.d("token",SESSION.token+"");
         context=this;
         ThisApp.setCurrentActivity(this);
         Bundle bundle = getIntent().getExtras();
 
         invoiceListView = (ListView)findViewById(R.id.invoiceManagement_LVInvoice);
-        etSearch = (EditText)findViewById(R.id.etSearch);
-        chooseCustomer = (ImageView)findViewById(R.id.chooseCustomer);
-        customerName = (TextView)findViewById(R.id.customerName);
-        chooseCustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                invoiceList=new ArrayList<>();
-                invoiceNumberList=new ArrayList<>();
-              callCustomerDialog();
+        customer_id = (EditText) findViewById(R.id.customer_name);
+        gvCustomer = (GridView) findViewById(R.id.popUp_gvCustomer);
+        customerLayOut =(LinearLayout)findViewById(R.id.invoiceManagement_LVCustomerLayout);
 
-
-            }
-        });
         invoiceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -106,7 +97,92 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                 previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
 
             }});
+        gvCustomer.setNumColumns(3);
 
+        customer_id.setText("");
+        customer_id.setHint("Search..");
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+        gvCustomer.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+
+                    userScrolled = false;
+                    //  loadMoreProduct();
+                }
+            }
+        });
+
+        customerList = customerDBAdapter.getAllCustomer();
+        AllCustmerList = customerList;
+
+        CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
+
+        gvCustomer.setAdapter(custmerCatalogGridViewAdapter);
+
+        gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                customer= customerList.get(position);
+                if(customer!=null) {
+                    StartInvoiceConnection startInvoiceConnection = new StartInvoiceConnection();
+                    startInvoiceConnection.execute(String.valueOf(customer.getCustomerId()));
+                }
+            }
+        });
+
+        customer_id.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                gvCustomer.setTextFilterEnabled(true);
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                customerList = new ArrayList<Customer>();
+                String word = customer_id.getText().toString();
+
+                if (!word.equals("")) {
+                    for (Customer c : AllCustmerList) {
+
+                        if (c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
+                                c.getLastName().toLowerCase().contains(word.toLowerCase())||
+                                c.getCustomerIdentity().toLowerCase().contains(word.toLowerCase())||
+                                c.getPhoneNumber().toLowerCase().contains(word.toLowerCase())) {
+                            customerList.add(c);
+
+                        }
+                    }
+                } else {
+                    customerList = AllCustmerList;
+                }
+                CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
+                gvCustomer.setAdapter(adapter);
+                // Log.i("products", productList.toString());
+
+
+            }
+        });
 
 
 
@@ -172,7 +248,6 @@ public class InvoiceManagementActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                customer= customerList.get(position);
-                customerName.setText(customer.getFullName());
                 if(customer!=null) {
                     StartInvoiceConnection startInvoiceConnection = new StartInvoiceConnection();
                     startInvoiceConnection.execute(String.valueOf(customer.getCustomerId()));
@@ -238,6 +313,8 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPreExecute() {
+        InvoiceManagementActivity.invoiceList=new ArrayList<>();
+        InvoiceManagementActivity.invoiceNumberList=new ArrayList<>();
         progressDialog.setTitle("Please Wait");
         progressDialog2.setTitle("Please Wait");
         progressDialog.show();
@@ -255,10 +332,10 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
             JSONObject jsonObject = new JSONObject(invoiceRes);
             String msgData = jsonObject.getString(MessageKey.responseBody);
             if (msgData.startsWith("[")) {
+
                 try {
                     JSONArray jsonArray = new JSONArray(msgData);
-
-                    for (int i = 0; i <= jsonArray.length() ; i++) {
+                    for (int i = 0; i <= jsonArray.length()-1 ; i++) {
                         msgData = jsonArray.getJSONObject(i).toString();
                         JSONObject msgDataJson =new JSONObject(msgData);
                         InvoiceManagementActivity.invoiceNumberList.add(msgDataJson.getString("docNum"));
@@ -292,6 +369,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                     super.onPreExecute();
                     progressDialog2.setTitle("Success.");
                     progressDialog2.show();
+                    InvoiceManagementActivity.customerLayOut.setVisibility(View.GONE);
                     InvoiceManagementListViewAdapter invoiceManagementListViewAdapter = new InvoiceManagementListViewAdapter(InvoiceManagementActivity.context,R.layout.list_adapter_row_invoices_management,InvoiceManagementActivity.invoiceList,InvoiceManagementActivity.invoiceNumberList);
                     InvoiceManagementActivity.invoiceListView.setAdapter(invoiceManagementListViewAdapter);
                 }

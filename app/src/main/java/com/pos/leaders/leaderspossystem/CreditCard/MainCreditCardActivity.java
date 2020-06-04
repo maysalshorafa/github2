@@ -593,7 +593,8 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 //soap.getProperty("MerchantNote").toString().equals("anyType{}");
                 if(creditReceipt){
                     SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;
-                    DocumentControl.sendDoc(MainCreditCardActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice);
+
+                    DocumentControl.sendDoc(MainCreditCardActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice, soap.getProperty("MerchantNote").toString());
 
                 }
                 else {
