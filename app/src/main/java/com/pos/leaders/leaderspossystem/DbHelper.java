@@ -450,7 +450,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     break;
 
                 case 9:
-
+                  //  db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
                     db.execSQL(LincessDBAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(LincessDBAdapter.POS_LINCESS_TABLE_NAME));
                         db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
@@ -473,6 +473,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
                     db.execSQL("update products set currencyType='ILS' where currencyType ='0';");
                     db.execSQL(PosSettingDbAdapter.addColumnInteger("duplicateInvoice"));
+                    db.execSQL("update PosSetting set duplicateInvoice='0';");
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
                     db.execSQL(SettingsDBAdapter.addColumnText("country"));

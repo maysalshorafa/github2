@@ -1875,7 +1875,9 @@ public class InvoiceImg {
 
         double SaleOriginalityPrice = 0, saleTotalPrice = 0;
         double totalSaved = 0.0;
+        double price_before_tax=0;
         for (OrderDetails o : orders) {
+            price_before_tax+=o.getPaidAmountAfterTax();
             count+=o.getQuantity();
             if (o.getProduct().getDisplayName().equals("General"))
                 o.getProduct().setProductCode(context.getString(R.string.general));
@@ -1937,9 +1939,10 @@ public class InvoiceImg {
             blocks.add(toPidTextBeforeDiscount);
             blocks.add(clear.Left());
         }
+        double totalPriceAfterDiscount= sale.getTotalPrice()- (sale.getTotalPrice() * (sale.cartDiscount/100));
         Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+"%"  , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
-        Block addsTaxValue = new Block(Util.makePrice(noTax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block addsTaxValue = new Block(Util.makePrice(totalPriceAfterDiscount-price_before_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         // Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         //blocks.add(numTax.Left());
         blocks.add(addsTaxValue.Left().Bold());

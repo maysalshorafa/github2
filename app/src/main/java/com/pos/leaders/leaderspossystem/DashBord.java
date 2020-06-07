@@ -162,28 +162,6 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             SESSION.internetStatus = InternetStatus.ERROR;
         }
 
-
-        /*if(Util.isSyncServiceRunning(context)){
-         //   SESSION.syncStatus = SyncStatus.ENABLED;
-        } else {
-            Toast.makeText(context, "Reconnect, please wait...", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(context, SyncMessage.class);
-            intent.putExtra(SyncMessage.API_DOMAIN_SYNC_MESSAGE, SETTINGS.BO_SERVER_URL);
-            context.startService(intent);
-        }
-*/
-           /* try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-            /*if (!Util.isSyncServiceRunning(context)) {
-                SESSION.syncStatus = SyncStatus.DISABLED;
-            }*/
-
-         /*   SESSION.syncStatus = SyncStatus.ENABLED;
-        }*/
-
         //run MSR Service
         Intent intent = new Intent();
         intent.setPackage("com.sunmi.mscardservice");
@@ -243,9 +221,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             StrictMode.setThreadPolicy(policy);
         }
         try {
-          //  if (SETTINGS.enableCurrencies){
             updateCurrency();
-        //}
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {

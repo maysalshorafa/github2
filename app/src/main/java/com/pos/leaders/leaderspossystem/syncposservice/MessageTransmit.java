@@ -195,7 +195,7 @@ public class MessageTransmit {
     }
 
 public void updateLincessStatus(Response response){
-    if (response.code()==402){
+        if (response.code()==402){
     LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(ThisApp.getCurrentActivity());
     lincessDBAdapter.open();
     long idLincess=lincessDBAdapter.GetLincessID().getId();

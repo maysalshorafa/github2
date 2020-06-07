@@ -5,7 +5,7 @@ package com.pos.leaders.leaderspossystem.Tools;
  */
 
 public enum ServerUrl {
-    BO_SERVER_URL("http://94f53ed26976.ngrok.io/");
+    BO_SERVER_URL("http://apiv4.leadpos.net/");
 
     private final String url;
 

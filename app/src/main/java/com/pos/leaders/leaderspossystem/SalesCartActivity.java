@@ -2392,6 +2392,8 @@ public class SalesCartActivity extends AppCompatActivity {
                                                             s = s.substring(0, s.length() - 1);
                                                         }
                                                         SESSION._ORDERS.setTotalSaved(Double.parseDouble(s));
+                                                        Log.d("invoiceSessionOrderDetial",SESSION._ORDER_DETAILES.toString());
+                                                        Log.d("invoiceSessionOrder",SESSION._ORDERS.toString());
                                                         print(invoiceImg.Invoice(SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, invoiceNum, customerGeneralLedger));
                                                         clearCart();
 
