@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -31,6 +32,7 @@ import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceManagementActivity extends AppCompatActivity {
+    public static double debtAmount=0 , payAmount=0;
     public static ListView invoiceListView;
      EditText customer_id ;
     public static  GridView gvCustomer ;
@@ -57,7 +60,8 @@ public class InvoiceManagementActivity extends AppCompatActivity {
     View previousView = null;
     public static  List<String>orderIds=new ArrayList<>();
     public static  LinearLayout customerLayOut;
-
+    List<Long>invoiceNumberWantToPay=new ArrayList<>();
+    Button btnOk;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,40 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         customer_id = (EditText) findViewById(R.id.customer_name);
         gvCustomer = (GridView) findViewById(R.id.popUp_gvCustomer);
         customerLayOut =(LinearLayout)findViewById(R.id.invoiceManagement_LVCustomerLayout);
+        btnOk=(Button)findViewById(R.id.reciptPaymentInvoiceActivity);
+        payAmount=0;
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                for(int i=0;i<InvoiceManagementListViewAdapter.mCheckStates.size();i++)
+                {
+                    if(InvoiceManagementListViewAdapter.mCheckStates.get(i)==true)
+                    {
+                        try {
+                            payAmount+=Double.parseDouble(invoiceList.get(i).getDocumentsData().getString("total"));
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("teeeees",payAmount+"");
+
+                    }
+                }
+                for(int i=0;i<InvoiceManagementListViewAdapter.mCheckStatesPartial.size();i++)
+                {
+                    if(InvoiceManagementListViewAdapter.mCheckStatesPartial.get(i)==true)
+                    {
+                            payAmount+=Double.parseDouble(InvoiceManagementListViewAdapter.partialValue.get(i).toString());
+                        Log.d("teeeees",payAmount+"");
+
+                    }
+                }
+            }
+        });
+
+
 
         invoiceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -137,8 +175,53 @@ public class InvoiceManagementActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 customer= customerList.get(position);
                 if(customer!=null) {
-                    StartInvoiceConnection startInvoiceConnection = new StartInvoiceConnection();
-                    startInvoiceConnection.execute(String.valueOf(customer.getCustomerId()));
+                    StartInvoiceConnectionGetCustomerDebt startInvoiceConnectionDebtAmount = new StartInvoiceConnectionGetCustomerDebt();
+                    startInvoiceConnectionDebtAmount.execute(String.valueOf(customer.getCustomerId()));
+                    final Dialog paymentReceiptDialog = new Dialog(InvoiceManagementActivity.this);
+                    paymentReceiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    paymentReceiptDialog.show();
+                    paymentReceiptDialog.setContentView(R.layout.recipt_cash_dialog);
+                    final EditText etAmount = (EditText) paymentReceiptDialog.findViewById(R.id.recipthPaymentDialog_TECash);
+                    final TextView tvDebtAmount = (TextView) paymentReceiptDialog.findViewById(R.id.TvTotalAmountDebt);
+                    tvDebtAmount.setText(Util.makePrice(debtAmount));
+                    final TextView totalAmountAfterPay = (TextView) paymentReceiptDialog.findViewById(R.id.totalAmountAfterPay);
+                    Button btnOk = (Button)paymentReceiptDialog.findViewById(R.id.reciptPaymentDialog_BTOk);
+
+                    btnOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String checkStr = etAmount.getText().toString();
+                            if(!checkStr.matches("")){
+                                StartInvoiceConnection startInvoiceConnection = new StartInvoiceConnection();
+                                startInvoiceConnection.execute(String.valueOf(customer.getCustomerId()));
+                                paymentReceiptDialog.dismiss();
+                            }
+
+                        }
+                    });
+
+
+                    etAmount.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String checkStr = etAmount.getText().toString();
+                            if(!checkStr.matches("")){
+                                double total=debtAmount-Double.parseDouble(etAmount.getText().toString());
+                                totalAmountAfterPay.setText(Util.makePrice(total));
+                            }
+                        }
+                    });
+
                 }
             }
         });
@@ -184,6 +267,9 @@ public class InvoiceManagementActivity extends AppCompatActivity {
 
 
 
+    }
+    public void saveInvoicePos(BoInvoice boInvoice){
+       invoiceList.add(boInvoice);
     }
     //choose customer invoice
     private void callCustomerDialog() {
@@ -370,6 +456,80 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                     InvoiceManagementActivity.customerLayOut.setVisibility(View.GONE);
                     InvoiceManagementListViewAdapter invoiceManagementListViewAdapter = new InvoiceManagementListViewAdapter(InvoiceManagementActivity.context,R.layout.list_adapter_row_invoices_management,InvoiceManagementActivity.invoiceList,InvoiceManagementActivity.invoiceNumberList);
                     InvoiceManagementActivity.invoiceListView.setAdapter(invoiceManagementListViewAdapter);
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    progressDialog2.cancel();
+                    super.onPostExecute(aVoid);
+                }
+            }.execute();
+        } else {
+            //fail
+            Toast.makeText(InvoiceManagementActivity.context, "Try Again.", Toast.LENGTH_SHORT).show();
+        }
+        progressDialog.cancel();
+        super.onPostExecute(s);
+
+        //endregion
+    }
+
+}
+class StartInvoiceConnectionGetCustomerDebt extends AsyncTask<String,Void,String> {
+    private MessageTransmit messageTransmit;
+    ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    BoInvoice invoice;
+    StartInvoiceConnectionGetCustomerDebt() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    }
+
+    final ProgressDialog progressDialog = new ProgressDialog(InvoiceManagementActivity.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(InvoiceManagementActivity.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {//args{key,uuid}
+        String customerId=args[0];
+        try {
+            String url = ApiURL.Documents+"/totalUnPaidForCustomer/"+customerId;
+            //   Log.d("invoiceUrl",url);
+
+            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
+           Log.d("invoiceRes",invoiceRes);
+            JSONObject jsonObject = new JSONObject(invoiceRes);
+            String msgData = jsonObject.getString(MessageKey.responseBody);
+            InvoiceManagementActivity.debtAmount=Double.parseDouble(msgData);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        if (s != null) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog2.setTitle("Success.");
+                    progressDialog2.show();
                 }
 
                 @Override

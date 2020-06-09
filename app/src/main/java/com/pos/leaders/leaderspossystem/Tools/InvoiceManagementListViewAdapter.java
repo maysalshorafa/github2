@@ -3,12 +3,16 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,7 +33,10 @@ import java.util.List;
  * Created by Win8.1 on 9/5/2018.
  */
 
-public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
+public class InvoiceManagementListViewAdapter  extends ArrayAdapter implements CompoundButton.OnCheckedChangeListener{
+   public static SparseBooleanArray mCheckStates;
+    public static SparseBooleanArray mCheckStatesPartial;
+    public static ArrayList partialValue;
     private List<BoInvoice> invoicesList;
     private int resource;
     private LayoutInflater inflater;
@@ -49,6 +56,9 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
         this.resource = resource;
         this.invoicesList = objects;
         this.invoiceNumbers=invoiceNumbers;
+        mCheckStates = new SparseBooleanArray(invoicesList.size());
+        mCheckStatesPartial = new SparseBooleanArray(invoicesList.size());
+        partialValue=new ArrayList<Double>();
 
         inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -67,12 +77,19 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
             holder.cashReceipt = (Button)convertView.findViewById(R.id.listInvoiceManagement_BTCreateCashReceipt);
             holder.checkReceipt = (Button)convertView.findViewById(R.id.listInvoiceManagement_BTCreateCheckReceipt);
             holder.creditReceipt = (Button)convertView.findViewById(R.id.listInvoiceManagement_BTCreateCreditReceipt);
+            holder.checkBox=(CheckBox)convertView.findViewById(R.id.paidCheckBox);
+            holder.checkBoxPartial=(CheckBox)convertView.findViewById(R.id.paidPartialCheckBox);
+
             holder.FL = (LinearLayout) convertView.findViewById(R.id.listInvoiceManagement_FLMore);
+            holder.payAmount=(EditText)convertView.findViewById(R.id.listInvoiceManagement_TVTotalPay);
+
 
             convertView.setTag(holder);
         } else {
             holder = (InvoiceManagementListViewAdapter.ViewHolder) convertView.getTag();
         }
+
+
         holder.FL.setVisibility(View.GONE);
         holder.cashReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,15 +254,88 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
         });
         try {
             holder.tvTotalAmount.setText(invoicesList.get(position).getDocumentsData().getDouble("total")+getContext().getString(R.string.ins));
-            holder.tvID.setText(invoiceNumbers.get(position)+"");
+          // holder.tvID.setText(invoiceNumbers.get(position)+"");
             holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("totalPaid")+getContext().getString(R.string.ins));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("click", "onClick: "+position);
+                mCheckStates.put(position, true);
+            }
+        });
+
+        holder.checkBoxPartial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.i("clickPPP", "onClick: "+position);
+                mCheckStatesPartial.put(position, true);
+//                mCheckStatesPartial.put((Integer) buttonView.getTag(), isChecked);
+                if(ViewHolder.payAmount.getText().toString().equals("")){
+                    String s= "0";
+                    partialValue.add(Double.parseDouble(s));
+                }else {
+                    partialValue.add( Double.parseDouble(ViewHolder.payAmount.getText().toString()));
+
+                }
+                Log.d("mCheckStatesPartial",mCheckStatesPartial.size()+"");
+                Log.d("partialValue",partialValue.toString()+"");}
+        });
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mCheckStates.put(position, true);
+                Log.d("mCheckStates",mCheckStates.size()+"");}
+        });
 
         return convertView;
     }
-    class ViewHolder {
+
+
+
+    public boolean isChecked(int position) {
+
+        return mCheckStatesPartial.get(position, false);
+    }
+
+    public void setChecked(int position, boolean isChecked) {
+        mCheckStatesPartial.put(position, isChecked);
+
+    }
+
+    public void toggle(int position) {
+        setChecked(position, !isChecked(position));
+
+    }
+
+    public boolean isCheckedPartial(int position) {
+        return mCheckStatesPartial.get(position, false);
+    }
+
+
+
+    public void setCheckedPartial(int position, boolean isChecked) {
+        mCheckStatesPartial.put(position, isChecked);
+
+    }
+
+    public void togglePartial(int position) {
+        setChecked(position, !isCheckedPartial(position));
+
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView,
+                                 boolean isChecked) {
+
+
+    }
+
+
+
+    public static class ViewHolder {
         private TextView tvID;
         private TextView tvTotalAmount;
         private TextView tvTotalPaid;
@@ -253,6 +343,18 @@ public class InvoiceManagementListViewAdapter  extends ArrayAdapter {
         private Button creditReceipt;
         private Button checkReceipt;
         private LinearLayout FL;
+        public CheckBox checkBox;
+        public CheckBox checkBoxPartial;
+
+       public static EditText payAmount;
+        public Double getEtAmount() {
+            if(payAmount.getText().toString().equals("")){
+                String s= "0";
+                payAmount.setText(s);
+                return Double.parseDouble(payAmount.getText().toString());
+            }
+            return Double.parseDouble(payAmount.getText().toString());
+        }
 
     }
 
