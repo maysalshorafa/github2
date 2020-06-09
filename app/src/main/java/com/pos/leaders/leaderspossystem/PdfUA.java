@@ -284,6 +284,13 @@ public class PdfUA {
         insertCell(dataTable, Util.makePrice(zReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+
+        // Total Amount
+        insertCell(dataTable,  Util.makePrice(zReport.getTotalAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
+
         insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         insertCell(dataTable, context.getString(R.string.total), Element.ALIGN_RIGHT, 1, font);
@@ -310,9 +317,7 @@ public class PdfUA {
         insertCell(dataTable, currencyTypesList.get(3).getType(), Element.ALIGN_RIGHT, 2, font);}
 
 
-        insertCell(dataTable,  Util.makePrice(zReport.getTotalAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
 
         if(checkList.size()>0){
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
@@ -1592,6 +1597,12 @@ public class PdfUA {
         insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
 
+
+        insertCell(dataTable,  Util.makePrice(xReport.getTotalAmount()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
+
         insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         ///check region
@@ -1637,9 +1648,7 @@ public class PdfUA {
             insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
         }
-        insertCell(dataTable,  Util.makePrice(xReport.getTotalAmount()), Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
 
 
 
@@ -1979,7 +1988,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.method), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, zReport.getCashTotal() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,Util.makePrice(zReport.getCashTotal()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCashCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
@@ -1991,6 +2000,11 @@ public class PdfUA {
         insertCell(dataTable, Util.makePrice(zReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
+
+        insertCell(dataTable, Util.makePrice(zReport.getTotalAmount())+" ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
         insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
 
 
@@ -2020,9 +2034,7 @@ public class PdfUA {
 
 
 
-        insertCell(dataTable, Util.makePrice(zReport.getTotalAmount())+" ", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, "~", Element.ALIGN_RIGHT, 1, font);
-        insertCell(dataTable, context.getString(R.string.total_amount), Element.ALIGN_RIGHT, 2, font);
+
 
         insertCell(dataTable,"----------------------------", Element.ALIGN_CENTER, 4, font);
         if(checkList.size()>0){
@@ -2130,6 +2142,11 @@ public class PdfUA {
         double totalSaved=0.0;
         int count=0;
         String customerName="";
+
+
+
+
+
         // create file , document region
         Document document = new Document();
         String fileName = "normalInvoice.pdf";
@@ -2155,6 +2172,7 @@ public class PdfUA {
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
+
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, urFontName1);
@@ -2196,7 +2214,8 @@ public class PdfUA {
         PdfPTable checkTable = new PdfPTable(3);
         PdfPTable creditCard = new PdfPTable(4);
         Font urFontName = new Font(urName1, 24);
-
+        BaseFont boldFont = BaseFont.createFont("assets/arial.ttf", "Times-Bold",true,BaseFont.EMBEDDED);
+        Font fontbld = new Font(boldFont, 24);
         table.deleteBodyRows();
         table.setRunDirection(0);
         currencyTable.deleteBodyRows();
@@ -2207,6 +2226,16 @@ public class PdfUA {
         creditCard.setRunDirection(0);
         checkTable.deleteBodyRows();
         checkTable.setRunDirection(0);
+
+
+
+        String languageApp=getLanguageApp();
+        if (languageApp.equals("ar")){
+            table.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+        }
+        else {
+            table.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+        }
         //insert column headings;
         insertCell(table, "%", Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 2, urFontName1);
@@ -2240,30 +2269,34 @@ public class PdfUA {
         }
 
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 9, urFontName);
-        insertCell(table, context.getString(R.string.product_quantity)  , Element.ALIGN_CENTER, 5, urFontName);
-        insertCell(table,Util.makePrice(count)  , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table,Util.makePrice(count)  ,Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table, context.getString(R.string.product_quantity)  ,Element.ALIGN_CENTER, 5, urFontName);
+
 
 
         if (order.cartDiscount !=0) {
-            insertCell(table, context.getString(R.string.price_before_discount), Element.ALIGN_CENTER, 5, urFontName);
             insertCell(table, Util.makePrice(order.getTotalPrice() * 100 / (100 - order.cartDiscount)), Element.ALIGN_CENTER, 4, urFontName);
+            insertCell(table, context.getString(R.string.price_before_discount), Element.ALIGN_CENTER, 5, urFontName);
 
-            insertCell(table, context.getString(R.string.discount), Element.ALIGN_CENTER, 5, urFontName);
             insertCell(table, Util.makePrice(order.cartDiscount), Element.ALIGN_CENTER, 4, urFontName);
+            insertCell(table, context.getString(R.string.discount), Element.ALIGN_CENTER, 5, urFontName);
+
         }
         double totalPriceAfterDiscount= totalPrice- (totalPrice * (order.cartDiscount/100));
         Log.d("order.cartDiscount",totalPrice+"");
+        insertCell(table,Util.makePrice(totalPriceAfterDiscount)  , Element.ALIGN_CENTER, 4, fontbld);
         insertCell(table, context.getString(R.string.total_price)  , Element.ALIGN_CENTER, 5, urFontName);
-        insertCell(table,Util.makePrice(totalPriceAfterDiscount)  , Element.ALIGN_CENTER, 4, urFontName);
+
 
         double noTax =price_before_tax - (price_before_tax * (order.cartDiscount/100));
         Log.d("order.cartDiscount",noTax+"");
-        insertCell(table, context.getString(R.string.tax) +" : "+Util.makePrice(SETTINGS.tax)+" "+"%" , Element.ALIGN_CENTER, 5, urFontName);
         insertCell(table,Util.makePrice(totalPriceAfterDiscount - price_before_tax) , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table, context.getString(R.string.tax) +" : "+Util.makePrice(SETTINGS.tax)+" "+"%" , Element.ALIGN_CENTER, 5, urFontName);
 
 
-        insertCell(table, context.getString(R.string.price_before_tax)+" : " , Element.ALIGN_CENTER,5, urFontName);
         insertCell(table, Util.makePrice(price_before_tax) , Element.ALIGN_CENTER,4, urFontName);
+        insertCell(table, context.getString(R.string.price_before_tax) , Element.ALIGN_CENTER,5, urFontName);
+
 
 
 
@@ -2512,6 +2545,9 @@ public class PdfUA {
         double totalSaved=0.0;
         int count=0;
         String customerName="";
+
+
+
         // create file , document region
         Document document = new Document();
         String fileName = "normalInvoice.pdf";
@@ -2537,6 +2573,7 @@ public class PdfUA {
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
+
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, urFontName1);
@@ -2578,7 +2615,6 @@ Log.d("CompanySettingPDF",SETTINGS.company.name());
         PdfPTable checkTable = new PdfPTable(3);
         PdfPTable creditCard = new PdfPTable(4);
         Font urFontName = new Font(urName1, 24);
-
         table.deleteBodyRows();
         table.setRunDirection(0);
         currencyTable.deleteBodyRows();
@@ -2589,6 +2625,16 @@ Log.d("CompanySettingPDF",SETTINGS.company.name());
         creditCard.setRunDirection(0);
         checkTable.deleteBodyRows();
         checkTable.setRunDirection(0);
+
+        String languageApp=getLanguageApp();
+        if (languageApp.equals("ar")){
+            table.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+        }
+        else {
+            table.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+        }
+
+
         //insert column headings;
         insertCell(table, "%", Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(table, context.getString(R.string.total), Element.ALIGN_CENTER, 2, urFontName1);
@@ -2625,33 +2671,36 @@ Log.d("CompanySettingPDF",SETTINGS.company.name());
         Log.d("saleTotalPriceCal",saleTotalPrice+"");
         Log.d("totalCalaculate",totalSaved+"");
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 9, urFontName);
-        insertCell(table, context.getString(R.string.product_quantity)  , Element.ALIGN_CENTER, 5, urFontName);
         insertCell(table,Util.makePrice(count)  , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table, context.getString(R.string.product_quantity)  , Element.ALIGN_CENTER, 5, urFontName);
+
 
 
         if (order.cartDiscount !=0) {
-            insertCell(table, context.getString(R.string.price_before_discount), Element.ALIGN_CENTER, 5, urFontName);
             insertCell(table, Util.makePrice(order.getTotalPrice() * 100 / (100 - order.cartDiscount)), Element.ALIGN_CENTER, 4, urFontName);
+            insertCell(table, context.getString(R.string.price_before_discount), Element.ALIGN_CENTER, 5, urFontName);
 
+            insertCell(table, Util.makePrice(order.cartDiscount)+ "%", Element.ALIGN_CENTER, 4, urFontName);
             insertCell(table, context.getString(R.string.discount), Element.ALIGN_CENTER, 5, urFontName);
-            insertCell(table, Util.makePrice(order.cartDiscount), Element.ALIGN_CENTER, 4, urFontName);
+
         }
         double totalPriceAfterDiscount= totalPrice- (totalPrice * (order.cartDiscount/100));
         Log.d("order.cartDiscount",totalPrice+"");
         Log.d("ordet",totalPriceAfterDiscount+"");
-        insertCell(table, context.getString(R.string.total_price)  , Element.ALIGN_CENTER, 5, urFontName);
-        insertCell(table,Util.makePrice(totalPriceAfterDiscount)  , Element.ALIGN_CENTER, 4, urFontName);
 
         double noTax =price_before_tax - (price_before_tax * (order.cartDiscount/100));
         Log.d("noTaxIn",noTax+"");
         Log.d("ordeartDiscount",totalPriceAfterDiscount - price_before_tax+"");
-        insertCell(table, context.getString(R.string.tax) +" : "+Util.makePrice(SETTINGS.tax)+" "+"%" , Element.ALIGN_CENTER, 5, urFontName);
-        insertCell(table,Util.makePrice(totalPriceAfterDiscount - price_before_tax) , Element.ALIGN_CENTER, 4, urFontName);
 
-
-        insertCell(table, context.getString(R.string.price_before_tax)+" : " , Element.ALIGN_CENTER,5, urFontName);
         insertCell(table, Util.makePrice(price_before_tax) , Element.ALIGN_CENTER,4, urFontName);
+        insertCell(table, context.getString(R.string.price_before_tax) , Element.ALIGN_CENTER,5, urFontName);
 
+
+        insertCell(table,Util.makePrice(totalPriceAfterDiscount - price_before_tax) , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table, context.getString(R.string.tax) +" : "+Util.makePrice(SETTINGS.tax)+" "+"%" , Element.ALIGN_CENTER, 5, urFontName);
+
+        insertCell(table,Util.makePrice(totalPriceAfterDiscount)  , Element.ALIGN_CENTER, 4, urFontName);
+        insertCell(table, context.getString(R.string.total_price)  , Element.ALIGN_CENTER, 5, urFontName);
 
 
 
@@ -3076,5 +3125,11 @@ Log.d("CompanySettingPDF",SETTINGS.company.name());
 
     }
 
+
+    public static String getLanguageApp(){
+        String CurrentLang = Locale.getDefault().getLanguage();
+        Log.d("deviceLanguage",CurrentLang);
+        return CurrentLang;
+    }
 
 }

@@ -888,6 +888,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                     previousView.setBackgroundColor(getResources().getColor(R.color.list_background_color));
                 }
+
                 else  if(list.get(position-1) instanceof  Order){
                     final Order sale = (Order) list.get(position-1);
                     Log.d("testttt",sale.toString());

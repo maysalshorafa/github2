@@ -824,7 +824,7 @@
 
     <string name="date_end_zreport">Closing date zReport</string>
 
-    <string name="due_date">Due Date</string>
+    <string name="due_date">Expiry Date</string>
     <string name="text_dialog_lincess">The history of the license is over, please contact the company to activate.</string>
 
 

@@ -708,7 +708,7 @@
 
     <string name="date_end_zreport">تاريخ اغلاق تقرير z</string>
 
-    <string name="due_date">تاريخ الاستحقاق</string>
+    <string name="due_date">تاريخ انتهاء الصلاحية</string>
     <string name="text_dialog_lincess">انتهى تاريخ الليسنز, يرجى الاتصال بالشركة للتفعيل</string>
 </resources>
 

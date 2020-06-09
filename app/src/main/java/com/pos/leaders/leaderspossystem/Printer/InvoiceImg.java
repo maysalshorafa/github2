@@ -1907,13 +1907,13 @@ public class InvoiceImg {
         Block discountText = new Block("\u200E" + context.getString(R.string.discount), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
 
 
-        Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_discount),40f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
-        Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        Block discountAmount = new Block("\u200E" + String.valueOf(sale.cartDiscount)+ "%", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block toPidTextBeforeDiscount = new Block("\u200E" + context.getString(R.string.price_before_discount),25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block toPid = new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block discountAmount = new Block("\u200E" + Util.makePrice(sale.cartDiscount)+ "%", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
-        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice()+(sale.cartDiscount/100)*sale.getTotalPrice()), 35f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        productCount.Bold();
-        productCountText.Bold();
+        Block toPidBeforeDiscount= new Block(String.format(new Locale("en"), "%.2f", sale.getTotalPrice() * 100 / (100 - sale.cartDiscount)),25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+       // productCount.Bold();
+       // productCountText.Bold();
         productCount.Left();
         productCountText.Left();
         toPid.Left();
@@ -1928,26 +1928,44 @@ public class InvoiceImg {
         blocks.add(productCount);
         blocks.add(productCountText);
         blocks.add(clear.Left());
-        blocks.add(toPid);
-        blocks.add(toPidText);
-        blocks.add(clear.Left());
+
         if(sale.cartDiscount>0) {
-            blocks.add(discountAmount);
-            blocks.add(discountText);
-            blocks.add(clear.Left());
             blocks.add(toPidBeforeDiscount);
             blocks.add(toPidTextBeforeDiscount);
             blocks.add(clear.Left());
+            blocks.add(discountAmount);
+            blocks.add(discountText);
+            blocks.add(clear.Left());
+
         }
-        double totalPriceAfterDiscount= sale.getTotalPrice()- (sale.getTotalPrice() * (sale.cartDiscount/100));
-        Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+"%"  , 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+
+
+
+        double totalPriceAfterDiscount= saleTotalPrice- (saleTotalPrice * (sale.cartDiscount/100));
+        Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+"%"  , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         double noTax = sale.getTotalPrice() / (1 + (SETTINGS.tax / 100));
-        Block addsTaxValue = new Block(Util.makePrice(totalPriceAfterDiscount-price_before_tax), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        // Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        //blocks.add(numTax.Left());
-        blocks.add(addsTaxValue.Left().Bold());
-        blocks.add(addsTax.Left().Bold());
+        Block addsTaxValue = new Block(Util.makePrice(totalPriceAfterDiscount-price_before_tax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+        Block priceBeforeTax = new Block("\u200E" + context.getString(R.string.price_before_tax) + ": " , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
+        Block priceBeforeTaxValue = new Block(Util.makePrice(price_before_tax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+
+
+
+
+        blocks.add(priceBeforeTaxValue.Left());
+        blocks.add(priceBeforeTax.Left());
         blocks.add(clear.Left());
+
+        blocks.add(addsTaxValue.Left());
+        blocks.add(addsTax.Left());
+        blocks.add(clear.Left());
+
+
+
+        blocks.add(toPid.Left());
+        blocks.add(toPidText);
+        blocks.add(clear.Left());
+
         //pid and price
         blocks.add(clear.Left());
         blocks.add(lineR.Left());
@@ -1959,19 +1977,19 @@ public class InvoiceImg {
         blocks.add(cashier);
         Block customerGeneralLedgerView = new Block("\u200E" + context.getString(R.string.customer_ledger)+ ":"+Util.makePrice(customerGeneralLedger)+""+ "\n"+ line, 28.0f, Color.BLACK, Paint.Align.LEFT, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(customerGeneralLedgerView);
-        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block date = new Block("\u200e" + context.getString(R.string.date) + " :" + DateConverter.DateToString(sale.getCreatedAt()), 25f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(date.Left());
         if (isCopy) {
-            Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            Block bCopyDate = new Block("\u200E" + context.getString(R.string.copy_date) + ": " + DateConverter.currentDateTime(), 25f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(bCopyDate.Left());
         }
         if ((int) totalSaved != 0) {
             String s = SETTINGS.currencySymbol;
-            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" +totalSaved, 32.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+            Block totSaved = new Block("\u200e" + context.getString(R.string.total_saved) + " :" +totalSaved, 25f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
             blocks.add(totSaved.Bold().Left());
         }
 
-        Block thanks = new Block(SETTINGS.returnNote, 28.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
+        Block thanks = new Block(SETTINGS.returnNote, 25f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         blocks.add(thanks.Left());
 
         return make(blocks);

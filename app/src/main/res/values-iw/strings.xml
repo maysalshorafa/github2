@@ -729,6 +729,6 @@
     <string name="date_end_zreport">תאריך סגירת דו"ח Z</string>
     <string name="view_credit_invoice_doc_company_status">הצגת חשבון זיכוי</string>
 
-    <string name="due_date">תאריך להגשה</string>
+    <string name="due_date">תאריך תפוגה</string>
     <string name="text_dialog_lincess">ההיסטוריה של הרישיון הסתיימה, אנא צרו קשר עם החברה להפעלה.</string>
 </resources>

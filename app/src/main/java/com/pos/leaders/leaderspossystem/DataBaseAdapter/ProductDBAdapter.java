@@ -498,7 +498,7 @@ public class ProductDBAdapter {
             String where = PRODUCTS_COLUMN_ID + " = ?";
             db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{product.getProductId() + ""});
             Product p=productDBAdapter.getProductByID(product.getProductId());
-            Log.d("Update Object",p.toString());
+//            Log.d("Update Object",p.toString());
             productDBAdapter.close();
             return 1;
         } catch (SQLException ex) {
@@ -940,6 +940,14 @@ public class ProductDBAdapter {
         sendToBroker(MessageType.UPDATE_PRODUCT, p, this.context);
         productDBAdapter.close();
     }
-
+    public void updateProductShekel() {
+        ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
+        productDBAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(PRODUCTS_COLUMN_CURRENCY_TYPE,"ILS");
+        String where = PRODUCTS_COLUMN_CURRENCY_TYPE + " = ?";
+        db.update(PRODUCTS_TABLE_NAME, val, where, new String[]{"0"});
+    }
 }
 

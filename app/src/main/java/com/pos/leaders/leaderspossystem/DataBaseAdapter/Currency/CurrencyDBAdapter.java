@@ -108,8 +108,6 @@ public class CurrencyDBAdapter {
         //Assign values for each row.
 
         val.put(CURRENCY_COLUMN_ID, currency.getId());
-
-
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode() );
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());

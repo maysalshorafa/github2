@@ -356,6 +356,7 @@ public class SalesCartActivity extends AppCompatActivity {
         TitleBar.setTitleBar(this);
         ThisApp.setCurrentActivity(this);
 
+
         ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
         zReportDBAdapter.open();
         if(DbHelper.DATABASE_ENABEL_ALTER_COLUMN){

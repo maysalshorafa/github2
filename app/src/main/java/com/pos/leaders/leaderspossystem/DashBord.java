@@ -48,6 +48,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
@@ -103,6 +104,7 @@ import java.util.Locale;
 
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_AUTH;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.BO_CORE_ACCESS_TOKEN;
+import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.context;
 
 public class DashBord extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private boolean enableBackButton = true;
@@ -244,6 +246,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         settings = (IButton) findViewById(R.id.settings);
         checkLincess();
         TitleBar.setTitleBar(this);
+
+
+        /*ProductDBAdapter productDBAdapter=new ProductDBAdapter(DashBord.this);
+        productDBAdapter.open();
+        productDBAdapter.updateProductShekel();*/
 
        // EnableButtons();
 
@@ -1830,7 +1837,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
             }else {
                 String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
                 Log.d("tokenn",SESSION.token);
-                Log.i("Currency", currencyRes);
+                Log.i("CurrencyUpdateDash", currencyRes);
                 ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
                 objectMapper.setDateFormat(dateFormat);
@@ -1850,7 +1857,10 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                             msgData = jsonArray.getJSONObject(i).toString();
                             Currency currency = null;
                             currency = objectMapper.readValue(msgData, Currency.class);
+                           // currencyDBAdapter.deleteOldRate(currencyTypesList);
+                            currencyDBAdapter.deleteCurrencyList();
                             currencyDBAdapter.insertEntry(currency);
+
                             //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
                         }
                     } catch (Exception e) {
@@ -1861,14 +1871,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                 } catch (JSONException e) {
 
                 }
-            /*Currency currencyBoss=new Currency();
-           currencyBoss.setId(6725999);
-           currencyBoss.setName("Dollar");
-           currencyBoss.setCurrencyCode("USD");
-           currencyBoss.setCountry("USA");
-           currencyBoss.setRate(1.0);
-            currencyDBAdapter.insertEntry(currencyBoss);*/
-                currencyDBAdapter.deleteOldRate(currencyTypesList);
+              //  currencyDBAdapter.deleteOldRate(currencyTypesList);
 
 
             }
@@ -1878,7 +1881,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         else {
             String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
             Log.d("tokenn",SESSION.token);
-            Log.i("Currency", currencyRes);
+            Log.i("CurrencyDashbord", currencyRes);
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             objectMapper.setDateFormat(dateFormat);
@@ -1899,6 +1902,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                         msgData = jsonArray.getJSONObject(i).toString();
                         Currency currency = null;
                         currency = objectMapper.readValue(msgData, Currency.class);
+                        currencyDBAdapter.deleteCurrencyList();
                         currencyDBAdapter.insertEntry(currency);
                         //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
                     }
@@ -1910,14 +1914,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
             } catch (JSONException e) {
 
             }
-           /* Currency currencyBoss=new Currency();
-            currencyBoss.setId(6725999);
-            currencyBoss.setName("Dollar");
-            currencyBoss.setCurrencyCode("USD");
-            currencyBoss.setCountry("USA");
-            currencyBoss.setRate(1.0);
-            currencyDBAdapter.insertEntry(currencyBoss);*/
-            //   currencyDBAdapter.deleteOldRate(currencyTypesList);
+
 
 
         }

@@ -25,6 +25,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
+import com.pos.leaders.leaderspossystem.Models.PosSetting;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CompanyStatus;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
@@ -35,6 +36,7 @@ import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
@@ -54,6 +56,7 @@ import java.util.UUID;
 import static android.content.Context.MODE_PRIVATE;
 import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Currency;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.context;
+import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 public class SetupNewPOSOnlineActivity extends Activity {
     public final static String BO_CORE_ACCESS_AUTH = "BOCOREACCESSAUTH";
@@ -319,8 +322,10 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     SetupNewPOSOnlineActivity.restart = true;
                     CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(SetupNewPOSOnlineActivity.context);
                     currencyTypeDBAdapter.open();
+                    Log.d("Maayyy",SetupNewPOSOnlineActivity.ArrayCurrencySelect.toString());
                     for (int i=0;i<SetupNewPOSOnlineActivity.ArrayCurrencySelect.size();i++){
-                    currencyTypeDBAdapter.insertEntry(new CurrencyType(i,SetupNewPOSOnlineActivity.ArrayCurrencySelect.get(i)));
+
+                        currencyTypeDBAdapter.insertEntry(new CurrencyType(i,SetupNewPOSOnlineActivity.ArrayCurrencySelect.get(i)));
                     currencyTypeDBAdapter.insertEntry(SetupNewPOSOnlineActivity.ArrayCurrencySelect.get(i));}
                     final Intent i = new Intent(SetupNewPOSOnlineActivity.context, SplashScreenActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -529,8 +534,13 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                     posSettingDbAdapter.open();
                     posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SetupNewPOSOnlineActivity.currencyCode,SetupNewPOSOnlineActivity.currencySymbol,SetupNewPOSOnlineActivity.country,SETTINGS.enableDuplicateInvoice);
-                    Util.isFirstLaunch(context, true);
+
+                    /*PosSetting posSetting= posSettingDbAdapter.getPosSettingByID(id);
+
+                    addPosSetting(posSetting);
+                    Util.isFirstLaunch(context, true);*/
                     //finish();
+                    Util.isFirstLaunch(context, true);
                 } else {
                     Log.e("setup",jsonObject.getString(MessageKey.responseType));
                     //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again), Toast.LENGTH_SHORT).show();
@@ -548,8 +558,50 @@ class StartConnection extends AsyncTask<String,Void,String> {
     }
 
 
+    private void addPosSetting(PosSetting posSetting) {
 
+        MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+        final String token = SESSION.token;
+        try {
 
+            String res = messageTransmit.authPost(MessageType.ADD_POS_SETTING,posSetting.toString(), token);
+            Log.d("ADD_POS_SETTING",res);
+            JSONObject jsonObject;
+            try {
+                jsonObject = new JSONObject(res);
+            }
+            catch (JSONException e){
+                JSONArray jsonArray = new JSONArray(res);
+                jsonObject = jsonArray.getJSONObject(0);
+            }
+            if(jsonObject.getString(MessageKey.status).equals("200")) {
+                //03-11 16:18:47.482 20608-20721/com.pos.leaders.leaderspossystem E/CCC: {"logTag":"CompanyCredentials Resource","status":"200","responseType":"All objects are successfully returned","responseBody":[{"companyName":"LeadTest","companyID":1,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"},{"companyName":"LeadTest","companyID":2,"tax":17.0,"returnNote":"thanks","endOfReturnNote":14,"ccun":"null","ccpw":"null"}]}
+
+                JSONObject respnse;
+
+                try {
+                    respnse = jsonObject.getJSONObject(MessageKey.responseBody);
+                    Log.d("respnserespnse",respnse.toString());
+                }
+                catch (JSONException e){
+                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
+                    respnse = jsonArray.getJSONObject(0);
+                }
+
+            }
+            else {
+                Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                //Toast.makeText(SetupNewPOSOnlineActivity.context, SetupNewPOSOnlineActivity.context.getString(R.string.try_again)+": ", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
+
+
+
 

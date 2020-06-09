@@ -29,7 +29,7 @@ public class Currency {
 
 
 
-    public Currency(long id, String name, String country, String currencyCode, double rate, Timestamp lastUpdate) {
+    public Currency(long id, String name, String currencyCode,String country , double rate, Timestamp lastUpdate) {
         this.id = id;
         this.name = name;
         this.country = country;

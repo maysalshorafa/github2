@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +95,8 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 
 		tvName.setText(products.get(position).getDisplayName());
 		tvBarcode.setText(products.get(position).getSku());
+		Log.d("symbllll","fgfgfg"+products.get(position).getCurrencyType());
+
 		String currencyType = String.valueOf(symbolWithCodeHashMap.valueOf(products.get(position).getCurrencyType()).getValue());
 		tvPrice.setText(products.get(position).getPrice() + " " + currencyType);
 		/*if(products.get(position).getCurrencyType()==0) {
