@@ -3230,7 +3230,7 @@ public class SalesCartActivity extends AppCompatActivity {
             return;
         }
         if (Double.parseDouble(str) != 0)
-            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._EMPLOYEE.getEmployeeId(), "", ""));
+            addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(str), SESSION._EMPLOYEE.getEmployeeId(), "", "",ProductUnit.BARCODEWITHPRICE));
     }
 
 
@@ -3244,6 +3244,7 @@ public class SalesCartActivity extends AppCompatActivity {
             HorizontalScrollView hsv = (HorizontalScrollView) findViewById(R.id.mainActivity_svDepartment);
         }
     }
+    boolean isGeneralPriceProduct=true;
 
     public void touchPadClick(View view) throws JSONException {
         TextView tirh = (TextView) this.findViewById(R.id.touchPadFragment_tvView);
@@ -3312,14 +3313,14 @@ public class SalesCartActivity extends AppCompatActivity {
             case R.id.touchPadFragment_btEnter:
 
                 if (!touchPadPressed.equals("")){
-                   if( SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).getProduct().getUnit().getValue().equalsIgnoreCase(ProductUnit.GENERALPRICEPRODUCT.getValue()) ){
+                    if(SESSION._ORDER_DETAILES.size()>0&&SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).getProduct().getUnit().getValue().equalsIgnoreCase(ProductUnit.GENERALPRICEPRODUCT.getValue())&&isGeneralPriceProduct){
                        SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setUnitPrice(Double.parseDouble(touchPadPressed));
                        calculateTotalPrice();
-
-                       Log.d("testGenralPriceProduct",SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).toString());
-
+                        isGeneralPriceProduct=false;
                    }else {
-                       addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", ""));
+                        isGeneralPriceProduct=true;
+
+                        addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", "",ProductUnit.BARCODEWITHPRICE));
 
                    }
                 }

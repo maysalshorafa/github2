@@ -177,7 +177,7 @@ public class Product {
         this.sku = sku;
     }
 
-    public Product(long productId, String productCode, String displayName, double price, long byEmployee, String barCode,String sku) {
+    public Product(long productId, String productCode, String displayName, double price, long byEmployee, String barCode,String sku,ProductUnit productUnit) {
         this.productId = productId;
         this.productCode = productCode;
         this.price = price;
@@ -185,6 +185,7 @@ public class Product {
         this.barCode = barCode;
         this.displayName = displayName;
         this.sku = sku;
+        this.unit=productUnit;
     }
 
     public Product(Product product) {
