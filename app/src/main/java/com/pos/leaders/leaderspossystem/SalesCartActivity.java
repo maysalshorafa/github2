@@ -3310,8 +3310,20 @@ public class SalesCartActivity extends AppCompatActivity {
                 tirh.setText(touchPadPressed);
                 break;
             case R.id.touchPadFragment_btEnter:
-                if (!touchPadPressed.equals(""))
-                    addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", ""));
+
+                if (!touchPadPressed.equals("")){
+                   if( SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).getProduct().getUnit().getValue().equalsIgnoreCase(ProductUnit.GENERALPRICEPRODUCT.getValue()) ){
+                       SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setUnitPrice(Double.parseDouble(touchPadPressed));
+                       calculateTotalPrice();
+
+                       Log.d("testGenralPriceProduct",SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).toString());
+
+                   }else {
+                       addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", ""));
+
+                   }
+                }
+
                 touchPadPressed = "";
                 tirh.setText(touchPadPressed);
                 break;
@@ -3814,6 +3826,7 @@ public class SalesCartActivity extends AppCompatActivity {
             Log.d("teee",SESSION._ORDER_DETAILES.toString());
 
         }
+
 
         //restCategoryOffers();
         removeOrderItemSelection();
