@@ -2214,8 +2214,8 @@ public class PdfUA {
         PdfPTable checkTable = new PdfPTable(3);
         PdfPTable creditCard = new PdfPTable(4);
         Font urFontName = new Font(urName1, 24);
-        BaseFont boldFont = BaseFont.createFont("assets/arial.ttf", "Times-Bold",true,BaseFont.EMBEDDED);
-        Font fontbld = new Font(boldFont, 24);
+        /*BaseFont boldFont = BaseFont.createFont("assets/arial.ttf", "Times-Bold",true,BaseFont.EMBEDDED);
+        Font fontbld = new Font(boldFont, 24);*/
         table.deleteBodyRows();
         table.setRunDirection(0);
         currencyTable.deleteBodyRows();
@@ -2284,7 +2284,7 @@ public class PdfUA {
         }
         double totalPriceAfterDiscount= totalPrice- (totalPrice * (order.cartDiscount/100));
         Log.d("order.cartDiscount",totalPrice+"");
-        insertCell(table,Util.makePrice(totalPriceAfterDiscount)  , Element.ALIGN_CENTER, 4, fontbld);
+        insertCell(table,Util.makePrice(totalPriceAfterDiscount)  , Element.ALIGN_CENTER, 4, urFontName);
         insertCell(table, context.getString(R.string.total_price)  , Element.ALIGN_CENTER, 5, urFontName);
 
 

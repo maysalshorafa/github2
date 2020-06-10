@@ -44,7 +44,7 @@ public class SETTINGS {
 	public static String BO_SERVER_URL_V1 = "http://api.leadpos.net/webapi";
 	public static String BO_SERVER_URL_V2 = "http://apiv2.leadpos.net";
 	public static String FEEDBACK_SERVER = "http://report.leadpos.net/api";
-
+	public static  boolean havePosSetting=false;
 
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 

@@ -48,6 +48,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
@@ -60,6 +61,7 @@ import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
+import com.pos.leaders.leaderspossystem.Models.PosSetting;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Printer.HPRT_TP805;
@@ -187,6 +189,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
        AccessToken accessToken = new AccessToken(this);
         accessToken.execute(this);
+
+
+
+
         //load pos id from shared file
         SharedPreferences sharedpreferences = getSharedPreferences(BO_CORE_ACCESS_AUTH, Context.MODE_PRIVATE);
         if (sharedpreferences.contains(MessageKey.PosId)) {
@@ -248,32 +254,10 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         TitleBar.setTitleBar(this);
 
 
-        /*ProductDBAdapter productDBAdapter=new ProductDBAdapter(DashBord.this);
-        productDBAdapter.open();
-        productDBAdapter.updateProductShekel();*/
-
-       // EnableButtons();
-
-        /**  logOut.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-        /*scheduleWorkersDBAdapter=new ScheduleWorkersDBAdapter(getApplicationContext());
-        scheduleWorkersDBAdapter.open();
-        ScheduleWorkers scheduleWorkers = scheduleWorkersDBAdapter.getLastScheduleWorkersByUserID(SESSION._EMPLOYEE.getCashPaymentId());
-        scheduleWorkersDBAdapter.updateEntry(SESSION._EMPLOYEE.getCashPaymentId(),new Date());
-        Intent intent = new Intent(DashBord.this, LogInActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        /**
-        try {
-        scheduleWorkersDBAdapter.updateEntry(SESSION._SCHEDULEWORKERS.getCashPaymentId(), new Date());
-        SESSION._SCHEDULEWORKERS.setExitTime(new Date().getTime());
-        Log.i("Worker get out", SESSION._SCHEDULEWORKERS.toString());
-        } catch (Exception ex) {
-        }
-        SESSION._LogOut();
-        startActivity(intent);
-        }
-        });**/
+      if(!SETTINGS.havePosSetting){
+        updateSettings(SESSION.token);
+           SETTINGS.havePosSetting=true;
+       }
 
 
         //region customerName report button
@@ -1921,6 +1905,123 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 
 
 
+
+    }
+
+
+
+    private void updateSettings(String token) {
+
+        MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+        try {
+            String res = messageTransmit.authGet(ApiURL.PosSetting, token);
+            Log.d("updateCuee",res);
+            Log.e("Cuee", res);
+            JSONObject jsonObject;
+            try {
+                jsonObject = new JSONObject(res);
+            }
+            catch (JSONException e){
+                JSONArray jsonArray = new JSONArray(res);
+                jsonObject = jsonArray.getJSONObject(0);
+            }
+            if(jsonObject.getString(MessageKey.status).equals("200")) {
+
+                JSONObject respnse;
+
+                try {
+                    if(jsonObject.getString(MessageKey.responseBody).equalsIgnoreCase("null")){
+                        PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
+                        posSettingDbAdapter.open();
+                        PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
+                        addPosSetting(posSetting);
+                    }
+                    else {
+                        PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
+                        posSettingDbAdapter.open();
+                        PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
+                        updatePosSetting(posSetting);
+
+
+                    }
+                }
+                catch (JSONException e){
+                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
+                    respnse = jsonArray.getJSONObject(0);
+                }
+
+            }
+            else {
+                Log.e("setup",jsonObject.getString(MessageKey.responseType));
+            }
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void addPosSetting(PosSetting posSetting) {
+
+        MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+        final String token = SESSION.token;
+        try {
+
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonString = mapper.writeValueAsString(posSetting);
+            String res = messageTransmit.authPost(ApiURL.PosSetting,jsonString, token);
+            Log.d("ADD_POS_SETTING",res);
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(res);
+                if(jsonObject.getString(MessageKey.status).equals("200")) {
+
+                }
+                else {
+                    Log.d("addPossSetting",jsonObject.getString(MessageKey.responseType));
+                }
+            }
+            catch (JSONException e){
+                Log.e("exceptionAddPosSetting",e.toString());
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void updatePosSetting(PosSetting posSetting) {
+
+        MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+        final String token = SESSION.token;
+        try {
+
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonString = mapper.writeValueAsString(posSetting);
+            String res = messageTransmit.authPut(ApiURL.PosSetting,jsonString, token, Long.parseLong(SETTINGS.posID));
+            Log.d("ADD_POS_SETTING",res);
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(res);
+                if(jsonObject.getString(MessageKey.status).equals("200")) {
+
+                }
+                else {
+                    Log.d("addPossSetting",jsonObject.getString(MessageKey.responseType));
+                }
+            }
+            catch (JSONException e){
+                Log.e("exceptionAddPosSetting",e.toString());
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

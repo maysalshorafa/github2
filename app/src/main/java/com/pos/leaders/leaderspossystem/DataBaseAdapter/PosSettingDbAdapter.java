@@ -93,7 +93,7 @@ public class PosSettingDbAdapter {
             }
         }
         PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,companyStatus,posVersionNo,posDbVersionNo,branchId,currencyCode,currencySymbol,country,enableDuplicateInvoice);
-        sendToBroker(MessageType.ADD_POS_SETTING, posSetting, this.context);
+       // sendToBroker(MessageType.ADD_POS_SETTING, posSetting, this.context);
 
         try {
             close();

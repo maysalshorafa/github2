@@ -452,9 +452,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 case 9:
                     db.execSQL(LincessDBAdapter.DATABASE_CREATE);
                     db.execSQL(IdsCounterDBAdapter.addColumn(LincessDBAdapter.POS_LINCESS_TABLE_NAME));
-                        db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
-                        db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
-                        db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
+                    db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
+                    db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
+                    db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
 
                     db.execSQL(XReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
                     db.execSQL(XReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
