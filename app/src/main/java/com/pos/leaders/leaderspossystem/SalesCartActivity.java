@@ -3313,16 +3313,21 @@ public class SalesCartActivity extends AppCompatActivity {
             case R.id.touchPadFragment_btEnter:
 
                 if (!touchPadPressed.equals("")){
-                    if(SESSION._ORDER_DETAILES.size()>0&&SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).getProduct().getUnit().getValue().equalsIgnoreCase(ProductUnit.GENERALPRICEPRODUCT.getValue())&&isGeneralPriceProduct){
-                       SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setUnitPrice(Double.parseDouble(touchPadPressed));
-                       calculateTotalPrice();
-                        isGeneralPriceProduct=false;
-                   }else {
-                        isGeneralPriceProduct=true;
-
                         addToCart(new Product(-1, getApplicationContext().getResources().getString(R.string.general), getApplicationContext().getResources().getString(R.string.general), Double.parseDouble(touchPadPressed), SESSION._EMPLOYEE.getEmployeeId(), "", "",ProductUnit.BARCODEWITHPRICE));
 
-                   }
+                }
+
+                touchPadPressed = "";
+                tirh.setText(touchPadPressed);
+                break;
+
+            case R.id.touchPadFragment_btGeneralPriceProduct:
+
+                if (!touchPadPressed.equals("")){
+                    if(SESSION._ORDER_DETAILES.size()>0&&SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).getProduct().getUnit().getValue().equalsIgnoreCase(ProductUnit.GENERALPRICEPRODUCT.getValue())){
+                        SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setUnitPrice(Double.parseDouble(touchPadPressed));
+                        calculateTotalPrice();
+                    }
                 }
 
                 touchPadPressed = "";
