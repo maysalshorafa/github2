@@ -134,10 +134,12 @@ public class ProductsActivity  extends AppCompatActivity  {
         productUnit.add(ProductUnit.QUANTITY);
         productUnit.add(ProductUnit.BARCODEWITHWEIGHT);
         productUnit.add(ProductUnit.BARCODEWITHPRICE);
+        productUnit.add(ProductUnit.GENERALPRICEPRODUCT);
         final List<String>productUnitString = new ArrayList<String>();
         productUnitString.add(ProductUnit.QUANTITY.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHWEIGHT.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHPRICE.getValue());
+        productUnitString.add(ProductUnit.GENERALPRICEPRODUCT.getValue());
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productUnitString);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
