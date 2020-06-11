@@ -3324,6 +3324,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 productWeightDialog.show();
                 final TextView productName = (TextView) productWeightDialog.findViewById(R.id.TvProductName);
                 final TextView productPrice = (TextView) productWeightDialog.findViewById(R.id.TvPrice);
+                final ImageView productWeighFromEditTextImg = (ImageView) productWeightDialog.findViewById(R.id.addWeightFromEditText);
+                final EditText productWeightFromEditText = (EditText) productWeightDialog.findViewById(R.id.totalWeightFromEditText);
+
                 productWeight = (TextView) productWeightDialog.findViewById(R.id.totalWeight);
                 final TextView productDiscount = (TextView) productWeightDialog.findViewById(R.id.totalDiscount);
                 final TextView discountT = (TextView) productWeightDialog.findViewById(R.id.discountText);
@@ -3658,11 +3661,24 @@ public class SalesCartActivity extends AppCompatActivity {
                 btn_done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                            if(productWeightFromEditText.getVisibility()==1){
+                                SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setQuantity(Double.parseDouble(productWeightFromEditText.getText().toString()));
+                                totalPriceForBalance.setText(productWeightFromEditText.getText().toString());
+                                calculateTotalPrice();
+                            }else {
+                                String    str = totalPriceForBalance.getText().toString().substring(0, totalPriceForBalance.getText().toString().length() - 1);
+                                SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setQuantity(weightForProduct);
+                                calculateTotalPrice();
+                            }
 
-                        String    str = totalPriceForBalance.getText().toString().substring(0, totalPriceForBalance.getText().toString().length() - 1);
-                        SESSION._ORDER_DETAILES.get(SESSION._ORDER_DETAILES.size()-1).setQuantity(weightForProduct);
-                        calculateTotalPrice();
                       productWeightDialog.dismiss();
+                    }
+                });
+                productWeighFromEditTextImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        productWeightFromEditText.setVisibility(View.VISIBLE);
                     }
                 });
                 btn_add_weight.setOnClickListener(new View.OnClickListener() {

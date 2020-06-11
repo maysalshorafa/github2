@@ -148,13 +148,29 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="3">
             <ImageView
                 android:id="@+id/addWeight"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/plus"/>
-
+            <ImageView
+                android:id="@+id/addWeightFromEditText"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/edit"/>
+            <EditText
+                android:id="@+id/totalWeightFromEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:textColor="@color/black"
+                android:textDirection="anyRtl"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="invisible"/>
             <TextView
                 android:id="@+id/totalWeight"
                 android:layout_width="match_parent"
