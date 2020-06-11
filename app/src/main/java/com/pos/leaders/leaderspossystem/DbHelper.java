@@ -86,7 +86,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 11;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -493,8 +493,11 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
 
                     break;
-
-
+                case 10:
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
+                    break;
 
             }
         } catch (SQLException e) {
