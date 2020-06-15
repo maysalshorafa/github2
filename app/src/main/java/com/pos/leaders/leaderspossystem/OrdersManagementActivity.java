@@ -1,13 +1,16 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,14 +28,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pos.leaders.leaderspossystem.CustomerAndClub.AddNewCustomer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
@@ -63,6 +67,7 @@ import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.ConverterCurrency;
+import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -95,22 +100,20 @@ import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 public class OrdersManagementActivity extends AppCompatActivity {
     int loadItemOffset = 0;
     int countLoad = 60;
-    boolean userScrolled = false;
+    Long customerId;
     String searchWord = "";
-
-    TextView customer;
     ListView lvOrders;
     OrderDBAdapter orderDBAdapter;
     EmployeeDBAdapter userDBAdapter;
     PaymentDBAdapter paymentDBAdapter;
-    EditText etSearch;
+    EditText etSearch ,customer_id;
     SaleManagementListViewAdapter adapter;
     View previousView = null;
 
     List<Order> _saleList;
     List<OrderDetails> orders;
     List<Check> checks;
-    List<Order>filterOrderList;
+    public static  List<Order>filterOrderList;
     List<BoInvoice>filterBoInvoice;
     public static List<BoInvoice>invoiceList=new ArrayList<>();
     public static Context context = null;
@@ -120,6 +123,12 @@ public class OrdersManagementActivity extends AppCompatActivity {
     List<Object>objectList = new ArrayList<Object>();
     OrderDetailsDBAdapter orderDetailsDBAdapter;
     private final static int DAY_MINUS_ONE_SECOND = 86399999;
+    public static  GridView gvCustomer ;
+    boolean userScrolled =false;
+    public static  Customer customer;
+    List<Customer> customerList = new ArrayList<>();
+    List<Customer> AllCustmerList = new ArrayList<>();
+    CustomerDBAdapter customerDBAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,6 +147,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
         searchSpinner=(Spinner)findViewById(R.id.searchSpinner);
         orderDetailsDBAdapter=new OrderDetailsDBAdapter(OrdersManagementActivity.this);
         orderDetailsDBAdapter.open();
+        customerDBAdapter=new CustomerDBAdapter(OrdersManagementActivity.this);
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -1601,36 +1611,51 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 
                 }
-                if(searchSpinner.getSelectedItem().toString().equals(getString(R.string.invoice))){
-                    StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
-                    startInvoiceConnection.execute("1");
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    objectList=new ArrayList<>();
-                    objectList.addAll(invoiceList);
-                    Log.d("testinvoiceList",invoiceList.toString());
-                    adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+                if(searchSpinner.getSelectedItem().toString().equals(context.getString(R.string.customer))){
 
-                    lvOrders.setAdapter(adapter);
+                    callPopup();
 
-                }
-                else if (searchSpinner.getSelectedItem().toString().equals(getString(R.string.invoice_company_status))){
-                    StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
-                    startInvoiceConnection.execute("1");
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    objectList=new ArrayList<>();
-                    objectList.addAll(invoiceList);
-                    Log.d("testinvoiceList",invoiceList.toString());
-                    adapter = new SaleManagementListViewAdapter(OrdersManagementActivity.this, R.layout.list_adapter_row_sales_management, objectList);
+                    new AsyncTask<String, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                        }
 
-                    lvOrders.setAdapter(adapter);
+                        @Override
+                        protected Void doInBackground(String... params) {
+
+                            if(customer!=null) {
+                                StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
+                                startInvoiceConnection.execute(String.valueOf(customer.getCustomerId()));
+                                filterOrderList.addAll(  orderDBAdapter.getAllUserSales(customer.getCustomerId()));
+
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    list.addAll(invoiceList);
+//                                    list.addAll(filterOrderList);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                        }
+                    }.execute("");
+
+
+
+
+
+
+                //    filterOrderList.addAll(  orderDBAdapter.getAllUserSales(customer.getCustomerId()));
+
                 }
             }
 
@@ -1691,14 +1716,16 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                 }else {
                                     if(type.equals(context.getString(R.string.customer))){
+                                        callPopup();
+                                       // filterOrderList.addAll(  orderDBAdapter.getAllUserSales(customer.getCustomerId()));
 
                                     }
-                                    filterOrderList = orderDBAdapter.search(params[0], loadItemOffset,countLoad,type);
                             }
                                 runOnUiThread(new Runnable() {
 
                                     @Override
                                     public void run() {
+                                        list.addAll(invoiceList);
                                         list.addAll(filterOrderList);
                                         adapter.notifyDataSetChanged();
                                     }
@@ -1732,7 +1759,127 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
 
     }
+    private void callPopup() {
+        final Dialog customerDialog = new Dialog(OrdersManagementActivity.this);
+        customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        customerDialog.show();
+        customerDialog.setContentView(R.layout.pop_up);
+        customer_id = (EditText) customerDialog.findViewById(R.id.customer_name);
+        final GridView gvCustomer = (GridView) customerDialog.findViewById(R.id.popUp_gvCustomer);
+        gvCustomer.setNumColumns(3);
 
+     Button   btn_cancel = (Button) customerDialog.findViewById(R.id.btn_cancel);
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customerDialog.dismiss();
+            }
+        });
+
+        ((Button) customerDialog.findViewById(R.id.btn_add))
+                .setOnClickListener(new View.OnClickListener() {
+
+                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                    public void onClick(View arg0) {
+                        Intent intent = new Intent(OrdersManagementActivity.this, AddNewCustomer.class);
+                        startActivity(intent);
+
+                        customerDialog.dismiss();
+
+
+                    }
+                });
+
+
+        customer_id.setText("");
+        customer_id.setHint("Search..");
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+        gvCustomer.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
+
+                    userScrolled = false;
+                    //  loadMoreProduct();
+                }
+            }
+        });
+        customerDBAdapter.open();
+        customerList = customerDBAdapter.getTopCustomer(0, 50);
+        customerDBAdapter.close();
+        //  AllCustmerList = customerList;
+        AllCustmerList = new ArrayList<Customer>(customerList);
+       CustomerCatalogGridViewAdapter custmerCatalogGridViewAdapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
+
+        gvCustomer.setAdapter(custmerCatalogGridViewAdapter);
+
+        gvCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                customer= customerList.get(position);
+
+                customerDialog.dismiss();
+
+            }
+        });
+
+        customer_id.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                gvCustomer.setTextFilterEnabled(true);
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                customerList = new ArrayList<Customer>();
+                String word = customer_id.getText().toString();
+
+                if (!word.equals("")) {
+                    if (AllCustmerList.size()!=0 && !AllCustmerList.isEmpty()) {
+                        for (Customer c : AllCustmerList) {
+                            if (c.getFirstName()!=null){
+                                if(c.getFirstName().toLowerCase().contains(word.toLowerCase()) ||
+                                        c.getLastName().toLowerCase().contains(word.toLowerCase()) ||
+                                        c.getPhoneNumber().toLowerCase().contains(word.toLowerCase()) ||
+                                        String.valueOf(c.getCustomerIdentity()).contains(word.toLowerCase())) {
+                                    customerList.add(c);
+
+                                }}
+                        }
+                    }} else {
+                    customerList = AllCustmerList;
+                }
+                CustomerCatalogGridViewAdapter adapter = new CustomerCatalogGridViewAdapter(getApplicationContext(), customerList);
+                gvCustomer.setAdapter(adapter);
+                // Log.i("products", productList.toString());
+
+
+            }
+        });
+
+
+    }
     private void LoadMore(){
         filterOrderList=new ArrayList<>();
         loadItemOffset += countLoad;
