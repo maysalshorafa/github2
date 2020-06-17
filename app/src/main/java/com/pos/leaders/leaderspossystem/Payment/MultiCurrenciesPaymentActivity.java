@@ -530,12 +530,18 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     }
     public double getCurrencyRate(String currencyType){
+        double currencyRate=1;
+        Log.d("currencyType",currencyType);
+        Log.d("currenciesListRate",currenciesList.toString());
         for (int i=0;i<currenciesList.size();i++){
-            if(currenciesList.get(i).getCountry().equals(currencyType)) {
-                return currenciesList.get(i).getRate();
+            if(currenciesList.get(i).getCurrencyCode().equals(currencyType)) {
+                Log.d("currenciesListRate",currenciesList.get(i).getRate()+"");
+               currencyRate=currenciesList.get(i).getRate();
+
             }
         }
-        return 1;
+        Log.d("currenciesListRate","najl"+"");
+        return currencyRate;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

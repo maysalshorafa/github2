@@ -826,10 +826,10 @@ public class ReportZDetailsActivity extends Activity {
             for (int a=0 ;a<opiningReportList.size();a++) {
                 //aReportAmount+=opiningReportList.get(a).getAmount();
                 OpiningReport opiningReport = opiningReportList.get(a);
-                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
-                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(1).getId(), opiningReport.getOpiningReportId());
-                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(2).getId(), opiningReport.getOpiningReportId());
-                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(3).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(currencyList.get(1).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(currencyList.get(2).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(currencyList.get(3).getId(), opiningReport.getOpiningReportId());
             }
 
 
@@ -839,7 +839,7 @@ public class ReportZDetailsActivity extends Activity {
             aReportDetailsDBAdapter.open();
             for (int a=0 ;a<opiningReportList.size();a++) {
                 OpiningReport opiningReport = opiningReportList.get(a);
-                aReportDetailsForFirstCurrency += aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForFirstCurrency += aReportDetailsDBAdapter.getLastRow(currencyList.get(0).getId(), opiningReport.getOpiningReportId());
             }
         }
        /* checkList=new ArrayList<>();

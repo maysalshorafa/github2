@@ -789,14 +789,14 @@ public class Util {
                 }
 
             }
-           /* else {
+           else {
                 OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
                 aReportDetailsDBAdapter.open();
                 for (int a=0 ;a<opiningReportList.size();a++) {
                     OpiningReport opiningReport = opiningReportList.get(a);
                     aReportDetailsForFirstCurrency += aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
                 }
-            }*/
+            }
             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
             zReportDBAdapter.open();
             OrderDBAdapter orderDBAdapter = new OrderDBAdapter(context);

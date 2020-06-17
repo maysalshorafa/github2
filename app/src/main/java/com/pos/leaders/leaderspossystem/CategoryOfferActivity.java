@@ -430,6 +430,7 @@ public class CategoryOfferActivity extends AppCompatActivity {
         filter_productList = productDBAdapter.getAllProducts();
         ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(this, filter_productList);
         gvProduct.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         gvProduct.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -566,12 +567,15 @@ public class CategoryOfferActivity extends AppCompatActivity {
                             super.onPostExecute(aVoid);
                             ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), final_filter_productList);
                             gvProduct.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                            //suggestionAdapter.notifyDataSetChanged();
                         }
                     }.execute(word);
                 } else {
                     final_filter_productList = filter_productList;
                     ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), final_filter_productList);
                     gvProduct.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
 
             }

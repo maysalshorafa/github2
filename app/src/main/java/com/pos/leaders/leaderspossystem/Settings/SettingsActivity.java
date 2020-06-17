@@ -453,8 +453,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                   List<String>  list=convertObjectToList(newValue);
 
                     if (list.size()==3){
-                    Log.d("Najldda", list.size()+"");
-                    Log.d("joo",list.toString());
+                    Log.d("listSize", list.size()+"");
+                    Log.d("list",list.toString());
                         List<String>  currenciesChoose=new ArrayList<String>();
                         currenciesChoose.add(SETTINGS.currencyCode);
                         for (int i=0;i<list.size();i++)  {
@@ -467,11 +467,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         }
 
                              currencyTypeDBAdapter.delete();
-                              Log.d("sizrkjj",currencyTypeDBAdapter.getAllCurrencyType().size()+"");
+                              Log.d("currencyTypeDBAdapterSize",currencyTypeDBAdapter.getAllCurrencyType().size()+"");
                               for (int i=0;i<currenciesChoose.size();i++)     {
                                 currencyTypeDBAdapter.insertEntry(new CurrencyType(i,currenciesChoose.get(i)));     }
                               //    currencyTyhhhpeDBAdapter.insertEntry(currenciesChoose.get(i));   }
-                                   Log.d("sizrjjjjkjj",currencyTypeDBAdapter.getAllCurrencyType().get(0).getType()+" "+
+                                   Log.d("currencyTypeDBAdapterFirstItem",currencyTypeDBAdapter.getAllCurrencyType().get(0).getType()+" "+
                                    currencyTypeDBAdapter.getAllCurrencyType().get(1).getType()+""+
                                    currencyTypeDBAdapter.getAllCurrencyType().get(2).getType()+""+
                                    currencyTypeDBAdapter.getAllCurrencyType().get(3).getType()+"");
@@ -480,7 +480,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         multiSelectListPreference.setEnabled(false);
                    }
                    else {
-                       Toast.makeText(getContext(), "يرجى اختيار ثلث عملات ", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(getContext(), R.string.please_choose_three_currencies, Toast.LENGTH_SHORT).show();
                    }
                    return false;
                }

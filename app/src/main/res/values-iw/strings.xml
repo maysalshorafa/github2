@@ -731,4 +731,6 @@
 
     <string name="due_date">תאריך תפוגה</string>
     <string name="text_dialog_lincess">ההיסטוריה של הרישיון הסתיימה, אנא צרו קשר עם החברה להפעלה.</string>
+    <string name="please_choose_three_currencies">אנא בחר שלושה מטבעות</string>
+    <string name="there_are_no_currencies">אין מטבעות</string>
 </resources>

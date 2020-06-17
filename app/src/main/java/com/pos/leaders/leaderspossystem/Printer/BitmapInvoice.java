@@ -657,14 +657,14 @@ public class BitmapInvoice {
             }
 
         }
-        /*else {
+        else {
             OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
             aReportDetailsDBAdapter.open();
             for (int a=0 ;a<opiningReportList.size();a++) {
                 OpiningReport opiningReport = opiningReportList.get(a);
                 aReportDetailsForFirstCurrency += aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
             }
-        }*/
+        }
         checkList=new ArrayList<>();
         cashAmount=0;
         invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; firstTypeCount=0 ;secondTypeCount=0 ;thirdTypeCount=0;

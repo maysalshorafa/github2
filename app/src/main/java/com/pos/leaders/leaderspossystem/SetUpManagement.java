@@ -184,7 +184,6 @@ public class SetUpManagement extends AppCompatActivity {
 
         List<symbolWithCodeHashMap> somethingList = Arrays.asList(symbolWithCodeHashMap.values());
         Log.d("symbolWithCodeHashMap",somethingList.toString());
-        Log.d("symbolWithCodeHashMapff",String.valueOf(somethingList.get(0).getValue()));
        for (int i=0;i<somethingList.size();i++) {
             ChooseCurrencyList regionTransportar = new ChooseCurrencyList(String.valueOf(somethingList.get(i)),String.valueOf(somethingList.get(i).getValue()));
             list.add(regionTransportar);
@@ -290,8 +289,6 @@ public class SetUpManagement extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 currencyCodeSelect=currencyCodeArrayAdapter.getItem(position);
-                Log.d("currencyCodeSelect",currencyCodeSelect);
-               Log.d("currencySymbolyyy", String.valueOf(symbolWithCodeHashMap.valueOf(currencyCodeSelect).getValue()));
                 currencySymbolSelect=String.valueOf(symbolWithCodeHashMap.valueOf(currencyCodeSelect).getValue());
             }
 
@@ -306,12 +303,10 @@ public class SetUpManagement extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 currencyCountrySelect=currencySymbolArrayAdapter.getItem(position);
-                Log.d("currencyCountrySelect",currencyCountrySelect);
                 codeDebendCountry=countryWithCodeHasMap.valueOf(currencyCountrySelect).getValue();
                 for (int i=0;i<codeList.length;i++){
                     if (codeDebendCountry.equals(codeList[i])){
                 currencyCodeSpinner.setSelection(i);}}
-                Log.d("codeDebendCountryy",codeDebendCountry);
             }
 
             @Override
@@ -325,7 +320,6 @@ public class SetUpManagement extends AppCompatActivity {
          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
              CompanyStatusSelect=companyStatusArryAdapter.getItem(position);
-             Log.d("CompanyStatusSelect",CompanyStatusSelect);
          }
 
          @Override
@@ -505,7 +499,6 @@ public class SetUpManagement extends AppCompatActivity {
                     //CompanyStatus
                     if (SharedPreferencesCompanyStatus.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS)) {
                         String companyStatus = CompanyStatusSelect;
-                        Log.d("CompanyStauts2","2");
                         Log.d("CompanyStauts2",companyStatus);
                         editorCompanyStatus.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, companyStatus);
                         CompanyStatus companyStatus1 = CompanyStatus.valueOf(companyStatus);
@@ -587,7 +580,7 @@ public class SetUpManagement extends AppCompatActivity {
                                checkedCurrency[i]=false;
                                AlertDialog dialog = builder.create();
                                dialog.show();
-                               Toast.makeText(SetUpManagement.this, " يرجى اختيار ثلاث عملات فقط", Toast.LENGTH_SHORT).show();
+                               Toast.makeText(SetUpManagement.this, R.string.please_choose_three_currencies, Toast.LENGTH_SHORT).show();
                            }
                         }
 
@@ -595,7 +588,7 @@ public class SetUpManagement extends AppCompatActivity {
                     if (count<3){
                         AlertDialog dialog = builder.create();
                         dialog.show();
-                        Toast.makeText(SetUpManagement.this, " يرجى اختيار ثلاث عملات عملات ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SetUpManagement.this, R.string.please_choose_three_currencies, Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -610,7 +603,7 @@ public class SetUpManagement extends AppCompatActivity {
             dialog.show();
         }
         else {
-            Toast.makeText(SetUpManagement.this, "لا يوجد مناطق", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetUpManagement.this,R.string.there_are_no_currencies, Toast.LENGTH_SHORT).show();
 
         }
 

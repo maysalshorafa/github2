@@ -471,7 +471,13 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(CurrencyTypeDBAdapter.DATABASE_CREATE);
                     db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
                     db.execSQL("update products set currencyType='ILS' where currencyType ='0';");
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("country"));
                     db.execSQL(PosSettingDbAdapter.addColumnInteger("duplicateInvoice"));
+                    db.execSQL("update PosSetting set currencyCode='ILS';");
+                    db.execSQL("update PosSetting set currencySymbol='₪';");
+                    db.execSQL("update PosSetting set country='Israel';");
                     db.execSQL("update PosSetting set duplicateInvoice='0';");
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
@@ -492,9 +498,39 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
 
+
                     break;
 
+              /*  case 10:
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("country"));
+                    db.execSQL("update PosSetting set currencyCode='ILS';");
+                    db.execSQL("update PosSetting set currencySymbol='₪';");
+                    db.execSQL("update PosSetting set country='Israel';");
+                    break;*/
 
+               /* case 11:
+
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("country"));
+
+                    db.execSQL("update PosSetting set currencyCode='ILS';");
+                    db.execSQL("update PosSetting set currencySymbol='₪';");
+                    db.execSQL("update PosSetting set country='Israel';");
+                    break;*/
+
+              /*  case 12:
+
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("country"));
+
+                    db.execSQL("update PosSetting set currencyCode='ILS';");
+                    db.execSQL("update PosSetting set currencySymbol='₪';");
+                    db.execSQL("update PosSetting set country='Israel';");
+                    break;*/
 
             }
         } catch (SQLException e) {

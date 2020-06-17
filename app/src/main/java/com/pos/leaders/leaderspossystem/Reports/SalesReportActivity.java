@@ -217,6 +217,7 @@ public class SalesReportActivity extends AppCompatActivity {
                     filter_productsList = productsList;
                     adapterProduct = new ProductCatalogGridViewAdapter(SalesReportActivity.this, productsList);
                     gvProducts.setAdapter(adapterProduct);
+                    adapterProduct.notifyDataSetChanged();
                     etSearch.setVisibility(View.VISIBLE);
                     gvProducts.setVisibility(View.VISIBLE);
                     btnisclickedProduct=false;
@@ -292,12 +293,14 @@ public class SalesReportActivity extends AppCompatActivity {
                             super.onPostExecute(aVoid);
                             adapterProduct = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                             gvProducts.setAdapter(adapterProduct);
+                            adapterProduct.notifyDataSetChanged();
                         }
                     }.execute(word);
                 } else {
                     filter_productsList = productsList;
                     adapterProduct = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                     gvProducts.setAdapter(adapterProduct);
+                    adapterProduct.notifyDataSetChanged();
                 }
 
             }

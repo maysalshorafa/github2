@@ -56,6 +56,7 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.updateCurrencyType;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -254,7 +255,12 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                                 SalesWithoutTax+=(((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("ILS"));
                                             }
                                             else {
-                                                SalesWithoutTax+=((product.getPrice()*(c+1))*getCurrencyRate(product.getCurrencyType()));
+                                                if (product.getCurrencyType().equals("0")){
+                                                    updateCurrencyType.updateCurrencyToShekl(CreateCreditInvoiceActivity.context,product);
+                                                    //SalesWithoutTax+=((product.getPrice()*(c+1))*getCurrencyRate("ILS"));
+                                                }
+                                                else {
+                                                SalesWithoutTax+=((product.getPrice()*(c+1))*getCurrencyRate(product.getCurrencyType()));}
                                             }
 
 
@@ -373,7 +379,12 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                             SalesWithoutTax += (((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
                                         }
                                         else {
-                                            SalesWithoutTax += ((product.getPrice() * 1)*getCurrencyRate(product.getCurrencyType()));
+                                            if (product.getCurrencyType().equals("0")){
+                                                updateCurrencyType.updateCurrencyToShekl(CreateCreditInvoiceActivity.context,product);
+                                            }else {
+                                                SalesWithoutTax += ((product.getPrice() * 1)*getCurrencyRate(product.getCurrencyType()));
+                                            }
+                                        //    SalesWithoutTax += ((product.getPrice() * 1)*getCurrencyRate(product.getCurrencyType()));
                                         }
                                     }else {
                                         if(docDocument.getDouble("cartDiscount")>0){

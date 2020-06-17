@@ -35,6 +35,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.updateCurrencyType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,6 +115,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         swManageStock = (Switch) findViewById(R.id.SWManageStock);
 
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
+        //swWithTax.setChecked(false);
         swWithSerialNo=(Switch)findViewById(R.id.SWWithSerialNo);
         productUnitSp = (Spinner)findViewById(R.id.SpProductUnit);
         SpProductCurrency = (Spinner)findViewById(R.id.SpProductCurrency);
@@ -326,7 +328,10 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etInventoryCostPrice.setText(editableProduct.getLastCostPriceInventory() + "");
                     etPrice.setText(editableProduct.getPrice() + "");
                     etStockQuantity.setText(editableProduct.getStockQuantity() + "");
-                    swWithTax.setChecked(editableProduct.isWithTax());
+                  //  swWithTax.setChecked(editableProduct.isWithTax());
+                 if (!editableProduct.isWithTax()) {
+                     swWithTax.setChecked(true);
+                 }
                     swWithSerialNo.setChecked(editableProduct.isWithSerialNumber());
                     if(editableProduct.getUnit().getValue().equals(ProductUnit.WEIGHT.getValue())){
                         llWeight.setVisibility(View.VISIBLE);
@@ -345,6 +350,9 @@ public class ProductsActivity  extends AppCompatActivity  {
                     }
                     for (int i = 0; i < currencyTypesList.size(); i++) {
                         CurrencyType currencyType1 = currencyTypesList.get(i);
+                        if (editableProduct.getCurrencyType().equals("0")){
+                            updateCurrencyType.updateCurrencyToShekl(ProductsActivity.this,editableProduct);
+                        }
                         if (currencyType1.getType() == editableProduct.getCurrencyType()) {
                             SpProductCurrency.setSelection(i);
 

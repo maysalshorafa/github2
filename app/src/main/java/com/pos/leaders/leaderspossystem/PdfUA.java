@@ -496,6 +496,15 @@ public class PdfUA {
             }
 
         }
+
+        else {
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
+            for (int a=0 ;a<opiningReportList.size();a++) {
+                OpiningReport opiningReport = opiningReportList.get(a);
+                aReportDetailsForFirstCurrency += aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+            }
+        }
        /* checkList=new ArrayList<>();
         cashAmount=0;
         invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; ShekelCount=0 ;UsdCount=0 ;EurCount=0; GbpCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
@@ -645,6 +654,7 @@ public class PdfUA {
             }
 
         }
+
        checkList=new ArrayList<>();
         cashAmount=0;
         invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; firstTypeCount=0 ;secondTypeCount=0 ;thirdTypeCount=0; fourthTypeCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
@@ -1955,7 +1965,7 @@ public class PdfUA {
         insertCell(dataTable, context.getString(R.string.count), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.details), Element.ALIGN_RIGHT, 2, font);
 
-        insertCell(dataTable, zReport.getInvoiceReceiptAmount() + " ", Element.ALIGN_RIGHT,1, font);
+        insertCell(dataTable, Util.makePrice(zReport.getInvoiceReceiptAmount()) + " ", Element.ALIGN_RIGHT,1, font);
         insertCell(dataTable,zReportCount.getInvoiceReceiptCount() + " ", Element.ALIGN_RIGHT, 1, font);
         if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.invoice_recipte_company_status), Element.ALIGN_RIGHT, 2, font);
@@ -1963,7 +1973,7 @@ public class PdfUA {
         else {
         insertCell(dataTable, context.getString(R.string.invoice_receipt), Element.ALIGN_RIGHT, 2, font);}
 
-        insertCell(dataTable, zReport.getInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, Util.makePrice(zReport.getInvoiceAmount())+ " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
         if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.invoice_company_status), Element.ALIGN_RIGHT,2, font);
@@ -1971,14 +1981,14 @@ public class PdfUA {
         else {
             insertCell(dataTable, context.getString(R.string.invoice), Element.ALIGN_RIGHT, 2, font);
         }
-        insertCell(dataTable, zReport.getCreditInvoiceAmount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,Util.makePrice( zReport.getCreditInvoiceAmount()) + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditInvoiceCount() + " ", Element.ALIGN_RIGHT, 1, font);
         if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
             insertCell(dataTable, context.getString(R.string.credit_invoice_doc_company_status), Element.ALIGN_RIGHT, 2, font);
         }else {
             insertCell(dataTable, context.getString(R.string.credit_invoice_doc), Element.ALIGN_RIGHT, 2, font);
         }
-        insertCell(dataTable, zReport.getTotalSales() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, Util.makePrice(zReport.getTotalSales()) + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,  "~", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.total_sales), Element.ALIGN_RIGHT, 2, font);
 
@@ -2071,7 +2081,7 @@ public class PdfUA {
         insertCell(opiningReportTable, context.getString(R.string.amount), Element.ALIGN_RIGHT, 1, font);
         insertCell(opiningReportTable,"----------------------------", Element.ALIGN_CENTER, 4, font);*/
 
- PdfPTable opiningReportDetailsTable = new PdfPTable(2);
+/* PdfPTable opiningReportDetailsTable = new PdfPTable(2);
         opiningReportDetailsTable.deleteBodyRows();
         opiningReportDetailsTable.setRunDirection(0);
         if(SETTINGS.enableCurrencies) {
@@ -2086,21 +2096,25 @@ public class PdfUA {
             insertCell(opiningReportDetailsTable, aReportDetailsForForthCurrency + " ", Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable,currencyTypesList.get(3).getType() , Element.ALIGN_RIGHT, 1, font);
             insertCell(opiningReportDetailsTable, "----------------------------", Element.ALIGN_CENTER, 2, font);
-        }
+        }*/
 
         PdfPTable accountInformation = new PdfPTable(4);
         accountInformation.deleteBodyRows();
         accountInformation.setRunDirection(0);
         insertCell(accountInformation, context.getString(R.string.accounting_information), Element.ALIGN_RIGHT, 4, font);
-        insertCell(accountInformation,Util.makePrice(zReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
 
         insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.Sales_With_tax), Element.ALIGN_RIGHT,2, font);
 
-        insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
-        insertCell(accountInformation,Util.makePrice(zReport.getSalesBeforeTax())+ " ", Element.ALIGN_RIGHT, 2, font);
 
+        insertCell(accountInformation,Util.makePrice(zReport.getTotalTax())+ " ", Element.ALIGN_RIGHT, 2, font);
+        insertCell(accountInformation, context.getString(R.string.tax), Element.ALIGN_RIGHT,2, font);
+
+
+
+        insertCell(accountInformation,Util.makePrice(zReport.getSalesBeforeTax())+ " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.Sales_Without_tax), Element.ALIGN_RIGHT,2, font);
+
 
         insertCell(accountInformation,Util.makePrice(zReport.getSalesWithTax()+zReport.getSalesBeforeTax()+zReport.getTotalTax()) + " ", Element.ALIGN_RIGHT, 2, font);
         insertCell(accountInformation, context.getString(R.string.total_price), Element.ALIGN_RIGHT,2, font);
@@ -2778,11 +2792,11 @@ Log.d("CompanySettingPDF",SETTINGS.company.name());
                 if (currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(0).getType()) ) {
                     firstTypePaid += currencyOperationList.get(i).getAmount();
                 } if (SETTINGS.enableCurrencies){
-                    if (currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(1).getType())) {
+                    if (currencyList.get(1)!=null&&currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(1).getType())) {
                     secondTypePaid += currencyOperationList.get(i).getAmount();
-                } else if (currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(2).getType())) {
+                } else if (currencyList.get(2)!=null&&currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(2).getType())) {
                     thirdTypePaid += currencyOperationList.get(i).getAmount();
-                } else if (currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(3).getType())) {
+                } else if (currencyList.get(3)!=null&&currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(3).getType())) {
                     fourthTypePaid += currencyOperationList.get(i).getAmount();
                 }}
                 }
@@ -2793,11 +2807,11 @@ Log.d("CompanySettingPDF",SETTINGS.company.name());
                 if (currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(0).getId()) {
                     firstTypeReturn += currencyReturnsList.get(i).getAmount();
                 } if (SETTINGS.enableCurrencies){
-                    if (currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(1).getId()) {
+                    if (currencyList.get(1)!=null&&currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(1).getId()) {
                     secondTypeReturn += currencyReturnsList.get(i).getAmount();
-                } else if (currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(2).getId()) {
+                } else if (currencyList.get(2)!=null&& currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(2).getId()) {
                     thirdTypeReturn += currencyReturnsList.get(i).getAmount();
-                } else if (currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(3).getId()) {
+                } else if (currencyList.get(3)!=null&&currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(3).getId()) {
                     fourthTypeReturn += currencyReturnsList.get(i).getAmount();
                 }}
 

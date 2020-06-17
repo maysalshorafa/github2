@@ -339,7 +339,7 @@ public class MonthZReportView extends AppCompatActivity {
                     imageView.post(new Runnable() {
                         @Override
                         public void run() {
-                            newBitmap= combineImageIntoOne(bitmapList);
+                          newBitmap= combineImageIntoOne(bitmapList);
                             imageView.setImageBitmap(newBitmap);
                         }
                     });
@@ -407,12 +407,12 @@ public class MonthZReportView extends AppCompatActivity {
         }
     }
     private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
-       // int w = 0, h = 0;
+       int w = 0, h = 0;
 
-        Display display = getWindowManager().getDefaultDisplay();
+        /*Display display = getWindowManager().getDefaultDisplay();
         int w = display.getWidth();  // deprecated
         int h = display.getHeight();
-
+*/
         for (int i = 0; i < bitmap.size(); i++) {
             if (i < bitmap.size() - 1) {
                 w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();

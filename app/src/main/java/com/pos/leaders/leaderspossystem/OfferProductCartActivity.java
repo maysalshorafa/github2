@@ -138,6 +138,7 @@ public class OfferProductCartActivity extends Activity {
                 }
                 ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                 gvProducts.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -273,6 +274,7 @@ public class OfferProductCartActivity extends Activity {
 
                     adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                     gvProducts.setAdapter(adapter);
+
 
                 }
             });

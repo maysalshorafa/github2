@@ -181,6 +181,10 @@ public class SettingsDBAdapter {
 
     }
 
+
+
+
+
     public void read(Cursor cursor) {
         if(db.isOpen()){
 
@@ -209,6 +213,9 @@ public class SettingsDBAdapter {
         cursor.close();
         close();
     }
+
+
+
     public void readSetting() {
         if(db.isOpen()){
 
@@ -247,6 +254,7 @@ public class SettingsDBAdapter {
                 + " add column " + columnName + " INTEGER  DEFAULT 0 ;";
         return dbc;
     }
+
 
     public static String addColumnText(String columnName) {
         String dbc = "ALTER TABLE " + SETTINGS_TABLE_NAME

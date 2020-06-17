@@ -97,7 +97,9 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         productDBAdapter.open();
         Product product =productDBAdapter.getProductByID(orderList.get(position).getProductId());
         productDBAdapter.close();
-
+        if (product.getCurrencyType().equals("0")){
+            updateCurrencyType.updateCurrencyToShekl(context,product);
+        }
         String currencyType = String.valueOf(symbolWithCodeHashMap.valueOf(product.getCurrencyType()).getValue());
         try {
               if (product.getDisplayName()!=null){

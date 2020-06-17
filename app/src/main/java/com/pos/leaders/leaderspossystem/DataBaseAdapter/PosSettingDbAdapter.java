@@ -331,11 +331,16 @@ public class PosSettingDbAdapter {
         PosSetting posSetting = new PosSetting();
         Cursor cursor = null;
         cursor = db.rawQuery("SELECT * FROM " + POS_SETTING_TABLE_NAME + " ORDER BY id DESC LIMIT 1", null);
-        cursor.moveToFirst();
-        if (cursor != null && cursor.getCount() != 0) {
+        while (cursor.moveToNext()) {
+            // your content
             posSetting = build(cursor);
             Log.d("posSetting", posSetting.toString());
         }
+      /*  if (cursor != null && cursor.getCount() != 0) {
+            posSetting = build(cursor);
+            Log.d("posSetting", posSetting.toString());
+        }
+        cursor.moveToFirst();*/
         return posSetting;
     }
 
@@ -385,6 +390,34 @@ public class PosSettingDbAdapter {
         try {
             db.update(POS_SETTING_TABLE_NAME, updatedValues, where, new String[]{idPosSetting + ""});
             //   db.update(POS_LINCESS_TABLE_NAME, val, null, null);
+            return 1;
+        } catch (SQLException ex) {
+            Log.e("posSetting update", "update Entry at " + POS_SETTING_TABLE_NAME + ": " + ex.getMessage());
+            return 0;
+        }
+
+    }
+
+
+
+    public int updatePossVersion(PosSetting posSetting,long idPosSetting) {
+        if (db.isOpen()) {
+
+        } else {
+            try {
+                open();
+            } catch (SQLException ex) {
+                Log.d("Exception", ex.toString());
+            }
+        }
+        ContentValues updatedValues = new ContentValues();
+        //Assign values for each row.
+        String where = POS_SETTING_COLUMN_ID + " = ?";
+        updatedValues.put(POS_SETTING_COLUMN_POS_VERSION_NO, posSetting.getPosVersionNo());
+        updatedValues.put(POS_SETTING_COLUMN_POS_DB_VERSION_NO,posSetting.getPosDbVersionNo());
+
+        try {
+            db.update(POS_SETTING_TABLE_NAME, updatedValues, where, new String[]{idPosSetting + ""});
             return 1;
         } catch (SQLException ex) {
             Log.e("posSetting update", "update Entry at " + POS_SETTING_TABLE_NAME + ": " + ex.getMessage());

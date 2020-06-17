@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
@@ -35,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +45,7 @@ import com.pos.leaders.leaderspossystem.CustomerAndClub.Customer;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
@@ -51,6 +55,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Elements.IButton;
@@ -79,9 +84,11 @@ import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Tools.ViewDialogLincess;
+import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
+import com.pos.leaders.leaderspossystem.syncposservice.Model.BrokerMessage;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
@@ -228,13 +235,13 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        try {
+    /*    try {
             updateCurrency();
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         salesCart = (IButton) findViewById(R.id.mainScreen);
         btAReport = (IButton) findViewById(R.id.dashboard_btAreport);
@@ -255,10 +262,19 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
 
 
       if(!SETTINGS.havePosSetting){
-        updateSettings(SESSION.token);
+        checkSettings(SESSION.token);
            SETTINGS.havePosSetting=true;
        }
+        /*CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(DashBord.this);
+        customerDBAdapter.open();
+        //    public Customer(long customerId, String firstName, String lastName, String gender, String email, String job, String phoneNumber, String street, boolean hide, int city, long club, String houseNumber, String postalCode, String country, String countryCode,double balance,CustomerType customerType,String customerCode,String customerIdentity,int branchId) {
 
+        Broker broker=new Broker(DashBord.this);
+        broker.open();
+      List<BrokerMessage> brokerMessages= broker.getAllNotSyncedCommand();
+        for (int i=0;i<brokerMessages.size();i++){
+            broker.Synced(brokerMessages.get(i).getId());
+        }*/
 
         //region customerName report button
         btAReport.setOnClickListener(new View.OnClickListener() {
@@ -271,20 +287,25 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
                 OpiningReport aReport = getLastAReport();
                 ZReport zReport = getLastZReport();
 
+
                 if (aReport == null) {
                     _aReport.setLastZReportID(-1);
                     _aReport.setLastOrderId(-1);
 
-                    ShowAReportDialog(_aReport);
+                  checkCurrency(_aReport);
+               //ShowAReportDialog(_aReport);
                 } else {
                     if(zReport==null){
                         _aReport.setLastZReportID(-1);
                         _aReport.setLastOrderId(-1);
+
                     }else {
                         _aReport.setLastZReportID(zReport.getzReportId());
                         _aReport.setLastOrderId(zReport.getEndOrderId());
                     }
-                    ShowAReportDialog(_aReport);
+
+                checkCurrency(_aReport);
+               //     ShowAReportDialog(_aReport);
                 }
 
             }
@@ -923,6 +944,17 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         enableBackButton = false;
         // a_report Dialog WithOut Currency
         if (!SETTINGS.enableCurrencies) {
+            final List<Currency> currenciesList;
+            List<CurrencyType> currencyTypesList = null;
+            final CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(DashBord.this);
+            currencyDBAdapter.open();
+            CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+            currencyTypeDBAdapter.open();
+            currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+            currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+
+            fCurrency=currenciesList.get(0);
+            firstCurrencyInDefaultValue = 0;
             final Dialog discountDialog = new Dialog(DashBord.this);
             discountDialog.setTitle(R.string.opening_report);
             discountDialog.setContentView(R.layout.cash_payment_dialog);
@@ -930,7 +962,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 
             final Button btOK = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTOk);
             final Button btCancel = (Button) discountDialog.findViewById(R.id.cashPaymentDialog_BTCancel);
-            final EditText et = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
+            final EditText etFirstCurrencyAmount = (EditText) discountDialog.findViewById(R.id.cashPaymentDialog_TECash);
             final Switch sw = (Switch) discountDialog.findViewById(R.id.cashPaymentDialog_SwitchProportion);
             sw.setVisibility(View.GONE);
             discountDialog.setCanceledOnTouchOutside(false);
@@ -950,8 +982,8 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                     DashBord.this.onResume();
                 }
             });
-            et.setHint(R.string.amount);
-            et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            etFirstCurrencyAmount.setHint(R.string.amount);
+            etFirstCurrencyAmount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -960,13 +992,34 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                     return false;
                 }
             });
+            etFirstCurrencyAmount.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (!etFirstCurrencyAmount.getText().toString().equals("")) {
+                        firstCurrencyInDefaultValue = Double.parseDouble(etFirstCurrencyAmount.getText().toString());
+
+                    } else {
+                        firstCurrencyInDefaultValue = 0;
+                    }
+                }
+            });
+
+
 
             btOK.setOnClickListener(new View.OnClickListener()
 
             {
                 @Override
                 public void onClick(View v) {
-                    String str = et.getText().toString();
+                    String str = etFirstCurrencyAmount.getText().toString();
                     ZReport zReport1 = null;
                     ZReportDBAdapter zReportDBAdapter=new ZReportDBAdapter(DashBord.this);
                     zReportDBAdapter.open();
@@ -982,6 +1035,8 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                         aReport.setAmount(Double.parseDouble(str));
                         OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
+                        final OpiningReportDetailsDBAdapter aReportDetailsDBAdapter = new OpiningReportDetailsDBAdapter(DashBord.this);
+                        aReportDetailsDBAdapter.open();
 
                         ZReport zReport = null;
                         OpiningReport opiningReport=null;
@@ -1090,21 +1145,26 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                             zReportDBAdapter.updateEntry(zReport);
 
                         }
-
+                        if (firstCurrencyInDefaultValue > 0) {
+                            Log.d("fCurrencyjj", String.valueOf(fCurrency.getId()));
+                           // aReportDetailsDBAdapter.insertEntry(id, firstCurrencyInDefaultValue, fCurrency.getId(), firstCurrencyInDefaultValue *
+                            aReportDetailsDBAdapter.insertEntry(id, firstCurrencyInDefaultValue, fCurrency.getId(), firstCurrencyInDefaultValue);
+                        }
                         discountDialog.cancel();
                         checkLincess();
                         //EnableButtons();
                     }
                     zReportDBAdapter.close();
                     zReportCountDbAdapter.close();
+
                     if (aReportDBAdapter!=null){
                         aReportDBAdapter.close();
                     }
 
                 }
             });
-            discountDialog.show();
-        }
+            discountDialog.show();}
+
         // With Currency Model
         else {
             firstCurrencyInDefaultValue = 0;
@@ -1373,12 +1433,13 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                     ZReportCountDbAdapter zReportCountDbAdapter=new ZReportCountDbAdapter(DashBord.this);
                     zReportCountDbAdapter.open();
                     String str = ETFirstCurrencyAmount.getText().toString();
-                   /* Log.d("firstCurrencyInDefau",firstCurrencyInDefaultValue+"Rate"+fCurrency.getRate());
-                    Log.d("secondCurrencyInDefaul",secondCurrencyInDefaultValue+"Rate"+sCurrency.getRate());
-                    Log.d("thirdCurrencyInDefault",thirdCurrencyInDefaultValue+"Rate"+tCurrency.getRate());
-                    Log.d("forthCurrencyInDefault",forthCurrencyInDefaultValue+"Rate"+forthCurrency.getRate());*/
                     if (!str.equals("")) {
-                        aReportTotalAmount = firstCurrencyInDefaultValue * fCurrency.getRate() + secondCurrencyInDefaultValue * sCurrency.getRate() + thirdCurrencyInDefaultValue * tCurrency.getRate() + forthCurrencyInDefaultValue * forthCurrency.getRate();
+                        if (firstCurrencyInDefaultValue>0&&secondCurrencyInDefaultValue==0&&forthCurrencyInDefaultValue==0&&thirdCurrencyInDefaultValue==0){
+                            aReportTotalAmount=firstCurrencyInDefaultValue;
+                        }
+                        else {
+                        aReportTotalAmount = firstCurrencyInDefaultValue * fCurrency.getRate() + secondCurrencyInDefaultValue * sCurrency.getRate() + thirdCurrencyInDefaultValue * tCurrency.getRate() + forthCurrencyInDefaultValue * forthCurrency.getRate();}
+
                         OpiningReportDBAdapter aReportDBAdapter = new OpiningReportDBAdapter(DashBord.this);
                         aReportDBAdapter.open();
                         OpiningReport opiningReport = null;
@@ -1813,9 +1874,14 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         //currencyTypeDBAdapter.close();
         CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
         currencyDBAdapter.open();
-        Currency lastCurrency =currencyDBAdapter.getLastCurrency();
+        Currency lastCurrency = null;
+        try {
+            lastCurrency = currencyDBAdapter.getLastCurrency();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Timestamp timestamp =new Timestamp(System.currentTimeMillis());
-        if (lastCurrency.getLastUpdate()!=null){
+        if (lastCurrency!=null){
             if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
                 //do nothing
             }else {
@@ -1841,19 +1907,23 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                             msgData = jsonArray.getJSONObject(i).toString();
                             Currency currency = null;
                             currency = objectMapper.readValue(msgData, Currency.class);
-                           // currencyDBAdapter.deleteOldRate(currencyTypesList);
-                            currencyDBAdapter.deleteCurrencyList();
-                            currencyDBAdapter.insertEntry(currency);
+                            currencyDBAdapter.deleteOldRate(currencyTypesList);
+                            //currencyDBAdapter.deleteCurrencyList();
+                         Long idCoulm=   currencyDBAdapter.insertEntry(currency);
+                            Log.d("idCoulm",idCoulm+"");
+
 
                             //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
                         }
                     } catch (Exception e) {
+                        Log.d("Exception",e.toString());
                     }
 
 
 
-                } catch (JSONException e) {
 
+                } catch (JSONException e) {
+                    Log.d("Exception",e.toString());
                 }
               //  currencyDBAdapter.deleteOldRate(currencyTypesList);
 
@@ -1886,17 +1956,19 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                         msgData = jsonArray.getJSONObject(i).toString();
                         Currency currency = null;
                         currency = objectMapper.readValue(msgData, Currency.class);
-                        currencyDBAdapter.deleteCurrencyList();
-                        currencyDBAdapter.insertEntry(currency);
-                        //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
+                       // currencyDBAdapter.deleteCurrencyList();
+                        Long idCoulm= currencyDBAdapter.insertEntry(currency);
+                        Log.d("idCoulm",idCoulm.toString());
+                      // currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
                     }
                 } catch (Exception e) {
+                    Log.d("Exception",e.toString());
                 }
 
 
 
             } catch (JSONException e) {
-
+                Log.d("Exception",e.toString());
             }
 
 
@@ -1909,14 +1981,12 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
     }
 
 
-
-    private void updateSettings(String token) {
+    private void checkSettings(String token) {
 
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
             String res = messageTransmit.authGet(ApiURL.PosSetting, token);
-            Log.d("updateCuee",res);
-            Log.e("Cuee", res);
+            Log.d("getPossSettingRespons",res);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(res);
@@ -1934,25 +2004,28 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                         posSettingDbAdapter.open();
                         PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
+                        Log.d("posSettingAdd",posSetting.toString());
                         addPosSetting(posSetting);
+                        posSettingDbAdapter.close();
                     }
                     else {
                         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                         posSettingDbAdapter.open();
                         PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
+                        Log.d("posSettingUpdate",posSetting.toString());
                         updatePosSetting(posSetting);
+                        posSettingDbAdapter.close();
 
 
                     }
                 }
                 catch (JSONException e){
-                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
-                    respnse = jsonArray.getJSONObject(0);
+                    Log.d("getPossSettingException",e.toString());
                 }
 
             }
             else {
-                Log.e("setup",jsonObject.getString(MessageKey.responseType));
+                Log.e("getPossSetting",jsonObject.getString(MessageKey.responseType));
             }
 
         } catch (IOException | JSONException e) {
@@ -1969,14 +2042,19 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         try {
 
             ObjectMapper mapper = new ObjectMapper();
+            posSetting.setPosDbVersionNo(String.valueOf(DbHelper.DATABASE_VERSION));
+            String verCode = getVersionCode();
+            posSetting.setPosVersionNo(verCode);
+            /*posSetting.setCompanyStatus();*/
             String jsonString = mapper.writeValueAsString(posSetting);
+            Log.d("posSetting12add",posSetting.toString());
             String res = messageTransmit.authPost(ApiURL.PosSetting,jsonString, token);
-            Log.d("ADD_POS_SETTING",res);
+            updatePosVersion(posSetting);
+            Log.d("addPossSettingRespons",res);
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(res);
                 if(jsonObject.getString(MessageKey.status).equals("200")) {
-
                 }
                 else {
                     Log.d("addPossSetting",jsonObject.getString(MessageKey.responseType));
@@ -2001,21 +2079,25 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         try {
 
             ObjectMapper mapper = new ObjectMapper();
+            posSetting.setPosDbVersionNo(String.valueOf(DbHelper.DATABASE_VERSION));
+            String verCode = getVersionCode();
+            posSetting.setPosVersionNo(verCode);
             String jsonString = mapper.writeValueAsString(posSetting);
+            Log.d("posSetting12",posSetting.toString());
             String res = messageTransmit.authPut(ApiURL.PosSetting,jsonString, token, Long.parseLong(SETTINGS.posID));
-            Log.d("ADD_POS_SETTING",res);
+            updatePosVersion(posSetting);
+            Log.d("updatePossSettingRespons",res);
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(res);
                 if(jsonObject.getString(MessageKey.status).equals("200")) {
-
                 }
                 else {
-                    Log.d("addPossSetting",jsonObject.getString(MessageKey.responseType));
+                    Log.d("updatePossSetting",jsonObject.getString(MessageKey.responseType));
                 }
             }
             catch (JSONException e){
-                Log.e("exceptionAddPosSetting",e.toString());
+                Log.e("exceptionUpdatePossSetting",e.toString());
             }
 
 
@@ -2024,5 +2106,51 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         }
 
     }
+
+    private void updatePosVersion(PosSetting posSetting){
+        PosSettingDbAdapter posSettingDbAdapter=new PosSettingDbAdapter(DashBord.this);
+        posSettingDbAdapter.open();
+        long idPosSetting=posSettingDbAdapter.getPosSettingID().getPosSettingId();
+        posSettingDbAdapter.updatePossVersion(posSetting,idPosSetting);
+        posSettingDbAdapter.close();
+    }
+
+    private void checkCurrency(OpiningReport _aReport){
+        CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(DashBord.this);
+        currencyDBAdapter.open();
+        Currency lastCurrency = null;
+        try {
+            lastCurrency = currencyDBAdapter.getLastCurrency();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (lastCurrency!=null){
+            ShowAReportDialog(_aReport);
+        }
+        else {
+                Toast.makeText(DashBord.this, "Wait to get currency please try again!", Toast.LENGTH_LONG).show();
+            try {
+                updateCurrency();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String getVersionCode(){
+        PackageInfo pInfo = null;
+        try {
+            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String verCode = pInfo.versionName;
+        return verCode;
+
+    }
+
 }
 

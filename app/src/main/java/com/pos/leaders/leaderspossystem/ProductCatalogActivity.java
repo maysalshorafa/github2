@@ -79,6 +79,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
         productsList = filter_productsList;
         adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
         gvProducts.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         super.onResume();
     }
 
@@ -161,12 +162,14 @@ public class ProductCatalogActivity extends AppCompatActivity {
                             super.onPostExecute(aVoid);
                             ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                             gvProducts.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                         }
                     }.execute(word);
                 } else {
                     filter_productsList = productsList;
                     ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                     gvProducts.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
 
             }
@@ -183,6 +186,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
         adapter = new ProductCatalogGridViewAdapter(this, productsList);
 
         gvProducts.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         btCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -369,6 +373,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                     filter_productsList = productsList;
                     adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                     gvProducts.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
 
                 }
             });
@@ -401,6 +406,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 productsList = filter_productsList;
                 adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                 gvProducts.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
                 return true;
             }
         });

@@ -298,7 +298,7 @@ public class SyncMessage extends Service {
             Log.d("multiSync","multiSync");
             Log.d("tokenmultisync",token);
             Log.d("ApiURLSync",ApiURL.Sync);
-
+            messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
             res = messageTransmit.authGet(ApiURL.Sync, token);
             Log.d("syncResponse",res +" "+ "response");
         } catch(SocketTimeoutException e){
@@ -1851,9 +1851,14 @@ public class SyncMessage extends Service {
         //currencyTypeDBAdapter.close();
         CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
         currencyDBAdapter.open();
-        Currency lastCurrency =currencyDBAdapter.getLastCurrency();
+        Currency lastCurrency = null;
+        try {
+            lastCurrency = currencyDBAdapter.getLastCurrency();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Timestamp timestamp =new Timestamp(System.currentTimeMillis());
-        if (lastCurrency.getLastUpdate()!=null){
+        if (lastCurrency!=null){
        if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
             //do nothing
         }else {
@@ -1885,12 +1890,13 @@ public class SyncMessage extends Service {
                           //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
                         }
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
 
 
             } catch (JSONException e) {
-
+                e.printStackTrace();
             }
 
 
@@ -1929,11 +1935,13 @@ public class SyncMessage extends Service {
                         //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
 
 
             } catch (JSONException e) {
+                e.printStackTrace();
 
             }
         }

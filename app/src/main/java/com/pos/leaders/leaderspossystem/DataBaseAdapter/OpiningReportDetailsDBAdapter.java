@@ -64,7 +64,7 @@ public class OpiningReportDetailsDBAdapter {
     }
 
     public long insertEntry(long a_report_id, double amount, long type, double amount_in_basic_currency) {
-        Log.d("type",type+"");
+        Log.d("typeInsert",type+"");
         if(db.isOpen()){
 
         }else {
@@ -115,7 +115,8 @@ public class OpiningReportDetailsDBAdapter {
         }
     }
 
-    public Double getLastRow(int type,long aReportId) {
+    public Double getLastRow(long type,long aReportId) {
+        Log.d("typeCurren",type+"");
         if(db.isOpen()){
 
         }else {
@@ -127,7 +128,7 @@ public class OpiningReportDetailsDBAdapter {
             }
         }
         OpiningReportDetails aReportDetails = null;
-        Cursor cursor = db.rawQuery("SELECT * from " + OPINING_REPORT_DETAILS_TABLE_NAME + "  where "+ OPINING_REPORT_DETAILS_COLUMN_TYPE +"=" + type +" and " + OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID +" = " + aReportId , null);
+        Cursor cursor = db.rawQuery("SELECT * from " + OPINING_REPORT_DETAILS_TABLE_NAME + " where "+ OPINING_REPORT_DETAILS_COLUMN_TYPE +"=" + type +" and " + OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID +" = " + aReportId , null);
         if (cursor.getCount() < 1) {
             cursor.close();
             close();
@@ -144,11 +145,11 @@ public class OpiningReportDetailsDBAdapter {
     private OpiningReportDetails makeAReportDetails(Cursor cursor) {
         try {
             return new OpiningReportDetails(Long.parseLong(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_ID))), Long.parseLong(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID))),
-                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_AMOUNT))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_TYPE))),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_AMOUNT))), Long.parseLong(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_TYPE))),
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_AMOUNT_IN_BASIC_CURRENCY))));
         } catch (Exception ex) {
             return new OpiningReportDetails(Long.parseLong(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_ID))), Long.parseLong(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_OPINING_REPORT_COLUMN_ID))),
-                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_AMOUNT))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_TYPE))),
+                    Double.parseDouble(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_AMOUNT))),Long.parseLong(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_TYPE))),
                     Double.parseDouble(cursor.getString(cursor.getColumnIndex(OPINING_REPORT_DETAILS_COLUMN_AMOUNT_IN_BASIC_CURRENCY))));
         }
 

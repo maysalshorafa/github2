@@ -6,6 +6,7 @@ import android.util.Log;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 
 import org.json.JSONException;
@@ -41,7 +42,13 @@ public class MessageTransmit {
     public MessageTransmit(){}
     public MessageTransmit(String domainURL){
       Log.d("MessageTransmit1",domainURL);
-        if(domainURL.length()>0){
+        if (domainURL.length()==0 && domainURL.isEmpty()){
+            domainURL=SETTINGS.BO_SERVER_URL;
+            char c = domainURL.charAt(domainURL.length() - 1);
+            if(c!='/')
+                domainURL += "/";
+        }
+      else  if(domainURL.length()>0){
             char c = domainURL.charAt(domainURL.length() - 1);
             if(c!='/')
                 domainURL += "/";}

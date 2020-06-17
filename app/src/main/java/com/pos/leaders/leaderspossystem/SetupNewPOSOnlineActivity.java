@@ -133,12 +133,6 @@ public class SetupNewPOSOnlineActivity extends Activity {
 
         Log.d("finalArraySelectList",SetupNewPOSOnlineActivity.ArrayCurrencySelect.toString());
 
-/*
-        else {
-            Log.d("Ena",SETTINGS.enableCurrencies+"");
-            Log.d("kddkskjds","ddd");
-            Log.d("hhhhh","gvgggg");
-        }*/
 
 
         //region check internet connection
@@ -342,7 +336,6 @@ class StartConnection extends AsyncTask<String,Void,String> {
         try {
             String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
             Log.d("companyCrediti",res);
-            Log.e("CCC", res);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(res);
@@ -413,7 +406,6 @@ class StartConnection extends AsyncTask<String,Void,String> {
         try {
             String res = messageTransmit.authGet(ApiURL.CompanyLicense+"/Active", token);
             Log.d("companyLicense",res);
-            Log.e("CCC", res);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(res);
@@ -429,7 +421,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
 
                 try {
                     respnse = jsonObject.getJSONObject(MessageKey.responseBody);
-                    Log.d("respnserespnse",respnse.toString());
+                    Log.d("respnsCompanyLicense",respnse.toString());
                 }
                 catch (JSONException e){
                     JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
@@ -447,12 +439,8 @@ class StartConnection extends AsyncTask<String,Void,String> {
                 SETTINGS.dueDate= DateConverter.toDate(Long.parseLong(dueDate));
                 Timestamp ts = new Timestamp(Long.parseLong(dueDate));
                 Timestamp ts2=new Timestamp(Long.parseLong(activationDate));
-                Log.d("dueDateStting",SETTINGS.dueDate);
 
                 long LincesID = lincessDBAdapter.insertEntry(respnse.getString(MessageKey.companyId),respnse.getString(MessageKey.note),respnse.getString(MessageKey.branchId), ts2 , ts, CONSTANT.ACTIVE);
-                Log.d("hhhu","huuuuy");
-
-                Log.d("LincesID",LincesID+"");
 
             }
             else {
@@ -470,7 +458,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
             String res = messageTransmit.authGet(ApiURL.INVENTORY+"/forPos", token);
-            Log.e("CCC", res);
+            Log.e("resInventory", res);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(res);

@@ -106,8 +106,8 @@ public class CurrencyDBAdapter {
         }
         ContentValues val = new ContentValues();
         //Assign values for each row.
-
-        val.put(CURRENCY_COLUMN_ID, currency.getId());
+        val.put(CURRENCY_COLUMN_ID,Util.idHealth(this.db, CURRENCY_TABLE_NAME, CURRENCY_COLUMN_ID));
+       // val.put(CURRENCY_COLUMN_ID, currency.getId());
         val.put(CURRENCY_COLUMN_NAME, currency.getName());
         val.put(CURRENCY_COLUMN_CURRENCYCODE, currency.getCurrencyCode() );
         val.put(CURRENCY_COLUMN_COUNTRY, currency.getCountry());
@@ -116,6 +116,7 @@ public class CurrencyDBAdapter {
         try {
             return db.insert(CURRENCY_TABLE_NAME, null, val);
         } catch (Exception ex) {
+            Log.d("Exception",ex.toString());
             Log.e("Currency DB insert", "inserting Entry at " + CURRENCY_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
@@ -251,11 +252,14 @@ public class CurrencyDBAdapter {
                 Double.parseDouble( cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_RATE))),
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CURRENCYCOLUMN_CREATEDATE))));
     }
-    public Currency getLastCurrency(){
-        if (db.isOpen()){
 
-        }
-        else {
+
+
+
+    public Currency getLastCurrency() throws Exception {
+        if(db.isOpen()){
+
+        }else {
             try {
                 open();
             }
@@ -263,15 +267,20 @@ public class CurrencyDBAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        Currency currency = new Currency();
-        Cursor cursor=null;
-        cursor = db.rawQuery("SELECT * FROM "+CURRENCY_TABLE_NAME+" ORDER BY id DESC LIMIT 1", null);
+        Currency aReport = null;
+        Cursor cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME + "  order by id desc", null);
+        if (cursor.getCount() < 1) // zReport Not Exist
+        {
+            cursor.close();
+            throw new Exception("there is no rows on Currency Table");
+        }
         cursor.moveToFirst();
-        if (cursor != null && cursor.getCount() != 0){
-        currency=build(cursor);
-        Log.d("Currency",currency.toString());}
-        return currency;
+        aReport = build(cursor);
+        cursor.close();
+        close();
+        return aReport;
     }
+
     public void deleteCurrencyList(){
         db.execSQL("delete from "+ CURRENCY_TABLE_NAME);
     }

@@ -70,6 +70,7 @@ import com.pos.leaders.leaderspossystem.Tools.SaleManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.updateCurrencyType;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -241,7 +242,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
         lvOrders.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
                 Log.d("testInvoice",list.size()+"" +position);
                 if(position==list.size()){
                     final Order sale = (Order) list.get(list.size()-1);
@@ -491,7 +492,10 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                 for (int i=0;i<orderDetailsList.size();i++){
                                                     productDBAdapter.open();
                                                     Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
-                                                    //     if (product.getCurrencyType()==0){
+                                                       if (product.getCurrencyType().equals("0")){
+                                                           updateCurrencyType.updateCurrencyToShekl(OrdersManagementActivity.context,product);
+                                                       }
+
                                                     double rateCurrency=ConverterCurrency.getRateCurrency(product.getCurrencyType(),OrdersManagementActivity.this);
                                                     if(!product.isWithTax()){
                                                         if(order1.getCartDiscount()>0){
@@ -735,7 +739,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                 for (int i=0;i<orderDetailsList.size();i++){
                                                     productDBAdapter.open();
                                                     Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
-//                                                    if (product.getCurrencyType()==0){
+                                                  if (product.getCurrencyType().equals("0")){
+                                                      updateCurrencyType.updateCurrencyToShekl(OrdersManagementActivity.context,product);
+                                                  }
                                                         double rateCurrency= ConverterCurrency.getRateCurrency(product.getCurrencyType(),OrdersManagementActivity.this);
                                                     if(!product.isWithTax()){
                                                         if(order.getCartDiscount()>0){
@@ -1054,7 +1060,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                             for (int i=0;i<orderDetailsList.size();i++){
                                                 productDBAdapter.open();
                                                 Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
-                                           //     if (product.getCurrencyType()==0){
+                                               if (product.getCurrencyType().equals("0")){
+                                                   updateCurrencyType.updateCurrencyToShekl(OrdersManagementActivity.context,product);
+                                               }
                                                     double rateCurrency=ConverterCurrency.getRateCurrency(product.getCurrencyType(),OrdersManagementActivity.this);
                                                 if(!product.isWithTax()){
                                                     if(order1.getCartDiscount()>0){
@@ -1382,7 +1390,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
                             for (int i=0;i<orderDetailsList.size();i++){
                                 productDBAdapter.open();
                                 Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
-                               // if (product.getCurrencyType()==0){
+                               if (product.getCurrencyType().equals("0")){
+                                   updateCurrencyType.updateCurrencyToShekl(OrdersManagementActivity.context,product);
+                               }
                                 double rateCurrency=ConverterCurrency.getRateCurrency(product.getCurrencyType(),OrdersManagementActivity.this);
                                 if(!product.isWithTax()){
                                     if(order.getCartDiscount()>0){
