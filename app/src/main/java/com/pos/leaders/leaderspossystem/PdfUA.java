@@ -742,7 +742,7 @@ public class PdfUA {
         document.close();
         //end :)
     }
-    public static void  printCustomerInvoicesReport(Context context, List<Object>list) throws IOException, DocumentException, JSONException {
+    public static void  printCustomerInvoicesReport(Context context, List<Object>list,double customerW) throws IOException, DocumentException, JSONException {
         // create file , document region
         Document document = new Document();
         String fileName = "customerInvoicesList.pdf";
@@ -770,6 +770,8 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.customer_ledger)+" : " + customerW, Element.ALIGN_CENTER, 1, font);
+
 //        insertCell(headingTable, context.getString(R.string.date) + invoiceJsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
 
         //end

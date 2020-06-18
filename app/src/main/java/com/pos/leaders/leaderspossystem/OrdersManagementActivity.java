@@ -101,6 +101,7 @@ import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
  * Editing by KARAM on 10/04/2017.
  */
 public class OrdersManagementActivity extends AppCompatActivity {
+    public static  double customerWallet=0;
     Button btSendToEmail;
     int loadItemOffset = 0;
     int countLoad = 60;
@@ -291,7 +292,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                PdfUA pdfUA = new PdfUA();
 
                                                try {
-                                                   pdfUA.printCustomerInvoicesReport(context,list);
+                                                   pdfUA.printCustomerInvoicesReport(context,list,customerWallet);
                                                } catch (DocumentException e) {
                                                    e.printStackTrace();
                                                }
@@ -319,8 +320,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
                         });
 
 
-                customer_email.setText("");
-                customer_email.setHint("Email..");
+                customer_email.setText(customer.getEmail());
 
 
 
@@ -1235,6 +1235,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     Log.d("customer",customer.toString());
                     StartInvoiceAndCreditInvoiceConnection startInvoiceConnection = new StartInvoiceAndCreditInvoiceConnection();
                     startInvoiceConnection.execute(String.valueOf(customer.getCustomerId()));
+                    StartGetCustomerGeneralLedgerConnectionForOrderActivity customerW = new StartGetCustomerGeneralLedgerConnectionForOrderActivity();
+                    customerW.execute(String.valueOf(customer.getCustomerId()));
                   //  list.addAll(invoiceList);
 
 //
@@ -1552,4 +1554,54 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
     }
 
 }
+class StartGetCustomerGeneralLedgerConnectionForOrderActivity extends AsyncTask<String,Void,String> {
+    private MessageTransmit messageTransmit;
+    ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+    BoInvoice invoice;
+    StartGetCustomerGeneralLedgerConnectionForOrderActivity() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    }
+
+    final ProgressDialog progressDialog = new ProgressDialog(OrdersManagementActivity.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(OrdersManagementActivity.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {
+        String customerId=args[0];
+        try {
+            String url = "GeneralLedger/"+customerId;
+
+            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
+            JSONObject jsonObject = new JSONObject(invoiceRes);
+            String msgData = jsonObject.getString(MessageKey.responseBody);
+            JSONObject response = new JSONObject(msgData);
+            OrdersManagementActivity.customerWallet=response.getDouble("creditAmount");
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+
+
+        progressDialog.cancel();
+        super.onPostExecute(s);
+
+        //endregion
+    }
+
+}
