@@ -48,7 +48,7 @@ public class SalesHistoryCopySales extends AppCompatActivity {
                 invoiceCancle=invoiceBitMab;
                 PrintTools printTools = new PrintTools(SalesHistoryCopySales.this);
                 printTools.PrintReport(invoiceCancle);
-                onBackPressed();
+             //   onBackPressed();
             }
         });
     }

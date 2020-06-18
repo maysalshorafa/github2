@@ -67,7 +67,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
 
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_invoice_management);
+        setContentView(R.layout.activity_recipt_layout);
         TitleBar.setTitleBar(this);
         CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(this);
         customerDBAdapter.open();

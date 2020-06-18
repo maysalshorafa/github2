@@ -35,6 +35,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
@@ -609,176 +610,7 @@ public class PdfUA {
         checkCount+=receiptInvoiceAmountCheck;*/
 
     }
-    public static  void getCountMounthForZReport(Context context, ZReport z) {
-        ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
-        zReportDBAdapter.open();
-        JSONObject res = new JSONObject();
-        aReportAmount=0;
-        opiningReportList=new ArrayList<>();
-        aReportDetailsForFirstCurrency=0;
-        aReportDetailsForSecondCurrency=0;
-        aReportDetailsForThirdCurrency=0;
-        aReportDetailsForForthCurrency=0;
 
-        OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
-        opiningReportDBAdapter.open();
-        if(zReportDBAdapter.getProfilesCount()==1) {
-            opiningReportList = opiningReportDBAdapter.getListByLastZReport(-1);
-
-        }else {
-
-            opiningReportList = opiningReportDBAdapter.getListByLastZReport(z.getzReportId());
-        }
-        for (int i=0;i<opiningReportList.size();i++){
-            aReportAmount+=opiningReportList.get(i).getAmount();
-        }
-        if (SETTINGS.enableCurrencies) {
-            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
-            aReportDetailsDBAdapter.open();
-            for (int a=0 ;a<opiningReportList.size();a++) {
-                //aReportAmount+=opiningReportList.get(a).getAmount();
-                OpiningReport opiningReport = opiningReportList.get(a);
-                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
-                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
-                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
-                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
-            }
-
-        }
-       checkList=new ArrayList<>();
-        cashAmount=0;
-        invoiceReceiptCount=0 ;invoiceCount=0; CreditInvoiceCount=0 ; firstTypeCount=0 ;secondTypeCount=0 ;thirdTypeCount=0; fourthTypeCount=0 ;checkCount=0 ; creditCardCount=0 ;receiptInvoiceAmountCheck=0 ; cashCount=0;receiptInvoiceAmount=0;
-        OrderDBAdapter orderDb = new OrderDBAdapter(context);
-        orderDb.open();
-        invoiceReceiptCount = orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()).size();
-
-        if(zReportDBAdapter.getProfilesCount()==0){
-            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
-            posInvoiceDBAdapter.open();
-            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(-1, InvoiceStatus.UNPAID.getValue());
-            invoiceCount+=posInvoiceList.size();
-
-            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
-            CreditInvoiceCount+=posCreditInvoiceList.size();
-
-            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
-            receiptInvoiceAmountCheck+=posReceiptList.size();
-
-        }else {
-            ZReport zReport1=null;
-            try {
-                zReport1 = zReportDBAdapter.getLastRow();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
-            posInvoiceDBAdapter.open();
-            List<PosInvoice>posInvoiceList = posInvoiceDBAdapter.getPosInvoiceList(zReport1.getzReportId(), InvoiceStatus.UNPAID.getValue());
-            invoiceCount+=posInvoiceList.size();
-
-
-            List<PosInvoice>posCreditInvoiceList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.CREDIT_INVOICE.getValue(),CONSTANT.CASH);
-            CreditInvoiceCount+=posCreditInvoiceList.size();
-            List<PosInvoice>posReceiptListCheck = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CHECKS);
-            receiptInvoiceAmountCheck+=posReceiptListCheck.size();
-        }
-        List<Long>orderIds= new ArrayList<>();
-        List<Payment> payments = paymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
-        CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(context);
-        cashPaymentDBAdapter.open();
-        ChecksDBAdapter checksDBAdapter =new ChecksDBAdapter(context);
-        checksDBAdapter.open();
-        CreditCardPaymentDBAdapter creditCardPaymentDBAdapter =new CreditCardPaymentDBAdapter(context);
-        creditCardPaymentDBAdapter.open();
-        for (Payment p : payments) {
-            long orderId = p.getOrderId();
-            List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(orderId);
-            for(int i=0;i<cashPaymentList.size();i++){
-                cashCount+=1;
-                cashAmount+=p.getAmount();
-            }
-            List<Check>checkList=checksDBAdapter.getPaymentBySaleID(orderId);
-            for(int i=0;i<checkList.size();i++){
-                checkCount+=1;
-            }
-            List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
-            for(int i=0;i<creditCardPayments.size();i++){
-                creditCardCount+=1;            }
-        }
-        if(orderIds.size()>0){
-            for (int id = 0;id<orderIds.size();id++){
-                ChecksDBAdapter checkDb= new ChecksDBAdapter(context);
-                checkDb.open();
-                List<Check> c = checkDb.getPaymentBySaleID(orderIds.get(id));
-                checkList.add(c);
-            }
-        }
-        //with Currency
-        if (SETTINGS.enableCurrencies) {
-            //Getting default currencies name and values
-            List<CurrencyType> currencyTypesList = null;
-            CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(context);
-            currencyTypeDBAdapter.open();
-            currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
-            currencyTypeDBAdapter.close();
-            List<CurrencyOperation>currencyOperationList=currencyOperationPaymentList(orderDb.getBetween(z.getStartOrderId(),z.getEndOrderId()),context);
-            for (CurrencyOperation cp : currencyOperationList) {
-            /*    switch (cp.getCurrencyType()) {
-                    case "ILS":
-                        ShekelCount+=1;
-                        break;
-                    case "USD":
-                        UsdCount+=1;
-                        break;
-                    case "EUR":
-                        EurCount+=1;
-
-                        break;
-                    case "GBP":
-                        GbpCount+=1;
-                        break;
-                }*/
-            if (cp.getCurrencyType().equals(currencyTypesList.get(0).getType())){
-
-                firstTypeCount+=1;
-            }
-              else   if (cp.getCurrencyType().equals(currencyTypesList.get(1).getType())){
-                secondTypeCount+=1;
-            }
-              else   if (cp.getCurrencyType().equals(currencyTypesList.get(2).getType())){
-                thirdTypeCount+=1;
-            }
-                else if (cp.getCurrencyType().equals(currencyTypesList.get(3).getType())){
-                fourthTypeCount+=1;
-            }
-
-
-            }
-
-        }
-        if(zReportDBAdapter.getProfilesCount()==0){
-            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
-            posInvoiceDBAdapter.open();
-            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(-1, DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
-            receiptInvoiceAmount+=posReceiptList.size();
-
-        }else {
-            ZReport zReport1=null;
-            try {
-                zReport1 = zReportDBAdapter.getLastRow();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
-            posInvoiceDBAdapter.open();
-            List<PosInvoice>posReceiptList = posInvoiceDBAdapter.getPosInvoiceListByType(zReport1.getzReportId(), DocumentType.RECEIPT.getValue(),CONSTANT.CASH);
-            receiptInvoiceAmount+=posReceiptList.size();
-
-        }
-        firstTypeCount+=receiptInvoiceAmount;
-        checkCount+=receiptInvoiceAmountCheck;
-
-    }
     public static void createUserReport(Context context ,PdfPTable table , List<ScheduleWorkers>scheduleWorkersList) throws IOException, DocumentException {
         Date date , startAt=null , endAt =null;
         table.setRunDirection(0);
@@ -899,6 +731,125 @@ public class PdfUA {
         insertCell(dateTable, context.getString(R.string.total_paid)+":"+customerJson.getDouble("paidAmount"), Element.ALIGN_LEFT, 2, dateFont);
 
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+        //end
+
+        // schedule worker table
+        //end
+
+        //add table to document
+        document.add(headingTable);
+        document.add(dateTable);
+        document.close();
+        //end :)
+    }
+    public static void  printCustomerInvoicesReport(Context context, List<Object>list) throws IOException, DocumentException, JSONException {
+        // create file , document region
+        Document document = new Document();
+        String fileName = "customerInvoicesList.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 10);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
+//        insertCell(headingTable, context.getString(R.string.date) + invoiceJsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
+
+        //end
+
+        //date table from , to
+        PdfPTable dateTable = new PdfPTable(9);
+        dateTable.setRunDirection(0);
+        dateTable.setWidthPercentage(108f);
+
+        insertCell(dateTable, context.getString(R.string.sale_id), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(dateTable, context.getString(R.string.name), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, context.getString(R.string.date), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, context.getString(R.string.price), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, context.getString(R.string.type), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, context.getString(R.string.discount), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, context.getString(R.string.cancel_invoice_id), Element.ALIGN_LEFT, 1, dateFont);
+        for(int i=0;i<list.size();i++){
+            if(list.get(i) instanceof  Order){
+                Order order =(Order) list.get(i);
+                insertCell(dateTable, order.getOrderId()+"", Element.ALIGN_LEFT, 3, dateFont);
+                insertCell(dateTable,order.getCustomer_name(), Element.ALIGN_LEFT, 1, dateFont);
+                insertCell(dateTable, order.getCreatedAt()+"", Element.ALIGN_LEFT, 1, dateFont);
+                insertCell(dateTable,order.getTotalPrice()+"", Element.ALIGN_LEFT, 1, dateFont);
+                insertCell(dateTable,"INRC", Element.ALIGN_LEFT, 1, dateFont);
+                insertCell(dateTable, order.getCartDiscount()+"", Element.ALIGN_LEFT, 1, dateFont);
+                insertCell(dateTable, order.getCancellingOrderId()+"", Element.ALIGN_LEFT, 1, dateFont);
+            }
+            else {
+                BoInvoice boInvoice =(BoInvoice)list.get(i);
+                JSONObject jsonObject=boInvoice.getDocumentsData();
+                JSONObject customerJson = jsonObject.getJSONObject("customer");
+
+                insertCell(dateTable,boInvoice.getDocNum(), Element.ALIGN_LEFT, 3, dateFont);
+
+                insertCell(dateTable, customerJson.getString("firstName"), Element.ALIGN_LEFT, 1, dateFont);
+
+                Date date = DateConverter.stringToDate(jsonObject.getString("date"));
+                insertCell(dateTable,DateConverter.geDate(date), Element.ALIGN_LEFT, 1, dateFont);
+
+
+                if(boInvoice.getType().getValue().equalsIgnoreCase(DocumentType.RECEIPT.getValue())){
+                    insertCell(dateTable, jsonObject.getString("paidAmount"), Element.ALIGN_LEFT, 1, dateFont);
+
+                }else {
+                    insertCell(dateTable, jsonObject.getString("total"), Element.ALIGN_LEFT, 1, dateFont);
+
+                }
+
+
+                if(boInvoice.getType().equals(DocumentType.INVOICE)) {
+                    insertCell(dateTable,"IN", Element.ALIGN_LEFT, 1, dateFont);
+
+                }else if(boInvoice.getType().equals(DocumentType.CREDIT_INVOICE)) {
+                    insertCell(dateTable, "CIN", Element.ALIGN_LEFT, 1, dateFont);
+
+                }
+                else if(boInvoice.getType().equals(DocumentType.INVOICE_RECEIPT)){
+                    insertCell(dateTable, "INRC", Element.ALIGN_LEFT, 1, dateFont);
+
+
+                }
+                else if(boInvoice.getType().equals(DocumentType.RECEIPT)){
+                    insertCell(dateTable,"RC", Element.ALIGN_LEFT, 1, dateFont);
+
+                }
+
+
+
+                if(boInvoice.getType().getValue().equalsIgnoreCase(DocumentType.RECEIPT.getValue())){
+                    insertCell(dateTable, 0+"", Element.ALIGN_LEFT, 1, dateFont);
+
+                }else {
+                    insertCell(dateTable, jsonObject.getString("cartDiscount"), Element.ALIGN_LEFT, 1, dateFont);
+
+                }
+                insertCell(dateTable, 0+"", Element.ALIGN_LEFT, 1, dateFont);
+            }
+        }
+
+        insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 9, font);
         //end
 
         // schedule worker table
