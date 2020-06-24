@@ -20,21 +20,30 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.ChecksActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CurrencyReturnsCustomDialogActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.InvoiceManagementActivity;
+import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.ReportsManagementActivity;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +57,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     private double totalPrice_defaultCurrency, excess_defaultCurrency, totalPaid = 0.0;
     private double totalPrice, excess, selectedCurrencyRate = 1 , valRow=0;
     double actualCurrencyRate=1.0;
-
+    Customer customer=null;
     private String defaultCurrency = "ILS";//ILS
 //'\u20aa'
     private String excessCurrency = "ILS";//ILS
@@ -74,24 +83,55 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     boolean multiCurrencyFromCreditCurrentlyInsert=false;
     boolean multiCurrencyFromCheckCurrentlyInsert=false;
     Button cashButton , checkButton , creditCardButton;
+    List<BoInvoice>invoice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Remove notification bar
+        // Remove notification barZ\\\\\\\\\\\\\0.
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_multi_currencies_payment);
 
-        //region set title bar
+        //region set title bar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\/
         TitleBar.setTitleBar(this);
         btCheckOut=(Button)findViewById(R.id.MultiCurrenciesTitlebar_btCheckOut);
+        final Bundle extras = getIntent().getExtras();
+
         btCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (excess <= 0 ) {
+                    if(extras.containsKey("Receipt")){
+                        if(invoice.size()>0){
+                            if (SESSION._CHECKS_HOLDER.size() > 0) {
+                                Log.d("invoicereeee", SESSION._CHECKS_HOLDER.toString());
+                                DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CHECKS, totalPrice, "", customer);
+                                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                startActivity(intent);
+                            } else if (CurrencyReturnsCustomDialogActivity.secondCredit != "") {
+                                DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CREDIT_CARD, totalPrice, CurrencyReturnsCustomDialogActivity.secondCredit, customer);
+                                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                startActivity(intent);
+                            } else {
+                                DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CASH, totalPrice, "", customer);
+                                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                startActivity(intent);
+                            }
+                        }else{
+                            DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CASH, totalPrice, "", customer);
+                            Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivity(intent);
+                        }
+
+                    }else {
                     Log.d("PaymentTables",paymentTables.toString());
                     Log.d("totJoj", String.valueOf(totalPrice));
                     Intent i = new Intent();
@@ -105,6 +145,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     setResult(RESULT_OK, i);
                     finish();
                }
+                }
               /*  if(excess<=0 && totalPrice<0){
                  if( CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote=="") {
                      paymentTables.add(new PaymentTable(spCurrency.getSelectedItem().toString(), Double.parseDouble(Util.makePrice(totalPrice)), 0, 0, "", new CurrencyType(1l, defaultCurrency + ""), 1));
@@ -127,9 +168,20 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         //endregion title bar
 
         //check extras
-        final Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            if(extras.containsKey("Receipt")){
+                ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                try {
+                    customer=objectMapper.readValue(extras.getString("customer"), Customer.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ;
+                invoice= InvoiceManagementActivity.newInvoiceList;
+                Log.d("newInvoiceList",invoice.toString());
+            }
             totalPrice = (double) extras.get(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
+
         } else {
             onBackPressed();
         }
