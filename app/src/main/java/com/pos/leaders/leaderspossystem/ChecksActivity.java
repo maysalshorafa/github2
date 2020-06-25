@@ -60,6 +60,7 @@ public class ChecksActivity extends AppCompatActivity {
 	Button btDone,btCancel;
     TextView tv , tvCheckCustomer , tvChecksRequired;
 	ListView lvChecks;
+	Check _check ;
 	static List<Check> checkList = new ArrayList<Check>();
 	static List<Check> firstCheckList = new ArrayList<Check>();
 
@@ -68,7 +69,7 @@ public class ChecksActivity extends AppCompatActivity {
 	static final int DELTA = 50;
     private double totalPrice;
 	String customer_name;
-	String currencyType="ILS";
+	String currencyType;
 	LinearLayout LlCustomer;
 	enum Direction {LEFT, RIGHT;}
 	double requiredAmount=0;
@@ -121,7 +122,7 @@ public class ChecksActivity extends AppCompatActivity {
 		 extras = getIntent().getExtras();
         if (extras != null) {
 			if(!extras.containsKey("checksReceipt")) {
-				//currencyType = (String) extras.get("_CurrencyType");
+				currencyType = (String) extras.get("_CurrencyType");
 			}
 
 			totalPrice = (double) extras.get("_Price");
@@ -205,8 +206,10 @@ public class ChecksActivity extends AppCompatActivity {
 
     private double getTotalPid(){
         double d=0.0f;
+		Log.d("checkList",checkList.toString());
         for(Check c:checkList){
             d += c.getAmount();
+			Log.d("dAdd",d+"");
         }
         return d;
     }
@@ -223,15 +226,15 @@ public class ChecksActivity extends AppCompatActivity {
 			requiredAmount=totalPrice-d;
 			if(requiredAmount>0){
 				if(currencyType.equalsIgnoreCase(currencyTypesList.get(0).getType())){
-					tvChecksRequired.setText(Util.makePrice(totalPrice) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(0).getType()).getValue()));
+					tvChecksRequired.setText(Util.makePrice(requiredAmount) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(0).getType()).getValue()));
 				}
 				if (SETTINGS.enableCurrencies){
 					if(currencyType.equalsIgnoreCase(currencyTypesList.get(1).getType())){
-					tvChecksRequired.setText(Util.makePrice(totalPrice) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(1).getType()).getValue()));
+					tvChecksRequired.setText(Util.makePrice(requiredAmount) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(1).getType()).getValue()));
 				}else if(currencyType.equalsIgnoreCase(currencyTypesList.get(2).getType())){
-					tvChecksRequired.setText(Util.makePrice(totalPrice) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(2).getType()).getValue()));
+					tvChecksRequired.setText(Util.makePrice(requiredAmount) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(2).getType()).getValue()));
 				}else if(currencyType.equalsIgnoreCase(currencyTypesList.get(3).getType())){
-					tvChecksRequired.setText(Util.makePrice(totalPrice) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(3).getType()).getValue()));
+					tvChecksRequired.setText(Util.makePrice(requiredAmount) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(3).getType()).getValue()));
 				}}
 			}else {
 				if(currencyType.equalsIgnoreCase(currencyTypesList.get(0).getType())){
@@ -253,7 +256,7 @@ public class ChecksActivity extends AppCompatActivity {
 		btDone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                Check _check = new Check();
+				_check = new Check();
 				if(lvChecks.getChildCount()>1) {
                     ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lvChecks.getChildCount() - 1).getTag();
 
@@ -605,6 +608,7 @@ public class ChecksActivity extends AppCompatActivity {
 	}
 
 	public void delete(int pos){
+		Log.d("pos",pos+"");
 		checkList.remove(pos);
 		adapter.remove(pos);
 		adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);

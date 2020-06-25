@@ -23,7 +23,7 @@ public class Order {
 	private double totalPrice;
 	private double totalPaidAmount;
 	private long customerId;
-	public double cartDiscount = 0;
+	public double cartDiscount;
 	@JsonIgnore
 	private String customer_name = null;
 	@JsonIgnore

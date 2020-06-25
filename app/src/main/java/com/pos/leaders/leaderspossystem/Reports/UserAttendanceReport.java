@@ -225,7 +225,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 			String s = mYear + "-" + mMonth+ "-" + mDay;
 			etFromDate.setText(s);
 			SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
-			String currentDateTimeString = df2.format(new Date());
+			String currentDateTimeString = df2.format(new Date().getTime());
 			from = DateConverter.stringToDate(s + " "+currentDateTimeString);
 			setReportDate();
 		}
@@ -239,7 +239,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 			String s = mYear + "-" + mMonth+ "-" + mDay;
 			etToDate.setText(s);
 			SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
-			String currentDateTimeString = df2.format(new Date());
+			String currentDateTimeString = df2.format(new Date().getTime());
 			to = DateConverter.stringToDate(s + " "+currentDateTimeString);
 			setReportDate();
 		}

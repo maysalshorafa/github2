@@ -96,76 +96,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
             returnSpener.setVisibility(View.INVISIBLE);
         }*/
 
-        done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-
-                    List<CurrencyType> currencyTypesList = null;
-                    List<Currency> currencyList=new ArrayList<>();
-                    CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(getContext());
-                    currencyTypeDBAdapter.open();
-                    currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
-
-
-                    for (int i=0;i<currencyTypesList.size();i++){
-                        CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(getContext());
-                        currencyDBAdapter.open();
-                        currencyList.add(currencyDBAdapter.getCurrencyByCode(currencyTypesList.get(i).getType()));
-                        currencyDBAdapter.close();
-                    }
-                    CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getContext());
-                    currencyReturnsDBAdapter.open();
-                    double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
-                    currencyReturnsDBAdapter.insertEntry(sale.getOrderId(), returnCurrencyValue, new Timestamp(System.currentTimeMillis()), rCurrency.getId());
-                    ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(getContext());
-                    zReportDBAdapter.open();
-                    try {
-                        ZReport zReport =zReportDBAdapter.getLastRow();
-                        Log.d("rCurrencyhh",rCurrency.getId()+"");
-                        if(rCurrency.getId()==currencyList.get(0).getId()) {
-                            zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() - returnCurrencyValue);
-
-                        }if (SETTINGS.enableCurrencies) {
-                         if (rCurrency.getId()==currencyList.get(1).getId()){
-                            zReport.setSecondTypeAmount(zReport.getSecondTypeAmount()-returnCurrencyValue);
-                        }else if(rCurrency.getId()==currencyList.get(2).getId()){
-                            zReport.setThirdTypeAmount(zReport.getThirdTypeAmount()-returnCurrencyValue);
-                        }else if(rCurrency.getId()==currencyList.get(3).getId()){
-                            zReport.setFourthTypeAmount(zReport.getFourthTypeAmount()-returnCurrencyValue);
-                        }}
-                        zReport.setCashTotal(zReport.getCashTotal() - returnCurrencyValue);
-
-                        zReportDBAdapter.updateEntry(zReport);
-                        zReportDBAdapter.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=true;
-                    currencyReturnsDBAdapter.close();
-                    if(SETTINGS.printer.equals(PrinterType.SUNMI_T1)){
-                        if (secondCredit != "") {
-                            printAndOpenCashBoxSUNMI_T1(firstCredit,secondCredit,thirdCredit);
-
-                        } else {
-                            printAndOpenCashBoxSUNMI_T1("","","");
-
-                        }
-                    }else {
-                        if (secondCredit != "") {
-                            PrinterTools.printAndOpenCashBox(firstCredit, secondCredit, thirdCredit, 600, getContext(), c);
-
-                        } else {
-                            PrinterTools.printAndOpenCashBox("", "", "", 600, getContext(), c);
-
-                        }
-
-
-                }
-
-                cancel();
-            }
-        });
 
       //  if (SETTINGS.enableCurrencies) {
             CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this.c);
@@ -177,7 +108,6 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
             currencyDBAdapter.open();
             final List<Currency> currencyList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
             currencyDBAdapter.close();
-
             final List<String> currency = new ArrayList<String>();
             for (int i = 0; i < currencyTypesList.size(); i++) {
                 currency.add(currencyTypesList.get(i).getType());
@@ -218,6 +148,79 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
         if (!SETTINGS.enableCurrencies){
             returnSpener.setEnabled(false);}
         tvExcess.setText(String.format(new Locale("en"), "%.2f", excess));
+
+
+
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                  /*  List<CurrencyType> currencyTypesList = null;
+                    List<Currency> currencyList=new ArrayList<>();
+                    CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(getContext());
+                    currencyTypeDBAdapter.open();
+                    currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+
+
+                    for (int i=0;i<currencyTypesList.size();i++){
+                        CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(getContext());
+                        currencyDBAdapter.open();
+                        currencyList.add(currencyDBAdapter.getCurrencyByCode(currencyTypesList.get(i).getType()));
+                        currencyDBAdapter.close();
+                    }*/
+                CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(getContext());
+                currencyReturnsDBAdapter.open();
+                double returnCurrencyValue = Double.parseDouble(tvExcess.getText().toString());
+                currencyReturnsDBAdapter.insertEntry(sale.getOrderId(), returnCurrencyValue, new Timestamp(System.currentTimeMillis()), rCurrency.getId());
+                ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(getContext());
+                zReportDBAdapter.open();
+                try {
+                    ZReport zReport =zReportDBAdapter.getLastRow();
+                    if(rCurrency.getId()==currencyList.get(0).getId()) {
+                        zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() - returnCurrencyValue);
+
+                    }if (SETTINGS.enableCurrencies) {
+                        if (rCurrency.getId()==currencyList.get(1).getId()){
+                            zReport.setSecondTypeAmount(zReport.getSecondTypeAmount()-returnCurrencyValue);
+                        }else if(rCurrency.getId()==currencyList.get(2).getId()){
+                            zReport.setThirdTypeAmount(zReport.getThirdTypeAmount()-returnCurrencyValue);
+                        }else if(rCurrency.getId()==currencyList.get(3).getId()){
+                            zReport.setFourthTypeAmount(zReport.getFourthTypeAmount()-returnCurrencyValue);
+                        }}
+                    zReport.setCashTotal(zReport.getCashTotal() - returnCurrencyValue);
+
+                    zReportDBAdapter.updateEntry(zReport);
+                    zReportDBAdapter.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=true;
+                currencyReturnsDBAdapter.close();
+                if(SETTINGS.printer.equals(PrinterType.SUNMI_T1)){
+                    if (secondCredit != "") {
+                        printAndOpenCashBoxSUNMI_T1(firstCredit,secondCredit,thirdCredit);
+
+                    } else {
+                        printAndOpenCashBoxSUNMI_T1("","","");
+
+                    }
+                }else {
+                    if (secondCredit != "") {
+                        PrinterTools.printAndOpenCashBox(firstCredit, secondCredit, thirdCredit, 600, getContext(), c);
+
+                    } else {
+                        PrinterTools.printAndOpenCashBox("", "", "", 600, getContext(), c);
+
+                    }
+
+
+                }
+
+                cancel();
+            }
+        });
     }
     private void printAndOpenCashBoxSUNMI_T1(String mainAns, final String mainMer, final String mainCli) {
         //AidlUtil.getInstance().connectPrinterService(this);

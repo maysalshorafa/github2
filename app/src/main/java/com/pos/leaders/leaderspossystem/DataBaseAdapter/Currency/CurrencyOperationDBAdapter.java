@@ -147,8 +147,8 @@ public class CurrencyOperationDBAdapter {
         val.put(CurrencyOperation_COLUMN_Operation_ID, currency.getOperationId());
         val.put(CurrencyOperation_COLUMN_Operation_Type,currency.getOperationType());
         val.put(CurrencyOperationCOLUMN_AMOUNT, currency.getAmount());
-        val.put(CurrencyOperation_COLUMN_PAYMENT_WAY,currency.getCurrencyType() );
-        val.put(CurrencyOperation_COLUMN_Currency_Type, currency.getPaymentWay());
+        val.put(CurrencyOperation_COLUMN_Currency_Type,currency.getCurrencyType() );
+        val.put(CurrencyOperation_COLUMN_PAYMENT_WAY, currency.getPaymentWay());
 
 
         try {
@@ -196,8 +196,8 @@ Log.d("exception",e.toString());
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_CREATEDATE))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_Operation_ID))),
                 cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_Operation_Type)),
-                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CurrencyOperationCOLUMN_AMOUNT))),cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_PAYMENT_WAY)),
-                cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_Currency_Type)));
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(CurrencyOperationCOLUMN_AMOUNT))),
+                cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_Currency_Type)),cursor.getString(cursor.getColumnIndex(CurrencyOperation_COLUMN_PAYMENT_WAY)));
     }
 
     public static String addColumnText(String columnName) {

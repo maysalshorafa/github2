@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.pos.leaders.leaderspossystem.DbHelper;
@@ -13,6 +14,7 @@ import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -266,6 +268,7 @@ public class ScheduleWorkersDBAdapter {
     public List<ScheduleWorkers> getAllUserScheduleWorkBtweenToDate(long userId , Date from , Date to){
         List<ScheduleWorkers> userScheduleWorkerstList=new ArrayList<ScheduleWorkers>();
         List<ScheduleWorkers> scheduleWorkersList=getAllScheduleWorkers();
+
         try {
             if(db.isOpen()){
 
@@ -278,8 +281,16 @@ public class ScheduleWorkersDBAdapter {
                 }
             }
         for (ScheduleWorkers item:scheduleWorkersList) {
-            if(item.getUserId()==userId && item.getExitTime()<=to.getTime()&& item.getStartTime()>=from.getTime() )
-                userScheduleWorkerstList.add(item);
+            if(item.getUserId()==userId ){
+            if (item.getStartTime()>=from.getTime()){
+                if (item.getExitTime()<=to.getTime()){
+                    userScheduleWorkerstList.add(item);
+                }
+            }
+            Log.d("userScheduleWorkerstList",userScheduleWorkerstList.toString());
+            }
+
+
         }
         close();
         } catch (Exception e) {

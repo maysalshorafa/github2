@@ -1371,7 +1371,7 @@ public class PdfUA {
 
 
     }
-    public static void createSalesManReport(Context context  , List<CustomerAssistant>customerAssistantList) throws IOException, DocumentException {
+    public static void createSalesManReport(Context context  , List<CustomerAssistant>customerAssistantList,double totalAmount,Timestamp from,Timestamp to) throws IOException, DocumentException {
         Document document = new Document();
         String fileName = "salesmanreport.pdf";
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();
@@ -1394,11 +1394,20 @@ public class PdfUA {
         PdfPTable headingTable = new PdfPTable(1);
         headingTable.deleteBodyRows();
         headingTable.setRunDirection(0);
+        PdfPTable dateTable =new PdfPTable(1);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 1, font);
         insertCell(headingTable, context.getString(R.string.sales_man_report), Element.ALIGN_CENTER, 1, font);
+
+        insertCell(dateTable, context.getString(R.string.from) +":  "+from, Element.ALIGN_CENTER, 1, font);
+        insertCell(dateTable, context.getString(R.string.to) +":  "+to, Element.ALIGN_CENTER, 1, font);
+        insertCell(dateTable, context.getString(R.string.total_amount) +":  "+totalAmount, Element.ALIGN_CENTER, 1, font);
+
         insertCell(headingTable, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 4, font);
         Font urFontName = new Font(urName, 22);
         PdfPTable table = new PdfPTable(new float[] { 2,2, 2});
@@ -1420,7 +1429,8 @@ public class PdfUA {
         }
         //add table to document
         document.add(headingTable);
-      document.add(table);
+       document.add(dateTable);
+        document.add(table);
         document.close();
     }
 
@@ -2262,8 +2272,8 @@ public class PdfUA {
         for (int i=0;i<orderDetailsList.size();i++){
             productDBAdapter.open();
             price_before_tax+=orderDetailsList.get(i).getPaidAmountAfterTax();
-            insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
+            insertCell(table, "  " + Util.makePrice(orderDetailsList.get(i).getDiscount()), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " + Util.makePrice(orderDetailsList.get(i).getItemTotalPrice()), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
 
@@ -2661,8 +2671,8 @@ Log.d("CompanySettingPDF",SETTINGS.company.name());
         for (int i=0;i<orderDetailsList.size();i++){
             productDBAdapter.open();
             price_before_tax+=orderDetailsList.get(i).getPaidAmountAfterTax();
-            insertCell(table, "  " + orderDetailsList.get(i).getDiscount(), Element.ALIGN_CENTER, 1, urFontName); // insert date value
-            insertCell(table, "  " + orderDetailsList.get(i).getItemTotalPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
+            insertCell(table, "  " + Util.makePrice(orderDetailsList.get(i).getDiscount()), Element.ALIGN_CENTER, 1, urFontName); // insert date value
+            insertCell(table, "  " + Util.makePrice(orderDetailsList.get(i).getItemTotalPrice()), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             insertCell(table,"  "+ orderDetailsList.get(i).getUnitPrice(), Element.ALIGN_CENTER, 2, urFontName); // insert date value
             insertCell(table, orderDetailsList.get(i).getQuantity()+"", Element.ALIGN_CENTER, 1, urFontName); // insert date value
 
@@ -2777,41 +2787,51 @@ Log.d("CompanySettingPDF",SETTINGS.company.name());
             CurrencyReturnsDBAdapter currencyReturnDBAdapter = new CurrencyReturnsDBAdapter(context);
             currencyReturnDBAdapter.open();
             List<Currency> currencyList=new ArrayList<>();
-            for (int i=0;i<currencyTypesList.size();i++){
+            /*for (int i=0;i<currencyTypesList.size();i++){
                 CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(context);
                 currencyDBAdapter.open();
                 currencyList.add(currencyDBAdapter.getCurrencyByCode(currencyTypesList.get(i).getType()));
                 currencyDBAdapter.close();
-            }
+            }*/
+        CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(context);
+        currencyDBAdapter.open();
+         currencyList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+        currencyDBAdapter.close();
+
+
             List<CurrencyReturns> currencyReturnsList = currencyReturnDBAdapter.getCurencyReturnBySaleID(order.getOrderId());
         Log.d("currrencyreturnlistpdf",currencyReturnsList.toString());
         Log.d("currencyOperationLpdf",currencyOperationList.toString());
         Log.d("currencyTypesListtpdf",currencyTypesList.get(0).getType());
             for (int i = 0; i < currencyOperationList.size(); i++) {
                 if (currencyOperationList.get(i).getPaymentWay().equalsIgnoreCase(CONSTANT.CASH)) {
-                if (currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(0).getType()) ) {
+                if (currencyOperationList.get(i).getCurrencyType().equalsIgnoreCase(currencyTypesList.get(0).getType()) ) {
                     firstTypePaid += currencyOperationList.get(i).getAmount();
+                    Log.d("firstTypePaid",firstTypePaid+"");
                 } if (SETTINGS.enableCurrencies){
-                    if (currencyList.get(1)!=null&&currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(1).getType())) {
+                    if (currencyList.get(1)!=null&&currencyOperationList.get(i).getCurrencyType().equalsIgnoreCase(currencyTypesList.get(1).getType())) {
                     secondTypePaid += currencyOperationList.get(i).getAmount();
-                } else if (currencyList.get(2)!=null&&currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(2).getType())) {
+                        Log.d("secondTypePaid",secondTypePaid+"");
+                } else if (currencyList.get(2)!=null&&currencyOperationList.get(i).getCurrencyType().equalsIgnoreCase(currencyTypesList.get(2).getType())) {
                     thirdTypePaid += currencyOperationList.get(i).getAmount();
-                } else if (currencyList.get(3)!=null&&currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(3).getType())) {
+                        Log.d("thirdTypePaid",thirdTypePaid+"");
+                } else if (currencyList.get(3)!=null&&currencyOperationList.get(i).getCurrencyType().equalsIgnoreCase(currencyTypesList.get(3).getType())) {
                     fourthTypePaid += currencyOperationList.get(i).getAmount();
+                        Log.d("fourthTypePaid",fourthTypePaid+"");
                 }}
                 }
 
             }
             for (int i = 0; i < currencyReturnsList.size(); i++) {
                 Log.d("huhu",currencyReturnsList.get(i).getCurrency_type()+"");
-                if (currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(0).getId()) {
+                if (currencyReturnsList.get(i).getCurrency_type() ==  currencyList.get(0).getId()) {
                     firstTypeReturn += currencyReturnsList.get(i).getAmount();
                 } if (SETTINGS.enableCurrencies){
-                    if (currencyList.get(1)!=null&&currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(1).getId()) {
+                    if ((currencyList.get(1)!=null)&&currencyReturnsList.get(i).getCurrency_type() == currencyList.get(1).getId()) {
                     secondTypeReturn += currencyReturnsList.get(i).getAmount();
-                } else if (currencyList.get(2)!=null&& currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(2).getId()) {
+                } else if ((currencyList.get(2)!=null)&& currencyReturnsList.get(i).getCurrency_type() == currencyList.get(2).getId()) {
                     thirdTypeReturn += currencyReturnsList.get(i).getAmount();
-                } else if (currencyList.get(3)!=null&&currencyReturnsList.get(i).getCurrency_type() == (int) currencyList.get(3).getId()) {
+                } else if ((currencyList.get(3)!=null)&&currencyReturnsList.get(i).getCurrency_type() == currencyList.get(3).getId()) {
                     fourthTypeReturn += currencyReturnsList.get(i).getAmount();
                 }}
 

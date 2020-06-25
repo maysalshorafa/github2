@@ -10,9 +10,9 @@ import com.pos.leaders.leaderspossystem.Models.Product;
  */
 
 public class updateCurrencyType {
-    public  static void updateCurrencyToShekl(Context context, Product product){
+    public  static long updateCurrencyToShekl(Context context, Product product){
         ProductDBAdapter productDBAdapter=new ProductDBAdapter(context);
         productDBAdapter.open();
-        productDBAdapter.updateProductShekel(product);
+        return productDBAdapter.updateProductShekel(product);
     }
 }

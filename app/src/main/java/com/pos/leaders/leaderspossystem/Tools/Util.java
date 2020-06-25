@@ -79,6 +79,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -1203,7 +1204,7 @@ public class Util {
         }.execute();
 
     }
-    public static void salesManReport(final Context context, final List<CustomerAssistant>customerAssistantList){
+    public static void salesManReport(final Context context, final List<CustomerAssistant>customerAssistantList, final double amount, final Timestamp from , final Timestamp to){
         final String SAMPLE_FILE = "salesmanreport.pdf";
         new AsyncTask<Void, Void, Void>(){
             @Override
@@ -1235,7 +1236,7 @@ public class Util {
                     PdfUA pdfUA = new PdfUA();
 
                     try {
-                        pdfUA.createSalesManReport(context,customerAssistantList);
+                        pdfUA.createSalesManReport(context,customerAssistantList,amount,from ,to);
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     }

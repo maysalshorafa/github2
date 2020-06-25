@@ -65,7 +65,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		}
 
 		if (checks.get(position) != null) {
-			if(position==0){
+		/*	if(position==0){
 				holder.etAmount.setHint(checks.get(position).getAmount() + "");
 				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
@@ -73,7 +73,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etAccountNum.setHint(checks.get(position).getAccountNum() + "");
 				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
 				amount=checks.get(position).getAmount() ;
-			}else {
+			}else {*/
 				holder.etAccountNum.setText(checks.get(position).getAccountNum() + "");
 				holder.etAmount.setText(checks.get(position).getAmount() + "");
 				holder.etBankNum.setText(checks.get(position).getBankNum() + "");
@@ -81,7 +81,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etCheckNum.setText(checks.get(position).getCheckNum() + "");
 				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
 
-			}
+			//}
 		}
 		if(bgColor%2==0){
 			convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
@@ -116,7 +116,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.i("delete click", "onClick: "+position);
+				Log.d("delete click", "onClick: "+position);
 				ChecksActivity checksActivity = (ChecksActivity)getContext();
 				checksActivity.delete(position);
 			}

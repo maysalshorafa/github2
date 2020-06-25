@@ -977,9 +977,11 @@ public class SalesCartActivity extends AppCompatActivity {
                                     saleDBAdapter.updateEntry(lastOrder);
                                     saleDBAdapter.close();
                                     try {
-                                        Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
-                                        SETTINGS.copyInvoiceBitMap =invoiceImg.replacmentNote(lastOrder,false);
-                                        startActivity(i);
+                                        createReplacementInvoice createReplacementInvoice = new createReplacementInvoice(SalesCartActivity.this);
+                                        createReplacementInvoice.execute(lastOrder);
+                                       /* Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
+                                       // SETTINGS.copyInvoiceBitMap =invoiceImg.replacmentNote(lastOrder,false);
+                                        startActivity(i);*/
                                     }catch (Exception e){
                                         e.printStackTrace();
                                         Log.d("exception",lastOrder.toString());
@@ -2173,12 +2175,11 @@ public class SalesCartActivity extends AppCompatActivity {
         btnPauseSale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 if (SESSION._ORDER_DETAILES.size() != 0) {
                     Util.printPauseInvoice(SalesCartActivity.this,SESSION._ORDER_DETAILES);
                     Order s = new Order(SESSION._ORDERS);
                     s.setOrders(SESSION._ORDER_DETAILES);
+                    s.setCartDiscount(SESSION._ORDERS.getCartDiscount());
                     if (SESSION._SALES == null)
                         SESSION._SALES = new ArrayList<Pair<Integer, Order>>();
                     else if (SESSION._SALES.size() == 0)
@@ -3071,6 +3072,7 @@ public class SalesCartActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("session",SESSION._SALES.get(position).second.toString());
                 resumeSale(SESSION._SALES.get(position).second);
                 Toast.makeText(SalesCartActivity.this, getString(R.string.resume_deal_number) + " " + (SESSION._SALES.get(position).first), Toast.LENGTH_SHORT).show();
                 SESSION._SALES.remove(SESSION._SALES.get(position));
@@ -3272,6 +3274,7 @@ public class SalesCartActivity extends AppCompatActivity {
         }
 
         SESSION._ORDERS = new Order(s);
+        SESSION._ORDERS.setCartDiscount(s.getCartDiscount());
         SESSION._ORDER_DETAILES = s.getOrders();
         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
         lvOrder.setAdapter(saleDetailsListViewAdapter);
@@ -3495,6 +3498,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 clearCart();
             }else {
                 if (o.getProduct().getCurrencyType().equals("0")){
+                    o.getProduct().setCurrencyType("ILS");
                     updateCurrencyType.updateCurrencyToShekl(SalesCartActivity.context,o.getProduct());
                 }
                 String currencyType=o.getProduct().getCurrencyType();
@@ -3515,7 +3519,6 @@ public class SalesCartActivity extends AppCompatActivity {
                 Currency currency = currencyDBAdapter.getCurrencyByCode(currencyType);
                 currencyDBAdapter.close();
 
-
                     saleTotalPrice += o.getItemTotalPrice() * currency.getRate();
 
                     Log.d("saleTotalPrice", String.valueOf(saleTotalPrice));
@@ -3527,7 +3530,7 @@ public class SalesCartActivity extends AppCompatActivity {
         }
 
 
-        if (SESSION._ORDERS.cartDiscount != 0&& SESSION._ORDER_DETAILES.size()>0) {
+        if (SESSION._ORDERS!=null&&SESSION._ORDERS.cartDiscount != 0&& SESSION._ORDER_DETAILES.size()>0) {
             //show the discount view
             llCartDiscount.setVisibility(View.VISIBLE);
             tvTotalPriceBeforeCartDiscount.setVisibility(View.VISIBLE);
@@ -5266,8 +5269,8 @@ public class SalesCartActivity extends AppCompatActivity {
                         currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,0,SETTINGS.currencyCode,CONSTANT.CASH);
 
                     }else {
-                        for (int i = 0 ;i<paymentTableArrayList.size();i++){
-                            currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getPaymentMethod(),paymentTableArrayList.get(i).getCurrency().getType());
+                        for (int i = 0 ;i<paymentTableArrayList.size()-1;i++){
+                            currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),saleIDforCash,CONSTANT.DEBIT,paymentTableArrayList.get(i).getTendered(),paymentTableArrayList.get(i).getCurrency().getType(),paymentTableArrayList.get(i).getPaymentMethod());
                           Log.d("enableCurrency",SETTINGS.enableCurrencies+"");
                            if (SETTINGS.enableCurrencies){
                             if(paymentTableArrayList.get(i).getCurrency().getType().equalsIgnoreCase(currencyTypesList.get(1).getType())) {
@@ -5286,7 +5289,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     long paymentID = paymentDBAdapter.insertEntry(saleTotalPrice, saleIDforCash,order.getOrderKey());
 
 
-                    for (int i = 0; i < jsonArray.length() - 1; i++) {
+                    for (int i = 0; i < jsonArray.length()- 1; i++) {
                         double totPay=0;
 
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -5952,13 +5955,15 @@ customerDBAdapter.open();
         clubAdapter.close();
     }
 
-    public double getCurrencyRate(String currencyType) {
-        for (int i = 0; i < currenciesList.size(); i++) {
-            if (currenciesList.get(i).getCountry().equals(currencyType)) {
-                return currenciesList.get(i).getRate();
+    public double getCurrencyRate(String currencyType){
+        double currencyRate=1;
+        for (int i=0;i<currenciesList.size();i++){
+            if(currenciesList.get(i).getCurrencyCode().equals(currencyType)) {
+                currencyRate=currenciesList.get(i).getRate();
+
             }
         }
-        return 1;
+        return currencyRate;
     }
 
     public void calculateOfferForOrderDetails(OrderDetails orderDetails) throws JSONException {
@@ -6239,4 +6244,32 @@ class StartGetCustomerGeneralLedgerConnection extends AsyncTask<String,Void,Stri
 
 }
 
+class createReplacementInvoice extends AsyncTask<Order,Void,String> {
+    InvoiceImg invoiceImg;
+    Context context;
+    public createReplacementInvoice(Context context) {
+        this.context =context;
+    }
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+         invoiceImg = new InvoiceImg(SalesCartActivity.context);
+    }
 
+    @Override
+    protected String doInBackground(Order... args) {
+        Order lastOrder= args[0];
+        SETTINGS.copyInvoiceBitMap =invoiceImg.replacmentNote(lastOrder,false);
+        return "";
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        Intent i = new Intent(SalesCartActivity.context, SalesHistoryCopySales.class);
+        // SETTINGS.copyInvoiceBitMap =invoiceImg.replacmentNote(lastOrder,false);
+      context.startActivity(i);
+        //endregion
+    }
+
+}

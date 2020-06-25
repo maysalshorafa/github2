@@ -693,7 +693,6 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         String dateYear=new SimpleDateFormat("yyyy", Locale.US).format(new Date());
         String dateMonth=new SimpleDateFormat("MM", Locale.US).format(new Date());
         String dateDay=new SimpleDateFormat("dd", Locale.US).format(new Date());
-        Log.d("dateDevice",dateYear+" "+dateMonth+" "+dateDay+" "+parts[0]+" "+parts[1]+" "+parts[2]);
         if (dateYear.equals(parts[0])){
             if (dateMonth.equals(parts[1])){
                 int day1=Integer.parseInt(parts[2]);
@@ -952,7 +951,6 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
             currencyTypeDBAdapter.open();
             currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
             currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
-
             fCurrency=currenciesList.get(0);
             firstCurrencyInDefaultValue = 0;
             final Dialog discountDialog = new Dialog(DashBord.this);
@@ -1040,7 +1038,6 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 
                         ZReport zReport = null;
                         OpiningReport opiningReport=null;
-
 
 
 
@@ -1146,7 +1143,6 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 
                         }
                         if (firstCurrencyInDefaultValue > 0) {
-                            Log.d("fCurrencyjj", String.valueOf(fCurrency.getId()));
                            // aReportDetailsDBAdapter.insertEntry(id, firstCurrencyInDefaultValue, fCurrency.getId(), firstCurrencyInDefaultValue *
                             aReportDetailsDBAdapter.insertEntry(id, firstCurrencyInDefaultValue, fCurrency.getId(), firstCurrencyInDefaultValue);
                         }
@@ -1186,12 +1182,10 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
             CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
             currencyTypeDBAdapter.open();
             currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
-            Log.d("currencyTypesList",currencyTypesList.toString());
             currencyTypeDBAdapter.close();
             final CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(DashBord.this);
             currencyDBAdapter.open();
             currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
-            Log.d("currenciesList",currenciesList.toString());
             currencyDBAdapter.close();
             currenciesNames = new ArrayList<String>();
             for (int i = 0; i < currencyTypesList.size(); i++) {
@@ -1468,58 +1462,58 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                                 z.setByUser(SESSION._EMPLOYEE.getEmployeeId());
                                 z.setStartOrderId(0);
                                 z.setTotalAmount(aReportTotalAmount);
-                                Log.d("ff",fCurrency.getCountry());
+                                Log.d("ff",fCurrency.getCurrencyCode());
                                 Log.d("ddfd",finalCurrencyTypesList.get(0).getType());
                                 if (firstCurrencyInDefaultValue!=0) {
-                                    if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())) {
+                                    if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())) {
                                         z.setFirstTypeAmount(z.getFirstTypeAmount()+firstCurrencyInDefaultValue);
-                                    } else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())) {
+                                    } else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())) {
                                         z.setSecondTypeAmount(z.getSecondTypeAmount()+firstCurrencyInDefaultValue);
-                                    } else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())) {
+                                    } else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())) {
                                         z.setThirdTypeAmount(z.getThirdTypeAmount()+firstCurrencyInDefaultValue);
-                                    } else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())) {
+                                    } else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())) {
                                         z.setFourthTypeAmount(z.getFourthTypeAmount()+firstCurrencyInDefaultValue);
                                     }
                                 }
 
                                 if (secondCurrencyInDefaultValue!=0){
-                                    if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                    if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                         z.setFirstTypeAmount(z.getFirstTypeAmount()+secondCurrencyInDefaultValue);
                                     }
-                                    else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                    else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                         z.setSecondTypeAmount(z.getSecondTypeAmount()+secondCurrencyInDefaultValue);
                                     }
-                                    else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                    else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                         z.setThirdTypeAmount(z.getThirdTypeAmount()+secondCurrencyInDefaultValue);
                                     }
-                                    else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())){
+                                    else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())){
                                         z.setFourthTypeAmount(z.getFourthTypeAmount()+secondCurrencyInDefaultValue);
                                     }}
                                 if (thirdCurrencyInDefaultValue!=0){
-                                    if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                    if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                         z.setFirstTypeAmount(z.getFirstTypeAmount()+thirdCurrencyInDefaultValue);
                                     }
-                                    else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                    else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                         z.setSecondTypeAmount(z.getSecondTypeAmount()+thirdCurrencyInDefaultValue);
                                     }
-                                    else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                    else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                         z.setThirdTypeAmount(z.getThirdTypeAmount()+thirdCurrencyInDefaultValue);
                                     }
-                                    else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())){
+                                    else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())){
                                         z.setFourthTypeAmount(z.getFourthTypeAmount()+thirdCurrencyInDefaultValue);
                                     }}
 
                                 if (forthCurrencyInDefaultValue!=0){
-                                    if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                    if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                         z.setFirstTypeAmount(z.getFirstTypeAmount()+forthCurrencyInDefaultValue);
                                     }
-                                    else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                    else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                         z.setSecondTypeAmount(z.getSecondTypeAmount()+forthCurrencyInDefaultValue);
                                     }
-                                    else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                    else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                         z.setThirdTypeAmount(z.getThirdTypeAmount()+forthCurrencyInDefaultValue);
                                     }
-                                    else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())){
+                                    else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())){
                                         z.setFourthTypeAmount(z.getFourthTypeAmount()+forthCurrencyInDefaultValue);
                                     }}
 
@@ -1555,55 +1549,55 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                                 z.setStartOrderId(zReport.getEndOrderId()+1);
                                 z.setTotalAmount(aReport.getAmount());
                                 if (firstCurrencyInDefaultValue!=0) {
-                                    if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())) {
+                                    if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())) {
                                         z.setFirstTypeAmount(z.getFirstTypeAmount()+firstCurrencyInDefaultValue);
-                                    } else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())) {
+                                    } else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())) {
                                         z.setSecondTypeAmount(z.getSecondTypeAmount()+firstCurrencyInDefaultValue);
-                                    } else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())) {
+                                    } else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())) {
                                         z.setThirdTypeAmount(z.getThirdTypeAmount()+firstCurrencyInDefaultValue);
-                                    } else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())) {
+                                    } else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())) {
                                         z.setFourthTypeAmount(z.getFourthTypeAmount()+firstCurrencyInDefaultValue);
                                     }
                                 }
 
                                 if (secondCurrencyInDefaultValue!=0){
-                                    if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                    if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                         z.setFirstTypeAmount(z.getFirstTypeAmount()+secondCurrencyInDefaultValue);
                                     }
-                                    else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                    else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                         z.setSecondTypeAmount(z.getSecondTypeAmount()+secondCurrencyInDefaultValue);
                                     }
-                                    else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                    else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                         z.setThirdTypeAmount(z.getThirdTypeAmount()+secondCurrencyInDefaultValue);
                                     }
-                                    else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())){
+                                    else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())){
                                         z.setFourthTypeAmount(z.getFourthTypeAmount()+secondCurrencyInDefaultValue);
                                     }}
                                 if (thirdCurrencyInDefaultValue!=0){
-                                    if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                    if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                         z.setFirstTypeAmount(z.getFirstTypeAmount()+thirdCurrencyInDefaultValue);
                                     }
-                                    else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                    else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                         z.setSecondTypeAmount(z.getSecondTypeAmount()+thirdCurrencyInDefaultValue);
                                     }
-                                    else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                    else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                         z.setThirdTypeAmount(z.getThirdTypeAmount()+thirdCurrencyInDefaultValue);
                                     }
-                                    else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())){
+                                    else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())){
                                         z.setFourthTypeAmount(z.getFourthTypeAmount()+thirdCurrencyInDefaultValue);
                                     }}
 
                                 if (forthCurrencyInDefaultValue!=0){
-                                    if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                    if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                         z.setFirstTypeAmount(z.getFirstTypeAmount()+forthCurrencyInDefaultValue);
                                     }
-                                    else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                    else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                         z.setSecondTypeAmount(z.getSecondTypeAmount()+forthCurrencyInDefaultValue);
                                     }
-                                    else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                    else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                         z.setThirdTypeAmount(z.getThirdTypeAmount()+forthCurrencyInDefaultValue);
                                     }
-                                    else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())){
+                                    else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())){
                                         z.setFourthTypeAmount(z.getFourthTypeAmount()+forthCurrencyInDefaultValue);
                                     }}
 
@@ -1631,58 +1625,58 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                                 zReport.setTotalAmount(zReport.getTotalAmount()+aReport.getAmount());
 
                                   if (firstCurrencyInDefaultValue!=0){
-                                if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                     zReport.setFirstTypeAmount(zReport.getFirstTypeAmount()+firstCurrencyInDefaultValue);
                                 }
-                                else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                     zReport.setSecondTypeAmount(zReport.getSecondTypeAmount()+firstCurrencyInDefaultValue);
                                 }
-                                else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                     zReport.setThirdTypeAmount(zReport.getThirdTypeAmount()+firstCurrencyInDefaultValue);
                                 }
-                                else if (fCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())){
+                                else if (fCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())){
                                     zReport.setFourthTypeAmount(zReport.getFourthTypeAmount()+firstCurrencyInDefaultValue);
                                 }}
 
 
                                 if (secondCurrencyInDefaultValue!=0) {
-                                    if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())) {
+                                    if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())) {
                                         zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() + secondCurrencyInDefaultValue);
-                                    } else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())) {
+                                    } else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())) {
                                         zReport.setSecondTypeAmount(zReport.getSecondTypeAmount() + secondCurrencyInDefaultValue);
-                                    } else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())) {
+                                    } else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())) {
                                         zReport.setThirdTypeAmount(zReport.getThirdTypeAmount() + secondCurrencyInDefaultValue);
-                                    } else if (sCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())) {
+                                    } else if (sCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())) {
                                         zReport.setFourthTypeAmount(zReport.getFourthTypeAmount() + secondCurrencyInDefaultValue);
                                     }
                                 }
 
 
                                 if (thirdCurrencyInDefaultValue!=0){
-                                if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                     zReport.setFirstTypeAmount(zReport.getFirstTypeAmount()+thirdCurrencyInDefaultValue);
                                 }
-                                else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                     zReport.setSecondTypeAmount(zReport.getSecondTypeAmount()+thirdCurrencyInDefaultValue);
                                 }
-                                else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                     zReport.setThirdTypeAmount(zReport.getThirdTypeAmount()+thirdCurrencyInDefaultValue);
                                 }
-                                else if (tCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())) {
+                                else if (tCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())) {
                                     zReport.setFourthTypeAmount(zReport.getFourthTypeAmount() + thirdCurrencyInDefaultValue);
                                 }                                }
 
                                    if (forthCurrencyInDefaultValue!=0){
-                                if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(0).getType())){
+                                if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(0).getType())){
                                     zReport.setFirstTypeAmount(zReport.getFirstTypeAmount()+forthCurrencyInDefaultValue);
                                 }
-                                else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(1).getType())){
+                                else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(1).getType())){
                                     zReport.setSecondTypeAmount(zReport.getSecondTypeAmount()+forthCurrencyInDefaultValue);
                                 }
-                                else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(2).getType())){
+                                else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(2).getType())){
                                     zReport.setThirdTypeAmount(zReport.getThirdTypeAmount()+forthCurrencyInDefaultValue);
                                 }
-                                else if (forthCurrency.getCountry().equals(finalCurrencyTypesList.get(3).getType())){
+                                else if (forthCurrency.getCurrencyCode().equals(finalCurrencyTypesList.get(3).getType())){
                                     zReport.setFourthTypeAmount(zReport.getFourthTypeAmount()+forthCurrencyInDefaultValue);
                                 }}
 
@@ -1877,6 +1871,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         Currency lastCurrency = null;
         try {
             lastCurrency = currencyDBAdapter.getLastCurrency();
+            Log.d("lastCurrencyUpdateDAsh",lastCurrency+"");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1886,13 +1881,10 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                 //do nothing
             }else {
                 String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
-                Log.d("tokenn",SESSION.token);
-                Log.i("CurrencyUpdateDash", currencyRes);
                 ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
                 objectMapper.setDateFormat(dateFormat);
                 JSONObject jsonObject = null;
-                Log.i("Currency", currencyRes);
 
                 jsonObject = new JSONObject(currencyRes);
                 try {
@@ -1901,15 +1893,13 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 
                     try {
                         JSONArray jsonArray = new JSONArray(msgData);
-                        Log.d("jsonArraySize",jsonArray.length()+"Size");
-                        Log.d("jsonArrayCurrency",jsonArray.toString());
+                        currencyDBAdapter.deleteOldRate(currencyTypesList);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             msgData = jsonArray.getJSONObject(i).toString();
                             Currency currency = null;
                             currency = objectMapper.readValue(msgData, Currency.class);
-                            currencyDBAdapter.deleteOldRate(currencyTypesList);
                             //currencyDBAdapter.deleteCurrencyList();
-                         Long idCoulm=   currencyDBAdapter.insertEntry(currency);
+                            Long idCoulm=   currencyDBAdapter.insertEntry(currency);
                             Log.d("idCoulm",idCoulm+"");
 
 
@@ -1933,15 +1923,11 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 
         }
         else {
-            String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
-            Log.d("tokenn",SESSION.token);
-            Log.i("CurrencyDashbord", currencyRes);
+            String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);;
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             objectMapper.setDateFormat(dateFormat);
             JSONObject jsonObject = null;
-            Log.i("Currency", currencyRes);
-
             jsonObject = new JSONObject(currencyRes);
             try {
                 String msgData = jsonObject.getString(MessageKey.responseBody);
@@ -1986,7 +1972,6 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
             String res = messageTransmit.authGet(ApiURL.PosSetting, token);
-            Log.d("getPossSettingRespons",res);
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(res);
@@ -2004,7 +1989,6 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                         posSettingDbAdapter.open();
                         PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
-                        Log.d("posSettingAdd",posSetting.toString());
                         addPosSetting(posSetting);
                         posSettingDbAdapter.close();
                     }
@@ -2012,7 +1996,6 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                         posSettingDbAdapter.open();
                         PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
-                        Log.d("posSettingUpdate",posSetting.toString());
                         updatePosSetting(posSetting);
                         posSettingDbAdapter.close();
 
@@ -2047,10 +2030,8 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
             posSetting.setPosVersionNo(verCode);
             /*posSetting.setCompanyStatus();*/
             String jsonString = mapper.writeValueAsString(posSetting);
-            Log.d("posSetting12add",posSetting.toString());
             String res = messageTransmit.authPost(ApiURL.PosSetting,jsonString, token);
             updatePosVersion(posSetting);
-            Log.d("addPossSettingRespons",res);
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(res);
@@ -2083,23 +2064,20 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
             String verCode = getVersionCode();
             posSetting.setPosVersionNo(verCode);
             String jsonString = mapper.writeValueAsString(posSetting);
-            Log.d("posSetting12",posSetting.toString());
-            String res = messageTransmit.authPut(ApiURL.PosSetting,jsonString, token, Long.parseLong(SETTINGS.posID));
-            updatePosVersion(posSetting);
-            Log.d("updatePossSettingRespons",res);
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(res);
-                if(jsonObject.getString(MessageKey.status).equals("200")) {
-                }
-                else {
-                    Log.d("updatePossSetting",jsonObject.getString(MessageKey.responseType));
+            if (SETTINGS.posID!=null) {
+                String res = messageTransmit.authPut(ApiURL.PosSetting, jsonString, token, Long.parseLong(SETTINGS.posID));
+                updatePosVersion(posSetting);
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(res);
+                    if (jsonObject.getString(MessageKey.status).equals("200")) {
+                    } else {
+                        Log.d("updatePossSetting", jsonObject.getString(MessageKey.responseType));
+                    }
+                } catch (JSONException e) {
+                    Log.e("exceptionUpdatePossSetting", e.toString());
                 }
             }
-            catch (JSONException e){
-                Log.e("exceptionUpdatePossSetting",e.toString());
-            }
-
 
         } catch (IOException e) {
             e.printStackTrace();

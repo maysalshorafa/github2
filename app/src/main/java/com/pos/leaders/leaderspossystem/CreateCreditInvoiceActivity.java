@@ -710,13 +710,14 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
     }
 
 
-    public double getCurrencyRate(String currencyType) {
-        for (int i = 0; i < currenciesList.size(); i++) {
-            if (currenciesList.get(i).getCountry().equals(currencyType)) {
-                return currenciesList.get(i).getRate();
+    public double getCurrencyRate(String currencyType){
+        double currencyRate=1;
+        for (int i=0;i<currenciesList.size();i++){
+            if(currenciesList.get(i).getCurrencyCode().equals(currencyType)) {
+                currencyRate=currenciesList.get(i).getRate();
             }
         }
-        return 1;
+        return currencyRate;
     }
 
 

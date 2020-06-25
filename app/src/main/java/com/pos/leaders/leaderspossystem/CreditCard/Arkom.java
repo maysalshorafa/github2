@@ -24,10 +24,10 @@ public class Arkom {
     static private final String NAMESPACE = "https://secure.arkom.co.il/";
 
     //For release mode
-    static private final String URL = "https://cc.arkom.co.il/MTS_WebService.asmx";
+  //  static private final String URL = "https://cc.arkom.co.il/MTS_WebService.asmx";
 
     //For test mode
-    //static private final String URL = "https://secure.arkom.co.il/wsdev/MTS_WebService.asmx";
+    static private final String URL = "https://secure.arkom.co.il/wsdev/MTS_WebService.asmx";
 
     static private final String SOAP_ACTION_MTS_PING = "https://secure.arkom.co.il/MTS_Ping";
     static private final String METHOD_NAME_MTS_PING = "MTS_Ping";
