@@ -740,8 +740,8 @@ public class OfferController {
                     //convert the string value to double
                     val = Double.parseDouble(value);
                     if (orderDetails.getQuantity() >= quantity) {
-                        int productCollection = orderDetails.getQuantity() / quantity;
-                        int productOutTheCollection = orderDetails.getQuantity() - (productCollection * quantity);
+                        int productCollection = (int) (orderDetails.getQuantity() / quantity);
+                        int productOutTheCollection = (int) (orderDetails.getQuantity() - (productCollection * quantity));
                         double discount = (1 - (((productCollection * orderDetails.getUnitPrice() * (1 - (val / 100))) +
                                 (productOutTheCollection * orderDetails.getUnitPrice())) /
                                 (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;
@@ -754,8 +754,8 @@ public class OfferController {
                     //convert string value to double
                     val = Double.parseDouble(value);
                     if (orderDetails.getQuantity() >= quantity) {
-                        int productCollection = orderDetails.getQuantity() / quantity;
-                        int productOutTheCollection = orderDetails.getQuantity() - (productCollection * quantity);
+                        int productCollection = (int) (orderDetails.getQuantity() / quantity);
+                        int productOutTheCollection = (int) (orderDetails.getQuantity() - (productCollection * quantity));
                         double discount = (1 - (((productCollection * orderDetails.getUnitPrice() - (val * productCollection)) +
                                 (productOutTheCollection * orderDetails.getUnitPrice())) /
                                 (orderDetails.getQuantity() * orderDetails.getUnitPrice()))) * 100;

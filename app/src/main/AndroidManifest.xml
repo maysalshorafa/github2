@@ -77,7 +77,15 @@
             android:name=".SalesCartActivity"
             android:hardwareAccelerated="true"
             android:label="@string/title_main_sales_activity"
-            android:largeHeap="true" />
+            android:largeHeap="true" >
+        <intent-filter>
+            <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+        </intent-filter>
+        <meta-data
+            android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+            android:resource="@xml/device_filter" />
+
+        </activity>
         <activity
             android:name=".Tools.OldCashActivity"
             android:theme="@style/AppTheme.PopUp" />
