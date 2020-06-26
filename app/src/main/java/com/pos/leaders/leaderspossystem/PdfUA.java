@@ -921,7 +921,7 @@ public class PdfUA {
         document.close();
         //end :)
     }
-    public static void  printReceiptReport(Context context, String res,String mainMer) throws IOException, DocumentException, JSONException {
+    public static void  printReceiptReport(Context context, String res, String mainMer, List<BoInvoice>invoiceList) throws IOException, DocumentException, JSONException {
         String str="";
         Log.d("rrrr",res);
         JSONObject jsonObject = new JSONObject(res);
@@ -972,7 +972,9 @@ public class PdfUA {
         PdfPTable dateTable = new PdfPTable(2);
         dateTable.setRunDirection(0);
         dateTable.setWidthPercentage(108f);
-
+        PdfPTable invoiceTable = new PdfPTable(4);
+        invoiceTable.setRunDirection(0);
+        invoiceTable.setWidthPercentage(108f);
         insertCell(dateTable, context.getString(R.string.receipt_numbers)+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
@@ -989,7 +991,7 @@ public class PdfUA {
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
         insertCell(orderDetailsTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 3, font);
         insertCell(orderDetailsTable, context.getString(R.string.date)+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 3, dateFont);
-        insertCell(dateTable, context.getString(R.string.reference_invoice)+":"+refNumber.get(0), Element.ALIGN_LEFT, 3, dateFont);
+//        insertCell(dateTable, context.getString(R.string.reference_invoice)+":"+refNumber.get(0), Element.ALIGN_LEFT, 3, dateFont);
         insertCell(dateTable, context.getString(R.string.customer_ledger)+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
 
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
@@ -1011,6 +1013,21 @@ public class PdfUA {
 
             //end :)
         }
+        insertCell(invoiceTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        insertCell(invoiceTable, context.getString(R.string.id), Element.ALIGN_CENTER, 1, font);
+        insertCell(invoiceTable, context.getString(R.string.status), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(invoiceTable, context.getString(R.string.total_amount), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(invoiceTable, context.getString(R.string.total_paid), Element.ALIGN_LEFT, 1, dateFont);
+        for(int i=0;i<invoiceList.size();i++){
+            JSONObject jsonObject1 = invoiceList.get(i).getDocumentsData();
+            insertCell(invoiceTable, invoiceList.get(i).getDocNum(), Element.ALIGN_CENTER, 1, font);
+            insertCell(invoiceTable, jsonObject1.getString("invoiceStatus"), Element.ALIGN_CENTER, 1, font);
+            insertCell(invoiceTable, jsonObject1.getString("total"), Element.ALIGN_CENTER, 1, font);
+            insertCell(invoiceTable, jsonObject1.getString("totalPaid"), Element.ALIGN_CENTER, 1, font);
+
+        }
+
         Log.d("mainMerCredit",mainMer);
         for (String s : mainMer.split("\n")) {
 
@@ -1057,6 +1074,9 @@ public class PdfUA {
         document.add(headingTable);
         document.add(dateTable);
         document.add(orderDetailsTable);
+        if(invoiceList.size()>0){
+        document.add(invoiceTable);
+        }
         document.add(creditCard);
 
         document.close();

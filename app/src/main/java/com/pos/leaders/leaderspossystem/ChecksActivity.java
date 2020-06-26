@@ -75,7 +75,7 @@ public class ChecksActivity extends AppCompatActivity {
 	double requiredAmount=0;
     Bundle extras;
 	JSONObject invoiceJson=new JSONObject();
-	BoInvoice invoice ;
+	List<BoInvoice >invoice ;
 	boolean fromMultiCurrency=false;
 	Context context;
 	@Override
@@ -141,17 +141,7 @@ public class ChecksActivity extends AppCompatActivity {
 			}}
 			tvCheckCustomer.setText(customer_name);
 			if(extras.containsKey("checksReceipt")){
-				try {
-					invoiceJson=new JSONObject(extras.getString("invoice"));
-					JSONObject docJson = invoiceJson.getJSONObject("documentsData");
-					docJson.remove("@type");
-					docJson.put("type","Invoice");
-					invoiceJson.remove("documentsData");
-					invoiceJson.put("documentsData",docJson);
-					invoice=new BoInvoice(DocumentType.INVOICE,docJson,invoiceJson.getString("docNum"));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+					invoice= (List<BoInvoice>) extras.get("invoice");
 				//sendReceipt();
 			}
         } else {
@@ -290,7 +280,7 @@ public class ChecksActivity extends AppCompatActivity {
 								finalCheckList.add(_check);
 							}
 							SESSION._CHECKS_HOLDER = finalCheckList;
-							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice,"");
+							//DocumentControl.sendReciptDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice,"",);
 						}else {
 
 							 List<Check> finalCheckList = new ArrayList<Check>();
@@ -311,10 +301,7 @@ public class ChecksActivity extends AppCompatActivity {
 							}
 
 							SESSION._CHECKS_HOLDER = finalCheckList;
-							if(firstCheckList.size()>0){
-								SESSION._CHECKS_HOLDER .addAll(firstCheckList);
 
-							}
 							Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
 							Intent i = new Intent();
 							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
@@ -354,7 +341,7 @@ public class ChecksActivity extends AppCompatActivity {
 						}
 						SESSION._CHECKS_HOLDER = finalCheckList;
 						finish();
-						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,t,"");
+						//DocumentControl.sendReciptDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,t,"");
 
 					}else {
 						double d = getTotalPid() - checkList.get(checkList.size() - 1).getAmount();

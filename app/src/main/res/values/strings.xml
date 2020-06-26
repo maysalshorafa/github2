@@ -141,6 +141,8 @@
     <string name="cashier">Cashier</string>
     <string name="total_saved">Total Saved</string>
     <string name="all">All</string>
+    <string name="partial">Partial</string>
+
     <string name="pos_branch">Pos Branch</string>
     <string name="general">General</string>
     <string name="general_product">General Product</string>
@@ -149,6 +151,9 @@
     <string name="price_before_discount">Price before discount</string>
     <string name="document">Document</string>
     <string name="receipt">Receipt</string>
+    <string name="amount_want_to_pay">Amount want to Pay</string>
+    <string name="amount_of_dept">The amount of debt</string>
+
     <string name="order_document">Order Document</string>
     <string name="CustomerLedger">CustomerLedger</string>
     <string name="total_discount">Total Discount</string>

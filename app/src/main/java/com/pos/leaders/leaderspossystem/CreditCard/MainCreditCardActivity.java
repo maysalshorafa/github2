@@ -30,16 +30,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -48,10 +45,9 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.sunmi.aidl.MSCardService;
 import com.sunmi.aidl.callback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.ksoap2.serialization.SoapObject;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class MainCreditCardActivity extends AppCompatActivity {
@@ -80,8 +76,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
     int numberOfPayments = 1;
     boolean creditReceipt=false;
     boolean fromMultiCurrency=false;
-    JSONObject invoiceJson=new JSONObject();
-    BoInvoice invoice ;
+   List< BoInvoice> invoice ;
     int NumOfFixedPayments=1;
 
     private MSCardService sendservice;
@@ -166,18 +161,11 @@ public class MainCreditCardActivity extends AppCompatActivity {
             if(extras.containsKey("creditReceipt")){
                 creditReceipt=true;
                 totalPrice = (double) extras.get("_Price");
-                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
-                try {
-                    invoiceJson=new JSONObject(extras.getString("invoice"));
-                    JSONObject docJson = invoiceJson.getJSONObject("documentsData");
-                    docJson.remove("@type");
-                    docJson.put("type","Invoice");
-                    invoiceJson.remove("documentsData");
-                    invoiceJson.put("documentsData",docJson);
-                    invoice=new BoInvoice(DocumentType.INVOICE,docJson,invoiceJson.getString("docNum"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " +  SETTINGS.currencySymbol);
+
+                invoice= (List<BoInvoice>) extras.get("invoice");
+
+
             }else {
                 creditReceipt=false;
                 fromMultiCurrency=extras.getBoolean(LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY);
@@ -187,6 +175,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
         } else {
             finish();
         }
+
 
         btDone.setClickable(false);
 
@@ -594,7 +583,8 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 if(creditReceipt){
                     SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;
 
-                    DocumentControl.sendDoc(MainCreditCardActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice, soap.getProperty("MerchantNote").toString());
+                   //
+                    // DocumentControl.sendReciptDoc(MainCreditCardActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice, soap.getProperty("MerchantNote").toString());
 
                 }
                 else {

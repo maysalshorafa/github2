@@ -24,6 +24,7 @@ import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
+import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
@@ -32,7 +33,6 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
-import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -82,15 +82,15 @@ public class DocumentControl {
 
                 @Override
                 protected void onPostExecute(String html) {
-                  print(context,bitmapList);
+                    print(context,bitmapList);
                     //after async close progress dialog
                     progressDialog.dismiss();
                     if (pauseClick.equals("Pause")){}
                     else {
-                    ((Activity)context).finish();}
-                //load the html in the webview
-                //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
-            }
+                        ((Activity)context).finish();}
+                    //load the html in the webview
+                    //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
+                }
 
                 @Override
                 protected String doInBackground(Void... params) {
@@ -158,13 +158,13 @@ public class DocumentControl {
                 @Override
                 protected void onPostExecute(String html) {
 
-                   PrintTools pt=new PrintTools(context);
-                        newBitmap=Util.removeMargins2(bitmapList.get(0),Color.WHITE);
+                    PrintTools pt=new PrintTools(context);
+                    newBitmap=Util.removeMargins2(bitmapList.get(0),Color.WHITE);
                     pt.PrintReport(newBitmap);
 
                     //after async close progress dialog
                     progressDialog.dismiss();
-              //      ((Activity)context).finish();
+                    //      ((Activity)context).finish();
                 }
 
                 @Override
@@ -238,7 +238,7 @@ public class DocumentControl {
 
                     //after async close progress dialog
                     progressDialog.dismiss();
-                        ((Activity)context).finish();
+                    ((Activity)context).finish();
                 }
 
                 @Override
@@ -362,7 +362,7 @@ public class DocumentControl {
         } catch (Exception e) {
             e.printStackTrace();
         }
-   return r; }
+        return r; }
 
 
     public static void print(Context context, ArrayList<Bitmap> bitmapList){
@@ -374,68 +374,9 @@ public class DocumentControl {
         }
 
     }
-    public static void sendREc(final Context context, final BoInvoice invoice, final String mainmer){
-        final String SAMPLE_FILE = "receipt.pdf";
-        final BoInvoice newInvoice;
-
-            new AsyncTask<Void, Void, Void>(){
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                }
-                @Override
-                protected void onPostExecute(Void aVoid) {
 
 
-
-                            try
-                            {
-                                File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
-                                File file = new File(path,SAMPLE_FILE);
-                                RandomAccessFile f = new RandomAccessFile(file, "r");
-                                byte[] data = new byte[(int)f.length()];
-                                f.readFully(data);
-                                PrinterTools.pdfLoadImages(data,context,"");
-                                //pdfLoadImages1(data);
-                            }
-                            catch(Exception ignored) {
-
-
-                            }}
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    try {
-                        PdfUA pdfUA = new PdfUA();
-
-                            try {
-                                pdfUA.printReceiptReport(context,invoice.toString(),mainmer);
-                            } catch (DocumentException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-            }.execute();
-
-
-
-
-    }
-
-    public static void sendDoc(final Context context, final BoInvoice invoice, final String paymentWays, final double totalPaid, final String mainmer){
+    public static void sendReciptDoc(final Context context, final List<BoInvoice> invoiceList, final String paymentWays, final double totalPaid, final String mainmer,Customer s){
         List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
         List<Payment> paymentList = new ArrayList<Payment>();
         List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
@@ -443,25 +384,19 @@ public class DocumentControl {
         final String SAMPLE_FILE = "receipt.pdf";
         final BoInvoice newInvoice;
         try {
-            JSONObject jsonObject = new JSONObject(invoice.toString());
-            JSONObject docDataJson = jsonObject.getJSONObject("documentsData");
             final ArrayList<String> invoiceIdsList = new ArrayList<String>();
-            final JSONObject customerJson =docDataJson.getJSONObject("customer");
-            final String docNum = invoice.getDocNum();
-            invoiceIdsList.add(docNum);
+            for(int i=0;i<invoiceList.size();i++){
+                invoiceIdsList.add(invoiceList.get(i).getDocNum());
+            }
+            JSONObject JsonForCus=new JSONObject(s.toString());
+            final JSONObject customerJson =JsonForCus;
             PaymentDBAdapter paymentDBAdapter = new PaymentDBAdapter(context);
             paymentDBAdapter.open();
-            JSONObject DocData = invoice.getDocumentsData();
-            if(DocData.has("type")){
-                DocData.remove("type");
-                DocData.put("@type","Invoice");
-            }
-            newInvoice=new BoInvoice(DocumentType.INVOICE,DocData,invoice.getDocNum());
             Payment payment=null;
             if(paymentWays.equals(CASH)) {
-                 payment = new Payment(0,  totalPaid, 0);
+                payment = new Payment(0,  totalPaid, 0);
             }else {
-                 payment = new Payment(0, totalPaid, 0);
+                payment = new Payment(0, totalPaid, 0);
             }
             final JSONObject newJsonObject = new JSONObject(payment.toString());
             if(paymentWays.equalsIgnoreCase(CONSTANT.CASH)){
@@ -470,11 +405,11 @@ public class DocumentControl {
                 JSONArray jsonArray = new JSONArray(cashPaymentList.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
             }
-           if(paymentWays.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
-               JSONObject obj = new JSONObject(SESSION._TEMP_CREDITCARD_PAYMNET.toString());
-               JSONArray jsonArray = new JSONArray();
-               jsonArray.put(obj);
-              //  JSONArray jsonArray = new JSONArray(SESSION._TEMP_CREDITCARD_PAYMNET.toString());
+            if(paymentWays.equalsIgnoreCase(CONSTANT.CREDIT_CARD)){
+                JSONObject obj = new JSONObject(SESSION._TEMP_CREDITCARD_PAYMNET.toString());
+                JSONArray jsonArray = new JSONArray();
+                jsonArray.put(obj);
+                //  JSONArray jsonArray = new JSONArray(SESSION._TEMP_CREDITCARD_PAYMNET.toString());
                 newJsonObject.put("paymentDetails",jsonArray);
             }
             if(paymentWays.equalsIgnoreCase(CONSTANT.CHECKS)){
@@ -500,20 +435,20 @@ public class DocumentControl {
                     try {
                         if(receiptJsonObject.get("status").equals("200")){
 
-                        try
-                        {
-                            File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
-                            File file = new File(path,SAMPLE_FILE);
-                            RandomAccessFile f = new RandomAccessFile(file, "r");
-                            byte[] data = new byte[(int)f.length()];
-                            f.readFully(data);
-                            PrinterTools.pdfLoadImages(data,context,"");
-                            //pdfLoadImages1(data);
-                        }
-                        catch(Exception ignored)
-                        {
+                            try
+                            {
+                                File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                                File file = new File(path,SAMPLE_FILE);
+                                RandomAccessFile f = new RandomAccessFile(file, "r");
+                                byte[] data = new byte[(int)f.length()];
+                                f.readFully(data);
+                                pdfLoadImages(data,context,"");
+                                //pdfLoadImages1(data);
+                            }
+                            catch(Exception ignored)
+                            {
 
-                        }
+                            }
                         }else {
                             if (SETTINGS.company.equals("BO_EXEMPT_DEALER")){
                                 new android.support.v7.app.AlertDialog.Builder(context)
@@ -560,7 +495,7 @@ public class DocumentControl {
                     MessageTransmit transmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                     try {
                         ObjectMapper mapper = new ObjectMapper();
-                        ReceiptDocuments documents = new ReceiptDocuments("Receipt",new Timestamp(System.currentTimeMillis()), invoiceIdsList,Double.parseDouble(String.valueOf(invoice.getDocumentsData().getDouble("total"))),"ILS");
+                        ReceiptDocuments documents = new ReceiptDocuments("Receipt",new Timestamp(System.currentTimeMillis()), invoiceIdsList,totalPaid,"ILS");
                         String doc = mapper.writeValueAsString(documents);
                         JSONObject docJson= new JSONObject(doc);
                         JSONArray paymentJsonArray = new JSONArray();
@@ -571,10 +506,10 @@ public class DocumentControl {
                         docJson.put("customer",customerJson);
                         docJson.put("payments",paymentJsonArray);
                         Log.d("Document vale", docJson.toString());
-                        BoInvoice invoiceA = new BoInvoice(DocumentType.RECEIPT,docJson,docNum);
+                        BoInvoice invoiceA = new BoInvoice(DocumentType.RECEIPT,docJson,"");
                         Log.d("Receipt log",invoiceA.toString());
                         String res=transmit.authPost(ApiURL.Documents,invoiceA.toString(), SESSION.token);
-                         receiptJsonObject = new JSONObject(res);
+                        receiptJsonObject = new JSONObject(res);
                         String msgData = receiptJsonObject.getString(MessageKey.responseBody);
 
                         Log.d("receiptResult",res);
@@ -597,11 +532,11 @@ public class DocumentControl {
                                 }
                                 if (paymentWays.equals(CASH)){
                                     zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() + totalPaid);
-                                zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
+                                    zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
                                     zReportCount.setFirstTYpeCount(zReportCount.getFirstTYpeCount()+1);
-                                zReportDBAdapter.updateEntry(zReport);
+                                    zReportDBAdapter.updateEntry(zReport);
 
-                            }else {
+                                }else {
                                     zReportCount.setCheckCount(zReportCount.getCheckCount()+1);
                                     zReport.setCheckTotal(zReport.getCheckTotal()+totalPaid);
                                     zReportDBAdapter.updateEntry(zReport);
@@ -631,36 +566,26 @@ public class DocumentControl {
 
                                 e.printStackTrace();
                             }
-
-                            BoInvoice invoice1 = newInvoice;
-                            JSONObject updataInvoice =invoice1.getDocumentsData();
-                            double total= updataInvoice.getDouble("total");
-                            Log.d("totalPaid",total+"");
-                            updataInvoice.remove("totalPaid");
-                            updataInvoice.remove("balanceDue");
-                            updataInvoice.put("totalPaid",total);
-                            updataInvoice.put("balanceDue",0);
-                            updataInvoice.remove("invoiceStatus");
-                            updataInvoice.put("invoiceStatus", InvoiceStatus.PAID);
-                            invoice1.setDocumentsData(updataInvoice);
-                            Log.d("invoiceRes",invoice1.toString());
-
-                            String upDataInvoiceRes=transmit.authPutInvoice(ApiURL.Documents,invoice1.toString(), SESSION.token,docNum);
-                            Log.d("invoiceRes",upDataInvoiceRes);
-                            JSONObject upDateInvoice = new JSONObject(upDataInvoiceRes);
-                            if(upDateInvoice.get("status").equals("200")){
-                                PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
-                                posInvoiceDBAdapter.open();
-                                PosInvoice posInvoice = posInvoiceDBAdapter.getPodInvoiceByBoId(docNum);
-                                if(posInvoice!=null){
-                                posInvoice.setStatus(InvoiceStatus.PAID.getValue());
-                                posInvoiceDBAdapter.updateEntry(posInvoice);
-                            }}
-                            String response = upDateInvoice.getString(MessageKey.responseBody);
+                            for (int i=0;i<invoiceList.size();i++){
+                                BoInvoice invoice1 = invoiceList.get(i);
+                                String upDataInvoiceRes=transmit.authPutInvoice(ApiURL.Documents,invoice1.toString(), SESSION.token,invoiceList.get(i).getDocNum());
+                                Log.d("invoiceRes",upDataInvoiceRes);
+                                JSONObject upDateInvoice = new JSONObject(upDataInvoiceRes);
+                                if(upDateInvoice.get("status").equals("200")){
+                                    PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
+                                    posInvoiceDBAdapter.open();
+                                    PosInvoice posInvoice = posInvoiceDBAdapter.getPodInvoiceByBoId(invoice1.getDocNum());
+                                    if(posInvoice!=null){
+                                        posInvoice.setStatus(InvoiceStatus.PAID.getValue());
+                                        posInvoiceDBAdapter.updateEntry(posInvoice);
+                                    }}
+                                String response = upDateInvoice.getString(MessageKey.responseBody);
+                                Log.d("response",response);
+                            }
                             PdfUA pdfUA = new PdfUA();
 
                             try {
-                                pdfUA.printReceiptReport(context,msgData,mainmer);
+                                pdfUA.printReceiptReport(context,msgData,mainmer,invoiceList);
                             } catch (DocumentException e) {
                                 e.printStackTrace();
                             }
