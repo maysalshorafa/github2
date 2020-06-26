@@ -368,6 +368,7 @@ public class OrderDetails {
 				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
 				", \"serialNumber\":" + "\""+serialNumber +"\""+
 				", \"paid_amount_amount_after_tax\":" + "\""+paidAmountAfterTax +"\""+
+				", \"name\":" + "\""+product.getDisplayName() +"\""+
 				'}';
 	}
 	public Offer getOffer() {

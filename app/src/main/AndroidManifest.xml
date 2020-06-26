@@ -33,6 +33,8 @@
         android:sharedUserId="android.uid.system"
         android:supportsRtl="true"
         android:largeHeap="true"
+        android:testOnly="false"
+        android:debuggable="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
         <activity android:name=".HomeActivity" />

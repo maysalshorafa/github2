@@ -374,6 +374,66 @@ public class DocumentControl {
         }
 
     }
+    public static void sendREc(final Context context, final BoInvoice invoice, final String mainmer){
+        final String SAMPLE_FILE = "receipt.pdf";
+        final BoInvoice newInvoice;
+
+            new AsyncTask<Void, Void, Void>(){
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                }
+                @Override
+                protected void onPostExecute(Void aVoid) {
+
+
+
+                            try
+                            {
+                                File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                                File file = new File(path,SAMPLE_FILE);
+                                RandomAccessFile f = new RandomAccessFile(file, "r");
+                                byte[] data = new byte[(int)f.length()];
+                                f.readFully(data);
+                                PrinterTools.pdfLoadImages(data,context,"");
+                                //pdfLoadImages1(data);
+                            }
+                            catch(Exception ignored) {
+
+
+                            }}
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    try {
+                        PdfUA pdfUA = new PdfUA();
+
+                            try {
+                                pdfUA.printReceiptReport(context,invoice.toString(),mainmer);
+                            } catch (DocumentException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+
+
+
+
+    }
 
     public static void sendDoc(final Context context, final BoInvoice invoice, final String paymentWays, final double totalPaid, final String mainmer){
         List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
