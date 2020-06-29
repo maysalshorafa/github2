@@ -217,7 +217,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(mcf.paymentMethodSpinner.getSelectedItem().toString().equals(getString(R.string.cash))) {
 
-                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString(),false);
                     // btCheckOut.performClick();
                     btCheckOut.post(new Runnable(){
                         @Override
@@ -229,13 +229,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 }
                 if(mcf.paymentMethodSpinner.getSelectedItem().toString().equals(getString(R.string.credit_card))) {
                     multiCurrencyFromCreditCurrentlyInsert=true;
-                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString(),false);
 
                 }
                 if(mcf.paymentMethodSpinner.getSelectedItem().toString().equals(getString(R.string.checks))) {
                     multiCurrencyFromCheckCurrentlyInsert=true;
                     Log.d("totalPriceCheck",totalPrice+"");
-                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString(),false);
 
                 }
 
@@ -247,10 +247,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 cashButton.setClickable(false);
                 if (selectedCurrencyRate>1){
                     //  totalPrice= totalPrice / selectedCurrencyRateREsult;
-                    insertNewRow(totalPrice / selectedCurrencyRate, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.cash));
+                    insertNewRow(totalPrice / selectedCurrencyRate, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.cash),false);
                 }
                 else {
-                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.cash));}
+                    insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.cash),false);}
                 btCheckOut.performClick();
                 /*btCheckOut.post(new Runnable(){
                     @Override
@@ -273,7 +273,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     insertNewRow(totalPrice / selectedCurrencyRate, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.checks));
                 }*/
                 // else {
-                insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.checks));
+                insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.checks),false);
                 //  }
             }
         });
@@ -287,7 +287,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     insertNewRow(totalPrice / selectedCurrencyRate, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.cash));
                 }*/
                 // else {
-                insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.credit_card));
+                insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.credit_card),false);
                 // }
             }
         });
@@ -401,9 +401,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             for(int i=0;i<tempArray.size()-1;i++) {
                 Log.d("methodi",tempArray.get(i).toString());
                 Log.d("method",tempArray.get(i).getPaymentMethod());
-                insertNewRow(tempArray.get(i).getTendered(), tempArray.get(i).getCurrency().getType(), getCurrencyRate(tempArray.get(i).getCurrency().getType()), tempArray.get(i).getPaymentMethod());
+                insertNewRow(tempArray.get(i).getTendered(), tempArray.get(i).getCurrency().getType(), getCurrencyRate(tempArray.get(i).getCurrency().getType()), tempArray.get(i).getPaymentMethod(),true);
             }}
         if (tempArray.size()-1 == 0) {
+            Log.d("tempArray","sizeEqualZero");
             setExcess();
             updateView();
             updateLastRow();
@@ -420,7 +421,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         paymentTableAdapter.notifyDataSetChanged();
     }
 
-    private void insertNewRow(double val, String currency,double currencyRate,String paymentMethod) {
+    private void insertNewRow(double val, String currency,double currencyRate,String paymentMethod,boolean deleteRow) {
         //   if(val>0&&val<=10000){
         boolean haveRow=false;
         if(paymentMethod.equals(PaymentMethod.CASH)) {
@@ -474,8 +475,22 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     paymentTables.add(paymentTables.size() - 1, new PaymentTable(SETTINGS.currencyCode, beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + ""), actualCurrencyRate));
                     updateLastRow();
                     lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-                }}
+                }
+            }
         }else if(paymentMethod.equals(PaymentMethod.CHECK)) {
+            if (deleteRow){
+                    Log.d("currencyRate",currencyRate+"");
+                    totalPaid += val * currencyRate;
+                    Log.d("valCheck",val+"  "+totalPaid);
+                    double beforeChangeExcess = excess;
+                    setExcess();
+                    updateView();
+                    paymentTables.add(paymentTables.size() - 1, new PaymentTable(SETTINGS.currencyCode,beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CHECK, new CurrencyType(1, currency + ""), actualCurrencyRate));
+                    updateLastRow();
+                    lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+
+            }
+            else {
             if(multiCurrencyFromCheckCurrentlyInsert){
                 Log.d("currencyRate",currencyRate+"");
                 totalPaid += val * currencyRate;
@@ -506,8 +521,22 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CHECKS_ACTIVITY_CODE);
             }
 
-        }
+        }}
         else if(paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
+            if (deleteRow){
+                if (SETTINGS.creditCardEnable) {
+                    totalPaid += val * currencyRate;
+                    double beforeChangeExcess = excess;
+                    setExcess();
+                    updateView();
+                    paymentTables.add(paymentTables.size() - 1, new PaymentTable(SETTINGS.currencyCode, beforeChangeExcess, valRow, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CREDIT_CARD, new CurrencyType(1, currency + ""), actualCurrencyRate));
+                    updateLastRow();
+                    lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                }  else {
+                    Toast.makeText(MultiCurrenciesPaymentActivity.this, R.string.please_enable_credit_card, Toast.LENGTH_LONG).show();
+                }
+
+            }else {
             if(multiCurrencyFromCreditCurrentlyInsert){
                 if (SETTINGS.creditCardEnable) {
                     totalPaid += val * currencyRate;
@@ -537,7 +566,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     Toast.makeText(MultiCurrenciesPaymentActivity.this, R.string.please_enable_credit_card, Toast.LENGTH_LONG).show();
                 }
             }
-        }
+        }}
     }
       /*  }
         else {
@@ -587,7 +616,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 val = 100;
                 break;
         }
-        insertNewRow(val, SETTINGS.currencyCode,1, mcf.paymentMethodSpinner.getSelectedItem().toString());
+        insertNewRow(val, SETTINGS.currencyCode,1, mcf.paymentMethodSpinner.getSelectedItem().toString(),false);
 //        insertNewRow(val, mcf.currencySpinner.getSelectedItem().toString(),getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), mcf.paymentMethodSpinner.getSelectedItem().toString());
     }
 
@@ -596,7 +625,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             if((mcf.amount.getText().toString()!="")) {
                 currencyType = String.valueOf(mcf.currencySpinner.getSelectedItem().toString());
                 double val = Double.parseDouble(mcf.amount.getText().toString());
-                insertNewRow(val, currencyType + "", getCurrencyRate(currencyType), mcf.paymentMethodSpinner.getSelectedItem().toString());
+                insertNewRow(val, currencyType + "", getCurrencyRate(currencyType), mcf.paymentMethodSpinner.getSelectedItem().toString(),false);
                 mcf.clearScreen();
             }
 

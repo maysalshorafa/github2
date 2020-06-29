@@ -48,6 +48,7 @@ import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
+import com.pos.leaders.leaderspossystem.Models.LincessPos;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -1455,9 +1456,10 @@ public class PdfUA {
         document.close();
     }
 
-    public static void createPauseInvoice(Context context  , List<OrderDetails>orderDetailsList) throws IOException, DocumentException {
+    public static void createPauseInvoice(Context context  , List<OrderDetails>orderDetailsList,double carDiscount) throws IOException, DocumentException {
         double totalPrice =0.0;
         int count=0;
+
         // create file , document region
         Document document = new Document();
         String fileName = "pauseInvoice.pdf";
@@ -1510,9 +1512,11 @@ public class PdfUA {
             totalPrice+=orderDetailsList.get(i).getItemTotalPrice();
             count+=orderDetailsList.get(i).getQuantity();
         }
+        double totalPriceAfterDiscount= totalPrice- (totalPrice * (carDiscount/100));
+        Log.d("totalPricePouse",totalPriceAfterDiscount+"");
         insertCell(table, "\n\n\n---------------------------" , Element.ALIGN_CENTER, 7, font);
         insertCell(table, context.getString(R.string.product_quantity)+" : "+count  , Element.ALIGN_CENTER, 7, font);
-        insertCell(table, context.getString(R.string.total_price)+" : "+totalPrice  , Element.ALIGN_CENTER, 7, font);
+        insertCell(table, context.getString(R.string.total_price)+" : "+totalPriceAfterDiscount  , Element.ALIGN_CENTER, 7, font);
         //add table to document
         document.add(headingTable);
         document.add(table);

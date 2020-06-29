@@ -1250,7 +1250,7 @@ public class Util {
         }.execute();
 
     }
-    public static void printPauseInvoice(final Context context, final List<OrderDetails>orderDetailsList){
+    public static void printPauseInvoice(final Context context, final List<OrderDetails>orderDetailsList, final double carDiscount){
         final String SAMPLE_FILE = "pauseInvoice.pdf";
         new AsyncTask<Void, Void, Void>(){
             @Override
@@ -1282,7 +1282,7 @@ public class Util {
                     PdfUA pdfUA = new PdfUA();
 
                     try {
-                        pdfUA.createPauseInvoice(context,orderDetailsList);
+                        pdfUA.createPauseInvoice(context,orderDetailsList,carDiscount);
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     }

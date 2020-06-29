@@ -199,41 +199,7 @@
 
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="2">
 
-            <TextView
-                android:id="@+id/totalDiscount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:textColor="@color/black"
-                android:textDirection="anyRtl"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/discountText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:paddingLeft="16dp"
-                android:text="@string/discount"
-                android:textColor="@color/black"
-                android:textDirection="anyRtl"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -301,19 +267,6 @@
             android:textColor="#fff"
             android:textSize="20dp" />
 
-        <Button
-            android:id="@+id/productWeightDialog_BTDiscount"
-            style="@style/AppTheme.bt_normal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="16dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/discount"
-            android:textColor="#fff"
-            android:textSize="20dp" />
 
     </LinearLayout>
 
