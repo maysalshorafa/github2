@@ -69,7 +69,6 @@ import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.ConverterCurrency;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
-import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -714,6 +713,11 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                 CurrencyReturnsDBAdapter currencyReturnsDBAdapter = new CurrencyReturnsDBAdapter(OrdersManagementActivity.this);
                                                 currencyReturnsDBAdapter.open();
                                                 List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(sale.getOrderId());
+                                                for(int i=0;i<orderDetailsList.size();i++){
+                                                    OrderDetails o =orderDetailsList.get(i);
+                                                    o.setOrderId(sID);
+                                                    orderDetailsDBAdapter.insertEntryCancel(o);
+                                                }
                                                 if (SETTINGS.enableCurrencies) {
                                                     currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), sID, CONSTANT.DEBIT, sale.getTotalPaidAmount() * -1, "ILS", CONSTANT.CASH);
                                                     currencyReturnsDBAdapter.insertEntry(sale.getOrderId(), (sale.getTotalPaidAmount() - sale.getTotalPrice()) * -1, new Timestamp(System.currentTimeMillis()), 0);

@@ -710,7 +710,12 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(SalesCartActivity.this);
                                                         currencyReturnsDBAdapter.open();
                                                         List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(lastOrder.getOrderId());
-                                                        Log.d("orderDetailsList",orderDetailsList.toString());
+//                                                        Log.d("orderDetailsList",orderDetailsList.toString());
+                                                        for(int i=0;i<orderDetailsList.size();i++){
+                                                            OrderDetails o =orderDetailsList.get(i);
+                                                            o.setOrderId(sID);
+                                                            orderDetailsDBAdapter.insertEntryCancel(o);
+                                                        }
                                                        if(SETTINGS.enableCurrencies){
                                                             currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),sID,CONSTANT.DEBIT,lastOrder.getTotalPaidAmount() * -1,SETTINGS.currencyCode,CONSTANT.CASH);
                                                             currencyReturnsDBAdapter.insertEntry(lastOrder.getOrderId(),(lastOrder.getTotalPaidAmount()-lastOrder.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
@@ -5536,6 +5541,8 @@ public class SalesCartActivity extends AppCompatActivity {
                             }else {
                                 SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
                                 SalesWithoutTax +=( SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
+                                Log.d("tesddt","    "+SalesWithoutTax);
+
                             }
                         }else {
                             if(SESSION._ORDERS.getCartDiscount()>0){
