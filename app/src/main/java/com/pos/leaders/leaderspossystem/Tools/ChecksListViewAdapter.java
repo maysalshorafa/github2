@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.ChecksActivity;
 import com.pos.leaders.leaderspossystem.Models.Check;
@@ -65,15 +66,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		}
 
 		if (checks.get(position) != null) {
-		/*	if(position==0){
-				holder.etAmount.setHint(checks.get(position).getAmount() + "");
-				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
-				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
-				holder.etCheckNum.setHint(checks.get(position).getCheckNum() + "");
-				holder.etAccountNum.setHint(checks.get(position).getAccountNum() + "");
-				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
-				amount=checks.get(position).getAmount() ;
-			}else {*/
+
 				holder.etAccountNum.setText(checks.get(position).getAccountNum() + "");
 				holder.etAmount.setText(checks.get(position).getAmount() + "");
 				holder.etBankNum.setText(checks.get(position).getBankNum() + "");
@@ -132,6 +125,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		checks.get(position).setCreatedAt(new java.sql.Timestamp(date1.getTime()));
 		this.notifyDataSetChanged();
 	}
+
 
 	public class ViewHolder {
 		private EditText etAmount;

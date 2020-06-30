@@ -352,25 +352,34 @@ public class OrderDetails {
 
 	@Override
 	public String toString() {
-		return "{"  +
-				"\"productId\":" + productId +
-				", \"quantity\":" + quantity +
-				", \"userOffer\":" + userOffer +
-				", \"unitPrice\":" + unitPrice +
-				", \"paidAmount\":" + paidAmount +
-				", \"discount\":" + discount +
-
-				", \"scannable\":" + "\""+scannable +"\""+
-                        ", \"giftProduct\":" + "\""+giftProduct +"\""+
-                ", \"position\":" + "\""+position +"\""+
-				", \"orderKey\":" + "\""+orderKey +"\""+
-				", \"offerCategory\":" + "\""+offerCategory +"\""+
-				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
-				", \"serialNumber\":" + "\""+serialNumber +"\""+
-				", \"paid_amount_amount_after_tax\":" + "\""+paidAmountAfterTax +"\""+
-				", \"name\":" + "\""+product.getDisplayName() +"\""+
+		return "OrderDetails{" +
+				"orderDetailsId=" + orderDetailsId +
+				", productId=" + productId +
+				", quantity=" + quantity +
+				", userOffer=" + userOffer +
+				", orderId=" + orderId +
+				", unitPrice=" + unitPrice +
+				", paidAmount=" + paidAmount +
+				", discount=" + discount +
+				", orderKey='" + orderKey + '\'' +
+				", offerCategory=" + offerCategory +
+				", paidAmountAfterTax=" + paidAmountAfterTax +
+				", rowDiscount=" + rowDiscount +
+				", product=" + product +
+				", offerList=" + offerList +
+				", giftProduct=" + giftProduct +
+				", position=" + position +
+				", scannable=" + scannable +
+				", offerRule=" + offerRule +
+				", offer=" + offer +
+				", objectID=" + objectID +
+				", offerId=" + offerId +
+				", productSerialNumber=" + productSerialNumber +
+				", serialNumber='" + serialNumber + '\'' +
+				", customer_assistance_id=" + customer_assistance_id +
 				'}';
 	}
+
 	public Offer getOffer() {
 		return offer;
 	}

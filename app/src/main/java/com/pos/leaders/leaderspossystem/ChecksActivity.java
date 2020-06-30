@@ -301,14 +301,25 @@ public class ChecksActivity extends AppCompatActivity {
 							}
 
 							SESSION._CHECKS_HOLDER = finalCheckList;
-
+							boolean checkList=true;
 							Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
-							Intent i = new Intent();
-							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
-							i.putExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, totalPrice);
-							i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
-							setResult(RESULT_OK, i);
-							finish();
+							for (int i=0;i<SESSION._CHECKS_HOLDER.size();i++){
+								Check check=SESSION._CHECKS_HOLDER.get(i);
+								if (check.getBankNum()==0 || check.getAccountNum()==0|| check.getBranchNum()==0){
+									checkList=false;
+								}
+
+							}
+							if (checkList){
+								Intent i = new Intent();
+								i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
+								i.putExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, totalPrice);
+								i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
+								setResult(RESULT_OK, i);
+								finish();}
+							else {
+								Toast.makeText(ChecksActivity.this,"يرجى التأكد من تعبئة البيانات", Toast.LENGTH_SHORT).show();
+							}
 						}
                     }
                     else{
@@ -371,16 +382,39 @@ public class ChecksActivity extends AppCompatActivity {
 							SESSION._CHECKS_HOLDER .addAll(firstCheckList);
 
 						}
+						Log.d("SESSION._CHECKS_HOLDERx",SESSION._CHECKS_HOLDER.toString());
+                        /* for (int i=0;i<SESSION._CHECKS_HOLDER.size();i++){
+							 Check check=SESSION._CHECKS_HOLDER.get(i);
+							 if (check.getBankNum()==0){
+								 SESSION._CHECKS_HOLDER.get(i).setBankNum(1);
+							 }
+							 if (check.getAccountNum()==0){
+								 SESSION._CHECKS_HOLDER.get(i).setAccountNum(1);
+							 }
+							 if (check.getBranchNum()==0){
+								 SESSION._CHECKS_HOLDER.get(i).setBranchNum(1);
+							 }
+						 }
+						Log.d("CHECKS_HOLDERAfterChange",SESSION._CHECKS_HOLDER.toString());*/
+						boolean checkList=true;
 						Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
+						for (int i=0;i<SESSION._CHECKS_HOLDER.size();i++){
+							Check check=SESSION._CHECKS_HOLDER.get(i);
+							if (check.getBankNum()==0 || check.getAccountNum()==0|| check.getBranchNum()==0){
+								checkList=false;
+							}
 
-						Intent i = new Intent();
-						i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
-						i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
-						i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
-						setResult(RESULT_OK, i);
-						finish();
-
-
+						}
+						if (checkList){
+							Intent i = new Intent();
+							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
+							i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+							i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
+							setResult(RESULT_OK, i);
+							finish();}
+						else {
+							Toast.makeText(ChecksActivity.this,"يرجى التأكد من تعبئة البيانات", Toast.LENGTH_SHORT).show();
+						}
 					}
                 } else {
                     Toast.makeText(ChecksActivity.this, getString(R.string.check_pid_error), Toast.LENGTH_SHORT).show();

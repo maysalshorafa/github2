@@ -329,18 +329,12 @@ public class PosSettingDbAdapter {
             }
         }
         PosSetting posSetting = new PosSetting();
-        Cursor cursor = null;
-        cursor = db.rawQuery("SELECT * FROM " + POS_SETTING_TABLE_NAME + " ORDER BY id DESC LIMIT 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + POS_SETTING_TABLE_NAME + " ORDER BY id DESC LIMIT 1", null);
         while (cursor.moveToNext()) {
             // your content
             posSetting = build(cursor);
             Log.d("posSetting", posSetting.toString());
         }
-      /*  if (cursor != null && cursor.getCount() != 0) {
-            posSetting = build(cursor);
-            Log.d("posSetting", posSetting.toString());
-        }
-        cursor.moveToFirst();*/
         return posSetting;
     }
 
