@@ -816,7 +816,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
        // EnableButtons();
 
         if (SETTINGS.company == null) {
-            SETTINGS.company = CompanyStatus.BO_AUTHORIZED_DEALER;
+            SETTINGS.company = CompanyStatus.BO_COMPANY;
         }
         if (SETTINGS.printer == null) {
             SETTINGS.printer = PrinterType.HPRT_TP805;

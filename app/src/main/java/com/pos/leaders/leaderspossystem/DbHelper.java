@@ -484,6 +484,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL("update PosSetting set currencySymbol='₪';");
                     db.execSQL("update PosSetting set country='Israel';");
                     db.execSQL("update PosSetting set duplicateInvoice='0';");
+                    db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
                     db.execSQL(SettingsDBAdapter.addColumnText("country"));
