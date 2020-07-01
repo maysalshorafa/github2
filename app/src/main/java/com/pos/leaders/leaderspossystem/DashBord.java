@@ -714,8 +714,8 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         }
 
     }else {
-        String activationDate="2020-06-01";
-         String dueDateLicencess="2021-06-01";
+        String activationDate=CONSTANT.ACTIVATION_DATE_LICENCESS;
+         String dueDateLicencess=CONSTANT.DUE_DATE_LICENCESS;
         Timestamp ts=null,ts2 = null;
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -724,7 +724,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        long LincesID = lincessDBAdapter.insertEntry(SETTINGS.companyID,"yearly",Integer.toString(SETTINGS.branchId), ts , ts2, CONSTANT.ACTIVE);
+        long LincesID = lincessDBAdapter.insertEntry(SETTINGS.companyID,CONSTANT.YEARLY_ACTIVATION_LICENSS,Integer.toString(SETTINGS.branchId), ts , ts2, CONSTANT.ACTIVE);
     }
 }
 
