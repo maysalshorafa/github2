@@ -343,6 +343,7 @@ public class PosSettingDbAdapter {
     }
 
 
+
     public static String addColumnText(String columnName) {
         String dbc = "ALTER TABLE " + POS_SETTING_TABLE_NAME
                 + " add column " + columnName + " TEXT  DEFAULT '' ;";

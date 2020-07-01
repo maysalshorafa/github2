@@ -1497,7 +1497,7 @@ public class InvoiceImg {
         double noTax =price_before_tax - (price_before_tax * (sale.cartDiscount/100));
         double totalPriceAfterDiscount= SaleOriginalityPrice- (SaleOriginalityPrice * (sale.cartDiscount/100));
         Log.d("noTaxCan",noTax+"");
-        Log.d("totalPriceAfterDiscouCanc",totalPriceAfterDiscount+"");
+        Log.d("totalPriceAfter",totalPriceAfterDiscount+"");
         Log.d("priceBefor",totalPriceAfterDiscount-noTax+"");
         Block addsTaxValue = new Block(Util.makePrice(totalPriceAfterDiscount-noTax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         Block priceBeforeTax = new Block(Util.makePrice(noTax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
@@ -1750,7 +1750,7 @@ public class InvoiceImg {
         return make(blocks);
     }
     public Bitmap replacmentNote(Order sale, boolean isCopy) {
-        int count=0;
+        double count=0;
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
         List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(sale));
@@ -2145,13 +2145,17 @@ public class InvoiceImg {
 
         double SaleOriginalityPrice = 0, saleTotalPrice = 0;
         double totalSaved = 0.0;
+        ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
+        productDBAdapter.open();
+
         for (int a=0;a<cartDetailsList.length();a++) {
             JSONObject o = cartDetailsList.getJSONObject(a);
+            Product p= productDBAdapter.getProductByID(o.getLong("productId"));
             count+=o.getInt("quantity");
             int cut = 11;
-            if (o.getString("name").length() < cut)
-                cut = o.getString("name").length();
-            name.text += (o.getString("name").substring(0, cut) + newLineL);
+            if (p.getDisplayName().length() < cut)
+                cut = p.getDisplayName().length();
+            name.text += (p.getDisplayName().substring(0, cut) + newLineL);
             counter.text += o.getInt("quantity") + "\n";
             unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getDouble("unitPrice")) + "\n";
             price.text += String.format(new Locale("en"), "%.2f",(o.getDouble("unitPrice")*o.getInt("quantity"))-(o.getDouble("unitPrice")*o.getInt("quantity")*o.getDouble("discount")/100)) + "\n";
@@ -2321,7 +2325,7 @@ public class InvoiceImg {
     public Bitmap pinPadInvoice(Order order, Boolean isCopy, HashMap<String, String> mainMer) {
         Block rest = new Block("\u200E" , 30.0f, Color.BLACK, CONSTANT.PRINTER_PAGE_WIDTH);
         Block clear = new Block("\u200E" + "" + "\u200E", 1.0f, Color.BLACK, Paint.Align.CENTER, CONSTANT.PRINTER_PAGE_WIDTH);
-        int count=0;
+        double count=0;
         final List<Block> blocks = new ArrayList<Block>();
         blocks.addAll(Head(order));
         String status = context.getString(R.string.source_invoice);

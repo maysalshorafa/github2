@@ -68,12 +68,13 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         }
         // Get the data item for this position
         final PaymentTable paymentTable = getItem(position);
-        Log.d("symhhhh",paymentTable.getCurrency().getType());
-        Log.d("sym1jjj",paymentTable.getTempCurrency());
+
 /*
         String sym = " " + currencySymbols.get(paymentTable.getCurrency().getType());
         String sym1 = " " + currencySymbols.get(paymentTable.getTempCurrency());*/
-
+         if (paymentTable.getTempCurrency()==null){
+             paymentTable.setTempCurrency(paymentTable.getCurrency().getType());
+         }
 
         String sym = " " + String.valueOf(symbolWithCodeHashMap.valueOf(paymentTable.getCurrency().getType()).getValue());
         String sym1 = " " + String.valueOf(symbolWithCodeHashMap.valueOf(paymentTable.getTempCurrency()).getValue());

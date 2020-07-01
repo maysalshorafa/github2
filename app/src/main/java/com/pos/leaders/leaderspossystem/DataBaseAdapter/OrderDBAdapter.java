@@ -345,11 +345,11 @@ public class OrderDBAdapter {
 		return salesList;
 	}
 
-	public List<Order> getAllUserSales(int userId) {
+	public List<Order> getAllUserSales(long userId) {
 		List<Order> userSaleList = new ArrayList<Order>();
 		List<Order> saleList = getAllSales();
 		for (Order d : saleList) {
-			if (d.getByUser() == userId)
+			if (d.getCustomerId() == userId)
 				userSaleList.add(d);
 		}
 		return userSaleList;

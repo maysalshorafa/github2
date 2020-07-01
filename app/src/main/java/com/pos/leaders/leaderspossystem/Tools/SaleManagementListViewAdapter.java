@@ -148,11 +148,26 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 
 			if(boInvoice.getType().equals(DocumentType.INVOICE)) {
 				holder.tvStatus.setText("IN");
-			}else {
+			}else if(boInvoice.getType().equals(DocumentType.CREDIT_INVOICE)) {
 				holder.tvStatus.setText("CIN");
 			}
-			price = doc.getDouble("total");
-			holder.tvDiscount.setText(doc.getDouble("cartDiscount")+"");
+			else if(boInvoice.getType().equals(DocumentType.INVOICE_RECEIPT)){
+				holder.tvStatus.setText("INRC");
+
+			}
+			else if(boInvoice.getType().equals(DocumentType.RECEIPT)){
+				holder.tvStatus.setText("RC");
+
+			}
+                if(boInvoice.getType().equals(DocumentType.RECEIPT)){
+                    price = doc.getDouble("paidAmount");
+					holder.tvDiscount.setText(0+"");
+
+
+				}else {
+					price = doc.getDouble("total");
+					holder.tvDiscount.setText(doc.getDouble("cartDiscount")+"");
+				}
 			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 			Date date = DateConverter.stringToDate(doc.getString("date"));
 
@@ -161,11 +176,15 @@ public class SaleManagementListViewAdapter extends ArrayAdapter {
 			JSONObject customerJson= doc.getJSONObject("customer");
 			holder.tvCustomerName.setText(customerJson.get("firstName")+" "+customerJson.get("lastName"));
 			int count =0;
+				if(boInvoice.getType().equals(DocumentType.RECEIPT)){
+
+				}else {
 			JSONArray jsonArray = doc.getJSONArray("cartDetailsList");
 			for (int c = 0;c<jsonArray.length();c++){
 				JSONObject j = jsonArray.getJSONObject(c);
 				count+=j.getInt("quantity");
 			}
+				}
 			//	holder.tvNumberOfItems.setText(count+"");
 		} catch (JSONException e) {
 			e.printStackTrace();

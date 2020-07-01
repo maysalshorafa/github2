@@ -12,12 +12,52 @@
         android:layout_marginRight="16dp"
 
         />
+    <LinearLayout
+        android:id="@+id/listInvoiceManagement_FLMore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/listInvoiceManagement_BTCreateCashReceipt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/cash"
+            style="@style/AppTheme.bt_normal"
+            />
+        <Button
+            android:id="@+id/listInvoiceManagement_BTCreateCheckReceipt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/checks"
+            style="@style/AppTheme.bt_normal"
+            />
+        <Button
+            android:id="@+id/listInvoiceManagement_BTCreateCreditReceipt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/credit_card"
+            style="@style/AppTheme.bt_normal"
+            />
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/cashLayOut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:visibility="gone"
+       >
+
 
         <EditText
             android:id="@+id/cashReceiptDialog_TECash"
@@ -28,37 +68,37 @@
             android:background="@drawable/catalogproduct_item_bg"
             android:inputType="numberDecimal"
             android:textAlignment="center" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom"
-        android:layout_margin="12dp"
-        >
-
-        <Button
-            android:id="@+id/cashReceiptDialog_BTOk"
-            style="@style/AppTheme.bt_green"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="16dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@android:string/ok"
-            android:textColor="#fff"
-            android:textSize="20dp" />
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_margin="12dp"
+            >
+
+            <Button
+                android:id="@+id/cashReceiptDialog_BTOk"
+                style="@style/AppTheme.bt_green"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@android:string/ok"
+                android:textColor="#fff"
+                android:textSize="20dp" />
 
 
 
 
 
+
+        </LinearLayout>
 
     </LinearLayout>
+
 
 
 

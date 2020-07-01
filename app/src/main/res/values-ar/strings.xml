@@ -26,6 +26,8 @@
     <string name="products">منتوجات</string>
     <string name="qty">كمية</string>
     <string name="refresh">تحديث</string>
+    <string name="test">فحص</string>
+
     <string name="returned">باقي</string>
     <string name="total_price">مجمل المبيعات</string>
     <string name="total_saved">وفر</string>
@@ -100,7 +102,8 @@
     <string name="receipt">وصل</string>
     <string name="order_document">طلبية</string>
     <string name="CustomerLedger">حساب الزبون</string>
-
+    <string name="amount_want_to_pay">المبلغ المراد دفعه</string>
+    <string name="amount_of_dept">بلغ الدين</string>
 
     <!--DashBord String-->
     <string name="main_screen">شاشة المبيعات</string>

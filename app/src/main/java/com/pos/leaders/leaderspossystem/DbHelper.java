@@ -86,7 +86,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 11;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -499,39 +499,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
 
-
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
                     break;
 
-              /*  case 10:
-                    db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
-                    db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
-                    db.execSQL(PosSettingDbAdapter.addColumnText("country"));
-                    db.execSQL("update PosSetting set currencyCode='ILS';");
-                    db.execSQL("update PosSetting set currencySymbol='₪';");
-                    db.execSQL("update PosSetting set country='Israel';");
-                    break;*/
-
-               /* case 11:
-
-                    db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
-                    db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
-                    db.execSQL(PosSettingDbAdapter.addColumnText("country"));
-
-                    db.execSQL("update PosSetting set currencyCode='ILS';");
-                    db.execSQL("update PosSetting set currencySymbol='₪';");
-                    db.execSQL("update PosSetting set country='Israel';");
-                    break;*/
-
-              /*  case 12:
-
-                    db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
-                    db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
-                    db.execSQL(PosSettingDbAdapter.addColumnText("country"));
-
-                    db.execSQL("update PosSetting set currencyCode='ILS';");
-                    db.execSQL("update PosSetting set currencySymbol='₪';");
-                    db.execSQL("update PosSetting set country='Israel';");
-                    break;*/
 
             }
         } catch (SQLException e) {

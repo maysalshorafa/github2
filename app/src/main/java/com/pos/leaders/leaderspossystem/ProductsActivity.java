@@ -137,11 +137,15 @@ public class ProductsActivity  extends AppCompatActivity  {
         productUnit.add(ProductUnit.BARCODEWITHWEIGHT);
         productUnit.add(ProductUnit.BARCODEWITHPRICE);
         productUnit.add(ProductUnit.GENERALPRICEPRODUCT);
+
+        productUnit.add(ProductUnit.WEIGHT);
         final List<String>productUnitString = new ArrayList<String>();
         productUnitString.add(ProductUnit.QUANTITY.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHWEIGHT.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHPRICE.getValue());
         productUnitString.add(ProductUnit.GENERALPRICEPRODUCT.getValue());
+
+        productUnitString.add(ProductUnit.WEIGHT.getValue());
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productUnitString);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -286,7 +290,7 @@ public class ProductsActivity  extends AppCompatActivity  {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 unit = productUnit.get(position);
-                if(unit.getValue().equalsIgnoreCase(ProductUnit.BARCODEWITHWEIGHT.getValue())){
+                if(unit.getValue().equalsIgnoreCase(ProductUnit.BARCODEWITHWEIGHT.getValue())||unit.getValue().equalsIgnoreCase(ProductUnit.WEIGHT.getValue())){
                     llWeight.setVisibility(View.VISIBLE);
                 }else {
                     llWeight.setVisibility(View.GONE);

@@ -88,10 +88,11 @@ public class SaleDetailsListViewAdapter extends ArrayAdapter implements OnClickL
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        int count;
+        double count;
         double price;
         double discount = orderList.get(position).getDiscount();
-        price = orderList.get(position).getPaidAmount();
+            price = orderList.get(position).getPaidAmount();
+
         count = orderList.get(position).getQuantity();
         ProductDBAdapter productDBAdapter =new  ProductDBAdapter(context);
         productDBAdapter.open();
