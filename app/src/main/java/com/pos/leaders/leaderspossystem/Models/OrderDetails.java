@@ -158,8 +158,8 @@ public class OrderDetails {
 		this.userOffer = userOffer;
 		this.product = product;
 		this.productId = product.getProductId();
-		this.paidAmount = product.getPrice();
-		this.unitPrice = product.getPrice();
+		this.paidAmount = product.getPriceWithTax();
+		this.unitPrice = product.getPriceWithTax();
 		this.discount = 0;
 		initObjectID();
 	}

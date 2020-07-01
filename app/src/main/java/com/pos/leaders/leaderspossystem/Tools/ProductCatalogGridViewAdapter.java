@@ -1,7 +1,6 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +101,7 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 			 }
 			 else {
 		 currencyTypeSymbol = String.valueOf(symbolWithCodeHashMap.valueOf(products.get(position).getCurrencyType()).getValue());}
-		tvPrice.setText(products.get(position).getPrice() + " " + currencyTypeSymbol);}
+		tvPrice.setText(products.get(position).getPriceWithTax() + " " + currencyTypeSymbol);}
 
 		return gridView;
 	}

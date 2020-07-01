@@ -191,8 +191,8 @@ public class ImportProductsActivity extends Activity {
                                 updateCurrencyType.updateCurrencyToShekl(ImportProductsActivity.this,p);
                             }
                             productDBAdapter.insertEntry(p.getProductCode(), p.getBarCode(),
-                                    "", p.getPrice(), p.getCostPrice(), true, depID, p.getByEmployee(), 1, 1,
-                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock(),p.getUnit(),p.getWeight(),p.getCurrencyType(),p.getBranchId(),0,p.getLastCostPriceInventory(),p.isWithSerialNumber());
+                                    "", p.getPriceWithTax(), p.getCostPrice(), true, depID, p.getByEmployee(), 1, 1,
+                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock(),p.getUnit(),p.getWeight(),p.getCurrencyType(),p.getBranchId(),0,p.getLastCostPriceInventory(),p.isWithSerialNumber(),p.getPriceWithOutTax());
 
                         }
                     }

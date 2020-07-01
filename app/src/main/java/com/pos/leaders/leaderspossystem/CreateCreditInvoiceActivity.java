@@ -174,10 +174,10 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                             Product product =new Product(Long.parseLong(String.valueOf(-1)),"General","General",cartDetailsObject.getDouble("amount"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1)));
 
                                 if(docDocument.getDouble("cartDiscount")>0){
-                                    product.setPrice((cartDetailsObject.getDouble("amount"))*(100-(docDocument.getDouble("cartDiscount")))/100);
+                                    product.setPriceWithTax((cartDetailsObject.getDouble("amount"))*(100-(docDocument.getDouble("cartDiscount")))/100);
 
                                 }else {
-                                    product.setPrice(cartDetailsObject.getDouble("amount"));
+                                    product.setPriceWithTax(cartDetailsObject.getDouble("amount"));
 
                                 }
 
@@ -186,18 +186,18 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                             Product product = productDBAdapter.getProductByID(Long.parseLong(pId));
                             if(cartDetailsObject.getDouble("discount")>0){
                                 if(docDocument.getDouble("cartDiscount")>0){
-                                    product.setPrice((cartDetailsObject.getDouble("unitPrice"))*(100-(cartDetailsObject.getDouble("discount")+docDocument.getDouble("cartDiscount")))/100);
+                                    product.setPriceWithTax((cartDetailsObject.getDouble("unitPrice"))*(100-(cartDetailsObject.getDouble("discount")+docDocument.getDouble("cartDiscount")))/100);
 
                                 }else {
-                                    product.setPrice(cartDetailsObject.getDouble("unitPrice")*(100-cartDetailsObject.getDouble("discount"))/100);
+                                    product.setPriceWithTax(cartDetailsObject.getDouble("unitPrice")*(100-cartDetailsObject.getDouble("discount"))/100);
 
                                 }
                             }else {
                                 if(docDocument.getDouble("cartDiscount")>0){
-                                    product.setPrice((cartDetailsObject.getDouble("unitPrice"))*(100-(cartDetailsObject.getDouble("discount")+docDocument.getDouble("cartDiscount")))/100);
+                                    product.setPriceWithTax((cartDetailsObject.getDouble("unitPrice"))*(100-(cartDetailsObject.getDouble("discount")+docDocument.getDouble("cartDiscount")))/100);
 
                                 }else {
-                                    product.setPrice(cartDetailsObject.getDouble("unitPrice"));
+                                    product.setPriceWithTax(cartDetailsObject.getDouble("unitPrice"));
 
                                 }
                             }
@@ -229,7 +229,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                             product=productList.get(position1);
                             int count = productCount.get(position1);
                             haveCart=false;
-                            creditAmount+=product.getPrice();
+                            creditAmount+=product.getPriceWithTax();
                             credit.setText(Util.makePrice(creditAmount));
                             JSONObject newCartJson=new JSONObject();
                             try {
@@ -247,34 +247,34 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         newCartDetails.getJSONObject(p).remove("quantity");
                                         newCartDetails.getJSONObject(p).put("quantity",c+1);
                                         newCartDetails.getJSONObject(p).remove("unitPrice");
-                                        newCartDetails.getJSONObject(p).put("unitPrice", product.getPrice());
+                                        newCartDetails.getJSONObject(p).put("unitPrice", product.getPriceWithTax());
                                         haveCart=true;
                                       // if (product.getCurrencyType()==0){
                                         if(!product.isWithTax()){
                                             if(docDocument.getDouble("cartDiscount")>0){
-                                                SalesWithoutTax+=(((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("ILS"));
+                                                SalesWithoutTax+=(((product.getPriceWithTax()*(c+1))-((product.getPriceWithTax()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("ILS"));
                                             }
                                             else {
                                                 if (product.getCurrencyType().equals("0")){
                                                     updateCurrencyType.updateCurrencyToShekl(CreateCreditInvoiceActivity.context,product);
-                                                    //SalesWithoutTax+=((product.getPrice()*(c+1))*getCurrencyRate("ILS"));
+                                                    //SalesWithoutTax+=((product.getPriceWithTax()*(c+1))*getCurrencyRate("ILS"));
                                                 }
                                                 else {
-                                                SalesWithoutTax+=((product.getPrice()*(c+1))*getCurrencyRate(product.getCurrencyType()));}
+                                                SalesWithoutTax+=((product.getPriceWithTax()*(c+1))*getCurrencyRate(product.getCurrencyType()));}
                                             }
 
 
                                         }
                                     else {
                                             if(docDocument.getDouble("cartDiscount")>0) {
-                                                salesaftertax += (((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
+                                                salesaftertax += (((product.getPriceWithTax() * (c + 1))- ((product.getPriceWithTax() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
                                                 Log.d("salesaftertax", salesaftertax + "k6666666666");
-                                                SalesWitheTax +=(((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
+                                                SalesWitheTax +=(((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
                                             }
                                         else {
-                                                salesaftertax += ((product.getPrice() * (c + 1))*getCurrencyRate("ILS"));
+                                                salesaftertax += ((product.getPriceWithTax() * (c + 1))*getCurrencyRate("ILS"));
                                                 Log.d("salesaftertax", salesaftertax + "k6666666666");
-                                                SalesWitheTax += ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100)))*getCurrencyRate("ILS"));
+                                                SalesWitheTax += ((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100)))*getCurrencyRate("ILS"));
                                             }
                                         }
                                         Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -284,24 +284,24 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                       /*else   if (product.getCurrencyType()==1){
                                             if(product.isWithTax()){
                                                 if(docDocument.getDouble("cartDiscount")>0){
-                                                    SalesWithoutTax+=(((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("USD"));
+                                                    SalesWithoutTax+=(((product.getPriceWithTax()*(c+1))-((product.getPriceWithTax()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("USD"));
                                                 }
                                                 else {
-                                                    SalesWithoutTax+=((product.getPrice()*(c+1))*getCurrencyRate("USD"));
+                                                    SalesWithoutTax+=((product.getPriceWithTax()*(c+1))*getCurrencyRate("USD"));
                                                 }
 
 
                                             }
                                             else {
                                                 if(docDocument.getDouble("cartDiscount")>0) {
-                                                    salesaftertax += (((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));
+                                                    salesaftertax += (((product.getPriceWithTax() * (c + 1))- ((product.getPriceWithTax() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));
                                                     Log.d("salesaftertax", salesaftertax + "k6666666666");
-                                                    SalesWitheTax += (((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));
+                                                    SalesWitheTax += (((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));
                                                 }
                                                 else {
-                                                    salesaftertax += ((product.getPrice() * (c + 1))*getCurrencyRate("USD"));
+                                                    salesaftertax += ((product.getPriceWithTax() * (c + 1))*getCurrencyRate("USD"));
                                                     Log.d("salesaftertax", salesaftertax + "k6666666666");
-                                                    SalesWitheTax += ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100)))*getCurrencyRate("USD"));
+                                                    SalesWitheTax += ((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100)))*getCurrencyRate("USD"));
                                                 }
                                             }
                                             Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -312,24 +312,24 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                        else if (product.getCurrencyType()==2){
                                             if(product.isWithTax()){
                                                 if(docDocument.getDouble("cartDiscount")>0){
-                                                    SalesWithoutTax+=(((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("GBP"));
+                                                    SalesWithoutTax+=(((product.getPriceWithTax()*(c+1))-((product.getPriceWithTax()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("GBP"));
                                                 }
                                                 else {
-                                                    SalesWithoutTax+=((product.getPrice()*(c+1))*getCurrencyRate("GBP"));
+                                                    SalesWithoutTax+=((product.getPriceWithTax()*(c+1))*getCurrencyRate("GBP"));
                                                 }
 
 
                                             }
                                             else {
                                                 if(docDocument.getDouble("cartDiscount")>0) {
-                                                    salesaftertax += (((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));
+                                                    salesaftertax += (((product.getPriceWithTax() * (c + 1))- ((product.getPriceWithTax() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));
                                                     Log.d("salesaftertax", salesaftertax + "k6666666666");
-                                                    SalesWitheTax += (((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));
+                                                    SalesWitheTax += (((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));
                                                 }
                                                 else {
-                                                    salesaftertax +=((product.getPrice() * (c + 1))*getCurrencyRate("GBP"));
+                                                    salesaftertax +=((product.getPriceWithTax() * (c + 1))*getCurrencyRate("GBP"));
                                                     Log.d("salesaftertax", salesaftertax + "k6666666666");
-                                                    SalesWitheTax += ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100)))*getCurrencyRate("GBP"));
+                                                    SalesWitheTax += ((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100)))*getCurrencyRate("GBP"));
                                                 }
                                             }
                                             Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -339,24 +339,24 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                        else if (product.getCurrencyType()==3){
                                             if(product.isWithTax()){
                                                 if(docDocument.getDouble("cartDiscount")>0){
-                                                    SalesWithoutTax+=(((product.getPrice()*(c+1))-((product.getPrice()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("EUR"));
+                                                    SalesWithoutTax+=(((product.getPriceWithTax()*(c+1))-((product.getPriceWithTax()*(c+1))*docDocument.getDouble("cartDiscount")/100))*getCurrencyRate("EUR"));
                                                 }
                                                 else {
-                                                    SalesWithoutTax+=((product.getPrice()*(c+1))*getCurrencyRate("EUR"));
+                                                    SalesWithoutTax+=((product.getPriceWithTax()*(c+1))*getCurrencyRate("EUR"));
                                                 }
 
 
                                             }
                                             else {
                                                 if(docDocument.getDouble("cartDiscount")>0) {
-                                                    salesaftertax += (((product.getPrice() * (c + 1))- ((product.getPrice() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));
+                                                    salesaftertax += (((product.getPriceWithTax() * (c + 1))- ((product.getPriceWithTax() * (c + 1)) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));
                                                     Log.d("salesaftertax", salesaftertax + "k6666666666");
-                                                    SalesWitheTax += (((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));
+                                                    SalesWitheTax += (((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100))) - ((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100))) * (docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));
                                                 }
                                                 else {
-                                                    salesaftertax += ((product.getPrice() * (c + 1))*getCurrencyRate("EUR"));
+                                                    salesaftertax += ((product.getPriceWithTax() * (c + 1))*getCurrencyRate("EUR"));
                                                     Log.d("salesaftertax", salesaftertax + "k6666666666");
-                                                    SalesWitheTax += ((product.getPrice() * (c + 1) / (1 + (SETTINGS.tax / 100)))*getCurrencyRate("EUR"));
+                                                    SalesWitheTax += ((product.getPriceWithTax() * (c + 1) / (1 + (SETTINGS.tax / 100)))*getCurrencyRate("EUR"));
                                                 }
                                             }
                                             Log.d("teeee888888s",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -368,7 +368,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                 }
                                 if(!haveCart){
                                     newCartJson.remove("unitPrice");
-                                    newCartJson.put("unitPrice", product.getPrice());
+                                    newCartJson.put("unitPrice", product.getPriceWithTax());
                                     newCartJson.remove("quantity");
                                     newCartJson.put("quantity", 1);
                                   newCartDetails.put(newCartJson);
@@ -376,25 +376,25 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                    // if (product.getCurrencyType()==0){
                                     if(!product.isWithTax()){
                                         if(docDocument.getDouble("cartDiscount")>0) {
-                                            SalesWithoutTax += (((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
+                                            SalesWithoutTax += (((product.getPriceWithTax() * 1)-((product.getPriceWithTax() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
                                         }
                                         else {
                                             if (product.getCurrencyType().equals("0")){
                                                 updateCurrencyType.updateCurrencyToShekl(CreateCreditInvoiceActivity.context,product);
                                             }else {
-                                                SalesWithoutTax += ((product.getPrice() * 1)*getCurrencyRate(product.getCurrencyType()));
+                                                SalesWithoutTax += ((product.getPriceWithTax() * 1)*getCurrencyRate(product.getCurrencyType()));
                                             }
-                                        //    SalesWithoutTax += ((product.getPrice() * 1)*getCurrencyRate(product.getCurrencyType()));
+                                        //    SalesWithoutTax += ((product.getPriceWithTax() * 1)*getCurrencyRate(product.getCurrencyType()));
                                         }
                                     }else {
                                         if(docDocument.getDouble("cartDiscount")>0){
-                                        salesaftertax+=(((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
+                                        salesaftertax+=(((product.getPriceWithTax()*1)-((product.getPriceWithTax()*1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));
                                         Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                        SalesWitheTax+=((((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));}
+                                        SalesWitheTax+=((((product.getPriceWithTax()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPriceWithTax()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("ILS"));}
                                         else {
-                                            salesaftertax+=((product.getPrice()*1)*getCurrencyRate("ILS"));
+                                            salesaftertax+=((product.getPriceWithTax()*1)*getCurrencyRate("ILS"));
                                             Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                            SalesWitheTax+=(((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))*getCurrencyRate("ILS"));
+                                            SalesWitheTax+=(((product.getPriceWithTax()*1)/ (1 + (SETTINGS.tax / 100)))*getCurrencyRate("ILS"));
                                         }
                                     }
                                     Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -403,20 +403,20 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                  /*  else if (product.getCurrencyType()==1){
                                         if(product.isWithTax()){
                                             if(docDocument.getDouble("cartDiscount")>0) {
-                                                SalesWithoutTax += (((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));
+                                                SalesWithoutTax += (((product.getPriceWithTax() * 1)-((product.getPriceWithTax() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));
                                             }
                                             else {
-                                                SalesWithoutTax +=(( product.getPrice() * 1)*getCurrencyRate("USD"));
+                                                SalesWithoutTax +=(( product.getPriceWithTax() * 1)*getCurrencyRate("USD"));
                                             }
                                         }else {
                                             if(docDocument.getDouble("cartDiscount")>0){
-                                                salesaftertax+=(((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));
+                                                salesaftertax+=(((product.getPriceWithTax()*1)-((product.getPriceWithTax()*1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));
                                                 Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                                SalesWitheTax+=((((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));}
+                                                SalesWitheTax+=((((product.getPriceWithTax()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPriceWithTax()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("USD"));}
                                             else {
-                                                salesaftertax+=((product.getPrice()*1)*getCurrencyRate("USD"));
+                                                salesaftertax+=((product.getPriceWithTax()*1)*getCurrencyRate("USD"));
                                                 Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                                SalesWitheTax+=(((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))*getCurrencyRate("USD"));
+                                                SalesWitheTax+=(((product.getPriceWithTax()*1)/ (1 + (SETTINGS.tax / 100)))*getCurrencyRate("USD"));
                                             }
                                         }
                                         Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -427,20 +427,20 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                    else if (product.getCurrencyType()==2){
                                         if(product.isWithTax()){
                                             if(docDocument.getDouble("cartDiscount")>0) {
-                                                SalesWithoutTax += (((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));
+                                                SalesWithoutTax += (((product.getPriceWithTax() * 1)-((product.getPriceWithTax() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));
                                             }
                                             else {
-                                                SalesWithoutTax += ((product.getPrice() * 1)*getCurrencyRate("GBP"));
+                                                SalesWithoutTax += ((product.getPriceWithTax() * 1)*getCurrencyRate("GBP"));
                                             }
                                         }else {
                                             if(docDocument.getDouble("cartDiscount")>0){
-                                                salesaftertax+=(((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));
+                                                salesaftertax+=(((product.getPriceWithTax()*1)-((product.getPriceWithTax()*1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));
                                                 Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                                SalesWitheTax+=((((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));}
+                                                SalesWitheTax+=((((product.getPriceWithTax()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPriceWithTax()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("GBP"));}
                                             else {
-                                                salesaftertax+=((product.getPrice()*1)*getCurrencyRate("GBP"));
+                                                salesaftertax+=((product.getPriceWithTax()*1)*getCurrencyRate("GBP"));
                                                 Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                                SalesWitheTax+=(((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))*getCurrencyRate("GBP"));
+                                                SalesWitheTax+=(((product.getPriceWithTax()*1)/ (1 + (SETTINGS.tax / 100)))*getCurrencyRate("GBP"));
                                             }
                                         }
                                         Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -451,20 +451,20 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                    else if (product.getCurrencyType()==3){
                                         if(product.isWithTax()){
                                             if(docDocument.getDouble("cartDiscount")>0) {
-                                                SalesWithoutTax += (((product.getPrice() * 1)-((product.getPrice() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));
+                                                SalesWithoutTax += (((product.getPriceWithTax() * 1)-((product.getPriceWithTax() * 1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));
                                             }
                                             else {
-                                                SalesWithoutTax += ((product.getPrice() * 1)*getCurrencyRate("EUR"));
+                                                SalesWithoutTax += ((product.getPriceWithTax() * 1)*getCurrencyRate("EUR"));
                                             }
                                         }else {
                                             if(docDocument.getDouble("cartDiscount")>0){
-                                                salesaftertax+=(((product.getPrice()*1)-((product.getPrice()*1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));
+                                                salesaftertax+=(((product.getPriceWithTax()*1)-((product.getPriceWithTax()*1)*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));
                                                 Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                                SalesWitheTax+=((((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPrice()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));}
+                                                SalesWitheTax+=((((product.getPriceWithTax()*1)/ (1 + (SETTINGS.tax / 100)))-((product.getPriceWithTax()*1/ (1 + (SETTINGS.tax / 100)))*(docDocument.getDouble("cartDiscount") / 100)))*getCurrencyRate("EUR"));}
                                             else {
-                                                salesaftertax+=((product.getPrice()*1)*getCurrencyRate("EUR"));
+                                                salesaftertax+=((product.getPriceWithTax()*1)*getCurrencyRate("EUR"));
                                                 Log.d("salesaftertax",salesaftertax+"k6666666666");
-                                                SalesWitheTax+=(((product.getPrice()*1)/ (1 + (SETTINGS.tax / 100)))*getCurrencyRate("EUR"));
+                                                SalesWitheTax+=(((product.getPriceWithTax()*1)/ (1 + (SETTINGS.tax / 100)))*getCurrencyRate("EUR"));
                                             }
                                         }
                                         Log.d("teeees",SalesWithoutTax+"  "+salesaftertax+"   "+SalesWitheTax);
@@ -490,7 +490,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                         currentCartObject.remove("quantity");
                                         currentCartObject.put("quantity",c+1);
                                         currentCartObject.remove("unitPrice");
-                                        currentCartObject.put("unitPrice", product.getPrice());
+                                        currentCartObject.put("unitPrice", product.getPriceWithTax());
                                         newCartDetails.remove(i);
                                         newCartDetails.put(currentCartObject);
                                         Log.d("newObject1",currentCartObject.toString());
@@ -500,7 +500,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                                 if(!haveCart){
                                     JSONObject a= tempJson;
                                     a.remove("unitPrice");
-                                    a.put("unitPrice", product.getPrice());
+                                    a.put("unitPrice", product.getPriceWithTax());
                                     a.remove("quantity");
                                     a.put("quantity", 1);
                                     newCartDetails.put(a);

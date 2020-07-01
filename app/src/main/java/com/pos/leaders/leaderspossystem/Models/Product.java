@@ -18,7 +18,7 @@ public class Product {
     private String productCode;
     private String barCode;
     private String description;
-    private double price;
+    private double priceWithTax;
     private double costPrice;
     private boolean withTax=true;
     private Timestamp createdAt;
@@ -37,6 +37,7 @@ public class Product {
     private boolean inStock;
     private ProductUnit unit;
     private double weight;
+    private  double priceWithOutTax;
 
     private String currencyType= SETTINGS.currencyCode;
 
@@ -58,6 +59,14 @@ public class Product {
 
     //Product with -1 value on accountingId this is a general product
 
+
+    public double getPriceWithOutTax() {
+        return priceWithOutTax;
+    }
+
+    public void setPriceWithOutTax(double priceWithOutTax) {
+        this.priceWithOutTax = priceWithOutTax;
+    }
 
     public void setProductId(long productId) {
         this.productId = productId;
@@ -84,12 +93,12 @@ public class Product {
 
 
 
-    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax,Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,String currencyType,int branchId,long offerId,double lastCostPriceInventory,boolean withSerialNumber) {
+    public Product(long productId, String productCode, String barCode, String description, double priceWithTax, double costPrice, boolean withTax, Timestamp createdAt, boolean hide, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit, double weight, String currencyType, int branchId, long offerId, double lastCostPriceInventory, boolean withSerialNumber,double priceWithOutTax) {
         this.productId = productId;
         this.productCode = productCode;
         this.barCode = barCode;
         this.description = description;
-        this.price = price;
+        this.priceWithTax = priceWithTax;
         this.costPrice = costPrice;
         this.withTax = withTax;
         this.createdAt = createdAt;
@@ -112,15 +121,16 @@ public class Product {
         this.offerId=offerId;
         this.lastCostPriceInventory=lastCostPriceInventory;
         this.withSerialNumber=withSerialNumber;
+        this.priceWithOutTax=priceWithOutTax;
     }
 
-    public Product(long productId, String productCode, String barCode, String description, double price, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock,ProductUnit unit,double weight,String currencyType,int branchId,long offerId,double lastCostPriceInventory,boolean withSerialNumber) {
+    public Product(long productId, String productCode, String barCode, String description, double priceWithTax, double costPrice, boolean withTax, Timestamp createdAt, long categoryId, long byEmployee, int withPos, int withPointSystem, String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit, double weight, String currencyType, int branchId, long offerId, double lastCostPriceInventory, boolean withSerialNumber,double priceWithOutTax) {
 
         this.productId = productId;
         this.productCode =productCode;
         this.barCode = barCode;
         this.description = description;
-        this.price = price;
+        this.priceWithTax = priceWithTax;
         this.costPrice = costPrice;
         this.withTax = withTax;
         this.createdAt = createdAt;
@@ -142,20 +152,21 @@ public class Product {
         this.offerId=offerId;
         this.lastCostPriceInventory=lastCostPriceInventory;
         this.withSerialNumber=withSerialNumber;
+        this.priceWithOutTax=priceWithOutTax;
     }
 
-    public Product(long productId, String productCode,String displayName, double price, long byEmployee) {
+    public Product(long productId, String productCode, String displayName, double priceWithTax, long byEmployee) {
         this.productId = productId;
         this.productCode = productCode;
         this.displayName = displayName;
-        this.price = price;
+        this.priceWithTax = priceWithTax;
         this.byEmployee = byEmployee;
     }
 
-    public Product(long productId, String productCode,String displayName, double price, String barCode,String sku, long categoryId, long byEmployee) {
+    public Product(long productId, String productCode, String displayName, double priceWithTax, String barCode, String sku, long categoryId, long byEmployee) {
         this.productId = productId;
         this.productCode = productCode;
-        this.price = price;
+        this.priceWithTax = priceWithTax;
         this.barCode=barCode;
         this.categoryId =categoryId;
         this.withTax=true;
@@ -166,9 +177,9 @@ public class Product {
         this.sku = sku;
     }
 
-    public Product(String productCode,String displayName, double price, double costPrice, String barCode,String sku, long byEmployee) {
+    public Product(String productCode, String displayName, double priceWithTax, double costPrice, String barCode, String sku, long byEmployee) {
         this.productCode = productCode;
-        this.price = price;
+        this.priceWithTax = priceWithTax;
         this.costPrice = costPrice;
         this.barCode = barCode;
         this.withTax = true;
@@ -177,10 +188,10 @@ public class Product {
         this.sku = sku;
     }
 
-    public Product(long productId, String productCode, String displayName, double price, long byEmployee, String barCode,String sku,ProductUnit productUnit) {
+    public Product(long productId, String productCode, String displayName, double priceWithTax, long byEmployee, String barCode, String sku, ProductUnit productUnit) {
         this.productId = productId;
         this.productCode = productCode;
-        this.price = price;
+        this.priceWithTax = priceWithTax;
         this.byEmployee = byEmployee;
         this.barCode = barCode;
         this.displayName = displayName;
@@ -190,10 +201,10 @@ public class Product {
 
     public Product(Product product) {
         this(product.getProductId(), product.getProductCode(), product.getBarCode(), product.getDescription(),
-                product.getPrice(), product.getCostPrice(), product.isWithTax(),
+                product.getPriceWithTax(), product.getCostPrice(), product.isWithTax(),
                 product.getCreatedAt(), product.isHide(), product.getCategoryId(), product.getByEmployee(),
                 product.getWithPos(), product.getWithPointSystem(), product.getSku(), product.getStatus(), product.getDisplayName(),
-                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock(),product.getUnit(),product.getWeight(),product.getCurrencyType(),product.getBranchId(),product.getOfferId(),product.getLastCostPriceInventory(),product.isWithSerialNumber());
+                product.getRegularPrice(), product.getStockQuantity(), product.isManageStock(), product.isInStock(),product.getUnit(),product.getWeight(),product.getCurrencyType(),product.getBranchId(),product.getOfferId(),product.getLastCostPriceInventory(),product.isWithSerialNumber(), product.getPriceWithOutTax());
 
     }
 
@@ -248,8 +259,8 @@ public class Product {
         return description;
     }
 
-    public double getPrice() {
-        return price;
+    public double getPriceWithTax() {
+        return priceWithTax;
     }
 
     public double getCostPrice() {
@@ -343,8 +354,8 @@ public class Product {
 		this.categoryId = categoryId;
 	}
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPriceWithTax(double priceWithTax) {
+        this.priceWithTax = priceWithTax;
     }
 
     public void setCostPrice(double costPrice) {
@@ -428,7 +439,8 @@ public class Product {
                 ", productCode='" + productCode + '\'' +
                 ", barCode='" + barCode + '\'' +
                 ", description='" + description + '\'' +
-                ", price=" + price +
+                ", priceWithTax=" + priceWithTax +
+                ", priceWithOutTax=" + priceWithOutTax +
                 ", costPrice=" + costPrice +
                 ", withTax=" + withTax +
                 ", createdAt=" + createdAt +

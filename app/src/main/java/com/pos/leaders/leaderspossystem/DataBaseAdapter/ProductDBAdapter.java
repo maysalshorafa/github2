@@ -36,7 +36,9 @@ public class ProductDBAdapter {
     protected static final String PRODUCTS_COLUMN_NAME = "name";
     protected static final String PRODUCTS_COLUMN_BARCODE = "barcode";
     protected static final String PRODUCTS_COLUMN_DESCRIPTION = "description";
-    protected static final String PRODUCTS_COLUMN_PRICE = "price";
+    protected static final String PRODUCTS_COLUMN_PRICE = "priceWithTax";
+    protected static final String PRODUCTS_COLUMN_PRICE_WITHOUT_TAx = "priceWithoutTax";
+
     protected static final String PRODUCTS_COLUMN_COSTPRICE = "costPrice";
     protected static final String PRODUCTS_COLUMN_WITHTAX = "withTax";
     protected static final String PRODUCTS_COLUMN_CREATINGDATE = "creatingDate";
@@ -70,7 +72,7 @@ public class ProductDBAdapter {
     public static final String DATABASE_CREATE = "CREATE TABLE " + PRODUCTS_TABLE_NAME + " ( `" + PRODUCTS_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`" + PRODUCTS_COLUMN_NAME + "` TEXT UNIQUE, `" + PRODUCTS_COLUMN_BARCODE + "` TEXT , `" + PRODUCTS_COLUMN_DESCRIPTION + "` TEXT," +
             "`" + PRODUCTS_COLUMN_DISPLAY_NAME + "` TEXT NOT NULL, `" + PRODUCTS_COLUMN_SKU + "` TEXT UNIQUE , `" + PRODUCTS_COLUMN_REGULAR_PRICE + "` REAL," +
-            "`" + PRODUCTS_COLUMN_PRICE + "` REAL NOT NULL, `" + PRODUCTS_COLUMN_COSTPRICE + "` REAL, `" + PRODUCTS_COLUMN_WITHTAX + "` INTEGER NOT NULL DEFAULT 1, " +
+            "`" + PRODUCTS_COLUMN_PRICE + "` REAL NOT NULL, `" +  PRODUCTS_COLUMN_PRICE_WITHOUT_TAx + "` REAL NOT NULL DEFAULT 0.0, `" + PRODUCTS_COLUMN_COSTPRICE + "` REAL, `" + PRODUCTS_COLUMN_WITHTAX + "` INTEGER NOT NULL DEFAULT 1, " +
             "`" + PRODUCTS_COLUMN_STOCK_QUANTITY + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_MANAGE_STOCK + "` INTEGER NOT NULL DEFAULT 1, `" + PRODUCTS_COLUMN_IN_STOCK + "` INTEGER NOT NULL DEFAULT 1, " +
             "`" +PRODUCTS_COLUMN_CREATINGDATE + "` TIMESTAMP NOT NULL DEFAULT current_timestamp, " +
             "`" + PRODUCTS_COLUMN_DISENABLED + "` INTEGER DEFAULT 0, `" + PRODUCTS_COLUMN_CATEGORYID + "` INTEGER NOT NULL, " +
@@ -82,9 +84,9 @@ public class ProductDBAdapter {
             + PRODUCTS_COLUMN_WITH_SERIAL_NUMBER + "' INTEGER NOT NULL DEFAULT 1 , `" +PRODUCTS_COLUMN_OFFER_ID +"` INTEGER NOT NULL DEFAULT 0 )";
 
 
-    public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v1;", DATABASE_CREATE + "; ",
-            "insert into products (id,name,displayName,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system) " +
-                    "select id,name,name,barcode,barcode,description,price,costPrice,price,withTax,creatingDate,hide,depId,byEmployee,with_pos,with_point_system from product_v1;"};
+    public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v10;", DATABASE_CREATE + "; ",
+            "insert into products (id,name,displayName,,barcode,sku,description,priceWithTax,priceWithoutTax,costPrice,regularPrice,withTax,,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system,stockQuantity,manageStock,inStock,status,currencyType,branchId,offerId,lastCostPriceInventory,with_serial_number) " +
+                    "select id,name,displayName,,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system,stockQuantity,manageStock,inStock,status,currencyType,branchId,offerId,lastCostPriceInventory,with_serial_number from product_v10;"};
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
@@ -115,10 +117,11 @@ public class ProductDBAdapter {
     public long insertEntry(String name, String barCode, String description, double price, double costPrice,
                             boolean withTax, long categoryId, long byUser , int pos, int point_system,
 
-                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,String currencyType,int branchId,long offerId,double lastCostPrice,boolean withSerialNumber) {
+                            String sku, ProductStatus status, String displayName, double regularPrice, int stockQuantity, boolean manageStock, boolean inStock, ProductUnit unit,double weight,String currencyType,int branchId,long offerId,double lastCostPrice,boolean withSerialNumber,double priceWithOutTax) {
         Product p = new Product(Util.idHealth(this.db, PRODUCTS_TABLE_NAME, PRODUCTS_COLUMN_ID), name, barCode, description, price,
-                costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType,branchId,offerId,lastCostPrice,withSerialNumber);
+                costPrice, withTax,  new Timestamp(System.currentTimeMillis()), categoryId, byUser, pos, point_system, sku, status, displayName, regularPrice, stockQuantity, manageStock, inStock,unit,weight,currencyType,branchId,offerId,lastCostPrice,withSerialNumber,priceWithOutTax);
 
+        Log.d("testTax",p.toString()+" ");
 
         long id = insertEntry(p);
         if (id > 0) {
@@ -171,7 +174,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_NAME, p.getProductCode());
         val.put(PRODUCTS_COLUMN_BARCODE, p.getBarCode());
         val.put(PRODUCTS_COLUMN_DESCRIPTION, p.getDescription());
-        val.put(PRODUCTS_COLUMN_PRICE, p.getPrice());
+        val.put(PRODUCTS_COLUMN_PRICE, p.getPriceWithTax());
         val.put(PRODUCTS_COLUMN_COSTPRICE, p.getCostPrice());
         val.put(PRODUCTS_COLUMN_WITHTAX, p.isWithTax());
         val.put(PRODUCTS_COLUMN_CATEGORYID, p.getCategoryId());
@@ -193,6 +196,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_OFFER_ID,p.getOfferId());
         val.put(PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY,p.getLastCostPriceInventory());
         val.put(PRODUCTS_COLUMN_WITH_SERIAL_NUMBER,p.isWithSerialNumber());
+        val.put(PRODUCTS_COLUMN_PRICE_WITHOUT_TAx, p.getPriceWithOutTax());
 
         ProductInventoryDbAdapter productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
         productInventoryDbAdapter.open();
@@ -417,7 +421,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_NAME, product.getProductCode());
         val.put(PRODUCTS_COLUMN_BARCODE, product.getBarCode());
         val.put(PRODUCTS_COLUMN_DESCRIPTION, product.getDescription());
-        val.put(PRODUCTS_COLUMN_PRICE, product.getPrice());
+        val.put(PRODUCTS_COLUMN_PRICE, product.getPriceWithTax());
         val.put(PRODUCTS_COLUMN_COSTPRICE, product.getCostPrice());
         val.put(PRODUCTS_COLUMN_WITHTAX, product.isWithTax());
         val.put(PRODUCTS_COLUMN_CATEGORYID, product.getCategoryId());
@@ -464,7 +468,7 @@ public class ProductDBAdapter {
         val.put(PRODUCTS_COLUMN_NAME, product.getProductCode());
         val.put(PRODUCTS_COLUMN_BARCODE, product.getBarCode());
         val.put(PRODUCTS_COLUMN_DESCRIPTION, product.getDescription());
-        val.put(PRODUCTS_COLUMN_PRICE, product.getPrice());
+        val.put(PRODUCTS_COLUMN_PRICE, product.getPriceWithTax());
         val.put(PRODUCTS_COLUMN_COSTPRICE, product.getCostPrice());
         val.put(PRODUCTS_COLUMN_WITHTAX, product.isWithTax());
         val.put(PRODUCTS_COLUMN_CATEGORYID, product.getCategoryId());
@@ -751,7 +755,8 @@ public class ProductDBAdapter {
                 cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_CURRENCY_TYPE)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_BRANCH_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_OFFER_ID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_LAST_COST_PRICE_INVENTORY))),
-                withSerialNoValue);
+                withSerialNoValue,
+                Double.parseDouble(cursor.getString(cursor.getColumnIndex(PRODUCTS_COLUMN_PRICE_WITHOUT_TAx))));
 
         if(p.getDescription()==null){
             p.setDescription("");
@@ -763,7 +768,7 @@ public class ProductDBAdapter {
             p.setCostPrice(0.0f);
         }
         if(Double.isNaN(p.getRegularPrice())){
-            p.setRegularPrice(p.getPrice());
+            p.setRegularPrice(p.getPriceWithTax());
         }
         return p;
     }
