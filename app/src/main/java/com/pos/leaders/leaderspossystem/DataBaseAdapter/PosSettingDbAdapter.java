@@ -314,7 +314,7 @@ public class PosSettingDbAdapter {
                 Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE)))
                 );
         cursor.close();
-  close();
+        close();
         return posSetting;
     }
 
@@ -329,22 +329,18 @@ public class PosSettingDbAdapter {
             }
         }
         PosSetting posSetting = new PosSetting();
-        Cursor cursor = null;
-        cursor = db.rawQuery("SELECT * FROM " + POS_SETTING_TABLE_NAME + " ORDER BY id DESC LIMIT 1", null);
-        while (cursor.moveToNext()) {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + POS_SETTING_TABLE_NAME + " order by id desc", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
             // your content
             posSetting = build(cursor);
+            cursor.moveToNext();
+            close();
             Log.d("posSetting", posSetting.toString());
         }
-      /*  if (cursor != null && cursor.getCount() != 0) {
-            posSetting = build(cursor);
-            Log.d("posSetting", posSetting.toString());
-        }
-        cursor.moveToFirst();*/
+        close();
         return posSetting;
     }
-
-
 
 
     public static String addColumnText(String columnName) {

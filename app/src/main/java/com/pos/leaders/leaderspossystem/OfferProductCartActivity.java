@@ -151,8 +151,10 @@ public class OfferProductCartActivity extends Activity {
         productSelectedAdapter=new ProductCatalogGridViewAdapter(this, selectedProductsList);
 
         lvProducts.setAdapter(productSelectedAdapter);
-
         gvProducts.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        productSelectedAdapter.notifyDataSetChanged();
+
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -274,6 +276,7 @@ public class OfferProductCartActivity extends Activity {
 
                     adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                     gvProducts.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
 
 
                 }
@@ -305,6 +308,7 @@ public class OfferProductCartActivity extends Activity {
                 productsList = filter_productsList;
                 adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                 gvProducts.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
                 return true;
             }
         });

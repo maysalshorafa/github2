@@ -1360,7 +1360,6 @@ public class SalesCartActivity extends AppCompatActivity {
                                     productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 50));
                                     productDBAdapter.close();
                                     // Stuff that updates the UI
-                                    productCatalogGridViewAdapter.notifyDataSetChanged();
                                 }
                             });
 
@@ -3874,8 +3873,17 @@ public class SalesCartActivity extends AppCompatActivity {
                     productCatalogGridViewAdapter = new ProductCatalogGridViewAdapter(getApplicationContext(), All_productsList);
                     lvProducts.setAdapter(productCatalogGridViewAdapter);
                     gvProducts.setAdapter(productCatalogGridViewAdapter);
-                    productCatalogGridViewAdapter.notifyDataSetChanged();
+
                 }
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // Stuff that updates the UI
+                        productCatalogGridViewAdapter.notifyDataSetChanged();
+
+                    }
+                });
                 dialog.cancel();
                 userScrolled=false;
             }
@@ -3903,7 +3911,6 @@ public class SalesCartActivity extends AppCompatActivity {
                             productList.addAll(productDBAdapter.getTopProducts( productList.size()-1, 50));
                             productDBAdapter.close();
                             // Stuff that updates the UI
-                            productCatalogGridViewAdapter.notifyDataSetChanged();
 
                         }
                     });
@@ -3916,8 +3923,6 @@ public class SalesCartActivity extends AppCompatActivity {
                             productList.addAll(productDBAdapter.getAllProductsByCategory(id, productList.size()-1, 50));
                             productDBAdapter.close();
                             // Stuff that updates the UI
-                            productCatalogGridViewAdapter.notifyDataSetChanged();
-
                         }
                     });
                 }
@@ -5609,7 +5614,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         });
-customerDBAdapter.open();
+    customerDBAdapter.open();
         customerList = customerDBAdapter.getTopCustomer(0, 50);
         customerDBAdapter.close();
       //  AllCustmerList = customerList;

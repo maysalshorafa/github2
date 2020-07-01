@@ -260,7 +260,11 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         checkLincess();
         TitleBar.setTitleBar(this);
 
-
+        if(!DbHelper.DATABASE_ENABEL_POS_SETTING){
+            checkSettings(SESSION.token);
+            Log.d("DATABASE_ENABEL_POS_SETTING","DATABASE_ENABEL_POS_SETTING");
+            DbHelper.DATABASE_ENABEL_POS_SETTING=true;
+        }
       if(!SETTINGS.havePosSetting){
         checkSettings(SESSION.token);
            SETTINGS.havePosSetting=true;
@@ -1988,16 +1992,28 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                     if(jsonObject.getString(MessageKey.responseBody).equalsIgnoreCase("null")){
                         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                         posSettingDbAdapter.open();
-                        PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
-                        addPosSetting(posSetting);
-                        posSettingDbAdapter.close();
+                        try {
+                            PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
+                            addPosSetting(posSetting);
+                            posSettingDbAdapter.close();
+                        }
+                        catch (Exception e){
+                            Log.d("ExceptionNullSetting",e.toString());
+                        }
+
                     }
                     else {
                         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                         posSettingDbAdapter.open();
-                        PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
-                        updatePosSetting(posSetting);
-                        posSettingDbAdapter.close();
+                        try {
+                            PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
+                            updatePosSetting(posSetting);
+                            posSettingDbAdapter.close();
+                        }
+                        catch (Exception e){
+                            Log.d("ExceptionSetting",e.toString());
+                        }
+
 
 
                     }
