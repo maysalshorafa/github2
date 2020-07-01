@@ -475,7 +475,7 @@ public class SalesReportActivity extends AppCompatActivity {
                                 if(p.getProductId()==orderDetailsList.get(x).getProductId()) {
                                     int i = orderDetailsList.get(x).getQuantity();
                                     productSale.setCount(productSale.getCount() + i);
-                                    productSale.setPrice(productSale.getPrice() + (p.getPrice() * i));
+                                    productSale.setPriceWithTax(productSale.getPriceWithTax() + (p.getPriceWithTax() * i));
 
                                 }}
                             finalListProduct.add(productSale);
@@ -780,7 +780,7 @@ public class SalesReportActivity extends AppCompatActivity {
                                 if(p.getProductId()==orderDetailsList.get(x).getProductId()){
                                     int i = orderDetailsList.get(x).getQuantity();
                                     productSale.setCount(productSale.getCount()+i);
-                                    productSale.setPrice(productSale.getPrice()+(p.getPrice()*i));
+                                    productSale.setPriceWithTax(productSale.getPriceWithTax()+(p.getPriceWithTax()*i));
 
                                 }
                             }

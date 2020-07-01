@@ -75,7 +75,7 @@ public class Backup{
                     excelTable.addCell(new Label(0,i+1,products.get(i).getProductId()+""));
                     excelTable.addCell(new Label(1,i+1,products.get(i).getDisplayName()));
                     excelTable.addCell(new Label(2,i+1,products.get(i).getSku()));
-                    excelTable.addCell(new Label(3,i+1,String.format(new Locale("en"),"%.2f",products.get(i).getPrice())));
+                    excelTable.addCell(new Label(3,i+1,String.format(new Locale("en"),"%.2f",products.get(i).getPriceWithTax())));
                 }
 
                 excelFile.write();
@@ -148,7 +148,7 @@ public class Backup{
                 excelTable.addCell(new Label(0,i+1,products.get(i).getProductId()+""));
                 excelTable.addCell(new Label(1,i+1,products.get(i).getDisplayName()));
                 excelTable.addCell(new Label(2,i+1,products.get(i).getSku()));
-                excelTable.addCell(new Label(3,i+1,String.format(new Locale("en"),"%.2f",products.get(i).getPrice())));
+                excelTable.addCell(new Label(3,i+1,String.format(new Locale("en"),"%.2f",products.get(i).getPriceWithTax())));
             }
             excelFile.write();
             excelFile.close();

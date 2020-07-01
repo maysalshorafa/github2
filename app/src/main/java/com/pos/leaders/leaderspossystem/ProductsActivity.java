@@ -54,7 +54,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     List<String> departmentsName;
     Spinner productUnitSp , SpProductCurrency , SpProductBranch;
     Button btSave,btnCancel;
-    EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etInventoryCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
+    EditText etName,etBarcode,etDescription, etPriceWithTax,etCostPrice,etInventoryCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight , etPriceWithOutTax;
     Switch swWithTax,swManageStock ,swWithSerialNo;
     static ListView lvDepartment;
     Map<String,Long> departmentMap=new HashMap<String,Long>();
@@ -105,7 +105,8 @@ public class ProductsActivity  extends AppCompatActivity  {
         etName=(EditText)findViewById(R.id.ETName);
         etBarcode=(EditText)findViewById(R.id.ETBarCode);
         etDescription=(EditText)findViewById(R.id.ETDescription);
-        etPrice=(EditText)findViewById(R.id.ETPrice);
+        etPriceWithTax =(EditText)findViewById(R.id.ETPrice_withTax);
+        etPriceWithOutTax=(EditText)findViewById(R.id.ETPrice_withOutTax);
         etCostPrice=(EditText)findViewById(R.id.ETCostPrice);
         etInventoryCostPrice=(EditText)findViewById(R.id.ETInventoryCostPrice);
 
@@ -330,7 +331,8 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etDescription.setText(editableProduct.getDescription());
                     etCostPrice.setText(editableProduct.getCostPrice() + "");
                     etInventoryCostPrice.setText(editableProduct.getLastCostPriceInventory() + "");
-                    etPrice.setText(editableProduct.getPrice() + "");
+                    etPriceWithTax.setText(editableProduct.getPriceWithTax() + "");
+                    etPriceWithOutTax.setText(editableProduct.getPriceWithOutTax() + "");
                     etStockQuantity.setText(editableProduct.getStockQuantity() + "");
                   //  swWithTax.setChecked(editableProduct.isWithTax());
                  if (!editableProduct.isWithTax()) {
@@ -386,7 +388,8 @@ public class ProductsActivity  extends AppCompatActivity  {
                         etDescription.setEnabled(false);
                         etCostPrice.setEnabled(false);
                         etInventoryCostPrice.setEnabled(false);
-                        etPrice.setEnabled(false);
+                        etPriceWithTax.setEnabled(false);
+                        etPriceWithOutTax.setEnabled(false);
                         etDisplayName.setEnabled(false);
                         etStockQuantity.setEnabled(false);
                         etSku.setEnabled(false);
@@ -419,7 +422,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     }
 
     private boolean addEditProduct() {
-        double price=0 , costPrice=0 , weight=0 , inventoryCostPrice=0;
+        double price=0 , costPrice=0 , weight=0 , inventoryCostPrice=0 ,priceWithOut=0;
         int stockQuantity = 0;
         String tempBarcode = etBarcode.getText().toString();
         String newBarCode="";
@@ -461,9 +464,9 @@ public class ProductsActivity  extends AppCompatActivity  {
             } else if (etBarcode.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_barcode), Toast.LENGTH_LONG).show();
                 etBarcode.setBackgroundResource(R.drawable.backtext);
-            } else if (etPrice.getText().toString().equals("") ) {
+            } else if (etPriceWithTax.getText().toString().equals("") ) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
-                etPrice.setBackgroundResource(R.drawable.backtext);
+                etPriceWithTax.setBackgroundResource(R.drawable.backtext);
             }
             else if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText().toString().equals("")){
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_weight), Toast.LENGTH_LONG).show();
@@ -478,13 +481,16 @@ public class ProductsActivity  extends AppCompatActivity  {
                         depID = d.getCategoryId();
                     }
                 }
-                if(availableProductName&&availableBarCode&& !etPrice.getText().toString().equals("")){
+                if(availableProductName&&availableBarCode&& !etPriceWithTax.getText().toString().equals("")){
                     if(depID==0){
                         Toast.makeText(ProductsActivity.this,R.string.please_insert_category_name,Toast.LENGTH_LONG).show();
 
                     }else {
-                        if(!etPrice.getText().toString().equals("")){
-                            price=Double.parseDouble(etPrice.getText().toString());
+                        if(!etPriceWithTax.getText().toString().equals("")){
+                            price=Double.parseDouble(etPriceWithTax.getText().toString());
+                        }
+                        if(!etPriceWithOutTax.getText().toString().equals("")){
+                            priceWithOut=Double.parseDouble(etPriceWithOutTax.getText().toString());
                         }
                         if (etSku.getText().toString().equals("")) {
                             etSku.setText(etBarcode.getText().toString());
@@ -505,7 +511,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                         }
                         check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
-                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId,0,inventoryCostPrice,withSerialNo);
+                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId,0,inventoryCostPrice,withSerialNo,priceWithOut);
 
 
                         if (check > 0) {
@@ -568,9 +574,9 @@ public class ProductsActivity  extends AppCompatActivity  {
             } else if (etSku.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_sku), Toast.LENGTH_LONG).show();
                 etSku.setBackgroundResource(R.drawable.backtext);
-            } else if (etPrice.getText().toString().equals("") ) {
+            } else if (etPriceWithTax.getText().toString().equals("") ) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
-                etPrice.setBackgroundResource(R.drawable.backtext);
+                etPriceWithTax.setBackgroundResource(R.drawable.backtext);
             }
             else if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText().toString().equals("")){
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_weight), Toast.LENGTH_LONG).show();
@@ -579,10 +585,15 @@ public class ProductsActivity  extends AppCompatActivity  {
                 if (etSku.getText().toString().equals("")) {
                     etSku.setText(etBarcode.getText().toString());
                 }
-                if(!etPrice.getText().toString().equals("")){
-                    price=Double.parseDouble(etPrice.getText().toString());
+                if(!etPriceWithTax.getText().toString().equals("")){
+                    price=Double.parseDouble(etPriceWithTax.getText().toString());
                 }else {
-                    price=editableProduct.getPrice();
+                    price=editableProduct.getPriceWithTax();
+                }
+                if(!etPriceWithOutTax.getText().toString().equals("")){
+                    priceWithOut=Double.parseDouble(etPriceWithOutTax.getText().toString());
+                }else {
+                    priceWithOut=editableProduct.getPriceWithOutTax();
                 }
                 if(!etCostPrice.getText().toString().equals("")){
                     costPrice=Double.parseDouble(etCostPrice.getText().toString());
@@ -616,7 +627,8 @@ public class ProductsActivity  extends AppCompatActivity  {
                     editableProduct.setSku(etSku.getText().toString());
                     editableProduct.setDescription(etDescription.getText().toString());
                     editableProduct.setStockQuantity(stockQuantity);
-                    editableProduct.setPrice(price);
+                    editableProduct.setPriceWithTax(price);
+                    editableProduct.setPriceWithOutTax(priceWithOut);
                     editableProduct.setCostPrice(costPrice);
                     editableProduct.setLastCostPriceInventory(inventoryCostPrice);
                     editableProduct.setWithTax(withTax);
@@ -650,7 +662,8 @@ public class ProductsActivity  extends AppCompatActivity  {
     private void setNewProduct() {
         etName.setBackgroundResource(R.drawable.catalogproduct_item_bg);
         etBarcode.setBackgroundResource(R.drawable.catalogproduct_item_bg);
-        etPrice.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+        etPriceWithTax.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+        etPriceWithOutTax.setBackgroundResource(R.drawable.catalogproduct_item_bg);
         if (previouslySelectedItem != null)
             previouslySelectedItem.setBackgroundColor(
                     getResources().getColor(R.color.transparent));
@@ -664,7 +677,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         etBarcode.setText("");
         etSku.setText("");
         etDescription.setText("");
-        etPrice.setText("");
+        etPriceWithTax.setText("");
         etStockQuantity.setText("");
         etCostPrice.setText("");
         etInventoryCostPrice.setText("");

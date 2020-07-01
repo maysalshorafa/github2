@@ -465,6 +465,10 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportCountDbAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
                     db.execSQL(ZReportCountDbAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
 
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
+
                     db.execSQL("drop table Currency;");
                     db.execSQL(CurrencyDBAdapter.DATABASE_CREATE);
                     db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel',1,'"+new Timestamp(System.currentTimeMillis())+"');");

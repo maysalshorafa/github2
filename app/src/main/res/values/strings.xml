@@ -140,17 +140,23 @@
     <string name="returned">Returned</string>
     <string name="cashier">Cashier</string>
     <string name="total_saved">Total Saved</string>
+    <string name="vat">Vat</string>
+
     <string name="all">All</string>
     <string name="partial">Partial</string>
 
     <string name="pos_branch">Pos Branch</string>
     <string name="general">General</string>
     <string name="general_product">General Product</string>
-    <string name="price">Price</string>
+    <string name="priceWithTax">Price</string>
     <string name="price_after_discount">Price after discount</string>
     <string name="price_before_discount">Price before discount</string>
     <string name="document">Document</string>
     <string name="receipt">Receipt</string>
+    <string name="price_with_tax">Price With Tax</string>
+    <string name="price_with_out_tax">Price With Out Tax</string>
+    <string name="price">Price</string>
+
     <string name="amount_want_to_pay">Amount want to Pay</string>
     <string name="amount_of_dept">The amount of debt</string>
 
@@ -214,7 +220,7 @@
 
     <!--Checks Activity pop-up-->
     <string name="add_check">Add Check</string>
-    <string name="check_pid_error">The total checks amount does not get the total price</string>
+    <string name="check_pid_error">The total checks amount does not get the total priceWithTax</string>
     <string name="not_inserted_checks">There is no checks inserted</string>
     <string name="checks_amount_more_than_amount_need">Amount inserted more than amount need</string>
 

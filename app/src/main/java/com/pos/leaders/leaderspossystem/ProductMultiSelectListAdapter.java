@@ -53,7 +53,7 @@ public class ProductMultiSelectListAdapter extends RecyclerView.Adapter<ProductM
     public void onBindViewHolder(ViewHolder holder, int position) {
         Product p = products.get(position);
         holder.name.setText(_Substring(p.getDisplayName()));
-        holder.price.setText(Util.makePrice(p.getPrice()));
+        holder.price.setText(Util.makePrice(p.getPriceWithTax()));
         holder.barcode.setText(p.getSku());
 
         if (selectedProducts.contains(products.get(position))) {

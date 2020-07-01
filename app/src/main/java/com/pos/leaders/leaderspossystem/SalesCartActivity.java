@@ -332,7 +332,7 @@ public class SalesCartActivity extends AppCompatActivity {
     List<OrderDetails> orderIdList;
     List<Long> orderId;
     long custmerSaleAssetstId;
-    TextView orderSalesMan, orderCount, orderTotalPrice, orderOfferName;
+    TextView orderSalesMan, orderCount, orderTotalPrice, orderOfferName, Vat;
     ImageView deleteOrderSalesMan,mainActivity_btnRemoveCustomer;
     String fromEditText = "";
     static List<String> printedRows;
@@ -463,6 +463,8 @@ public class SalesCartActivity extends AppCompatActivity {
         currencyDBAdapter.open();
         currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
         currencyDBAdapter.close();
+        Vat=(TextView)findViewById(R.id.mainActivity_tvVat);
+        //Vat.setText(SETTINGS.tax+" ");
         search_person = (ImageButton) findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
 
@@ -3512,6 +3514,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     }}
 
         }
+        double price_before_tax=0;
 
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
             if(o.getProduct()==null) {
@@ -3573,6 +3576,36 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
 
+        double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
+        for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+            if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType().equals("0")){
+                updateCurrencyType.updateCurrencyToShekl(SalesCartActivity.context,SESSION._ORDER_DETAILES.get(i).getProduct());
+            }
+            //       if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType()==0){
+            //   double rateCurrency= ConverterCurrency.getRateCurrency("ILS",SalesCartActivity.this);
+            double rateCurrency= ConverterCurrency.getRateCurrency(SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType(),SalesCartActivity.this);
+            if(!SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+                if(SESSION._ORDERS.getCartDiscount()>0){
+                    SalesWithoutTax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
+                }else {
+                    SalesWithoutTax +=( SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
+                    Log.d("tesddt","    "+SalesWithoutTax);
+
+                }
+            }else {
+                if(SESSION._ORDERS.getCartDiscount()>0){
+                    Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
+
+                    salesaftertax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
+                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100))*rateCurrency;
+                }else {
+                    salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
+                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100))*rateCurrency);
+                }
+            }
+        }
+        double totalPriceAfterDiscount= saleTotalPrice- (saleTotalPrice * (SESSION._ORDERS.cartDiscount/100));
+        Vat.setText(Util.makePrice(totalPriceAfterDiscount - SalesWitheTax));
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
         tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " +SETTINGS.currencySymbol);
         tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + SETTINGS.currencySymbol);
@@ -3666,7 +3699,7 @@ public class SalesCartActivity extends AppCompatActivity {
             }*/
          /*   CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(SalesCartActivity.this);
             currencyDBAdapter.open();*/
-            final OrderDetails o = new OrderDetails(1, 0, p, p.getPrice() , p.getPrice(), 0);
+            final OrderDetails o = new OrderDetails(1, 0, p, p.getPriceWithTax() , p.getPriceWithTax(), 0);
             //getOfferCategoryForProduct
           /*  OfferCategoryDbAdapter offerCategoryDbAdapter = new OfferCategoryDbAdapter(SalesCartActivity.this);
             offerCategoryDbAdapter.open();
@@ -3715,7 +3748,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
             }
             if(o.getProduct().getUnit().equals(ProductUnit.WEIGHT)){
-                PriceForWeight=o.getProduct().getPrice();
+                PriceForWeight=o.getProduct().getPriceWithTax();
                 final Dialog productWeightDialog = new Dialog(SalesCartActivity.this);
                 productWeightDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 productWeightDialog.show();
@@ -3739,7 +3772,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 deviceHelper = new DeviceHelper(this);
                 productName.setText(o.getProduct().getDisplayName());
-                productPrice.setText(Util.makePrice(o.getProduct().getPrice()));
+                productPrice.setText(Util.makePrice(o.getProduct().getPriceWithTax()));
                 refreshList();
                 if(devicesList.size()>0) {
                     selectedDeviceIndex = 0;
@@ -3849,7 +3882,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     double salePrice=0;
                                                     for (int i=0;i<SESSION._ORDER_DETAILES.size();i++) {
                                                         OrderDetails o =SESSION._ORDER_DETAILES.get(i);
-                                                        salePrice+=(o.getProduct().getPrice() * o.getQuantity());
+                                                        salePrice+=(o.getProduct().getPriceWithTax() * o.getQuantity());
                                                         if(i!=SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart)){
                                                             originalTotalPrice += (Double.parseDouble(totalPriceForBalance.getText().toString())* o.getQuantity())*(1-o.getDiscount()/100);
                                                         }else {
@@ -3860,7 +3893,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     salePrice= salePrice - (salePrice * (X/ 100));
                                                     Log.d("teeestr",originalTotalPrice+":  "+salePrice);
                                                     if (originalTotalPrice>=salePrice){
-                                                        discount = (1 - (d / (o.getProduct().getPrice()  * selectedOrderOnCart.getQuantity()))) * 100;
+                                                        discount = (1 - (d / (o.getProduct().getPriceWithTax()  * selectedOrderOnCart.getQuantity()))) * 100;
                                                         selectedOrderOnCart.setDiscount(discount);
                                                         totalDiscount.setText(Util.makePrice(itemOriginalPrice * selectedOrderOnCart.getDiscount()/100) + type);
                                                         priceAfterDiscount.setText(itemOriginalPrice*(1-(selectedOrderOnCart.getDiscount())/100) + type);
@@ -3886,9 +3919,9 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         OrderDetails o =SESSION._ORDER_DETAILES.get(i);
                                                         salePrice+=(o.getUnitPrice() * o.getQuantity());
                                                         if(i!=SESSION._ORDER_DETAILES.indexOf(selectedOrderOnCart)){
-                                                            originalTotalPrice += ((o.getProduct().getPrice() ) * o.getQuantity())*(1-o.getDiscount()/100);
+                                                            originalTotalPrice += ((o.getProduct().getPriceWithTax() ) * o.getQuantity())*(1-o.getDiscount()/100);
                                                         }else {
-                                                            originalTotalPrice += ((o.getProduct().getPrice() ) * selectedOrderOnCart.getQuantity())*(1-d/100);
+                                                            originalTotalPrice += ((o.getProduct().getPriceWithTax() ) * selectedOrderOnCart.getQuantity())*(1-d/100);
                                                         }
                                                     }
                                                     originalTotalPrice= originalTotalPrice - (originalTotalPrice * (SESSION._ORDERS.cartDiscount / 100));
@@ -4043,7 +4076,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         if(!(productWeightFromEditText.getText().toString().equals(""))){
                             double x=0;
                             x=Double.parseDouble(productWeightFromEditText.getText().toString());
-                            totalPriceForBalance.setText((x*o.getProduct().getPrice())+"");
+                            totalPriceForBalance.setText((x*o.getProduct().getPriceWithTax())+"");
 
                         }}
                 });
@@ -4160,7 +4193,7 @@ public class SalesCartActivity extends AppCompatActivity {
             Double newPrice = Double.parseDouble(barcodeScanned.substring(7))/1000;
             product = productDBAdapter.getProductByBarCode(productNum);
             if(product!=null){
-                product.setPrice(newPrice);}
+                product.setPriceWithTax(newPrice);}
             }
         } else {
             product = productDBAdapter.getProductByBarCode(barcodeScanned);
@@ -4986,7 +5019,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             orderid = orderDBAdapter.insertEntry(o.getProductId(), o.getQuantity(), o.getUserOffer(), saleID, o.getPaidAmount(), o.getUnitPrice(), o.getDiscount(), o.getCustomer_assistance_id(), order.getOrderKey(), o.getOfferId(), o.getProductSerialNumber(), o.getPaidAmount() / (1 + (SETTINGS.tax / 100)), o.getSerialNumber());
                         }
                     }                    orderId.add(orderid);
-                    //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPrice(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
+                    //   orderDBAdapter.insertEntry(o.getProductSku(), o.getCount(), o.getUserOffer(), saleID, o.getPriceWithTax(), o.getOriginal_price(), o.getDiscount(),o.getCustmerAssestId());
                 }
                 // ORDER_DETAILS Sales man Region
                 for (int i = 0; i < orderIdList.size(); i++) {
