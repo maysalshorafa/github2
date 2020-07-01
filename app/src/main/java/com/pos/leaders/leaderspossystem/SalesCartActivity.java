@@ -464,7 +464,7 @@ public class SalesCartActivity extends AppCompatActivity {
         currenciesList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
         currencyDBAdapter.close();
         Vat=(TextView)findViewById(R.id.mainActivity_tvVat);
-        Vat.setText(SETTINGS.tax+" ");
+        //Vat.setText(SETTINGS.tax+" ");
         search_person = (ImageButton) findViewById(R.id.searchPerson);
         drawerLayout = (DrawerLayout) findViewById(R.id.mainActivity_drawerLayout);
 
@@ -3515,6 +3515,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     }}
 
         }
+        double price_before_tax=0;
 
         for (OrderDetails o : SESSION._ORDER_DETAILES) {
             if(o.getProduct()==null) {
@@ -3576,7 +3577,36 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
 
+        double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
+        for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+            if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType().equals("0")){
+                updateCurrencyType.updateCurrencyToShekl(SalesCartActivity.context,SESSION._ORDER_DETAILES.get(i).getProduct());
+            }
+            //       if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType()==0){
+            //   double rateCurrency= ConverterCurrency.getRateCurrency("ILS",SalesCartActivity.this);
+            double rateCurrency= ConverterCurrency.getRateCurrency(SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType(),SalesCartActivity.this);
+            if(!SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+                if(SESSION._ORDERS.getCartDiscount()>0){
+                    SalesWithoutTax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
+                }else {
+                    SalesWithoutTax +=( SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
+                    Log.d("tesddt","    "+SalesWithoutTax);
 
+                }
+            }else {
+                if(SESSION._ORDERS.getCartDiscount()>0){
+                    Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
+
+                    salesaftertax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
+                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100))*rateCurrency;
+                }else {
+                    salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
+                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100))*rateCurrency);
+                }
+            }
+        }
+        double totalPriceAfterDiscount= saleTotalPrice- (saleTotalPrice * (SESSION._ORDERS.cartDiscount/100));
+        Vat.setText(Util.makePrice(totalPriceAfterDiscount - SalesWitheTax));
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
         tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " +SETTINGS.currencySymbol);
         tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + SETTINGS.currencySymbol);
