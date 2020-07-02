@@ -376,6 +376,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 settingsDBAdapter.readSetting();
 
             }
+
           final   PosSettingDbAdapter posSettingDbAdapter=new PosSettingDbAdapter(getContext());
             posSettingDbAdapter.open();
             SwitchPreference enableDuplicateInvoice= (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE");
@@ -402,6 +403,28 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 }
             });
 
+            SwitchPreference enableFoodStamp= (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOd_STAMP");
+
+            enableFoodStamp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    //   if (newValue.toString().equals("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY")) {
+                    boolean test = (Boolean) newValue;
+                    if (test) {
+                        SETTINGS.enableFoodStamp=true;
+
+                    } else {
+                        SETTINGS.enableFoodStamp=false;
+                    }
+
+
+
+
+                    // }
+                    return true;
+                }
+            });
 
             final MultiSelectListPreference multiSelectListPreference=(MultiSelectListPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST");
 

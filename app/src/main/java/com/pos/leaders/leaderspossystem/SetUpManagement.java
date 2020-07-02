@@ -45,10 +45,10 @@ import java.util.List;
 
 
 public class SetUpManagement extends AppCompatActivity {
-    CheckBox currencyCheckBox, creditCardCheckBox,cbPinpad, customerMeasurementCheckBox;
+    CheckBox currencyCheckBox, creditCardCheckBox,cbPinpad, customerMeasurementCheckBox, foodStampCheckBox;
     Spinner printerTypeSpinner, floatPointSpinner , branchSpinner,SelectServer,CompanyStatusSpinner,currencyCodeSpinner,currencyCountrySpinner;
     Button saveButton, editButton;
-    ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad;
+    ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad , foodStampImg;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD";
@@ -64,11 +64,12 @@ public class SetUpManagement extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_LIST_CURRENCY_TYPE="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_LIST_CURRENCY_LIST";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP";
 
 
 
 
-    boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false;
+    boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false , foodStamp;
     int noOfPoint;
     String printerType , serverUrl,CompanyStatusSelect,currencySymbolSelect,currencyCodeSelect,currencyCountrySelect,codeDebendCountry;
     ArrayAdapter<String> spinnerArrayAdapter,companyStatusArryAdapter,currencyCodeArrayAdapter,currencySymbolArrayAdapter;
@@ -112,6 +113,7 @@ public class SetUpManagement extends AppCompatActivity {
         cbPinpad = (CheckBox) findViewById(R.id.setUpManagementCreditCardPinPadCheckBox);
 
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
+        foodStampCheckBox=(CheckBox)findViewById(R.id.setUpManagementFoodStampCheckBox);
         floatPointSpinner = (Spinner) findViewById(R.id.setUpManagementFloatPointSpinner);
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
         SelectServer=(Spinner) findViewById(R.id.setUpServer);
@@ -122,6 +124,7 @@ public class SetUpManagement extends AppCompatActivity {
         saveButton = (Button) findViewById(R.id.setUpManagementSaveButton);
         editButton = (Button) findViewById(R.id.setUpManagementEditButton);
         currencyImage = (ImageView) findViewById(R.id.currencyImage);
+        foodStampImg=(ImageView) findViewById(R.id.foodStampImgView);
 
 
         creditCardImage = (ImageView) findViewById(R.id.creditCardImage);
@@ -205,6 +208,17 @@ public class SetUpManagement extends AppCompatActivity {
                     showDialog(SetUpManagement.this);
                 } else {
                     currencyEnable = false;
+                }
+            }
+        });
+        foodStampCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    foodStamp = true;
+                } else {
+                    foodStamp = false;
                 }
             }
         });
@@ -396,6 +410,12 @@ public class SetUpManagement extends AppCompatActivity {
                 Toast.makeText(SetUpManagement.this, R.string.active_currency_service_in_pos, Toast.LENGTH_LONG).show();
             }
         });
+        foodStampImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SetUpManagement.this, R.string.active_currency_service_in_pos, Toast.LENGTH_LONG).show();
+            }
+        });
         creditCardImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -451,6 +471,17 @@ public class SetUpManagement extends AppCompatActivity {
                         editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, currencyEnable);
                         SETTINGS.enableCurrencies = currencyEnable;
                     }
+                    //
+                        //food stamp
+                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP)) {
+                            if(foodStampCheckBox.isChecked()){
+                                foodStamp=true;
+                            }else {
+                                foodStamp=false;
+                            }
+                            editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP, foodStamp);
+                            SETTINGS.enableFoodStamp = foodStamp;
+                        }
                     //CustomerMeasurement
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
                         if(customerMeasurementCheckBox.isChecked()){
@@ -641,6 +672,13 @@ public class SetUpManagement extends AppCompatActivity {
                 boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
                 if (currencyEnable) {
                     currencyCheckBox.setChecked(true);
+                }
+            }
+            //FoodStamp
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP)) {
+                boolean foodStamp = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP, false);
+                if (foodStamp) {
+                    foodStampCheckBox.setChecked(true);
                 }
             }
 
