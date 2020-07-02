@@ -27,6 +27,7 @@ public class SETTINGS {
 	public static PrinterType printer ;
 	public static CompanyStatus company;
 	public static boolean enableCurrencies ;
+	public static boolean enableFoodStamp ;
 	public static boolean enableDuplicateInvoice;
 	public static int decimalNumbers  ;
 	public static boolean enableAllBranch;

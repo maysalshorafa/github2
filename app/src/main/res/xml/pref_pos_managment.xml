@@ -39,6 +39,10 @@
         android:defaultValue="false"
         android:key="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE"
         android:title="@string/copyinvoice" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOd_STAMP"
+        android:title="@string/food_stamp" />
     <ListPreference
         android:defaultValue="2"
         android:entries="@array/float_point_list_preference"

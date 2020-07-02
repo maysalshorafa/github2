@@ -37,6 +37,7 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.ReportsManagementActivity;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Tools.ConverterCurrency;
 import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -82,7 +83,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     boolean multiCurrencyFromCheck=false;
     boolean multiCurrencyFromCreditCurrentlyInsert=false;
     boolean multiCurrencyFromCheckCurrentlyInsert=false;
-    Button cashButton , checkButton , creditCardButton,btnQuickPrice_5,btnQuickPrice_10,btnQuickPrice_20,btnQuickPrice_50,btnQuickPrice_100,btnQuickPrice_200;
+    Button cashButton , checkButton , creditCardButton,btnQuickPrice_5,btnQuickPrice_10,btnQuickPrice_20,btnQuickPrice_50,btnQuickPrice_100,btnQuickPrice_200 , foodStampBtn;
     int positionItem;
     Customer customer=null;
     List<BoInvoice>invoice;
@@ -209,6 +210,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         lvPaymentTable = (ListView) findViewById(R.id.MultiCurrenciesPaymentActivity_lvPaymentList);
         spCurrency = (Spinner) findViewById(R.id.MultiCurrenciesPaymentActivity_spCurrency);
         cashButton = (Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCash);
+        foodStampBtn=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickFoodStamp);
+        Log.d("foooodstamp",SETTINGS.enableFoodStamp+"");
+        if(SETTINGS.enableFoodStamp){
+            foodStampBtn.setVisibility(View.VISIBLE);
+        }else {
+            foodStampBtn.setVisibility(View.INVISIBLE);
+        }
         checkButton=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCheck);
         creditCardButton=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCreditCard);
         tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + defaultCurrency);
@@ -262,6 +270,43 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
             }
         });
+        foodStampBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                foodStampBtn.setClickable(false);
+                double SalesWitheTax=0,SalesWithoutTax=0,salesaftertax=0;
+                for (int i=0;i<SESSION._ORDER_DETAILES.size();i++){
+                    double rateCurrency= ConverterCurrency.getRateCurrency(SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType(),MultiCurrenciesPaymentActivity.this);
+                    if(!SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
+                        if(SESSION._ORDERS.getCartDiscount()>0){
+                            SalesWithoutTax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
+                        }else {
+                            SalesWithoutTax +=( SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
+                            Log.d("tesddt","    "+SalesWithoutTax);
+
+                        }
+                    }else {
+                        if(SESSION._ORDERS.getCartDiscount()>0){
+                            Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
+
+                            salesaftertax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
+                            SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100))*rateCurrency;
+                        }else {
+                            salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
+                            SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100))*rateCurrency);
+                        }
+                    }
+                }
+                double totalPriceAfterDiscount= totalPrice- (totalPrice * (SESSION._ORDERS.cartDiscount/100));
+             double  vat=  totalPriceAfterDiscount - SalesWitheTax;
+                totalPrice=totalPrice-vat;
+                SESSION._ORDERS.setTotalPrice(totalPrice);
+                tvTotalPrice.setText(Util.makePrice(totalPrice));
+
+
+            }
+        });
+
 
         checkButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -391,6 +436,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         Log.d("position",position+"");
         Log.d("paymentTablesrraytempArray",paymentTables.toString());
         paymentTables.remove(position);
+
         ArrayList<PaymentTable> tempArray = new ArrayList<>(paymentTables);
         Log.d("tempArraytempArray",tempArray.toString());
         if (!tempArray.isEmpty()&&tempArray!=null&&tempArray.size()>=0){
