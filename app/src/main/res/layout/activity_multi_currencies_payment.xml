@@ -179,17 +179,20 @@
             android:layout_height="wrap_content"
             android:text="@string/credit_card" />
 
+
         <Button
             android:id="@+id/MultiCurrenciesPaymentActivity_btQuickPinPad"
             style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/pin_pad" />
-
         <Button
+            android:id="@+id/MultiCurrenciesPaymentActivity_btQuickFoodStamp"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:text="@string/food_stamp"
+            android:visibility="gone"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

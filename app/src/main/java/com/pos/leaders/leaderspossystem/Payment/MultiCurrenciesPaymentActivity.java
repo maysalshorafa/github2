@@ -82,7 +82,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     boolean multiCurrencyFromCheck=false;
     boolean multiCurrencyFromCreditCurrentlyInsert=false;
     boolean multiCurrencyFromCheckCurrentlyInsert=false;
-    Button cashButton , checkButton , creditCardButton,btnQuickPrice_5,btnQuickPrice_10,btnQuickPrice_20,btnQuickPrice_50,btnQuickPrice_100,btnQuickPrice_200;
+    Button cashButton , checkButton , creditCardButton,btnQuickPrice_5,btnQuickPrice_10,btnQuickPrice_20,btnQuickPrice_50,btnQuickPrice_100,btnQuickPrice_200 , foodStampBtn;
     int positionItem;
     Customer customer=null;
     List<BoInvoice>invoice;
@@ -209,6 +209,12 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         lvPaymentTable = (ListView) findViewById(R.id.MultiCurrenciesPaymentActivity_lvPaymentList);
         spCurrency = (Spinner) findViewById(R.id.MultiCurrenciesPaymentActivity_spCurrency);
         cashButton = (Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCash);
+        foodStampBtn=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickFoodStamp);
+        if(SETTINGS.enableFoodStamp){
+            foodStampBtn.setVisibility(View.VISIBLE);
+        }else {
+            foodStampBtn.setVisibility(View.INVISIBLE);
+        }
         checkButton=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCheck);
         creditCardButton=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCreditCard);
         tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + defaultCurrency);
@@ -391,6 +397,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         Log.d("position",position+"");
         Log.d("paymentTablesrraytempArray",paymentTables.toString());
         paymentTables.remove(position);
+
         ArrayList<PaymentTable> tempArray = new ArrayList<>(paymentTables);
         Log.d("tempArraytempArray",tempArray.toString());
         if (!tempArray.isEmpty()&&tempArray!=null&&tempArray.size()>=0){
