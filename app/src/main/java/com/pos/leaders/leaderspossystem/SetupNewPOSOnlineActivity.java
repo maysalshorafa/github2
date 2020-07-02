@@ -37,7 +37,6 @@ import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageType;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.pos.leaders.leaderspossystem.syncposservice.MessagesCreator;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
@@ -49,16 +48,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.pos.leaders.leaderspossystem.SetUpManagement.POS_Currency;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.context;
 import static com.pos.leaders.leaderspossystem.SetupNewPOSOnlineActivity.posSetting;
-import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 public class SetupNewPOSOnlineActivity extends Activity {
     public final static String BO_CORE_ACCESS_AUTH = "BOCOREACCESSAUTH";
@@ -512,7 +508,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     String verCode = pInfo.versionName;
                     PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                     posSettingDbAdapter.open();
-                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SetupNewPOSOnlineActivity.currencyCode,SetupNewPOSOnlineActivity.currencySymbol,SetupNewPOSOnlineActivity.country,SETTINGS.enableDuplicateInvoice);
+                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SetupNewPOSOnlineActivity.currencyCode,SetupNewPOSOnlineActivity.currencySymbol,SetupNewPOSOnlineActivity.country,SETTINGS.   enableDuplicateInvoice);
                     posSetting=posSettingDbAdapter.getPosSettingID();
                     addPosSetting(posSetting);
                     Log.d("idPosSettingPO",posSetting.toString());
