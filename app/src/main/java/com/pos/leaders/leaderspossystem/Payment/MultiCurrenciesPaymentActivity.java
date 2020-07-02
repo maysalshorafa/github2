@@ -215,7 +215,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         if(SETTINGS.enableFoodStamp){
             foodStampBtn.setVisibility(View.VISIBLE);
         }else {
-            foodStampBtn.setVisibility(View.INVISIBLE);
+            foodStampBtn.setVisibility(View.GONE);
         }
         checkButton=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCheck);
         creditCardButton=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickCreditCard);

@@ -48,7 +48,6 @@ import com.pos.leaders.leaderspossystem.Models.CustomerType;
 import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.Employee;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
-import com.pos.leaders.leaderspossystem.Models.LincessPos;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -2714,7 +2713,11 @@ public class PdfUA {
             }
             productDBAdapter.close();
         }
+        if(SETTINGS.enableFoodStamp){
+            totalPrice=SESSION._TEMP_ORDERS.getTotalPrice();
+        }
         totalSaved = (totalPrice - saleTotalPrice);
+
         Log.d("pricePDF",price_before_tax+"");
         Log.d("totalPriceCal",totalPrice+"");
         Log.d("saleTotalPriceCal",saleTotalPrice+"");
