@@ -1499,8 +1499,8 @@ public class InvoiceImg {
         Log.d("noTaxCan",noTax+"");
         Log.d("totalPriceAfter",totalPriceAfterDiscount+"");
         Log.d("priceBefor",totalPriceAfterDiscount-noTax+"");
-        Block addsTaxValue = new Block(Util.makePrice(totalPriceAfterDiscount-noTax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        Block priceBeforeTax = new Block(Util.makePrice(noTax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block addsTaxValue = new Block(Util.makePrice(-1*(totalPriceAfterDiscount-noTax)), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block priceBeforeTax = new Block(Util.makePrice(noTax*-1), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
         // Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         //blocks.add(numTax.Left());
@@ -1591,8 +1591,8 @@ public class InvoiceImg {
         }
         if(cashPaymentList.size()>0){
             Block b_payment_Cash = new Block("\u200e" + context.getString(R.string.cash)  , 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.33));
-            Block b_total_Cash = new Block("\u200E" +  Util.makePrice(sale.getTotalPrice()*-1), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
-            Block b_given_Cash = new Block("\u200E" + Util.makePrice(cash_plus*-1), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_total_Cash = new Block("\u200E" +  Util.makePrice(sale.getTotalPrice()), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
+            Block b_given_Cash = new Block("\u200E" + Util.makePrice(cash_plus), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.21));
             Block b_returned_Cash = new Block("\u200E" + Util.makePrice((sale.getTotalPrice()-cash_plus)*-1), 28.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
             blocks.add(clear.Left());
             blocks.add(b_returned_Cash.Left());

@@ -696,6 +696,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                                         long sID = orderDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), lastOrder.getReplacementNote(), true, lastOrder.getTotalPrice() * -1, lastOrder.getTotalPaidAmount() * -1, lastOrder.getCustomerId(), lastOrder.getCustomer_name(),lastOrder.getCartDiscount(),lastOrder.getNumberDiscount(),lastOrder.getOrderId(),lastOrder.getSalesBeforeTax()* -1,lastOrder.getSalesWithTax()* -1,lastOrder.getTotalSaved());
                                                         Order order = orderDBAdapter.getOrderById(sID);
+
                                                         lastOrder.setCancellingOrderId(sID);
                                                         Log.d("orderCancle",order.toString());
                                                         orderDBAdapter.updateEntry(lastOrder);
@@ -722,6 +723,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                             currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),sID,CONSTANT.DEBIT,lastOrder.getTotalPaidAmount() * -1,SETTINGS.currencyCode,CONSTANT.CASH);
                                                             currencyReturnsDBAdapter.insertEntry(lastOrder.getOrderId(),(lastOrder.getTotalPaidAmount()-lastOrder.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
                                                         }
+
                                                         Log.d("CncelInvoice",order.toString());
                                                   if (checks.size() > 0) {
                                                             try {
@@ -3622,14 +3624,19 @@ public class SalesCartActivity extends AppCompatActivity {
     }
 
     private void removeFromCart(int index) {
-        OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
+        try {
+            OrderDetails orderDetails = SESSION._ORDER_DETAILES.get(index);
 
-        if(!orderDetails.scannable||orderDetails.giftProduct)
-            restCategoryOffers();
-        SESSION._ORDER_DETAILES.remove(index);
-        saleDetailsListViewAdapter.setSelected(-1);
-        //restCategoryOffers();
-        refreshCart();
+            if(!orderDetails.scannable||orderDetails.giftProduct)
+                restCategoryOffers();
+            SESSION._ORDER_DETAILES.remove(index);
+            saleDetailsListViewAdapter.setSelected(-1);
+            //restCategoryOffers();
+            refreshCart();
+        }catch (Exception e){
+            Log.d("excepton",e.toString());
+        }
+
     }
 
     void restCategoryOffers(){

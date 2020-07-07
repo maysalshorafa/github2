@@ -26,19 +26,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
+import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.ChecksListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.Tools.symbolWithCodeHashMap;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
@@ -450,8 +447,6 @@ public class ChecksActivity extends AppCompatActivity {
 						Date utilDate=DateConverter.stringToDate(lastItem.getEtDate());
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(utilDate);
-						Log.d("lastItemEtCheckNum",lastItem.getEtCheckNum()+" "+lastItem.getEtBankNum()+" "+lastItem.getEtBenchNum()+" "+lastItem.getEtAccountNum()+
-						" "+lastItem.getEtAmount());
 						check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
 								lastItem.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
 						//lastItem.findViewById(R.id.listChecks_ETAmount);
@@ -467,7 +462,6 @@ public class ChecksActivity extends AppCompatActivity {
 					}
 					checkList.add(newCheck);
 					lvChecks.setAdapter(adapter);
-					Log.d("checkList",checkList.toString());
 					getTotal();
 				}
 
