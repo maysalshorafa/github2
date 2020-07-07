@@ -78,5 +78,8 @@ public class SETTINGS {
 	public static String country;
     public static String dueDate;
 	public static String statusLincess=CONSTANT.INACTIVE;
+	public static Boolean minusPrice=false;
+	public static Boolean clickCreditBtn=false;
+
 }
 

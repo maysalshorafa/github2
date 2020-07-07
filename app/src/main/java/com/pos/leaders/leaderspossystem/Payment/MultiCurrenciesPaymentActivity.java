@@ -326,6 +326,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         creditCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SETTINGS.clickCreditBtn=true;
                 multiCurrencyFromCreditCurrentlyInsert=true;
              /*   if (selectedCurrencyRate>1){
                     //  totalPrice= totalPrice / selectedCurrencyRateREsult;

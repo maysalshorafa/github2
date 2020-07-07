@@ -441,6 +441,7 @@ public class ChecksActivity extends AppCompatActivity {
 
 					Check check=new Check();
 					int lsttchildID = lvChecks.getChildCount()-1;
+					Log.d("lsttchildID",lsttchildID+"" +lvChecks.getChildCount());
 					if(lvChecks.getChildCount()>1) {
 						ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lsttchildID).getTag();
 
@@ -449,6 +450,8 @@ public class ChecksActivity extends AppCompatActivity {
 						Date utilDate=DateConverter.stringToDate(lastItem.getEtDate());
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(utilDate);
+						Log.d("lastItemEtCheckNum",lastItem.getEtCheckNum()+" "+lastItem.getEtBankNum()+" "+lastItem.getEtBenchNum()+" "+lastItem.getEtAccountNum()+
+						" "+lastItem.getEtAmount());
 						check = new Check(lastItem.getEtCheckNum(), lastItem.getEtBankNum(), lastItem.getEtBenchNum(), lastItem.getEtAccountNum(),
 								lastItem.getEtAmount(), new java.sql.Timestamp(utilDate.getTime()), false);
 						//lastItem.findViewById(R.id.listChecks_ETAmount);
@@ -464,6 +467,7 @@ public class ChecksActivity extends AppCompatActivity {
 					}
 					checkList.add(newCheck);
 					lvChecks.setAdapter(adapter);
+					Log.d("checkList",checkList.toString());
 					getTotal();
 				}
 

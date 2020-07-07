@@ -178,18 +178,25 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                 zReportDBAdapter.open();
                 try {
                     ZReport zReport =zReportDBAdapter.getLastRow();
-                    if(rCurrency.getId()==currencyList.get(0).getId()) {
-                        zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() - returnCurrencyValue);
 
-                    }if (SETTINGS.enableCurrencies) {
-                        if (rCurrency.getId()==currencyList.get(1).getId()){
-                            zReport.setSecondTypeAmount(zReport.getSecondTypeAmount()-returnCurrencyValue);
-                        }else if(rCurrency.getId()==currencyList.get(2).getId()){
-                            zReport.setThirdTypeAmount(zReport.getThirdTypeAmount()-returnCurrencyValue);
-                        }else if(rCurrency.getId()==currencyList.get(3).getId()){
-                            zReport.setFourthTypeAmount(zReport.getFourthTypeAmount()-returnCurrencyValue);
-                        }}
+                    if (SETTINGS.minusPrice&&SETTINGS.clickCreditBtn){
+                        SETTINGS.clickCreditBtn=false;
+                        SETTINGS.minusPrice=false;
+                    }
+                    else {
+                        if(rCurrency.getId()==currencyList.get(0).getId()) {
+                            zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() - returnCurrencyValue);
+                        }if (SETTINGS.enableCurrencies) {
+                            if (rCurrency.getId()==currencyList.get(1).getId()){
+                                zReport.setSecondTypeAmount(zReport.getSecondTypeAmount()-returnCurrencyValue);
+                            }else if(rCurrency.getId()==currencyList.get(2).getId()){
+                                zReport.setThirdTypeAmount(zReport.getThirdTypeAmount()-returnCurrencyValue);
+                            }else if(rCurrency.getId()==currencyList.get(3).getId()){
+                                zReport.setFourthTypeAmount(zReport.getFourthTypeAmount()-returnCurrencyValue);
+                            }}
                     zReport.setCashTotal(zReport.getCashTotal() - returnCurrencyValue);
+
+                    }
 
                     zReportDBAdapter.updateEntry(zReport);
                     zReportDBAdapter.close();

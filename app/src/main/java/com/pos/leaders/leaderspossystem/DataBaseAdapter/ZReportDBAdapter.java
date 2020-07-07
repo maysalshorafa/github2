@@ -324,7 +324,11 @@ public class ZReportDBAdapter {
         saleDBAdapter.open();
         List<Order> sales = saleDBAdapter.getBetween(from, to);
         saleDBAdapter.close();
-        List<Payment> payments = paymentList(sales);
+
+        for (int i=0;i<sales.size();i++){
+            amount+=sales.get(i).getTotalPrice();
+        }
+       /* List<Payment> payments = paymentList(sales);
 
         for (Payment p : payments) {
             if(p.getAmount()>0){
@@ -333,9 +337,9 @@ public class ZReportDBAdapter {
             }else {
                 amountMinus+=p.getAmount();
             }
-        }
-        amount = amountPlus+amountMinus;
-      close();
+        }*/
+//        amount = amountPlus+amountMinus;
+  //    close();
         return amount;
     }
     public List<Payment> paymentList(List<Order> sales) {

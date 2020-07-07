@@ -2120,6 +2120,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 Log.d("SSSs",s);
                 if (SESSION._ORDER_DETAILES.size() > 0) {
+                 if (SESSION._ORDERS.getTotalPrice()<0){
+                     SETTINGS.minusPrice=true;
+                 }
                     //Intent intent = new Intent(SalesCartActivity.this, CashActivity.class);
                    SESSION._ORDERS.setTotalSaved(Double.parseDouble(s));
                     Log.d("testTotalSaved",s+"");

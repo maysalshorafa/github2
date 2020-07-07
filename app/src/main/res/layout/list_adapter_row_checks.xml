@@ -45,7 +45,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:text="1"
             android:gravity="center"
             android:inputType="number"
             tools:layout_editor_absoluteX="318dp"
@@ -79,7 +78,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:text="1"
             android:gravity="center"
             android:inputType="number"
             tools:layout_editor_absoluteX="33dp"
@@ -102,7 +100,6 @@
             android:layout_marginTop="8dp"
             android:text="@string/delete_check"
             android:layout_gravity="center"
-
             android:src="@drawable/delete_button"
           />
     </LinearLayout>

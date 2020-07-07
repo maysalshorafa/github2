@@ -57,6 +57,7 @@
     <string name="total_price">סה"כ מכירות</string>
     <string name="total_paid">סה\'\'כ הוכנס</string>
     <string name="total_saved">חסכת</string>
+    <string name="vat">מע"מ</string>
     <string name="transfer_credit_card">תעביר כרטיס אשראי</string>
     <string name="try_again">נסה שוב</string>
     <string name="with_tax">חייב למע\'\'מ</string>
@@ -734,4 +735,5 @@
     <string name="text_dialog_lincess">ההיסטוריה של הרישיון הסתיימה, אנא צרו קשר עם החברה להפעלה.</string>
     <string name="please_choose_three_currencies">אנא בחר שלושה מטבעות</string>
     <string name="there_are_no_currencies">אין מטבעות</string>
+
 </resources>
