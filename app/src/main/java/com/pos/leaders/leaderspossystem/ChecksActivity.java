@@ -435,7 +435,7 @@ public class ChecksActivity extends AppCompatActivity {
 					Toast.makeText(ChecksActivity.this,getString(R.string.dont_need_to_add_another_check),Toast.LENGTH_LONG).show();
 
 				}else {
-
+					Log.d("checkListAct",checkList.toString());
 					Check check=new Check();
 					int lsttchildID = lvChecks.getChildCount()-1;
 					Log.d("lsttchildID",lsttchildID+"" +lvChecks.getChildCount());
@@ -461,6 +461,7 @@ public class ChecksActivity extends AppCompatActivity {
 						newCheck.setCheckNum(check.getCheckNum()+1);
 					}
 					checkList.add(newCheck);
+					Log.d("checkListAftre",checkList.toString());
 					lvChecks.setAdapter(adapter);
 					getTotal();
 				}
@@ -630,6 +631,7 @@ public class ChecksActivity extends AppCompatActivity {
 		Log.d("pos",pos+"");
 		checkList.remove(pos);
 		adapter.remove(pos);
+		Log.d("checkList",checkList.toString());
 		adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
 		lvChecks.setAdapter(adapter);
 		adapter.notifyDataSetChanged();

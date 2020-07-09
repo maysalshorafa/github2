@@ -465,9 +465,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportCountDbAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
                     db.execSQL(ZReportCountDbAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
 
-                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
-                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
-                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
 
                     db.execSQL("drop table Currency;");
                     db.execSQL(CurrencyDBAdapter.DATABASE_CREATE);
@@ -484,7 +481,6 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL("update PosSetting set currencySymbol='₪';");
                     db.execSQL("update PosSetting set country='Israel';");
                     db.execSQL("update PosSetting set duplicateInvoice='0';");
-                    db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
                     db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
                     db.execSQL(SettingsDBAdapter.addColumnText("country"));
@@ -504,13 +500,21 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
 
+
+                    break;
+                case 10:
+                    db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
+
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
                     break;
 
-
             }
+
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);
         }

@@ -69,7 +69,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		}
 
 		if (checks.get(position) != null) {
-			if(position==0){
+		/*	if(position==0){
 				holder.etAmount.setHint(checks.get(position).getAmount() + "");
 				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
@@ -77,8 +77,8 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etAccountNum.setHint(checks.get(position).getAccountNum() + "");
 				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
 				amount=checks.get(position).getAmount() ;
-			}
-			else {
+			}*/
+		//	else {
 				holder.etAccountNum.setText(checks.get(position).getAccountNum() + "");
 				holder.etAccountNum.setText(checks.get(position).getAccountNum() + "");
 				holder.etAmount.setText(checks.get(position).getAmount() + "");
@@ -86,7 +86,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etBenchNum.setText(checks.get(position).getBranchNum() + "");
 				holder.etCheckNum.setText(checks.get(position).getCheckNum() + "");
 				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
-			}
+		//	}
 		}
 
 

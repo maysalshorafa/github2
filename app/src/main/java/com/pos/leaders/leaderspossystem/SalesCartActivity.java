@@ -3487,6 +3487,7 @@ public class SalesCartActivity extends AppCompatActivity {
     public int currCount = 0;
     static Map<Long, Offer> offers = new HashMap<Long, Offer>();
     protected void calculateTotalPrice()  {
+        boolean flag=false;
         tempSaleTotalPrice = 0;
         String a = tvTotalPrice.getText().toString();
         Log.d("tvTotalPrice",tvTotalPrice.getText().toString());
@@ -3558,6 +3559,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
         if (SESSION._ORDERS!=null&&SESSION._ORDERS.cartDiscount != 0&& SESSION._ORDER_DETAILES.size()>0) {
             //show the discount view
+            flag=true;
             llCartDiscount.setVisibility(View.VISIBLE);
             tvTotalPriceBeforeCartDiscount.setVisibility(View.VISIBLE);
 
@@ -3586,8 +3588,6 @@ public class SalesCartActivity extends AppCompatActivity {
             if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType().equals("0")){
                 updateCurrencyType.updateCurrencyToShekl(SalesCartActivity.context,SESSION._ORDER_DETAILES.get(i).getProduct());
             }
-            //       if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType()==0){
-            //   double rateCurrency= ConverterCurrency.getRateCurrency("ILS",SalesCartActivity.this);
             double rateCurrency= ConverterCurrency.getRateCurrency(SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType(),SalesCartActivity.this);
             if(!SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
                 if(SESSION._ORDERS.getCartDiscount()>0){
@@ -3600,7 +3600,6 @@ public class SalesCartActivity extends AppCompatActivity {
             }else {
                 if(SESSION._ORDERS.getCartDiscount()>0){
                     Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
-
                     salesaftertax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
                     SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100))*rateCurrency;
                 }else {
@@ -3609,8 +3608,15 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         }
-        double totalPriceAfterDiscount= saleTotalPrice- (saleTotalPrice * (SESSION._ORDERS.cartDiscount/100));
-        Vat.setText(Util.makePrice(totalPriceAfterDiscount - SalesWitheTax));
+        if (flag){
+            flag=false;
+            Vat.setText(Util.makePrice(saleTotalPrice - SalesWitheTax));
+        }
+        else {
+            double totalPriceAfterDiscount= saleTotalPrice- (saleTotalPrice * (SESSION._ORDERS.cartDiscount/100));
+            Vat.setText(Util.makePrice(totalPriceAfterDiscount - SalesWitheTax));
+        }
+
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
         tvTotalSaved.setText(String.format(new Locale("en"), "%.2f", (totalSaved)) + " " +SETTINGS.currencySymbol);
         tvTotalPrice.setText(String.format(new Locale("en"), "%.2f", saleTotalPrice) + " " + SETTINGS.currencySymbol);
@@ -4084,9 +4090,10 @@ public class SalesCartActivity extends AppCompatActivity {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if(!(productWeightFromEditText.getText().toString().equals(""))){
+                            if (Util.isDouble(productWeightFromEditText.getText().toString())){
                             double x=0;
                             x=Double.parseDouble(productWeightFromEditText.getText().toString());
-                            totalPriceForBalance.setText((x*o.getProduct().getPriceWithTax())+"");
+                            totalPriceForBalance.setText((x*o.getProduct().getPriceWithTax())+"");}
 
                         }}
                 });

@@ -569,7 +569,8 @@ public class DocumentControl {
                             for (int i=0;i<invoiceList.size();i++){
                                 BoInvoice invoice1 = invoiceList.get(i);
                                 String upDataInvoiceRes=transmit.authPutInvoice(ApiURL.Documents,invoice1.toString(), SESSION.token,invoiceList.get(i).getDocNum());
-                                Log.d("invoiceRes",upDataInvoiceRes);
+                                Log.d("invoiceRes",invoice1.toString()+"token"+SESSION.token+"DocNum"+invoiceList.get(i).getDocNum());
+                                Log.d("upDataInvoiceRes",upDataInvoiceRes.toString());
                                 JSONObject upDateInvoice = new JSONObject(upDataInvoiceRes);
                                 if(upDateInvoice.get("status").equals("200")){
                                     PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);

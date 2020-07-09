@@ -693,7 +693,7 @@ public class PrinterTools {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     //feed paper
-
+                    if (dialog.isShowing())
                     dialog.cancel();
                 }
 

@@ -9,7 +9,7 @@ public enum InvoiceStatus{
     SENT("sent"),
     VIEWED("viewed"),
     PARTIALLY_PAID("PARTIALLY_PAID")
-    ,PAID("paid"),
+    ,PAID("PAID"),
     UNPAID("unpaid"),
     CANCELED("canceled"),
     OVERDUE("overdue");

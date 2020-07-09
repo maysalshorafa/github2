@@ -194,6 +194,20 @@ public class ProductsActivity  extends AppCompatActivity  {
         });
 
 
+
+        //set Price with Tax
+        etPriceWithOutTax.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!etPriceWithOutTax.getText().toString().isEmpty()&&!etPriceWithOutTax.getText().toString().equals("")) {
+                    Double price = Double.valueOf(etPriceWithOutTax.getText().toString());
+                    Double priceWithTax = price / (1 + (SETTINGS.tax / 100));
+                    Double tax=price-priceWithTax;
+                    etPriceWithTax.setText(Util.makePrice(price+tax));
+                }
+            }
+        });
+
         //endregion
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +305,7 @@ public class ProductsActivity  extends AppCompatActivity  {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 unit = productUnit.get(position);
-                if(unit.getValue().equalsIgnoreCase(ProductUnit.BARCODEWITHWEIGHT.getValue())||unit.getValue().equalsIgnoreCase(ProductUnit.WEIGHT.getValue())){
+                if(unit.getValue().equalsIgnoreCase(ProductUnit.BARCODEWITHWEIGHT.getValue())){
                     llWeight.setVisibility(View.VISIBLE);
                 }else {
                     llWeight.setVisibility(View.GONE);

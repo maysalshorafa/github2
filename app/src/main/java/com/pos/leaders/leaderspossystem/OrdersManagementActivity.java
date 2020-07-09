@@ -2958,8 +2958,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                                                         .setMessage(getString(R.string.print_copy_invoice))
                                                                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                                                             public void onClick(DialogInterface dialog, int which) {
-                                                                                                BoInvoice boInvoice = (BoInvoice) objectList.get(position-1);
                                                                                                 try {
+                                                                                                    BoInvoice boInvoice = (BoInvoice) objectList.get(position-1);
                                                                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                                                                                     SETTINGS.copyInvoiceBitMap = invoiceImg.copyInvoice(boInvoice);
                                                                                                     startActivity(i);
@@ -2967,7 +2967,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                                                                                     e.printStackTrace();
                                                                                                     Log.d("exception",e.toString());
                                                                                                     sendLogFile();
-
                                                                                                 }
                                                                                             }
                                                                                         })
