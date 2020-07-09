@@ -200,13 +200,25 @@ public class ProductsActivity  extends AppCompatActivity  {
             @Override
             public void onClick(View view) {
                 if (!etPriceWithOutTax.getText().toString().isEmpty()&&!etPriceWithOutTax.getText().toString().equals("")) {
-                    Double price = Double.valueOf(etPriceWithOutTax.getText().toString());
-                    Double priceWithTax = price / (1 + (SETTINGS.tax / 100));
-                    Double tax=price-priceWithTax;
-                    etPriceWithTax.setText(Util.makePrice(price+tax));
+                    Double priceWithTax = priceWithTax(Double.valueOf(etPriceWithOutTax.getText().toString()));
+                    etPriceWithTax.setText(Util.makePrice(priceWithTax));
                 }
             }
         });
+
+
+//        set Price without Tax
+        etPriceWithTax.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
+                    Double priceWithOutTax = priceWithOutTax(Double.valueOf(etPriceWithTax.getText().toString()));
+                    etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                }
+            }
+        });
+
+
 
         //endregion
 
@@ -716,5 +728,15 @@ public class ProductsActivity  extends AppCompatActivity  {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public double priceWithTax(Double price){
+        Double priceWithTax = price * (1 + (SETTINGS.tax / 100));
+        return priceWithTax;
+    }
+
+    public double priceWithOutTax(Double price){
+        Double priceWithOutTax = price / (1 + (SETTINGS.tax / 100));
+        return priceWithOutTax;
     }
 }
