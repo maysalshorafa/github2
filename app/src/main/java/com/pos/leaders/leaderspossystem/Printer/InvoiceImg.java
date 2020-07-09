@@ -2150,12 +2150,18 @@ public class InvoiceImg {
 
         for (int a=0;a<cartDetailsList.length();a++) {
             JSONObject o = cartDetailsList.getJSONObject(a);
-            Product p= productDBAdapter.getProductByID(o.getLong("productId"));
             count+=o.getInt("quantity");
-            int cut = 11;
-            if (p.getDisplayName().length() < cut)
-                cut = p.getDisplayName().length();
-            name.text += (p.getDisplayName().substring(0, cut) + newLineL);
+
+            Product p= productDBAdapter.getProductByID(o.getLong("productId"));
+            if(p!=null) {
+                int cut = 11;
+                if (p.getDisplayName().length() < cut)
+                    cut = p.getDisplayName().length();
+                name.text += (p.getDisplayName().substring(0, cut) + newLineL);
+            }else {
+                name.text += (o.getLong("productId") + newLineL);
+
+            }
             counter.text += o.getInt("quantity") + "\n";
             unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getDouble("unitPrice")) + "\n";
             price.text += String.format(new Locale("en"), "%.2f",(o.getDouble("unitPrice")*o.getInt("quantity"))-(o.getDouble("unitPrice")*o.getInt("quantity")*o.getDouble("discount")/100)) + "\n";

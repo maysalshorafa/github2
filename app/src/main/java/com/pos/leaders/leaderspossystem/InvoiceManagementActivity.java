@@ -289,8 +289,14 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                         public void afterTextChanged(Editable s) {
                             String checkStr = etAmount.getText().toString();
                             if(!checkStr.matches("")){
-                                double total=debtAmount-Double.parseDouble(etAmount.getText().toString());
-                                totalAmountAfterPay.setText(Util.makePrice(total));
+                                if (Util.isDouble(etAmount.getText().toString())){
+                                    double x=0;
+                                    double total=debtAmount-Double.parseDouble(etAmount.getText().toString());
+                                    totalAmountAfterPay.setText(Util.makePrice(total));
+                                }
+
+
+
                             }
                         }
                     });

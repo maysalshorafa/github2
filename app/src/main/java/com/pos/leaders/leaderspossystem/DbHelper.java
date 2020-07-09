@@ -86,7 +86,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 11;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
@@ -418,7 +418,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     ClearSync clearSync3 = new ClearSync(context);
                     clearSync3.execute(context);
 
-                break;
+                    break;
                 case 6:
                     db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPull"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPullDetails"));
@@ -500,17 +500,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
 
-                    db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
+                 /*   db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
 
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
-                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
-
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);*/
                     break;
-              /*  case 10:
+                case 10:
                     db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
@@ -519,7 +518,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
-                    break;*/
+                    break;
 
             }
 
