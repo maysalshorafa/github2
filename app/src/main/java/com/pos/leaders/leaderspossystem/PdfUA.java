@@ -105,6 +105,146 @@ public class PdfUA {
     static double aReportDetailsForThirdCurrency=0;
     static double aReportDetailsForForthCurrency=0;
     static double aReportAmount = 0;
+    public static void  printReceiptReportOrder(Context context, String res,String mainMer) throws IOException, DocumentException, JSONException {
+        String str="";
+        Log.d("rrrr",res);
+        JSONObject jsonObject = new JSONObject(res);
+        String documentsData = jsonObject.getString("documentsData");
+        JSONObject customerJson = new JSONObject(documentsData);
+        JSONArray refNumber = customerJson.getJSONArray("invoicesNumbers");
+        JSONArray payments = customerJson.getJSONArray("payments");
+        JSONObject payment = payments.getJSONObject(0);
+        JSONArray paymentDetails = payment.getJSONArray("paymentDetails");
+        JSONObject customerInfo = new JSONObject(customerJson.getJSONObject("customer").toString());
+
+        // create file , document region
+        Document document = new Document();
+        String fileName = "receipt.pdf";
+        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
+        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        path.mkdirs();
+        File file = new File(path, fileName);
+        if(file.exists()){
+            PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
+            writer.print("");
+            writer.close();
+        }
+
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();        //end region
+        //end region
+
+        BaseFont urName = BaseFont.createFont("assets/arial.ttf", "Identity-H",true,BaseFont.EMBEDDED);
+        Font font = new Font(urName, 30);
+        Font dateFont = new Font(urName, 24);
+        //heading table
+        PdfPTable headingTable = new PdfPTable(1);
+        PdfPTable creditCard = new PdfPTable(4);
+        headingTable.deleteBodyRows();
+        headingTable.setRunDirection(0);
+        creditCard.deleteBodyRows();
+        creditCard.setRunDirection(0);
+        insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, font);
+        insertCell(headingTable, "\n---------------------------" , Element.ALIGN_CENTER, 1, font);
+
+//        insertCell(headingTable, context.getString(R.string.date) + invoiceJsonObject.getString("date"), Element.ALIGN_CENTER, 1, font);
+
+        //end
+
+        //date table from , to
+        PdfPTable dateTable = new PdfPTable(2);
+        dateTable.setRunDirection(0);
+        dateTable.setWidthPercentage(108f);
+
+        insertCell(dateTable, context.getString(R.string.receipt_numbers)+":"+jsonObject.getString("docNum"), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        insertCell(dateTable, context.getString(R.string.customer_name)+":"+customerInfo.getString("firstName")+customerInfo.getString("lastName"), Element.ALIGN_LEFT, 2, dateFont);
+
+        //end
+        insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
+
+        PdfPTable orderDetailsTable = new PdfPTable(3);
+        orderDetailsTable.setRunDirection(0);
+        orderDetailsTable.setWidthPercentage(108f);
+        Log.d("customerJson",customerJson.toString());
+        insertCell(orderDetailsTable, context.getString(R.string.total_paid)+": "+customerJson.getDouble("paidAmount"), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
+        insertCell(orderDetailsTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 3, font);
+        insertCell(orderDetailsTable, context.getString(R.string.date)+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(dateTable, context.getString(R.string.reference_invoice)+":"+refNumber.get(0), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(dateTable, context.getString(R.string.customer_ledger)+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
+
+        insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
+
+        if (paymentDetails.getJSONObject(0).getString("@type").equalsIgnoreCase("check")) {
+            insertCell(orderDetailsTable, context.getString(R.string.amount), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable, context.getString(R.string.date), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(orderDetailsTable, context.getString(R.string.checks), Element.ALIGN_LEFT, 1, dateFont);
+            for(int i =0 ; i<paymentDetails.length();i++){
+                JSONObject jsonObject1 = paymentDetails.getJSONObject(i);
+                insertCell(orderDetailsTable, jsonObject1.getDouble("amount")+"", Element.ALIGN_LEFT, 1, dateFont);
+                insertCell(orderDetailsTable, DateConverter.toDate(new Date(jsonObject1.getLong("createdAt"))), Element.ALIGN_LEFT, 1, dateFont);
+                insertCell(orderDetailsTable, jsonObject1.getInt("checkNum")+"", Element.ALIGN_LEFT, 1, dateFont);
+            }
+            //end
+
+            //add table to document
+
+
+            //end :)
+        }
+        Log.d("mainMerCredit",mainMer);
+        for (String s : mainMer.split("\n")) {
+
+           /* String[] tokens = s.split("\\s+");
+            Log.i("split0", Arrays.toString(tokens));*/
+
+            if(!s.replaceAll(" ","").equals("")) {
+                if(s.contains("שם מסוף")){
+                    continue;
+                }
+                else if(s.contains("מספר מסוף")){
+                    continue;
+                }
+                else if(s.contains("גרסת תוכנה")){
+                    continue;
+                }
+                else if(s.contains("מספר עסק בחברת האשראי")){
+                    continue;
+                }
+                else if(s.contains("Powered")){
+                    continue;
+                }
+                else  if(s.contains("מספר כרטיס")){
+                    if(s.split("\\s+")[1].length()>4){
+                        String head = "מספר כרטיס";
+                        String ss = "";
+                        for(int i=0;i<s.split("\\s+")[1].length()-4;i++) {
+                            ss += "*";
+                        }
+                        ss += s.split("\\s+")[1].substring(s.split("\\s+")[1].length() - 4, s.split("\\s+")[1].length());
+                        str += "\u200E" + ss + "\t" + head + "\n";
+                        continue;
+                    }
+                }
+                str += "\u200E" + s + "\n";
+            }
+
+            Log.i("cc row", s);
+        }
+        Log.d("str", str);
+        if(str!=""){
+            insertCell(creditCard,str, Element.ALIGN_CENTER, 4, font);
+        }
+        document.add(headingTable);
+        document.add(dateTable);
+        document.add(orderDetailsTable);
+        document.add(creditCard);
+
+        document.close();
+    }
     public static void  printUserReport(Context context, List<ScheduleWorkers>scheduleWorkersArrayList,long userId,Date from ,Date to) throws IOException, DocumentException {
         EmployeeDBAdapter userDBAdapter = new EmployeeDBAdapter(context);
         userDBAdapter.open();
