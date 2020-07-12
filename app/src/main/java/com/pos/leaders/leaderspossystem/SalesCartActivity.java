@@ -193,6 +193,7 @@ public class SalesCartActivity extends AppCompatActivity {
     private static final int REQUEST_MULTI_CURRENCY_ACTIVITY_CODE = 444;
     private static final int REQUEST_CREDIT_ACTIVITY_CODE = 500;
     private static final int REQUEST_INVOICE = 900;
+    public static  final int REQUEST_RECIPT_ACTIVITY_CODE=303;
 
     public static final String COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE = "com_pos_leaders_cart_total_price";
     String transID = "";
@@ -5230,6 +5231,14 @@ public class SalesCartActivity extends AppCompatActivity {
             sum_pointDbAdapter.close();
         }
         //endregion
+
+
+        if (requestCode==REQUEST_RECIPT_ACTIVITY_CODE){
+            if (resultCode==RESULT_OK){
+               Double totalPrice= Double.valueOf(data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER));
+      //          Customer customer=data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER);
+            }
+        }
 
         //region Cash Activity WithOut Currency Region
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {

@@ -1475,8 +1475,8 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
             if (msgData.startsWith("[")) {
                 try {
                     JSONArray jsonArray = new JSONArray(msgData);
-
-                    for (int i = 0; i < jsonArray.length() - 1; i++) {
+                    Log.d("jsonOrderMangmentAct",jsonArray.length()+"");
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         msgData = jsonArray.getJSONObject(i).toString();
                         JSONObject msgDataJson = new JSONObject(msgData);
                         if (msgDataJson.getString("type").equals("INVOICE")) {
@@ -1501,6 +1501,7 @@ class StartInvoiceAndCreditInvoiceConnection extends AsyncTask<String,Void,Strin
 
                     }
 
+              Log.d("invoiceOrderListS", OrdersManagementActivity.invoiceList.size()+"");
 
                 } catch (Exception e) {
                     Log.d("exception1", e.toString());

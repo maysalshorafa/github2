@@ -50,6 +50,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.pos.leaders.leaderspossystem.SalesCartActivity.REQUEST_RECIPT_ACTIVITY_CODE;
+
 public class InvoiceManagementActivity extends AppCompatActivity {
     public static double debtAmount=0  ,pay=0, totalAmount=0;
     public static ListView invoiceListView;
@@ -186,8 +188,8 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                     intent.putExtra("com_pos_leaders_cart_total_price",totalAmount);
                     intent.putExtra("Receipt","ReceiptWay");
                     intent.putExtra("customer",customer.toString());
-
-                    v.getContext().startActivity(intent);
+                    startActivityForResult(intent, REQUEST_RECIPT_ACTIVITY_CODE);
+                    //v.getContext().startActivity(intent);
 
 
            }

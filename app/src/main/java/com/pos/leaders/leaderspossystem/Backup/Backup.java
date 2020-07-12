@@ -1,16 +1,28 @@
 package com.pos.leaders.leaderspossystem.Backup;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DbHelper;
+import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Models.PosSetting;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
+import com.pos.leaders.leaderspossystem.SetUpManagement;
 import com.pos.leaders.leaderspossystem.Tools.BufferDbEmail;
+import com.pos.leaders.leaderspossystem.Tools.CompanyStatus;
+import com.pos.leaders.leaderspossystem.Tools.PrinterType;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.io.File;
@@ -41,7 +53,7 @@ public class Backup{
     private File downloadDir;
     private static final String LOG_TAG = "Backup_Backup";
     public static final String FULL_BACKUP_FILE_NAME = "Full_Backup.data";
-    Context context;
+    static Context context;
 
     public Backup(Context c,String folderName){
         this.context = c;
@@ -307,6 +319,35 @@ public class Backup{
         output.close();
         fis.close();
         BufferDbEmail.sendLogFileBufferDb();
+    }
+
+    public static void BackupPossSettingFile() throws IOException {
+        final String inFileName = "/data/data/com.pos.leaders.leaderspossystem/shared_prefs/POS_Management.xml";
+        File dbFile = new File(inFileName);
+        FileInputStream fis = new FileInputStream(dbFile);
+
+        String outFileName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/POS_Management.xml";
+
+        // Open the empty db as the output stream
+        OutputStream output = new FileOutputStream(outFileName);
+
+        // Transfer bytes from the inputfile to the outputfile
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = fis.read(buffer))>0){
+            output.write(buffer, 0, length);
+        }
+
+        // Close the streams
+        output.flush();
+        output.close();
+        fis.close();
+        BufferDbEmail.sendLogFileBufferDb();
+        PosSettingDbAdapter posSettingDbAdapter=new PosSettingDbAdapter(context);
+        posSettingDbAdapter.open();
+        if (!posSettingDbAdapter.existsHaveColumnInTable()){
+
+        }
     }
     public static void BackupPOSDB() throws IOException {
         final String inFileName = "/data/data/com.pos.leaders.leaderspossystem/databases/POSDB.db";

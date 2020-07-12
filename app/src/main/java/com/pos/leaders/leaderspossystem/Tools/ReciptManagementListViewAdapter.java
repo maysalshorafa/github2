@@ -100,13 +100,16 @@ public class ReciptManagementListViewAdapter extends ArrayAdapter {
                   button.setOnClickListener(new View.OnClickListener() {
 
                                 public void onClick(View arg0) {
-                                    if(customer_amount.getText().toString()!=""){
+                                    if(!customer_amount.getText().toString().isEmpty()){
                                         double amount =Double.parseDouble(customer_amount.getText().toString());
                                         reciptObjectList.get(position).setPartialAmount(amount);
                                    //    Log.d("reciptObjectList",reciptObjectList.toString());
                                       //  InvoiceManagementActivity.edit(position,String.valueOf(amount),reciptObjectList);
 
                                         customerDialog.dismiss();
+                                    }
+                                    else {
+                                           customerDialog.dismiss();
                                     }
 
 

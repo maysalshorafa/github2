@@ -22,6 +22,6 @@ public class CONSTANT {
     public static final String INACTIVE="inActive";
 
     public static final String ACTIVATION_DATE_LICENCESS="2020-06-01";
-   public static final String DUE_DATE_LICENCESS="2020-06-01";
+   public static final String DUE_DATE_LICENCESS="2021-06-01";
    public static final String YEARLY_ACTIVATION_LICENSS="yearly";
 }

@@ -49,7 +49,7 @@ public class PosSettingDbAdapter {
             "`enableCurrency` INTEGER DEFAULT 0 ,`duplicateInvoice` INTEGER DEFAULT 0, `enableCreditCard` INTEGER DEFAULT 0, " +
             "`enablePinPad` INTEGER DEFAULT 0, `enableCustomerMeasurement` INTEGER DEFAULT 0,`noOfFloatPoint` INTEGER DEFAULT 0,`posVersionNo` TEXT ,`posDbVersionNo` TEXT , `printerType` TEXT  , `companyStatus` TEXT  ,`branchId` INTEGER DEFAULT 0 , `currencyCode` TEXT  , `currencySymbol` TEXT ,`country` TEXT )";
     // Variable to hold the database instance
-    private SQLiteDatabase db;
+    private static SQLiteDatabase db;
     // Context of the application using the database.
     private final Context context;
     // Database open/upgrade helper
@@ -422,7 +422,36 @@ public class PosSettingDbAdapter {
         }
 
     }
+    public static boolean existsColumnInTable(SQLiteDatabase inDatabase, String inTable, String columnToCheck) {
+        Cursor mCursor = null;
+        try {
+            // Query 1 row
+            mCursor = inDatabase.rawQuery("SELECT * FROM " + inTable + " LIMIT 0", null);
 
+            // getColumnIndex() gives us the index (0 to ...) of the column - otherwise we get a -1
+            if (mCursor.getColumnIndex(columnToCheck) != -1)
+                return true;
+            else
+                return false;
+
+        } catch (Exception Exp) {
+            // Something went wrong. Missing the database? The table?
+            Log.d("... - existsColumnInTable", "When checking whether a column exists in the table, an error occurred: " + Exp.getMessage());
+            return false;
+        } finally {
+            if (mCursor != null) mCursor.close();
+        }
+    }
+
+    public  static boolean existsHaveColumnInTable(){
+
+        Cursor cursor = db.rawQuery("SELECT count(*) FROM itemtable",null);
+        cursor.moveToFirst();
+        if (cursor.getInt(0) > 0){
+            return true;
+        }
+        return false;
+    }
 
     public static String addColumnInteger(String columnName) {
         String dbc = "ALTER TABLE " + POS_SETTING_TABLE_NAME

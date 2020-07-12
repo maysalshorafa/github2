@@ -510,6 +510,19 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);*/
                     break;
                 case 10:
+                    if (!PosSettingDbAdapter.existsColumnInTable(db,"PosSetting","currencyCode")){
+                        db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
+                        db.execSQL("update PosSetting set currencyCode='ILS';");}
+
+                    if (!PosSettingDbAdapter.existsColumnInTable(db,"PosSetting","currencySymbol")){
+                        db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
+                        db.execSQL("update PosSetting set currencySymbol='₪';");}
+
+                    if (!PosSettingDbAdapter.existsColumnInTable(db,"PosSetting","country")){
+                        db.execSQL(PosSettingDbAdapter.addColumnText("country"));
+                        db.execSQL("update PosSetting set country='Israel';");}
+
+
                     db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
                     db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);

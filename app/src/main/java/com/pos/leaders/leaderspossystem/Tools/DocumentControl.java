@@ -492,24 +492,24 @@ public class DocumentControl {
                 }
                 @Override
                 protected void onPostExecute(Void aVoid) {
-                    try {
-                        if(receiptJsonObject.get("status").equals("200")){
+                    //                        if(receiptJsonObject.get("status").equals("200")){
 
-                            try
-                            {
-                                File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
-                                File file = new File(path,SAMPLE_FILE);
-                                RandomAccessFile f = new RandomAccessFile(file, "r");
-                                byte[] data = new byte[(int)f.length()];
-                                f.readFully(data);
-                                pdfLoadImages(data,context,"");
-                                //pdfLoadImages1(data);
-                            }
-                            catch(Exception ignored)
-                            {
-
-                            }
-                        }else {
+                    try
+                    {
+                        File path = new File( Environment.getExternalStorageDirectory(), context.getPackageName());
+                        File file = new File(path,SAMPLE_FILE);
+                        RandomAccessFile f = new RandomAccessFile(file, "r");
+                        byte[] data = new byte[(int)f.length()];
+                        f.readFully(data);
+                        pdfLoadImagesClosingReport(data,context);
+                        //pdfLoadImages1(data);
+                    }
+                    catch(Exception ignored)
+                    {
+                        Log.d("Exception",ignored.toString());
+                    }
+                    // }
+                     /* else {
                             if (SETTINGS.company.equals("BO_EXEMPT_DEALER")){
                                 new android.support.v7.app.AlertDialog.Builder(context)
                                         .setTitle(context.getString(R.string.invoice_company_status))
@@ -545,10 +545,7 @@ public class DocumentControl {
                                         .show();
                             }
 
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                        }*/
                 }
                 @Override
                 protected Void doInBackground(Void... voids) {

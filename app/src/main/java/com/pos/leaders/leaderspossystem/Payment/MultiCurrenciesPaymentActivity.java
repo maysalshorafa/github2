@@ -54,7 +54,8 @@ import static com.pos.leaders.leaderspossystem.SalesCartActivity.REQUEST_CREDIT_
 public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     public static final String LEADERS_POS_CASH_MULTI_CURRENCY_TOTAL_PRICE = "LEADERS_POS_CASH_MULTI_CURRENCY_TOTAL_PRICE";
     public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE";
-
+    public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT";
+    public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER";
     private double totalPrice_defaultCurrency, excess_defaultCurrency, totalPaid = 0.0;
     private double totalPrice, excess, selectedCurrencyRate = 1 , valRow=0,selectedCurrencyRateREsult=1;
     double actualCurrencyRate=1.0;
@@ -87,6 +88,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     int positionItem;
     Customer customer=null;
     List<BoInvoice>invoice;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,16 +139,30 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                                 startActivity(intent);
                             } else {
                                 DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CASH, totalPrice, "", customer);
-                                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
+                                Log.d("checkInvoice","checkInvoice1");
+                                /*Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                startActivity(intent);
+                                startActivity(intent);*/
                             }
-                        }else{
-                            DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CASH, totalPrice, "", customer);
-                            Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(intent);
                         }
+                        else{
+                            DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CASH, totalPrice, "", customer);
+                            Log.d("checkInvoice","checkInvoice1");
+                           /* Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivity(intent);*/
+                        }
+                        Intent i = new Intent();
+                        i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
+                        i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                        i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
+                        /*if(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote!="") {
+                            i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, CurrencyReturnsCustomDialogActivity.firstCredit);
+                            i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote, CurrencyReturnsCustomDialogActivity.secondCredit);
+                            i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote, CurrencyReturnsCustomDialogActivity.thirdCredit);
+                        }*/
+                        setResult(RESULT_OK, i);
+                        finish();
 
                     }else {
                         Log.d("PaymentTables",paymentTables.toString());

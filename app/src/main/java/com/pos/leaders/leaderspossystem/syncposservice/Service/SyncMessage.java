@@ -1121,7 +1121,9 @@ public class SyncMessage extends Service {
                     }
                     JSONObject respnseLincess = new JSONObject(msgData);
                     long idLincess=lincessDBAdapter.GetLincessID().getId();
-                    lincessDBAdapter.updateEntry(idLincess,SETTINGS.statusLincess,respnseLincess.getString(MessageKey.activationDate),respnseLincess.getString(MessageKey.dueDate),
+                    Timestamp dueDateTimeSt = new Timestamp(Long.parseLong(MessageKey.dueDate));
+                    Timestamp activationDateTimeS=new Timestamp(Long.parseLong(MessageKey.activationDate));
+                    lincessDBAdapter.updateEntry(idLincess,SETTINGS.statusLincess,activationDateTimeS,dueDateTimeSt,
                             respnseLincess.getString(MessageKey.branchId),respnseLincess.getString(MessageKey.companyId),respnseLincess.getString(MessageKey.note));
 
                     break;

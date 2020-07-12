@@ -94,7 +94,7 @@ public class LincessDBAdapter {
             close();
             return insertEntry(lincessPos);
         } catch (SQLException ex) {
-            Log.d("exceptionvscxyzdtf", ex.toString());
+            Log.d("SQLException", ex.toString());
 
             Log.e(POS_LINCESS_TABLE_NAME + " DB insert", "inserting Entry at " + POS_LINCESS_TABLE_NAME + ": " + ex.getMessage());
             return -1;
@@ -127,7 +127,7 @@ public class LincessDBAdapter {
         try {
             return db.insert(POS_LINCESS_TABLE_NAME, null, val);
         } catch (SQLException ex) {
-            Log.d("hhhjj", ex.toString());
+            Log.d("SQLException", ex.toString());
             Log.e(POS_LINCESS_TABLE_NAME + " DB insert", "inserting Entry at " + POS_LINCESS_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
@@ -160,7 +160,7 @@ public class LincessDBAdapter {
 
     }
 
-    public int updateEntry(long idLincess,String statusLincess, String activationDate, String dueDate, String branchId, String companyId, String note) {
+    public int updateEntry(long idLincess,String statusLincess, Timestamp activationDate, Timestamp dueDate, String branchId, String companyId, String note) {
         if (db.isOpen()) {
 
         } else {
@@ -174,8 +174,8 @@ public class LincessDBAdapter {
         //Assign values for each row.
         String where = POS_LINCESS_COLUMN_ID + " = ?";
         updatedValues.put(POS_LINCESS_COLUMN_STATUS, statusLincess);
-        updatedValues.put(POS_LINCESS_COLUMN_ACTIVATION_DATE, activationDate);
-        updatedValues.put(POS_LINCESS_COLUMN_DUE_DATE, dueDate);
+        updatedValues.put(POS_LINCESS_COLUMN_ACTIVATION_DATE, String.valueOf(activationDate));
+        updatedValues.put(POS_LINCESS_COLUMN_DUE_DATE, String.valueOf(dueDate));
         updatedValues.put(POS_LINCESS_COLUMN_BRANCH_ID, branchId);
         updatedValues.put(POS_LINCESS_COLUMN_COMPANY_ID, companyId);
         updatedValues.put(POS_LINCESS_COLUMN_NOTE, note);
