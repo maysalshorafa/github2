@@ -51,7 +51,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
@@ -137,6 +139,7 @@ import com.pos.leaders.leaderspossystem.Tools.ConverterCurrency;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.CustomerAssistantCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.OldCashActivity;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -5236,7 +5239,48 @@ public class SalesCartActivity extends AppCompatActivity {
         if (requestCode==REQUEST_RECIPT_ACTIVITY_CODE){
             if (resultCode==RESULT_OK){
                Double totalPrice= Double.valueOf(data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER));
-      //          Customer customer=data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER);
+              Object o=(Object) data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER);
+                Customer customer=(Customer)o;
+                String MultiCurrencyResultR = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT);
+                String  way= data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER);
+
+                List<BoInvoice>invoiceList=new ArrayList<>();
+                try {
+                    JSONArray jsonArraya = new JSONArray(MultiCurrencyResultR);
+                    Log.d("MultiCurrencyResult", MultiCurrencyResultR);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    for (int i = 0; i < jsonArraya.length(); i++) {
+                        JSONObject jsonObject = jsonArraya.getJSONObject(i);
+                        BoInvoice invoice= objectMapper.readValue(jsonObject.toString(), BoInvoice.class);
+                        invoiceList.add(invoice);
+                    }
+                    if(way.equalsIgnoreCase(CONSTANT.CASH)){
+                        Log.d("receptPrint","iiiii");
+                    DocumentControl.sendReciptDoc(SalesCartActivity.this, invoiceList, CONSTANT.CASH, totalPrice, "", customer);
+                    }else if(way.equalsIgnoreCase(CONSTANT.CHECKS)){
+                        DocumentControl.sendReciptDoc(getApplicationContext(), invoiceList, CONSTANT.CHECKS, totalPrice, "", customer);
+
+                    } else if (way.equalsIgnoreCase(CONSTANT.CREDIT_CARD)) {
+                        String  c= data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CREDIT);
+
+                        DocumentControl.sendReciptDoc(getApplicationContext(), invoiceList, CONSTANT.CREDIT_CARD, totalPrice, c, customer);
+
+                    }
+
+                    SESSION._Rest();
+                    clearCart();
+                    return;
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (JsonParseException e) {
+                    e.printStackTrace();
+                } catch (JsonMappingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
 

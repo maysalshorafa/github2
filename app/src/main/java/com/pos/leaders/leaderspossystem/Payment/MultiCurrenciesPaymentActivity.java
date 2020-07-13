@@ -56,6 +56,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE";
     public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT";
     public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER";
+    public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY";
+    public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CREDIT= "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CREDIT";
+
+
     private double totalPrice_defaultCurrency, excess_defaultCurrency, totalPaid = 0.0;
     private double totalPrice, excess, selectedCurrencyRate = 1 , valRow=0,selectedCurrencyRateREsult=1;
     double actualCurrencyRate=1.0;
@@ -127,42 +131,50 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     if(extras.containsKey("Receipt")){
                         if(invoice.size()>0){
                             if (SESSION._CHECKS_HOLDER!=null&&SESSION._CHECKS_HOLDER.size() > 0) {
-                                Log.d("invoicereeee", SESSION._CHECKS_HOLDER.toString());
-                                DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CHECKS, totalPrice, "", customer);
-                                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                startActivity(intent);
+                                Intent i = new Intent();
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
+                                i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY, CONSTANT.CHECKS);
+
+
+                                setResult(RESULT_OK, i);
+                                finish();
                             } else if (CurrencyReturnsCustomDialogActivity.secondCredit != "") {
-                                DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CREDIT_CARD, totalPrice, CurrencyReturnsCustomDialogActivity.secondCredit, customer);
                                 Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                 startActivity(intent);
+                                Intent i = new Intent();
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
+                                i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY, CONSTANT.CREDIT_CARD);
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CREDIT,  CurrencyReturnsCustomDialogActivity.secondCredit);
+
+                                setResult(RESULT_OK, i);
+                                finish();
                             } else {
-                                DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CASH, totalPrice, "", customer);
-                                Log.d("checkInvoice","checkInvoice1");
-                                /*Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
+                                Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                startActivity(intent);*/
+                                startActivity(intent);
+                                Intent i = new Intent();
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
+                                i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
+                                i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY, CONSTANT.CASH);
                             }
                         }
                         else{
-                            DocumentControl.sendReciptDoc(getApplicationContext(), invoice, CONSTANT.CASH, totalPrice, "", customer);
-                            Log.d("checkInvoice","checkInvoice1");
-                           /* Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
+                            Intent intent = new Intent(MultiCurrenciesPaymentActivity.this, ReportsManagementActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(intent);*/
+                            startActivity(intent);
+                            Intent i = new Intent();
+                            i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
+                            i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+                            i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
+                            i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY, CONSTANT.CASH);
                         }
-                        Intent i = new Intent();
-                        i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
-                        i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
-                        i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
-                        /*if(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote!="") {
-                            i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY, CurrencyReturnsCustomDialogActivity.firstCredit);
-                            i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote, CurrencyReturnsCustomDialogActivity.secondCredit);
-                            i.putExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote, CurrencyReturnsCustomDialogActivity.thirdCredit);
-                        }*/
-                        setResult(RESULT_OK, i);
-                        finish();
+
 
                     }else {
                         Log.d("PaymentTables",paymentTables.toString());

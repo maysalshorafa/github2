@@ -87,7 +87,7 @@ public class BackupActivity extends AppCompatActivity {
                 try {
                     backup.BackupBufferDB();
                     backup.BackupPOSDB();
-                    backup.BackupPossSettingFile();
+                //    backup.BackupPossSettingFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -3,7 +3,6 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -34,7 +33,6 @@ import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.Printer.PrinterTools;
-import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
@@ -306,6 +304,7 @@ public class DocumentControl {
 
                 @Override
                 protected void onPostExecute(String html) {
+                    Log.d("ttttttttt","uuuuuuu");
                     for(int i=1;i<bitmapList.size();i++){
                         print(context,bitmapList);
                     }
@@ -501,6 +500,8 @@ public class DocumentControl {
                         RandomAccessFile f = new RandomAccessFile(file, "r");
                         byte[] data = new byte[(int)f.length()];
                         f.readFully(data);
+                        Log.d("receptPrint2222","iiiii");
+
                         pdfLoadImagesClosingReport(data,context);
                         //pdfLoadImages1(data);
                     }
