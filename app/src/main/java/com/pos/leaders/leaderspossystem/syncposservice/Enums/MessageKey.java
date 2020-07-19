@@ -46,5 +46,14 @@ public interface MessageKey {
     String note="note";
     String companyId="companyId";
 
-
+    String enableCurrency="enableCurrency";
+    String enableCreditCard="enableCreditCard";
+    String enablePinPad="enablePinPad";
+    String enableCustomerMeasurement="enableCustomerMeasurement";
+    String noOfFloatPoint="noOfFloatPoint";
+    String printerType="printerType";
+    String posVersionNo="posVersionNo";
+    String posDbVersionNo="posDbVersionNo";
+    String duplicateInvoice="duplicateInvoice";
+    String companyStatus="companyStatus";
 }

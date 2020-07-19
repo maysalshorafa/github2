@@ -70,12 +70,20 @@ public class CurrencyTypeDBAdapter {
             }
         }
         List<CurrencyType> currencyTypes = new ArrayList<CurrencyType>();
-        Cursor cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME , null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            currencyTypes.add(createNewCurrency(cursor));
-            cursor.moveToNext();
+        try {
+            Cursor cursor = db.rawQuery("select * from " + CurrencyType_TABLE_NAME , null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                currencyTypes.add(createNewCurrency(cursor));
+                cursor.moveToNext();
+            }
         }
+        catch (Exception e){
+            e.printStackTrace();
+            Log.d("ExceptionGetALLRate",e.toString());
+            currencyTypes=null;
+        }
+
         return currencyTypes;
     }
 

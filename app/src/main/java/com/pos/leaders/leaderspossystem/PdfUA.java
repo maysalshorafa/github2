@@ -19,6 +19,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
@@ -1063,7 +1064,6 @@ public class PdfUA {
     }
     public static void  printReceiptReport(Context context, String res, String mainMer, List<BoInvoice>invoiceList) throws IOException, DocumentException, JSONException {
         String str="";
-        Log.d("rrrr",res);
         JSONObject jsonObject = new JSONObject(res);
         String documentsData = jsonObject.getString("documentsData");
         JSONObject customerJson = new JSONObject(documentsData);
@@ -1132,7 +1132,7 @@ public class PdfUA {
         insertCell(orderDetailsTable, context.getString(R.string.cashiers) + SESSION._EMPLOYEE.getFullName(), Element.ALIGN_CENTER, 3, font);
         insertCell(orderDetailsTable, context.getString(R.string.date)+":"+DateConverter.stringToDate(customerJson.getString("date")), Element.ALIGN_LEFT, 3, dateFont);
 //        insertCell(dateTable, context.getString(R.string.reference_invoice)+":"+refNumber.get(0), Element.ALIGN_LEFT, 3, dateFont);
-        insertCell(dateTable, context.getString(R.string.customer_ledger)+":"+customerJson.getString("customerGeneralLedger"), Element.ALIGN_LEFT, 3, dateFont);
+        insertCell(dateTable, context.getString(R.string.customer_ledger)+":"+Util.makePrice(Double.parseDouble(customerJson.getString("customerGeneralLedger"))), Element.ALIGN_LEFT, 3, dateFont);
 
         insertCell(orderDetailsTable, "\n---------------------------" , Element.ALIGN_CENTER, 3, font);
 
@@ -1169,6 +1169,7 @@ public class PdfUA {
         }
 
         Log.d("mainMerCredit",mainMer);
+
         for (String s : mainMer.split("\n")) {
 
            /* String[] tokens = s.split("\\s+");
@@ -1207,10 +1208,10 @@ public class PdfUA {
 
             Log.i("cc row", s);
         }
-        Log.d("str", str);
-        if(str!=""){
+        if(!str.isEmpty()&&str!=""){
             insertCell(creditCard,str, Element.ALIGN_CENTER, 4, font);
         }
+
         document.add(headingTable);
         document.add(dateTable);
         document.add(orderDetailsTable);
@@ -1220,6 +1221,11 @@ public class PdfUA {
         document.add(creditCard);
 
         document.close();
+        CurrencyReturnsCustomDialogActivity.firstCredit="";
+       CurrencyReturnsCustomDialogActivity.secondCredit="";
+       CurrencyReturnsCustomDialogActivity.thirdCredit="";
+
+        return;
     }
     public static void  printClosingReport(Context context, String res) throws IOException, DocumentException, JSONException {
         List<CurrencyType> currencyTypesList = null;

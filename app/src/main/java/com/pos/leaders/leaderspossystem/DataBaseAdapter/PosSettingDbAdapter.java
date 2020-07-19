@@ -80,8 +80,10 @@ public class PosSettingDbAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String currencyCode,String currencySymbol,String country,
-    boolean  enableDuplicateInvoice){
+    public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad,
+                             boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,
+                             String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,
+                             String currencyCode,String currencySymbol,String country,boolean  enableDuplicateInvoice){
         if(db.isOpen()){
 
         }else {
@@ -445,12 +447,19 @@ public class PosSettingDbAdapter {
 
     public  static boolean existsHaveColumnInTable(){
 
-        Cursor cursor = db.rawQuery("SELECT count(*) FROM itemtable",null);
-        cursor.moveToFirst();
-        if (cursor.getInt(0) > 0){
-            return true;
+        Cursor cur = db.rawQuery("SELECT COUNT(*) FROM PosSetting", null);
+        if (cur != null) {
+            cur.moveToFirst();                       // Always one row returned.
+            if (cur.getInt (0) == 0) {               // Zero count means empty table.
+                Log.d("emptyTable","emptyTable");
+                return false;
+            }
+            else {
+                Log.d("NotemptyTable","NotemptyTable");
+            }
         }
-        return false;
+        return true;
+
     }
 
     public static String addColumnInteger(String columnName) {

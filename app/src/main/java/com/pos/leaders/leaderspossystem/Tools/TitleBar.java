@@ -84,13 +84,12 @@ public class TitleBar {
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
         final TextView tvDate = (TextView) context.findViewById(R.id.titleBar_tvClock);
         final TextView tvDueDate=(TextView)context.findViewById(R.id.titleBar_tvDueDate);
-        if (SETTINGS.dueDate == null || SETTINGS.dueDate.isEmpty()){
+
             LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(context);
             lincessDBAdapter.open();
             lincessDBAdapter.GetLincess();
-        }
 
-        tvDueDate.setText(SETTINGS.dueDate);
+            tvDueDate.setText(SETTINGS.dueDate);
 
         final Handler someHandler = new Handler(getMainLooper());
         someHandler.postDelayed(new Runnable() {

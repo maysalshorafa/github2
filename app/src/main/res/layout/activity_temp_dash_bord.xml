@@ -12,11 +12,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:weightSum="4"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"  >
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="4">
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/mainScreen"
@@ -24,8 +24,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/shopping_cart_icon"
-            ibutton:button_text="@string/main_screen"
-            />
+            ibutton:button_text="@string/main_screen" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/dashboard_btAreport"
@@ -33,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/o_report"
-            ibutton:button_text="@string/opening_report"/>
+            ibutton:button_text="@string/opening_report" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/closingReport"
@@ -41,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             ibutton:button_icon="@drawable/c_report"
-            ibutton:button_text="@string/closing_report"/>
+            ibutton:button_text="@string/closing_report" />
 
         <com.pos.leaders.leaderspossystem.Elements.IButton
             android:id="@+id/dashboard_btZreport"
@@ -50,7 +49,6 @@
             android:layout_weight="1"
             ibutton:button_icon="@drawable/z_report"
             ibutton:button_text="@string/z_report" />
-
 
 
     </LinearLayout>

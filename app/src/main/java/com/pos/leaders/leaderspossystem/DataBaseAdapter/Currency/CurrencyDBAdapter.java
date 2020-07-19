@@ -267,7 +267,7 @@ public class CurrencyDBAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        Currency aReport = null;
+        Currency currency = null;
         Cursor cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME + "  order by id desc", null);
         if (cursor.getCount() < 1) // zReport Not Exist
         {
@@ -275,10 +275,10 @@ public class CurrencyDBAdapter {
             throw new Exception("there is no rows on Currency Table");
         }
         cursor.moveToFirst();
-        aReport = build(cursor);
+        currency = build(cursor);
         cursor.close();
         close();
-        return aReport;
+        return currency;
     }
 
     public void deleteCurrencyList(){
@@ -334,7 +334,6 @@ public class CurrencyDBAdapter {
 
         return currency;
     }
-
 
 
 }

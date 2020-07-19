@@ -289,6 +289,8 @@ public class DocumentControl {
         }
     }
     static int r =0;
+
+
     public static int pdfLoadImagesClosingReport(final byte[] data, final Context context) {
 
         final ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
@@ -304,10 +306,9 @@ public class DocumentControl {
 
                 @Override
                 protected void onPostExecute(String html) {
-                    Log.d("ttttttttt","uuuuuuu");
-                    for(int i=1;i<bitmapList.size();i++){
+                 for(int i=1;i<bitmapList.size();i++){
                         print(context,bitmapList);
-                    }
+                   }
                     //   print(context,bitmapList);
                     //after async close progress dialog
                     progressDialog.dismiss();
@@ -364,14 +365,94 @@ public class DocumentControl {
         }
         return r; }
 
+    public static int pdfLoadImagesReciptReport(final byte[] data, final Context context) {
 
+        final ArrayList<Bitmap> bitmapList=new ArrayList<Bitmap>();
+        try {
+            // run async
+            new AsyncTask<Void, Void, String>() {
+                Bitmap page;
+                Context a =context;
+
+                // create and show a progress dialog
+
+                ProgressDialog progressDialog = ProgressDialog.show(a, "", "Opening...");
+
+                @Override
+                protected void onPostExecute(String html) {
+
+                    PrintTools pt=new PrintTools(context);
+                    int index = 0;
+                    bitmapList.remove(index); //
+                    newBitmap= combineImageIntoOne(bitmapList);
+                    newBitmap=Util.removeMargins2(newBitmap,Color.WHITE);
+                    pt.PrintReport(newBitmap);
+                    pt.PrintReport(newBitmap);
+                   // pt.PrintReport(newBitmap);
+                        //pr(context,bitmapList);
+
+                    //   print(context,bitmapList);
+                    //after async close progress dialog
+                    progressDialog.dismiss();
+                    //load the html in the webview
+                    //	wv1.loadDataWithBaseURL("", html, "randompdf/html", "UTF-8", "");
+                }
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    try {
+                        //create pdf document object from bytes
+                        ByteBuffer bb = ByteBuffer.NEW(data);
+                        PDFFile pdf = new PDFFile(bb);
+                        //Get the first page from the pdf doc
+                        PDFPage PDFpage = pdf.getPage(1, true);
+                        //create a scaling value according to the WebView Width
+                        final float scale = 800 / PDFpage.getWidth() * 0.80f;
+                        //convert the page into a bitmap with a scaling value
+                        page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                        //save the bitmap to a byte array
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        stream.reset();
+                        //convert the byte array to a base64 string
+                        String base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                        //create the html + add the first image to the html
+                        String html = "<!DOCTYPE html><html><body bgcolor=\"#ffffff\"><img src=\"data:image/png;base64," + base64 + "\" hspace=328 vspace=4><br>";
+                        //loop though the rest of the pages and repeat the above
+                        for (int i = 0; i <= pdf.getNumPages(); i++) {
+                            PDFpage = pdf.getPage(i, true);
+                            page = PDFpage.getImage((int) (PDFpage.getWidth() * scale), (int) (PDFpage.getHeight() * scale), null, true, true);
+                            page.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            bitmapList.add(page);
+                            byteArray = stream.toByteArray();
+                            stream.reset();
+                            base64 = Base64.encodeToString(byteArray, Base64.NO_WRAP);
+                            html += "<img src=\"data:image/png;base64," + base64 + "\" hspace=10 vspace=10><br>";
+
+                        }
+
+                        stream.close();
+                        html += "</body></html>";
+                        return html;
+                    } catch (Exception e) {
+                        Log.d("error", e.toString());
+                    }
+                    return null;
+                }
+            }.execute();
+            System.gc();// run GC
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return r; }
     public static void print(Context context, ArrayList<Bitmap> bitmapList){
         PrintTools pt=new PrintTools(context);
-        for (int i= 1;i<bitmapList.size(); i++) {
+     for (int i= 1;i<bitmapList.size(); i++) {
             Log.d("bitmapsize",bitmapList.size()+"");
             pt.PrintReport(Util.removeMargins2(bitmapList.get(i), Color.WHITE));
 
-        }
+      }
 
     }
     public static void sendREc(final Context context, final BoInvoice invoice, final String mainmer){
@@ -435,7 +516,7 @@ public class DocumentControl {
 
     }
 
-    public static void sendReciptDoc(final Context context, final List<BoInvoice> invoiceList, final String paymentWays, final double totalPaid, final String mainmer,Customer s){
+    public static void sendReciptDoc(final Context context, final List<BoInvoice> invoiceList, final String paymentWays, final double totalPaid, final String mainmer,JSONObject s){
         List<CashPayment> cashPaymentList = new ArrayList<CashPayment>();
         List<Payment> paymentList = new ArrayList<Payment>();
         List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
@@ -500,9 +581,13 @@ public class DocumentControl {
                         RandomAccessFile f = new RandomAccessFile(file, "r");
                         byte[] data = new byte[(int)f.length()];
                         f.readFully(data);
-                        Log.d("receptPrint2222","iiiii");
 
-                        pdfLoadImagesClosingReport(data,context);
+                       if (paymentWays.equals(CONSTANT.CREDIT_CARD)){
+                           pdfLoadImagesReciptReport(data,context);
+                       }
+                       else {
+                           pdfLoadImagesClosingReport(data,context);
+                        }
                         //pdfLoadImages1(data);
                     }
                     catch(Exception ignored)

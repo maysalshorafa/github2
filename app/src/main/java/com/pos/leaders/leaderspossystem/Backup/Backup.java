@@ -343,11 +343,11 @@ public class Backup{
         output.close();
         fis.close();
         BufferDbEmail.sendLogFileBufferDb();
-        PosSettingDbAdapter posSettingDbAdapter=new PosSettingDbAdapter(context);
-        posSettingDbAdapter.open();
-        if (!posSettingDbAdapter.existsHaveColumnInTable()){
+       /* PosSettingDbAdapter posSettingDbAdapter=new PosSettingDbAdapter(context);
+        posSettingDbAdapter.open();*/
+        /*if (!posSettingDbAdapter.existsHaveColumnInTable()){
 
-        }
+        }*/
     }
     public static void BackupPOSDB() throws IOException {
         final String inFileName = "/data/data/com.pos.leaders.leaderspossystem/databases/POSDB.db";

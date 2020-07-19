@@ -181,6 +181,7 @@ import POSAPI.POSInterfaceAPI;
 import POSAPI.POSUSBAPI;
 import POSSDK.POSSDK;
 
+import static com.pos.leaders.leaderspossystem.LogInActivity.LEADPOS_MAKE_A_REPORT;
 import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 /**
@@ -365,6 +366,7 @@ public class SalesCartActivity extends AppCompatActivity {
     int selectedDeviceIndex = -1;
     DevicesListAdapter devicesListAdapter;
     DeviceHelper deviceHelper;
+    boolean backTodashbord =false;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private SerialInputOutputManager mSerialIoManager;
     @Override
@@ -808,8 +810,9 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         zReport1.setCashTotal(zReport1.getCashTotal()-lastOrder.getTotalPrice());
                                                         zReport1.setFirstTypeAmount(zReport1.getFirstTypeAmount()-lastOrder.getTotalPrice());
                                                         zReport1.setSalesWithTax(zReport1.getSalesWithTax()-SalesWitheTaxCancle);
-
+                                                        Log.d("setSalesWithTax",zReport1.getSalesWithTax()+" "+SalesWitheTaxCancle+" "+zReport1.getSalesWithTax());
                                                         zReport1.setSalesBeforeTax(zReport1.getSalesBeforeTax()-SalesWithoutTaxCancle);
+                                                        Log.d("SalesBeforeTax",zReport1.getSalesBeforeTax()+" "+SalesWithoutTaxCancle);
                                                         Log.d("Tax",zReport1.getTotalTax()+"fji");
                                                         Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
 
@@ -3020,7 +3023,37 @@ public class SalesCartActivity extends AppCompatActivity {
         super.onResume();
         refreshCart();
         Bundle extras = getIntent().getExtras();
+         JSONObject customerJsonM = new JSONObject();
         if (extras != null) {
+            if (extras.containsKey("MultiRecipt")){
+                backTodashbord=true;
+                Double totalPrice= extras.getDouble(COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
+                try {
+                    customerJsonM =new JSONObject(extras.getString(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                List<BoInvoice>invoiceList=InvoiceManagementActivity.newInvoiceList;
+                String  way= extras.getString(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY);
+                    Log.d("wayS",way);
+                String  creditCardResult;
+                if(way.equalsIgnoreCase(CONSTANT.CASH)){
+                        creditCardResult="";
+                        DocumentControl.sendReciptDoc(SalesCartActivity.this, invoiceList, CONSTANT.CASH, totalPrice,creditCardResult, customerJsonM);
+                    }else if(way.equalsIgnoreCase(CONSTANT.CHECKS)){
+                       creditCardResult="";
+                        DocumentControl.sendReciptDoc(SalesCartActivity.this, invoiceList, CONSTANT.CHECKS, totalPrice,creditCardResult, customerJsonM);
+
+                    } else if (way.equalsIgnoreCase(CONSTANT.CREDIT_CARD)) {
+                       creditCardResult= extras.getString(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CREDIT);
+                        DocumentControl.sendReciptDoc(SalesCartActivity.this, invoiceList, CONSTANT.CREDIT_CARD, totalPrice, creditCardResult, customerJsonM);
+
+                    }
+
+
+
+            }
             if (extras.containsKey("orderJson")) {
                 if(!extras.getString("orderJson").equals("")){
                     try {
@@ -3075,7 +3108,7 @@ public class SalesCartActivity extends AppCompatActivity {
              }
              //str = extras.getString("orderJson");
          }*/
-        customerDBAdapter.close();
+      //  customerDBAdapter.close();
         }else {
 
           if(CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE){
@@ -3493,8 +3526,6 @@ public class SalesCartActivity extends AppCompatActivity {
     protected void calculateTotalPrice()  {
         boolean flag=false;
         tempSaleTotalPrice = 0;
-        String a = tvTotalPrice.getText().toString();
-        Log.d("tvTotalPrice",tvTotalPrice.getText().toString());
        // String b = a.replace(SETTINGS.currencySymbol, "");
         double SaleOriginalityPrice = 0;
 
@@ -4778,7 +4809,9 @@ public class SalesCartActivity extends AppCompatActivity {
             }
         }
 
-        //region CreditCard
+
+
+            //region CreditCard
         if (requestCode == REQUEST_CREDIT_CARD_ACTIVITY_CODE) {
             if (resultCode == RESULT_OK) {
                 if(orderDocumentFlag){
@@ -4913,9 +4946,9 @@ public class SalesCartActivity extends AppCompatActivity {
                 Log.w("mainMer", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote));
                 Log.w("mainCli", data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote));
 
-                printAndOpenCashBox(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY),
+               /* printAndOpenCashBox(data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY),
                         data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote),
-                        data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote), REQUEST_CREDIT_CARD_ACTIVITY_CODE);
+                        data.getStringExtra(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_ClientNote), REQUEST_CREDIT_CARD_ACTIVITY_CODE);*/
 
 
 
@@ -5236,53 +5269,13 @@ public class SalesCartActivity extends AppCompatActivity {
         //endregion
 
 
-        if (requestCode==REQUEST_RECIPT_ACTIVITY_CODE){
-            if (resultCode==RESULT_OK){
-               Double totalPrice= Double.valueOf(data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER));
-              Object o=(Object) data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER);
-                Customer customer=(Customer)o;
-                String MultiCurrencyResultR = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT);
-                String  way= data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER);
+       /* if (resultCode==REQUEST_RECIPT_ACTIVITY_CODE){
+            Log.d("ResultRecCod","RECIPTRESULT");
 
-                List<BoInvoice>invoiceList=new ArrayList<>();
-                try {
-                    JSONArray jsonArraya = new JSONArray(MultiCurrencyResultR);
-                    Log.d("MultiCurrencyResult", MultiCurrencyResultR);
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    for (int i = 0; i < jsonArraya.length(); i++) {
-                        JSONObject jsonObject = jsonArraya.getJSONObject(i);
-                        BoInvoice invoice= objectMapper.readValue(jsonObject.toString(), BoInvoice.class);
-                        invoiceList.add(invoice);
-                    }
-                    if(way.equalsIgnoreCase(CONSTANT.CASH)){
-                        Log.d("receptPrint","iiiii");
-                    DocumentControl.sendReciptDoc(SalesCartActivity.this, invoiceList, CONSTANT.CASH, totalPrice, "", customer);
-                    }else if(way.equalsIgnoreCase(CONSTANT.CHECKS)){
-                        DocumentControl.sendReciptDoc(getApplicationContext(), invoiceList, CONSTANT.CHECKS, totalPrice, "", customer);
+                Log.d("ResultRec","RECIPTRESULT");
 
-                    } else if (way.equalsIgnoreCase(CONSTANT.CREDIT_CARD)) {
-                        String  c= data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CREDIT);
 
-                        DocumentControl.sendReciptDoc(getApplicationContext(), invoiceList, CONSTANT.CREDIT_CARD, totalPrice, c, customer);
-
-                    }
-
-                    SESSION._Rest();
-                    clearCart();
-                    return;
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (JsonParseException e) {
-                    e.printStackTrace();
-                } catch (JsonMappingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
+        }*/
 
         //region Cash Activity WithOut Currency Region
         if (requestCode == REQUEST_CASH_ACTIVITY_CODE) {
@@ -6501,13 +6494,63 @@ public class SalesCartActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) // Press Back Icon
         {
-            CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
-            finish();
+            if (backTodashbord) {
+                returnToDashBord();
+                return true;
+            }
+
+           else {
+                CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
+            finish();}
         }
 
         return super.onOptionsItemSelected(item);
     }
+   @Override
+    public void onBackPressed() {
+        Log.d("CDA", "onBackPressed Called");
+        if (backTodashbord){
+        returnToDashBord();}
+        else {
+            finish();
+        }
+    }
 
+
+    public  void returnToDashBord(){
+        EmployeePermissionsDBAdapter userPermissionsDBAdapter = new EmployeePermissionsDBAdapter(this);
+        userPermissionsDBAdapter.open();
+        ArrayList<Integer> permissions = userPermissionsDBAdapter.getPermissions( SESSION._EMPLOYEE.getEmployeeId());
+        Intent intent = new Intent(getApplicationContext(), DashBord.class);
+        intent.putIntegerArrayListExtra("permissions_name", permissions);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(LEADPOS_MAKE_A_REPORT, LEADPOS_MAKE_A_REPORT);
+        OrderDBAdapter saleDBAdapter = new OrderDBAdapter(SalesCartActivity.this);
+        saleDBAdapter.open();
+        Order lastSale = saleDBAdapter.getLast();
+        saleDBAdapter.close();
+
+        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
+        zReportDBAdapter.open();
+
+        //get ZReport TotalAmount
+        //end
+        ZReport lastZReport;
+        try {
+            lastZReport = zReportDBAdapter.getLastRow();
+            if (lastZReport.getEndOrderId() == lastSale.getOrderId()) {
+                intent.putExtra(LEADPOS_MAKE_A_REPORT, LEADPOS_MAKE_A_REPORT);
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+
+        backTodashbord=false;
+        startActivity(intent);
+        finish();
+
+    }
     private void setCustomer(Customer customer) {
         clubAdapter.open();
         if(customer==null) return;

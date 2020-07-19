@@ -201,12 +201,19 @@ public class MessageTransmit {
         return response.body().string();
     }
 
-public void updateLincessStatus(Response response){
-        if (response.code()==402){
+    public void updateLincessStatus(Response response){
+
     LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(ThisApp.getCurrentActivity());
     lincessDBAdapter.open();
     long idLincess=lincessDBAdapter.GetLincessID().getId();
-    lincessDBAdapter.updateEntry(CONSTANT.INACTIVE,idLincess);}
+
+        if (response.code()==402){
+        lincessDBAdapter.updateEntry(CONSTANT.INACTIVE,idLincess);
+        }
+
+       else {
+            lincessDBAdapter.updateEntry(CONSTANT.ACTIVE,idLincess);
+        }
     return;
 
 }

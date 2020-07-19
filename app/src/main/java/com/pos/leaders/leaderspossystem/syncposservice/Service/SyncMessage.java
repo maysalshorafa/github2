@@ -1121,8 +1121,15 @@ public class SyncMessage extends Service {
                     }
                     JSONObject respnseLincess = new JSONObject(msgData);
                     long idLincess=lincessDBAdapter.GetLincessID().getId();
-                    Timestamp dueDateTimeSt = new Timestamp(Long.parseLong(MessageKey.dueDate));
-                    Timestamp activationDateTimeS=new Timestamp(Long.parseLong(MessageKey.activationDate));
+
+                   String   activationDate =respnseLincess.getString(MessageKey.activationDate);
+                   String  dueDate=respnseLincess.getString(MessageKey.dueDate);
+
+
+                    Timestamp dueDateTimeSt =new Timestamp(Long.parseLong(dueDate));
+                    Timestamp activationDateTimeS=new Timestamp(Long.parseLong(activationDate));
+                    Log.d("activationDateSync",dueDateTimeSt +" "+activationDateTimeS);
+
                     lincessDBAdapter.updateEntry(idLincess,SETTINGS.statusLincess,activationDateTimeS,dueDateTimeSt,
                             respnseLincess.getString(MessageKey.branchId),respnseLincess.getString(MessageKey.companyId),respnseLincess.getString(MessageKey.note));
 
@@ -1850,16 +1857,26 @@ public class SyncMessage extends Service {
 
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
         currencyTypeDBAdapter.open();
-        List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
-        //currencyTypeDBAdapter.close();
+        List<CurrencyType> currencyTypesList=null;
+        try {
+            currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            Log.d("ExceptionUpdate",e.toString());
+        }
+
+        currencyTypeDBAdapter.close();
         CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
         currencyDBAdapter.open();
         messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         Currency lastCurrency = null;
         try {
             lastCurrency = currencyDBAdapter.getLastCurrency();
+            Log.d("lastCurrency",lastCurrency.toString());
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("Exception",e.toString());
         }
         Timestamp timestamp =new Timestamp(System.currentTimeMillis());
         if (lastCurrency!=null){
@@ -1892,12 +1909,14 @@ public class SyncMessage extends Service {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("ExceptionDeleteOldRate",e.toString());
                     }
 
 
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                Log.d("JSONException",e.toString());
             }
 
 
@@ -1933,12 +1952,14 @@ public class SyncMessage extends Service {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Log.d("Exception",e.toString());
                 }
 
 
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                Log.d("JSONException",e.toString());
 
             }
         }

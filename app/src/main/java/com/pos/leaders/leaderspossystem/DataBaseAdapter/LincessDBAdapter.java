@@ -179,6 +179,7 @@ public class LincessDBAdapter {
         updatedValues.put(POS_LINCESS_COLUMN_BRANCH_ID, branchId);
         updatedValues.put(POS_LINCESS_COLUMN_COMPANY_ID, companyId);
         updatedValues.put(POS_LINCESS_COLUMN_NOTE, note);
+        Log.d("dueDateUPDate",dueDate +"  "+activationDate+statusLincess);
         try {
             db.update(POS_LINCESS_TABLE_NAME, updatedValues, where, new String[]{idLincess + ""});
            // db.update(POS_LINCESS_TABLE_NAME, val, null, null);
@@ -247,6 +248,7 @@ public class LincessDBAdapter {
         cursor.moveToFirst();
         SETTINGS.statusLincess = cursor.getString(cursor.getColumnIndex(POS_LINCESS_COLUMN_STATUS));
         SETTINGS.dueDate = cursor.getString(cursor.getColumnIndex(POS_LINCESS_COLUMN_DUE_DATE));
+        Log.d("dueDateDB",SETTINGS.dueDate);
         cursor.close();
         close();
     }
