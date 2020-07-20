@@ -2506,15 +2506,18 @@ public class PdfUA {
         double check_plus = 0;
         double creditCard_plus = 0;
         List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(order.getOrderId());
+        cashPaymentDBAdapter.close();
         for(int i=0;i<cashPaymentList.size();i++){
             cash_plus+=cashPaymentList.get(i).getAmount()*cashPaymentList.get(i).getCurrencyRate();
 
         }
         List<Check>checkList=checksDBAdapter.getPaymentBySaleID(order.getOrderId());
+        checksDBAdapter.close();
         for(int i=0;i<checkList.size();i++){
             check_plus+=checkList.get(i).getAmount();
         }
         List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(order.getOrderId());
+        creditCardPaymentDBAdapter.close();
         for(int i=0;i<creditCardPayments.size();i++){
             creditCard_plus+=creditCardPayments.get(i).getAmount();
         }
@@ -2552,12 +2555,14 @@ public class PdfUA {
         CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
         currencyOperationDBAdapter.open();
         List<CurrencyOperation> currencyOperationList = currencyOperationDBAdapter.getCurrencyOperationByOrderID(order.getOrderId());
+        currencyOperationDBAdapter.close();
         CurrencyReturnsDBAdapter currencyReturnDBAdapter = new CurrencyReturnsDBAdapter(context);
         currencyReturnDBAdapter.open();
 
 
 
         List<CurrencyReturns> currencyReturnsList = currencyReturnDBAdapter.getCurencyReturnBySaleID(order.getOrderId());
+        currencyReturnDBAdapter.close();
         for (int i = 0; i < currencyOperationList.size(); i++) {
             if (currencyOperationList.get(i).getPaymentWay().equalsIgnoreCase(CONSTANT.CASH)) {
                 if (currencyOperationList.get(i).getCurrencyType().equals(currencyTypesList.get(0).getType()) ) {
@@ -2747,10 +2752,10 @@ public class PdfUA {
         String fileName = "normalInvoice.pdf";
 
         final String APPLICATION_PACKAGE_NAME = context.getPackageName();
-        File path = new File( Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
+        File path = new File(Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME );
         path.mkdirs();
         File file = new File(path, fileName);
-        if(file.exists()){
+        if(file.exists()&& !file.isDirectory()){
             PrintWriter writer = new PrintWriter(file);//to empty file each time method invoke
             writer.print("");
             writer.close();
@@ -2913,14 +2918,17 @@ public class PdfUA {
         double check_plus = 0;
         double creditCard_plus = 0;
         List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(order.getOrderId());
+        cashPaymentDBAdapter.close();
         for(int i=0;i<cashPaymentList.size();i++){
             cash_plus+=cashPaymentList.get(i).getAmount()*cashPaymentList.get(i).getCurrencyRate();
         }
         List<Check>checkList=checksDBAdapter.getPaymentBySaleID(order.getOrderId());
+        checksDBAdapter.close();
         for(int i=0;i<checkList.size();i++){
             check_plus+=checkList.get(i).getAmount();
         }
         List<CreditCardPayment>creditCardPayments=creditCardPaymentDBAdapter.getPaymentByOrderID(order.getOrderId());
+        creditCardPaymentDBAdapter.close();
         for(int i=0;i<creditCardPayments.size();i++){
             creditCard_plus+=creditCardPayments.get(i).getAmount();
         }
@@ -2958,6 +2966,7 @@ public class PdfUA {
         CurrencyOperationDBAdapter currencyOperationDBAdapter = new CurrencyOperationDBAdapter(context);
         currencyOperationDBAdapter.open();
         List<CurrencyOperation> currencyOperationList = currencyOperationDBAdapter.getCurrencyOperationByOrderID(order.getOrderId());
+        currencyOperationDBAdapter.close();
         CurrencyReturnsDBAdapter currencyReturnDBAdapter = new CurrencyReturnsDBAdapter(context);
         currencyReturnDBAdapter.open();
         List<Currency> currencyList=new ArrayList<>();
@@ -2970,10 +2979,12 @@ public class PdfUA {
         CurrencyDBAdapter currencyDBAdapter = new CurrencyDBAdapter(context);
         currencyDBAdapter.open();
         currencyList = currencyDBAdapter.getAllCurrencyLastUpdate(currencyTypesList);
+        Log.d("currencyListPDF",currencyList.toString());
         currencyDBAdapter.close();
 
 
         List<CurrencyReturns> currencyReturnsList = currencyReturnDBAdapter.getCurencyReturnBySaleID(order.getOrderId());
+        currencyReturnDBAdapter.close();
         Log.d("currrencyreturnlistpdf",currencyReturnsList.toString());
         Log.d("currencyOperationLpdf",currencyOperationList.toString());
         Log.d("currencyTypesListtpdf",currencyTypesList.get(0).getType());

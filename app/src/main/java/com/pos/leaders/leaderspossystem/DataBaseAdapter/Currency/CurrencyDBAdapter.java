@@ -254,8 +254,6 @@ public class CurrencyDBAdapter {
     }
 
 
-
-
     public Currency getLastCurrency() throws Exception {
         if(db.isOpen()){
 
@@ -268,8 +266,8 @@ public class CurrencyDBAdapter {
             }
         }
         Currency currency = null;
-        Cursor cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME + "  order by id desc", null);
-        if (cursor.getCount() < 1) // zReport Not Exist
+        Cursor cursor = db.rawQuery("select * from " + CURRENCY_TABLE_NAME +" order by id desc", null);
+        if (cursor.getCount() < 1) // currency Not Exist
         {
             cursor.close();
             throw new Exception("there is no rows on Currency Table");
@@ -282,7 +280,8 @@ public class CurrencyDBAdapter {
     }
 
     public void deleteCurrencyList(){
-        db.execSQL("delete from "+ CURRENCY_TABLE_NAME);
+        if (existsHaveColumnInTable()){
+            db.execSQL("delete from "+ CURRENCY_TABLE_NAME);}
     }
 
     public void deleteOldRate(List<CurrencyType> currency) {
@@ -335,7 +334,22 @@ public class CurrencyDBAdapter {
         return currency;
     }
 
+    public boolean existsHaveColumnInTable(){
 
+        Cursor cur = db.rawQuery("SELECT COUNT(*) FROM PosSetting", null);
+        if (cur != null) {
+            cur.moveToFirst();                       // Always one row returned.
+            if (cur.getInt (0) == 0) {               // Zero count means empty table.
+                Log.d("emptyTable","emptyTable");
+                return false;
+            }
+            else {
+                Log.d("NotemptyTable","NotemptyTable");
+            }
+        }
+        return true;
+
+    }
 }
 
 

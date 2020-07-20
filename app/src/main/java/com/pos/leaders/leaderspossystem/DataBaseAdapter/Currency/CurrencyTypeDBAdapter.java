@@ -80,7 +80,7 @@ public class CurrencyTypeDBAdapter {
         }
         catch (Exception e){
             e.printStackTrace();
-            Log.d("ExceptionGetALLRate",e.toString());
+            Log.d("ExceptionGetALLCurrency",e.toString());
             currencyTypes=null;
         }
 

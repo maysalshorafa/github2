@@ -71,13 +71,17 @@ public class PrintTools {
             protected void onPostExecute(Void aVoid) {
                 //printer.PRN_PrintAndFeedLine(11);
                 //printer.PRN_HalfCutPaper();
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 pos.systemFeedLine(2);
                 pos.systemCutPaper(66, 0);
 
                 // pos.cashdrawerOpen(0,20,20);
 
                 posInterfaceAPI.CloseDevice();
-                dialog.cancel();
+
+
 
             }
 
@@ -89,7 +93,6 @@ public class PrintTools {
             }
         }.execute();
     }
-
 
     private void Print_WINTEC(Bitmap _bitmap) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);

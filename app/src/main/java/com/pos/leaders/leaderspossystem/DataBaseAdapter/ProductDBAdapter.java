@@ -100,7 +100,6 @@ public class ProductDBAdapter {
     }
 
     public ProductDBAdapter open() throws SQLException {
-
         this.db = dbHelper.getWritableDatabase();
         return this;
     }
@@ -688,6 +687,7 @@ public class ProductDBAdapter {
 
         }
         cursor.close();
+        close();
         return productsList;
     }
     public Long getIdProductByIDOrder(long productId){

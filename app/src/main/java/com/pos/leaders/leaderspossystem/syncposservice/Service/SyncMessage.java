@@ -1941,6 +1941,7 @@ public class SyncMessage extends Service {
 
                 try {
                     JSONArray jsonArray = new JSONArray(msgData);
+                    currencyDBAdapter.deleteCurrencyList();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         Log.d("i",i+" ");
                         msgData = jsonArray.getJSONObject(i).toString();

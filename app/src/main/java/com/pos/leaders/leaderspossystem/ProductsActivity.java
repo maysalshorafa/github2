@@ -83,6 +83,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     private List<String> currenciesNames = null;
     int branchId=0,positionItem;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

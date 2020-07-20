@@ -47,7 +47,7 @@ public class SalesHistoryCopySales extends AppCompatActivity {
             public void onClick(View v) {
                 invoiceCancle=invoiceBitMab;
                 PrintTools printTools = new PrintTools(SalesHistoryCopySales.this);
-                printTools.PrintReport(SETTINGS.copyInvoiceBitMap);
+                printTools.PrintReport(invoiceCancle);
                 onBackPressed();
             }
         });

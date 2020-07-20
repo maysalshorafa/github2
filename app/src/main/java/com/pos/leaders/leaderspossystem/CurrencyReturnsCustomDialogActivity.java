@@ -33,6 +33,7 @@ import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.getCurrencyCodeForBoss;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
     public static boolean REQUEST_CURRENCY_RETURN_ACTIVITY_CODE = true;
     int positionItem;
     Context context;
+    String defualtCurrencyPoss;
 
     public CurrencyReturnsCustomDialogActivity() {
         super(null);
@@ -91,7 +93,8 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
         setCanceledOnTouchOutside(false);
         tvExcess = (TextView) findViewById(R.id.cashActivity_TVExcess);
         returnSpener = (Spinner) findViewById(R.id.spinnerForReturnValue);
-
+        defualtCurrencyPoss= getCurrencyCodeForBoss.getCurrencyCodeDefault(getContext());
+        Log.d("defualtCurrencyPoss",defualtCurrencyPoss.toString());
        /* if (!SETTINGS.enableCurrencies) {
             returnSpener.setVisibility(View.INVISIBLE);
         }*/
@@ -113,7 +116,7 @@ public class CurrencyReturnsCustomDialogActivity extends Dialog {
                 currency.add(currencyTypesList.get(i).getType());
             }
             for (int i=0;i<currency.size();i++){
-                if (currency.get(i).equals(SETTINGS.currencyCode))
+                if (currency.get(i).equals(defualtCurrencyPoss))
                     positionItem=i;
             }
 

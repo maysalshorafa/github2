@@ -736,4 +736,7 @@
     <string name="please_choose_three_currencies">אנא בחר שלושה מטבעות</string>
     <string name="there_are_no_currencies">אין מטבעות</string>
 
+
+    <string name="price_with_tax">מחיר כולל מע"מ</string>
+    <string name="price_with_out_tax">מחיר לפני מע"מ</string>
 </resources>

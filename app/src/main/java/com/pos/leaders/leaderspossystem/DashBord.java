@@ -648,7 +648,6 @@ public void checkLincess(){
     LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(this);
     lincessDBAdapter.open();
     lincessDBAdapter.GetLincess();
-    Log.d("dueDateDash",SETTINGS.dueDate+" ");
     if (SETTINGS.dueDate!=null){
     if (SETTINGS.statusLincess.equals(CONSTANT.INACTIVE))
     { String sDate1=SETTINGS.dueDate;
@@ -730,6 +729,9 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         }
         long LincesID = lincessDBAdapter.insertEntry(SETTINGS.companyID,CONSTANT.YEARLY_ACTIVATION_LICENSS,Integer.toString(SETTINGS.branchId), ts , ts2, CONSTANT.ACTIVE);
     }
+
+    lincessDBAdapter.close();
+
 }
 
 
@@ -1946,6 +1948,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                     JSONArray jsonArray = new JSONArray(msgData);
                     Log.d("jsonArraySize",jsonArray.length()+"Size");
                     Log.d("jsonArrayCurrency",jsonArray.toString());
+                    currencyDBAdapter.deleteCurrencyList();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         Log.d("i",i+" ");
                         msgData = jsonArray.getJSONObject(i).toString();
@@ -2009,9 +2012,12 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
 
                     }
                     else {
-                     //   JSONObject responseBody = null;
-                     //   responseBody = jsonObject.getJSONObject(MessageKey.responseBody);
-                        /*Log.d("responesBoydy",jsonObject.getString(MessageKey.responseBody));
+
+                        JSONObject responseBody = null;
+                        responseBody = jsonObject.getJSONObject(MessageKey.responseBody);
+                        Log.d("responesBoydy",responseBody.toString());
+                       /*
+                        Log.d("responesBoydy",jsonObject.getString(MessageKey.responseBody));
                         Log.d("enableCurrency",responseBody.getBoolean("enableCurrency")+"");
                         Log.d("enableCreditCard",responseBody.getBoolean("enableCreditCard")+"");
                         Log.d("enablePinPad",responseBody.getBoolean("enablePinPad")+"");
@@ -2019,23 +2025,23 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                         Log.d("noOfFloatPoint",responseBody.getInt("noOfFloatPoint") +"");
                         Log.d("printerType",responseBody.getString("printerType")+"");
                         Log.d("posVersionNo",responseBody.getInt("posVersionNo")+"");
-                        //Log.d("companyStatus",responseBody.getString("companyStatus")+"");
+                        Log.d("companyStatus",responseBody.getString("companyStatus")+"");
                         Log.d("posDbVersionNo",responseBody.getInt("posDbVersionNo")+"");
                         Log.d("branchId",responseBody.getInt("branchId")+"");
                         Log.d("currencyCode",responseBody.getString("currencyCode")+"");
-                        Log.d("currencySymbol",responseBody.getString("currencySymbol")+"");*/
-                     //   Log.d("country", responseBody.getString("country")+"");
-                       // Log.d("duplicateInvoice", responseBody.getString("duplicateInvoice")+"");
+                        Log.d("currencySymbol",responseBody.getString("currencySymbol")+"");
+                        Log.d("country", responseBody.getString("country")+"");
+                        Log.d("duplicateInvoice", responseBody.getString("duplicateInvoice")+"");*/
                         PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                         posSettingDbAdapter.open();
                         try {
-                       //     if (posSettingDbAdapter.existsHaveColumnInTable()){
-                           //     Log.d("have","have");
+                            if (posSettingDbAdapter.existsHaveColumnInTable()){
+                               Log.d("have","have");
                             PosSetting posSetting=posSettingDbAdapter.getPosSettingID();
                             updatePosSetting(posSetting);
                             posSettingDbAdapter.close();
-                        //}
-                        /*    else {
+                        }
+                       else {
                                 Log.d("notHave","notHave");
                                 posSettingDbAdapter.insertEntry(responseBody.getBoolean(MessageKey.enableCurrency),
                                         responseBody.getBoolean(MessageKey.enableCreditCard),
@@ -2046,7 +2052,7 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
                                         responseBody.getInt(MessageKey.branchId), responseBody.getString(MessageKey.currencyCode),
                                         responseBody.getString(MessageKey.currencySymbol), responseBody.getString(MessageKey.country),
                                         responseBody.getBoolean(MessageKey.duplicateInvoice));
-                            }*/
+                            }
                         }
                         catch (Exception e){
                             Log.d("ExceptionSetting",e.toString());

@@ -715,5 +715,9 @@
     <string name="text_dialog_lincess">انتهى تاريخ الليسنز, يرجى الاتصال بالشركة للتفعيل</string>
     <string name="please_choose_three_currencies">يرجى اختيار ثلاث عملات</string>
     <string name="there_are_no_currencies">لا يوجد عملات</string>
+
+
+    <string name="price_with_tax">السعر شامل الضريبة</string>
+    <string name="price_with_out_tax">السعر قبل الضريبة</string>
 </resources>
 

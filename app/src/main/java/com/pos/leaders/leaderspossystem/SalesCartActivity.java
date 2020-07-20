@@ -702,7 +702,6 @@ public class SalesCartActivity extends AppCompatActivity {
 
                                                         long sID = orderDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), lastOrder.getReplacementNote(), true, lastOrder.getTotalPrice() * -1, lastOrder.getTotalPaidAmount() * -1, lastOrder.getCustomerId(), lastOrder.getCustomer_name(),lastOrder.getCartDiscount(),lastOrder.getNumberDiscount(),lastOrder.getOrderId(),lastOrder.getSalesBeforeTax()* -1,lastOrder.getSalesWithTax()* -1,lastOrder.getTotalSaved());
                                                         Order order = orderDBAdapter.getOrderById(sID);
-
                                                         lastOrder.setCancellingOrderId(sID);
                                                         Log.d("orderCancle",order.toString());
                                                         orderDBAdapter.updateEntry(lastOrder);
@@ -719,7 +718,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(SalesCartActivity.this);
                                                         currencyReturnsDBAdapter.open();
                                                         List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(lastOrder.getOrderId());
-//                                                        Log.d("orderDetailsList",orderDetailsList.toString());
+                                                     //   Log.d("orderDetailsList",orderDetailsList.toString());
                                                         for(int i=0;i<orderDetailsList.size();i++){
                                                             OrderDetails o =orderDetailsList.get(i);
                                                             o.setOrderId(sID);
@@ -3073,6 +3072,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         SESSION._EMPLOYEE.setEmployeeId(a.getLong("byUser"));
                         customerDBAdapter.open();
                         Customer customer = customerDBAdapter.getCustomerByID(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer").getString("customerId")));
+                        customerDBAdapter.close();
                         order.setCustomer(customer);
                         SESSION._ORDERS=order;
                         Log.d("iiitems",items.toString());
@@ -3318,8 +3318,8 @@ public class SalesCartActivity extends AppCompatActivity {
         custmerAssetstIdList = new ArrayList<Long>();
         orderIdList = new ArrayList<OrderDetails>();
         orderId = new ArrayList<Long>();
-        offerDBAdapter = new OfferDBAdapter(this);
-        offerDBAdapter.open();
+        /*offerDBAdapter = new OfferDBAdapter(this);
+        offerDBAdapter.open();*/
         // Offer offer=offerDBAdapter.getAllValidOffers();
 
 
@@ -4397,9 +4397,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
-                            productDBAdapter.open();
                             productList.addAll(productDBAdapter.getAllProductsByCategory(id, productList.size()-1, 50));
-                            productDBAdapter.close();
                             // Stuff that updates the UI
                         }
                     });
@@ -4795,14 +4793,12 @@ public class SalesCartActivity extends AppCompatActivity {
                 if (customerName_EditText.getText().toString().equals("")) {
                     customerDBAdapter.open();
                     Customer customer = customerDBAdapter.getCustomerByName("guest");
-                    customerDBAdapter.close();
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
 
                 } else {
                     customerDBAdapter.open();
                     Customer customer = customerDBAdapter.getCustomerByID(SESSION._ORDERS.getCustomerId());
-                    customerDBAdapter.close();
                     SESSION._ORDERS.setCustomer(customer);
                     setCustomer(SESSION._ORDERS.getCustomer());
                 }
@@ -6090,7 +6086,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 }
             }
         });
-    customerDBAdapter.open();
+      customerDBAdapter.open();
         customerList = customerDBAdapter.getTopCustomer(0, 50);
         customerDBAdapter.close();
       //  AllCustmerList = customerList;
