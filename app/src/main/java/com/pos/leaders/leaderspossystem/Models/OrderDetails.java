@@ -363,6 +363,7 @@ public class OrderDetails {
 				", \"giftProduct\":" + "\""+giftProduct +"\""+
 				", \"position\":" + "\""+position +"\""+
 				", \"orderKey\":" + "\""+orderKey +"\""+
+				", \"displayName\":" + "\""+product.getDisplayName()+"\""+
 				", \"offerCategory\":" + "\""+offerCategory +"\""+
 				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
 				", \"serialNumber\":" + "\""+serialNumber +"\""+
