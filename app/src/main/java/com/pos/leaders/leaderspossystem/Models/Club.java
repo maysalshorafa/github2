@@ -115,4 +115,19 @@ public class Club {
     public void setHide(boolean hide) {
         this.hide = hide;
     }
+
+    @Override
+    public String toString() {
+        return "Club{" +
+                "clubId=" + clubId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", percent=" + percent +
+                ", amount=" + amount +
+                ", point=" + point +
+                ", hide=" + hide +
+                ", branchId=" + branchId +
+                '}';
+    }
 }

@@ -1523,7 +1523,7 @@ public class SyncMessage extends Service {
             case MessageType.UPDATE_USED_POINT:
                 UsedPoint usedPoint =null;
                 usedPoint=objectMapper.readValue(msgData, UsedPoint.class);
-                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token,usedPoint.getUsedPointId());
+                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token,usedPoint.getId());
                 break;
             case MessageType.DELETE_USED_POINT:
                 res = messageTransmit.authDelete(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);

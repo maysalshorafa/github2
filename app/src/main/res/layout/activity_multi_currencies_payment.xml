@@ -194,9 +194,12 @@
             android:text="@string/food_stamp"
             android:visibility="gone"/>
         <Button
+            android:id="@+id/MultiCurrenciesPaymentActivity_btPayWithPoint"
+            style="@style/AppTheme.bt_normal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:text="@string/pay_point"
+            android:visibility="gone"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

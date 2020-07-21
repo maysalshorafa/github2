@@ -21,18 +21,17 @@ import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.
 public class UsedPointDBAdapter {
     public static final String USED_POINT_TABLE_NAME = "UsedPoint";
     // Column Names
-    protected static final String USED_POINT_COLUMN_ID = "usedPointId";
-    protected static final String USED_POINT_COLUMN_Order_ID = "orderId";
+    protected static final String USED_POINT_COLUMN_ID = "id";
     protected static final String USED_POINT_COLUMN_POINT = "unUsedPointAmount";
     protected static final String USED_POINT_COLUMN_CUSTOMER = "customerId";
 
 
-    public static final String DATABASE_CREATE = "CREATE TABLE UsedPoint ( `usedPointId` INTEGER PRIMARY KEY AUTOINCREMENT  , `orderId` INTEGER ,`unUsedPointAmount` INTEGER ,`customerId` INTEGER ," +"FOREIGN KEY(`orderId`) REFERENCES `_Order.id`)";
+    public static final String DATABASE_CREATE = "CREATE TABLE UsedPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT   ,`unUsedPointAmount` INTEGER ,`customerId` INTEGER)";
     private SQLiteDatabase db;
     private final Context context;
     // Database open/upgrade helper
     private DbHelper dbHelper;
-
+    public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table UsedPoint rename to UsedPointV2;", DATABASE_CREATE };
 
 // Sum Of UnUsed Point
     public int getUnusedPointInfo(long customerId) {
@@ -64,7 +63,7 @@ public class UsedPointDBAdapter {
     }
 
 
-    public long insertEntry( long saleId, int point,long custmerId) {
+    public long insertEntry(  int point,long custmerId) {
         if(db.isOpen()){
 
         }else {
@@ -75,7 +74,7 @@ public class UsedPointDBAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        UsedPoint usedPoint = new UsedPoint(Util.idHealth(this.db, USED_POINT_TABLE_NAME, USED_POINT_COLUMN_ID),saleId, point,custmerId);
+        UsedPoint usedPoint = new UsedPoint(Util.idHealth(this.db, USED_POINT_TABLE_NAME, USED_POINT_COLUMN_ID), point,custmerId);
         sendToBroker(MessageType.ADD_USED_POINT, usedPoint, this.context);
 
         try {
@@ -99,9 +98,8 @@ public class UsedPointDBAdapter {
             }
         }
         ContentValues val = new ContentValues();
-        val.put(USED_POINT_COLUMN_ID,usedPoint.getUsedPointId());
+        val.put(USED_POINT_COLUMN_ID,usedPoint.getId());
         //Assign values for each row.
-        val.put(USED_POINT_COLUMN_Order_ID, usedPoint.getSaleId());
         val.put(USED_POINT_COLUMN_POINT, usedPoint.getUnUsed_point_amount());
         val.put(USED_POINT_COLUMN_CUSTOMER,usedPoint.getCustomerId());
 
