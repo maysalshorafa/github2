@@ -5761,17 +5761,20 @@ public class SalesCartActivity extends AppCompatActivity {
                     if(clubType==2){
                         int amount = (int)(totalPrice*club.getPoint())/club.getAmount();
                         sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId());
+                        String strUsed = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE);
+                        Log.d("usedPoint",strUsed+"ojjjj");
+                        UsedPoint usedPoint=null;
+                        if (strUsed!=null) {
+                            JSONObject s=new JSONObject(strUsed);
+                            usedPoint= objectMapper.readValue(s.toString(), UsedPoint.class);
+                            usedpointDbAdapter.insertEntry( usedPoint.getUnUsed_point_amount(), SESSION._ORDERS.getCustomerId());
+
+
+                        }
 
                     }
-                    String strUsed = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE);
-                    Log.d("usedPoint",strUsed+"ojjjj");
-                    UsedPoint usedPoint=null;
-                    if (strUsed != ""&& clubType==2) {
-                        usedPoint= objectMapper.readValue(strUsed.toString(), UsedPoint.class);
-                        usedpointDbAdapter.insertEntry( usedPoint.getUnUsed_point_amount(), SESSION._ORDERS.getCustomerId());
 
 
-                    }
                     // Club with point and amount
                   /*  if (clubType == 2) {
                         pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
