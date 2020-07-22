@@ -1276,35 +1276,35 @@ public class PdfUA {
         insertCell(dateTable, context.getString(R.string.different), Element.ALIGN_LEFT, 1, dateFont);
 
         insertCell(dateTable, CONSTANT.CHECKS, Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("actualCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("expectedCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable,  jsonObject.getDouble("actualCheck")-jsonObject.getDouble("expectedCheck")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, Util.makePrice(jsonObject.getDouble("actualCheck")), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, Util.makePrice(jsonObject.getDouble("expectedCheck")), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, Util.makePrice(jsonObject.getDouble("actualCheck")-jsonObject.getDouble("expectedCheck")), Element.ALIGN_LEFT, 1, dateFont);
 
         insertCell(dateTable, CONSTANT.CREDIT_CARD, Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("actualCredit")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("expectedCredit")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable,  jsonObject.getDouble("actualCredit")-jsonObject.getDouble("expectedCredit")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, Util.makePrice( jsonObject.getDouble("actualCredit")), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, Util.makePrice(jsonObject.getDouble("expectedCredit")), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable, Util.makePrice(jsonObject.getDouble("actualCredit")-jsonObject.getDouble("expectedCredit")), Element.ALIGN_LEFT, 1, dateFont);
 
         insertCell(dateTable, currencyTypesList.get(0).getType(), Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("actualFirstType")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable, jsonObject.getDouble("expectedFirstType")+"", Element.ALIGN_LEFT, 1, dateFont);
-        insertCell(dateTable,  jsonObject.getDouble("actualFirstType")-jsonObject.getDouble("expectedFirstType")+"", Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  Util.makePrice(jsonObject.getDouble("actualFirstType")), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  Util.makePrice(jsonObject.getDouble("expectedFirstType")), Element.ALIGN_LEFT, 1, dateFont);
+        insertCell(dateTable,  Util.makePrice(jsonObject.getDouble("actualFirstType")-jsonObject.getDouble("expectedFirstType")), Element.ALIGN_LEFT, 1, dateFont);
         if (SETTINGS.enableCurrencies){
 
             insertCell(dateTable, currencyTypesList.get(1).getType(), Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable, jsonObject.getDouble("actualSecondType")+"", Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable, jsonObject.getDouble("expectedSecondType")+"", Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable,  jsonObject.getDouble("actualSecondType")-jsonObject.getDouble("expectedSecondType")+"", Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(dateTable, Util.makePrice(jsonObject.getDouble("actualSecondType")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(dateTable, Util.makePrice(jsonObject.getDouble("expectedSecondType")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(dateTable,  Util.makePrice(jsonObject.getDouble("actualSecondType")-jsonObject.getDouble("expectedSecondType")), Element.ALIGN_LEFT, 1, dateFont);
 
             insertCell(dateTable, currencyTypesList.get(2).getType(), Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable, jsonObject.getDouble("actualThirdType")+"", Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable, jsonObject.getDouble("expectedTirdType")+"", Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable,  jsonObject.getDouble("actualThirdType")-jsonObject.getDouble("expectedTirdType")+"", Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(dateTable, Util.makePrice(jsonObject.getDouble("actualThirdType")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(dateTable,Util.makePrice( jsonObject.getDouble("expectedTirdType")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(dateTable,Util.makePrice(  jsonObject.getDouble("actualThirdType")-jsonObject.getDouble("expectedTirdType")), Element.ALIGN_LEFT, 1, dateFont);
 
             insertCell(dateTable, currencyTypesList.get(3).getType(), Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable, jsonObject.getDouble("actualFourthType")+"", Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable, jsonObject.getDouble("expectedFourthType")+"", Element.ALIGN_LEFT, 1, dateFont);
-            insertCell(dateTable,  jsonObject.getDouble("actualFourthType")-jsonObject.getDouble("expectedFourthType")+"", Element.ALIGN_LEFT, 1, dateFont);}
+            insertCell(dateTable, Util.makePrice(jsonObject.getDouble("actualFourthType")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(dateTable, Util.makePrice(jsonObject.getDouble("expectedFourthType")), Element.ALIGN_LEFT, 1, dateFont);
+            insertCell(dateTable, Util.makePrice( jsonObject.getDouble("actualFourthType")-jsonObject.getDouble("expectedFourthType")), Element.ALIGN_LEFT, 1, dateFont);}
         insertCell(dateTable, "\n---------------------------" , Element.ALIGN_CENTER, 4, font);
 
         //end

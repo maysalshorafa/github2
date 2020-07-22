@@ -353,7 +353,7 @@ public class Arkom {
         request.addProperty("TransactionID", transactionID);
         request.addProperty("CardNum", cardNum);
         request.addProperty("CardExpiry", cardExpiry);
-        request.addProperty("TransSum", String.format("%.2f", transSum));
+        request.addProperty("TransSum", String.format(Locale.US,"%.2f", transSum));
         /*
         PropertyInfo TransSumProp = new PropertyInfo();
         TransSumProp.setName("TransSum");
@@ -361,7 +361,7 @@ public class Arkom {
         TransSumProp.setType(Integer.class);
         request.addProperty(TransSumProp);
         */
-        request.addProperty("TransPoints", String.format("%.2f", transPoints));
+        request.addProperty("TransPoints", String.format(Locale.US,"%.2f", transPoints));
         request.addProperty("Last4Digits", last4Digits);
         request.addProperty("CVV2", CVV2);
         request.addProperty("ID", ID);
@@ -369,15 +369,14 @@ public class Arkom {
         request.addProperty("ISO_Currency", ISO_Currenc);
         request.addProperty("CreditType", creditType);
         request.addProperty("ApprovalCode", approvalCode);
-        request.addProperty("FirstPayment", String.format("%.2f", firstPayment));
-        request.addProperty("FixedPayment", String.format("%.2f", fixedPayment));
+        request.addProperty("FirstPayment", String.format(Locale.US,"%.2f", firstPayment));
+        request.addProperty("FixedPayment", String.format(Locale.US,"%.2f", fixedPayment));
         request.addProperty("NumOfFixedPayments", numOfFixedPayments);
         request.addProperty("TransRef", transRef);
         request.addProperty("J_Prm", J_Prm);
         request.addProperty("Z_Prm", Z_Prm);
         request.addProperty("Q_Prm", Q_Prm);
         request.addProperty("A_Prm", A_Prm);
-
 
         request.addProperty("Answer", "");
         request.addProperty("MerchantNote", "");
@@ -498,11 +497,13 @@ public class Arkom {
         String last4Digits = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
         double fixedPayment=transSum/numOfFixedPayments;
         try {
-            double firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", transSum - (fixedPayment * (numOfFixedPayments - 1))));
+            double firstPayment = Double.parseDouble(String.format(Locale.US,"%.2f", transSum - (fixedPayment * (numOfFixedPayments - 1))));
+            Log.d("firstPaymentCr",firstPayment+"test");
             SoapObject soapObject = Arkom.CCTransaction(SETTINGS.ccNumber, SETTINGS.ccPassword, TransactionID,
                     creditCardNumber, cardExpiry, transSum, 0, last4Digits, cvv2,
                     idNumber, 1, "ILS", CreditType, approvalCode, firstPayment,
                     fixedPayment, numOfFixedPayments, "", 0, "", "", "");
+
             PutTransactionAcknowledge(SETTINGS.ccNumber, SETTINGS.ccPassword, TransactionID);
             return soapObject;
         }

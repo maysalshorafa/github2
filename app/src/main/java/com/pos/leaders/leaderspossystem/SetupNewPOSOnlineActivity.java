@@ -89,7 +89,7 @@ public class SetupNewPOSOnlineActivity extends Activity {
         etKey = (EditText) findViewById(R.id.setuponlinepos_etKey);
         btConnect = (Button) findViewById(R.id.setuponlinepos_btConnect);
         ThisApp.setCurrentActivity(this);
-        context = this;
+        context = SetupNewPOSOnlineActivity.this;
 
 
       SharedPreferences sharedPreferencesCurrency = getSharedPreferences(POS_Currency, MODE_PRIVATE);
@@ -209,8 +209,8 @@ class StartConnection extends AsyncTask<String,Void,String> {
         messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
     }
 
-    final ProgressDialog progressDialog = new ProgressDialog(context);
-    final ProgressDialog progressDialog2 = new ProgressDialog(context);
+    final ProgressDialog progressDialog = new ProgressDialog(ThisApp.getContext());
+    final ProgressDialog progressDialog2 = new ProgressDialog(ThisApp.getContext());
 
     @Override
     protected void onPreExecute() {

@@ -161,6 +161,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
             if(extras.containsKey("creditReceipt")){
                 creditReceipt=true;
                 totalPrice = (double) extras.get("_Price");
+                Log.d("totalPriceMain",totalPrice+"");
                 tvTotalPrice.setText(Util.makePrice(totalPrice) + " " +  SETTINGS.currencySymbol);
 
                 invoice= (List<BoInvoice>) extras.get("invoice");
@@ -170,6 +171,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 creditReceipt=false;
                 fromMultiCurrency=extras.getBoolean(LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY);
                 totalPrice = (double) extras.get(LEADERS_POS_CREDIT_CARD_TOTAL_PRICE);
+                Log.d("totalPriceMain",totalPrice+"");
                 tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
             }
         } else {
@@ -391,9 +393,9 @@ public class MainCreditCardActivity extends AppCompatActivity {
                             validCCNUM = validCCNUM + c;
                         }
                     }
-                    //Log.e("Card Number", validCCNUM);
-                    final String CCNum = validCCNUM;
 
+                    final String CCNum = validCCNUM;
+                    Log.e("Card Number", validCCNUM);
                     Log.i(LOG_TAG, CCNum);
                     if (advanceMode) {
                         String pn = etPaymentsNumber.getText().toString();
