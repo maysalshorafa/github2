@@ -85,8 +85,8 @@ public class ProductDBAdapter {
 
 
     public static final String DATABASE_UPDATE_FROM_V1_TO_V2[] = {"alter table products rename to product_v10;", DATABASE_CREATE + "; ",
-            "insert into products (id,name,displayName,,barcode,sku,description,priceWithTax,priceWithoutTax,costPrice,regularPrice,withTax,,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system,stockQuantity,manageStock,inStock,status,currencyType,branchId,offerId,lastCostPriceInventory,with_serial_number) " +
-                    "select id,name,displayName,,barcode,sku,description,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system,stockQuantity,manageStock,inStock,status,currencyType,branchId,offerId,lastCostPriceInventory,with_serial_number from product_v10;"};
+            "insert into products (id,name,displayName,barcode,sku,description,priceWithTax,priceWithoutTax,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system,stockQuantity,manageStock,inStock,status,currencyType,branchId,offerId,lastCostPriceInventory,with_serial_number) " +
+                    "select id,name,displayName,barcode,sku,description,price,price,costPrice,regularPrice,withTax,creatingDate,hide,categoryId,byEmployee,with_pos,with_point_system,stockQuantity,manageStock,inStock,status,currencyType,branchId,offerId,lastCostPriceInventory,with_serial_number from product_v10;"};
     // Variable to hold the database instance
     public SQLiteDatabase db;
     // Context of the application using the database.
