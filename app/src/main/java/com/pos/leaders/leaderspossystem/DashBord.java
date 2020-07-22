@@ -195,9 +195,7 @@ public class DashBord extends AppCompatActivity implements AdapterView.OnItemSel
         //sendable.run();
 
        AccessToken accessToken = new AccessToken(this);
-        accessToken.execute(this);
-
-
+       accessToken.execute(this);
 
 
         //load pos id from shared file
@@ -810,7 +808,6 @@ else if (SETTINGS.statusLincess.equals(CONSTANT.ACTIVE)){
         saleDBAdapter.open();
         lastSale = saleDBAdapter.getLast();
         saleDBAdapter.close();
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String str = extras.getString(LogInActivity.LEADPOS_MAKE_A_REPORT);

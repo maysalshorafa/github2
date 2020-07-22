@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -272,6 +274,8 @@ public class OrderDetails {
 	}
 
 	public double getPaidAmount() {
+		Log.d("unitPrice",unitPrice+"");
+		Log.d("quantity",quantity+"");
 		double temp = (unitPrice * (1 - (discount / 100)));
 		if (rowDiscount == 0)
 			return temp*quantity;
@@ -363,6 +367,7 @@ public class OrderDetails {
 				", \"giftProduct\":" + "\""+giftProduct +"\""+
 				", \"position\":" + "\""+position +"\""+
 				", \"orderKey\":" + "\""+orderKey +"\""+
+				", \"displayName\":" + "\""+product.getDisplayName()+"\""+
 				", \"offerCategory\":" + "\""+offerCategory +"\""+
 				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
 				", \"serialNumber\":" + "\""+serialNumber +"\""+

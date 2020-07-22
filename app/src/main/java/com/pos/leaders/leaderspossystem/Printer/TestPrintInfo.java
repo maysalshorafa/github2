@@ -660,7 +660,13 @@ public class TestPrintInfo {
 				//destroy bitmap buffer
 				for(i = 0; i < image_num; i++)
 				{
-					cg_image[i].recycle();
+					if (cg_image[i] != null && !cg_image[i].isRecycled()) {
+						cg_image[i].recycle();
+						cg_image[i] = null;
+					}
+					/*else {
+						cg_image[i].recycle();
+					}*/
 				}
 			}
 		if(printMode == PRINT_MODE_PAGE)

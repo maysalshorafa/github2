@@ -163,7 +163,8 @@ public class OrderDetailsDBAdapter {
 			}
 		}
 		ContentValues val = new ContentValues();
-		val.put(ORDER_DETAILS_COLUMN_ID, Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID));
+		long orderDetialsId= Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID);
+		val.put(ORDER_DETAILS_COLUMN_ID, orderDetialsId);
 		val.put(ORDER_DETAILES_COLUMN_PRODUCTID, o.getProductId());
 		val.put(ORDER_DETAILS_COLUMN_QUANTITY, o.getQuantity());
 		val.put(ORDER_DETAILES_COLUMN_USEROFFER, o.getUserOffer());
@@ -178,6 +179,11 @@ public class OrderDetailsDBAdapter {
 		val.put(ORDER_DETAILS_COLUMN_SERIAL_NUMBER,o.getSerialNumber());
 
 		try {
+			Log.d("orderGenerate",orderDetialsId+"");
+			Log.d("orderDetialsCancleB",o.getOrderDetailsId()+"najla");
+			Log.d("orderDetialsCancle",o.getOrderId()+"najla");
+			o.setOrderDetailsId(orderDetialsId);
+			Log.d("orderDetialsCancleAft",o.getOrderDetailsId()+"najla");
 			sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
 			return db.insert(ORDER_DETAILS_TABLE_NAME, null, val);
 		} catch (SQLException ex) {

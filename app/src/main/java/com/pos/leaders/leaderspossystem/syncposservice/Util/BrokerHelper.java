@@ -45,6 +45,7 @@ public class BrokerHelper {
 
         BrokerMessage brokerMessage = new BrokerMessage(jsonObject.toString());
         long res = broker.insertEntry(brokerMessage);
+        Log.d("res",res+"");
         broker.close();
     }
 }

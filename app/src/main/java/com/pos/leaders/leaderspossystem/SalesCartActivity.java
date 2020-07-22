@@ -703,11 +703,12 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         long sID = orderDBAdapter.insertEntry(SESSION._EMPLOYEE.getEmployeeId(), new Timestamp(System.currentTimeMillis()), lastOrder.getReplacementNote(), true, lastOrder.getTotalPrice() * -1, lastOrder.getTotalPaidAmount() * -1, lastOrder.getCustomerId(), lastOrder.getCustomer_name(),lastOrder.getCartDiscount(),lastOrder.getNumberDiscount(),lastOrder.getOrderId(),lastOrder.getSalesBeforeTax()* -1,lastOrder.getSalesWithTax()* -1,lastOrder.getTotalSaved());
                                                         Order order = orderDBAdapter.getOrderById(sID);
                                                         lastOrder.setCancellingOrderId(sID);
+                                                        Log.d("ddlastOrder",lastOrder.toString());
                                                         Log.d("orderCancle",order.toString());
                                                         orderDBAdapter.updateEntry(lastOrder);
                                                         PaymentDBAdapter paymentDBAdapter1 = new PaymentDBAdapter(SalesCartActivity.this);
                                                         paymentDBAdapter1.open();
-                                                        paymentDBAdapter1.insertEntry( lastOrder.getTotalPrice() * -1, sID,order.getOrderKey());
+                                                        paymentDBAdapter1.insertEntry(lastOrder.getTotalPrice() * -1, sID,order.getOrderKey());
                                                         paymentDBAdapter1.close();
                                                         CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(SalesCartActivity.this);
                                                         cashPaymentDBAdapter.open();
@@ -718,12 +719,20 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         CurrencyReturnsDBAdapter currencyReturnsDBAdapter =new CurrencyReturnsDBAdapter(SalesCartActivity.this);
                                                         currencyReturnsDBAdapter.open();
                                                         List<OrderDetails>orderDetailsList=orderDetailsDBAdapter.getOrderBySaleID(lastOrder.getOrderId());
-                                                     //   Log.d("orderDetailsList",orderDetailsList.toString());
+                                                        List<OrderDetails>orderDetailsesCancle=new ArrayList<OrderDetails>();
+                                                    //  Log.d("orderDetailsList",orderDetailsList.toString());
                                                         for(int i=0;i<orderDetailsList.size();i++){
                                                             OrderDetails o =orderDetailsList.get(i);
                                                             o.setOrderId(sID);
+                                                            o.setPaidAmount(orderDetailsList.get(i).getPaidAmount()*-1);
+                                                            o.setPaidAmountAfterTax(orderDetailsList.get(i).getPaidAmountAfterTax()*-1);
+                                                            o.setQuantity(orderDetailsList.get(i).getQuantity()*-1);
+                                                            o.setDiscount(orderDetailsList.get(i).getDiscount()*-1);
+                                                            orderDetailsesCancle.add(o);
+                                                            Log.d("orderDetialsCancle",o.getOrderDetailsId()+"najla");
                                                             orderDetailsDBAdapter.insertEntryCancel(o);
                                                         }
+
                                                        if(SETTINGS.enableCurrencies){
                                                             currencyOperationDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()),sID,CONSTANT.DEBIT,lastOrder.getTotalPaidAmount() * -1,SETTINGS.currencyCode,CONSTANT.CASH);
                                                             currencyReturnsDBAdapter.insertEntry(lastOrder.getOrderId(),(lastOrder.getTotalPaidAmount()-lastOrder.getTotalPrice())*-1,new Timestamp(System.currentTimeMillis()),0);
@@ -733,7 +742,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                   if (checks.size() > 0) {
                                                             try {
                                                                 Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
-                                                                SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order,orderDetailsList, false, checks);
+                                                                SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order,orderDetailsesCancle, false, checks);
                                                                 startActivity(i);
                                                             } catch (Exception e) {
                                                                 Log.d("exception", e.toString());
@@ -742,7 +751,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         }else {
                                                             try {
                                                                 Intent i = new Intent(SalesCartActivity.this, SalesHistoryCopySales.class);
-                                                                SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order, orderDetailsList,false, null);
+                                                                SETTINGS.copyInvoiceBitMap = invoiceImg.cancelingInvoice(order, orderDetailsesCancle,false, null);
                                                                 startActivity(i);
 
 
@@ -761,13 +770,14 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         try {
                                                             zReportCount = zReportCountDbAdapter.getLastRow();
                                                             zReport1 = zReportDBAdapter.getLastRow();
-                                                            Log.d("zReport1",zReport1.toString());
+                                                            Log.d("zReport1Cancle",zReport1.toString());
 
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }
                                                         double SalesWitheTaxCancle=0,SalesWithoutTaxCancle=0,salesaftertaxCancle=0;
                                                         productDBAdapter.open();
+
                                                         for (int i=0;i<orderDetailsList.size();i++){
                                                             Product product = productDBAdapter.getProductByID(orderDetailsList.get(i).getProductId());
                                                             if (product.getCurrencyType().equals("0")){
@@ -808,14 +818,16 @@ public class SalesCartActivity extends AppCompatActivity {
                                                         Log.d("zReportgetTOoo",lastOrder.getTotalPrice()+"fji");
                                                         zReport1.setCashTotal(zReport1.getCashTotal()-lastOrder.getTotalPrice());
                                                         zReport1.setFirstTypeAmount(zReport1.getFirstTypeAmount()-lastOrder.getTotalPrice());
-                                                        zReport1.setSalesWithTax(zReport1.getSalesWithTax()-SalesWitheTaxCancle);
+                                                        zReport1.setSalesWithTax(zReport1.getSalesWithTax()-lastOrder.getSalesWithTax());
                                                         Log.d("setSalesWithTax",zReport1.getSalesWithTax()+" "+SalesWitheTaxCancle+" "+zReport1.getSalesWithTax());
-                                                        zReport1.setSalesBeforeTax(zReport1.getSalesBeforeTax()-SalesWithoutTaxCancle);
+                                                        zReport1.setSalesBeforeTax(zReport1.getSalesBeforeTax()-lastOrder.getSalesBeforeTax());
                                                         Log.d("SalesBeforeTax",zReport1.getSalesBeforeTax()+" "+SalesWithoutTaxCancle);
                                                         Log.d("Tax",zReport1.getTotalTax()+"fji");
                                                         Log.d("Tax1",Double.parseDouble(Util.makePrice(zReport1.getTotalTax()+(salesaftertaxCancle - SalesWitheTaxCancle)))+"fji1");
+                                                        Double x=lastOrder.getTotalPrice() -lastOrder.getSalesBeforeTax();
+                                                        zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (x-lastOrder.getSalesWithTax()))));
 
-                                                        zReport1.setTotalTax(Double.parseDouble(Util.makePrice(zReport1.getTotalTax()- (salesaftertaxCancle - SalesWitheTaxCancle))));
+
                                                         zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()+1);
                                                         zReportCount.setCashCount(zReportCount.getCashCount()-1);
                                                     //    zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()-1);
@@ -3623,6 +3635,7 @@ public class SalesCartActivity extends AppCompatActivity {
             if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType().equals("0")){
                 updateCurrencyType.updateCurrencyToShekl(SalesCartActivity.context,SESSION._ORDER_DETAILES.get(i).getProduct());
             }
+            Log.d("testVat",SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()+""+i);
             double rateCurrency= ConverterCurrency.getRateCurrency(SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType(),SalesCartActivity.this);
             if(!SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
                 if(SESSION._ORDERS.getCartDiscount()>0){
@@ -3645,11 +3658,13 @@ public class SalesCartActivity extends AppCompatActivity {
         }
         if (flag){
             flag=false;
-            Vat.setText(Util.makePrice(saleTotalPrice - SalesWitheTax));
+            double Tax=saleTotalPrice-SalesWithoutTax;
+            Vat.setText(Util.makePrice(Tax - SalesWitheTax));
         }
         else {
             double totalPriceAfterDiscount= saleTotalPrice- (saleTotalPrice * (SESSION._ORDERS.cartDiscount/100));
-            Vat.setText(Util.makePrice(totalPriceAfterDiscount - SalesWitheTax));
+            double Tax=saleTotalPrice-SalesWithoutTax;
+            Vat.setText(Util.makePrice(Tax - SalesWitheTax));
         }
 
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);

@@ -232,6 +232,8 @@ public class LincessDBAdapter {
             lincessPos = build(cursor);
             Log.d("lincessPos", lincessPos.toString());
         }
+        db.close();
+        close();
         return lincessPos;
     }
 

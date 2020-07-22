@@ -1416,10 +1416,10 @@ public class InvoiceImg {
         Block discount = new Block("\u200E" + "%" + "\n", 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.14));
         double SaleOriginalityPrice = 0, saleTotalPrice = 0;
         double totalSaved = 0.0;
-        double price_before_tax=0;
-        for (OrderDetails o : orderDetailsList) {
+        double price_after_tax=0;
+      for (OrderDetails o : orderDetailsList) {
 
-            price_before_tax+=o.getPaidAmountAfterTax();
+            price_after_tax+=o.getPaidAmountAfterTax();
             ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
             productDBAdapter.open();
             Product p= productDBAdapter.getProductByID(o.getProductId());
@@ -1439,8 +1439,10 @@ public class InvoiceImg {
             saleTotalPrice += o.getUnitPrice();
 
         }
-        Log.d("priceBeforCancle",price_before_tax+"");
- Log.d("SaleOrieCancle",SaleOriginalityPrice+"");
+        Log.d("SaleOrieCancle",SaleOriginalityPrice+"");
+      //  SaleOriginalityPrice=sale.getTotalPrice();
+        Log.d("priceBeforCancle",price_after_tax+"");
+        Log.d("SaleOrieCancle",SaleOriginalityPrice+"");
         Log.d("saleTotalPriceCancle",saleTotalPrice+"");
         totalSaved = (SaleOriginalityPrice - saleTotalPrice);
         Log.d("cancleInvoiceTotalSaved",totalSaved+"");
@@ -1494,13 +1496,13 @@ public class InvoiceImg {
         Block addsTax = new Block("\u200E" + context.getString(R.string.tax) + ": "+Util.makePrice(SETTINGS.tax)+"%" , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
         Block priceBeforeTaxText = new Block("\u200E" + context.getString(R.string.price_before_tax) , 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.75));
 
-        double noTax =price_before_tax - (price_before_tax * (sale.cartDiscount/100));
+        double noTax =price_after_tax - (price_after_tax * (sale.cartDiscount/100));
         double totalPriceAfterDiscount= SaleOriginalityPrice- (SaleOriginalityPrice * (sale.cartDiscount/100));
         Log.d("noTaxCan",noTax+"");
         Log.d("totalPriceAfter",totalPriceAfterDiscount+"");
         Log.d("priceBefor",totalPriceAfterDiscount-noTax+"");
-        Block addsTaxValue = new Block(Util.makePrice(-1*(totalPriceAfterDiscount-noTax)), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
-        Block priceBeforeTax = new Block(Util.makePrice(noTax*-1), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block addsTaxValue = new Block(Util.makePrice((totalPriceAfterDiscount-noTax)), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
+        Block priceBeforeTax = new Block(Util.makePrice(noTax), 25f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
 
         // Block numTax = new Block("\u200E" + String.format(new Locale("en"), "\u200E%.2f\n\u200E%.2f\n\u200E%.2f", noTax * (SETTINGS.tax / 100), 0.0f), 30.0f, Color.BLACK, (int) (CONSTANT.PRINTER_PAGE_WIDTH * 0.25));
         //blocks.add(numTax.Left());
@@ -2147,26 +2149,14 @@ public class InvoiceImg {
         double totalSaved = 0.0;
         ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
         productDBAdapter.open();
-
         for (int a=0;a<cartDetailsList.length();a++) {
             JSONObject o = cartDetailsList.getJSONObject(a);
             count+=o.getInt("quantity");
-
-            Product p= productDBAdapter.getProductByID(o.getLong("productId"));
-            if(p!=null) {
-                int cut = 11;
-                if (p.getDisplayName().length() < cut)
-                    cut = p.getDisplayName().length();
-                name.text += (p.getDisplayName().substring(0, cut) + newLineL);
-            }else {
-                name.text += (o.getLong("productId") + newLineL);
-
-            }
+            name.text += (o.get("displayName") + newLineL);
             counter.text += o.getInt("quantity") + "\n";
             unitPrice.text +=String.format(new Locale("en"), "%.2f", o.getDouble("unitPrice")) + "\n";
             price.text += String.format(new Locale("en"), "%.2f",(o.getDouble("unitPrice")*o.getInt("quantity"))-(o.getDouble("unitPrice")*o.getInt("quantity")*o.getDouble("discount")/100)) + "\n";
             discount.text += String.format(new Locale("en"), "%.2f", o.getDouble("discount")) + "\n";
-
             SaleOriginalityPrice +=o.getDouble("unitPrice")*o.getInt("quantity") ;
             saleTotalPrice += o.getDouble("unitPrice")*o.getInt("quantity")-o.getDouble("unitPrice")*o.getInt("quantity")*o.getDouble("discount")/100;
         }

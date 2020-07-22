@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,8 +17,6 @@ public class SalesHistoryCopySales extends AppCompatActivity {
     Button btCancel, btPrint;
     ImageView invoiceImageView;
     String status;
-    Bitmap invoiceBitMab = null,invoiceCancle=null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +30,11 @@ public class SalesHistoryCopySales extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         btCancel = (Button) findViewById(R.id.salesHistory_btCancel);
         btPrint = (Button) findViewById(R.id.salesHistory_btPrint);
-        // btPrint.setVisibility(View.INVISIBLE);
         invoiceImageView = (ImageView) findViewById(R.id.salesHistory_ivCopyInvoice);
-        invoiceBitMab = SETTINGS.copyInvoiceBitMap;
-        invoiceImageView.setImageBitmap(invoiceBitMab);
+
+        Bitmap invoiceBitMab = SETTINGS.copyInvoiceBitMap;
+        setImageBitmap(invoiceBitMab,invoiceImageView);
+      //  invoiceImageView.setImageBitmap(invoiceBitMab);
         btCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,11 +45,17 @@ public class SalesHistoryCopySales extends AppCompatActivity {
         btPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                invoiceCancle=invoiceBitMab;
+
+                Bitmap invoiceCancle=SETTINGS.copyInvoiceBitMap;
                 PrintTools printTools = new PrintTools(SalesHistoryCopySales.this);
                 printTools.PrintReport(invoiceCancle);
                 onBackPressed();
             }
         });
+    }
+    public void setImageBitmap(Bitmap bm,ImageView imageView) {
+        // if this is used frequently, may handle bitmaps explicitly
+        // to reduce the intermediate drawable object
+        imageView.setImageDrawable(new BitmapDrawable(getApplicationContext().getResources(), bm));
     }
 }

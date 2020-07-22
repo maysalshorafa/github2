@@ -1966,7 +1966,7 @@ public class SyncMessage extends Service {
         }
 
 
-
+        currencyDBAdapter.close();
 
     }
 }

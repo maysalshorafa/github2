@@ -214,6 +214,7 @@ public class MessageTransmit {
        else {
             lincessDBAdapter.updateEntry(CONSTANT.ACTIVE,idLincess);
         }
+        lincessDBAdapter.close();
     return;
 
 }

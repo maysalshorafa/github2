@@ -200,9 +200,16 @@ public class ProductsActivity  extends AppCompatActivity  {
         etPriceWithOutTax.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (withTax){
                 if (!etPriceWithOutTax.getText().toString().isEmpty()&&!etPriceWithOutTax.getText().toString().equals("")) {
                     Double priceWithTax = priceWithTax(Double.valueOf(etPriceWithOutTax.getText().toString()));
                     etPriceWithTax.setText(Util.makePrice(priceWithTax));
+                }}
+                else {
+                    if (!etPriceWithOutTax.getText().toString().isEmpty()&&!etPriceWithOutTax.getText().toString().equals("")) {
+                        Double priceWithTax = Double.valueOf(etPriceWithOutTax.getText().toString());
+                        etPriceWithTax.setText(Util.makePrice(priceWithTax));
+                    }
                 }
             }
         });
@@ -212,9 +219,16 @@ public class ProductsActivity  extends AppCompatActivity  {
         etPriceWithTax.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (withTax){
                 if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
                     Double priceWithOutTax = priceWithOutTax(Double.valueOf(etPriceWithTax.getText().toString()));
                     etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                }}
+                else {
+                    if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
+                        Double priceWithOutTax = Double.valueOf(etPriceWithTax.getText().toString());
+                        etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                    }
                 }
             }
         });
@@ -279,8 +293,23 @@ public class ProductsActivity  extends AppCompatActivity  {
 
                 if(isChecked){
                     withTax=false; //edit here
+                    if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
+                        Double priceWithOutTax = Double.valueOf(etPriceWithTax.getText().toString());
+                        etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                        etPriceWithTax.setText(Util.makePrice(priceWithOutTax));
+                    }
+                   else if (!etPriceWithOutTax.getText().toString().isEmpty()&&!etPriceWithOutTax.getText().toString().equals("")) {
+                        Double priceWithOutTax = Double.valueOf(etPriceWithOutTax.getText().toString());
+                        etPriceWithTax.setText(Util.makePrice(priceWithOutTax));
+                    }
+
                 }else{
                     withTax=true; //edit here
+                    if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
+                        Double priceWithOutTax = priceWithOutTax(Double.valueOf(etPriceWithTax.getText().toString()));
+                        etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                    }
+
                 }
 
             }

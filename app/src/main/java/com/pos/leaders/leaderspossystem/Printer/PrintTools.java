@@ -87,6 +87,7 @@ public class PrintTools {
 
             @Override
             protected Void doInBackground(Void... params) {
+
                 pos.imageStandardModeRasterPrint(bitmap, CONSTANT.PRINTER_PAGE_WIDTH);
                 //printer.PRN_PrintDotBitmap(bitmap, 0);
                 return null;

@@ -327,9 +327,9 @@ public class ReportZDetailsActivity extends Activity {
 
 
                 zReportPosSales.setText(Util.makePrice(xReport.getTotalPosSales()));
-                zReportTotalTax.setText(xReport.getTotalTax()+"");
-                zReportSalesBeforeTax.setText(xReport.getSalesBeforeTax()+"");
-                zReportSalesWithTax.setText(xReport.getSalesWithTax()+"");
+                zReportTotalTax.setText(Util.makePrice(xReport.getTotalTax()));
+                zReportSalesBeforeTax.setText(Util.makePrice(xReport.getSalesBeforeTax()));
+                zReportSalesWithTax.setText(Util.makePrice(xReport.getSalesWithTax()));
                 zReportTotalPrice.setText(Util.makePrice(xReport.getSalesBeforeTax()+xReport.getSalesWithTax()+xReport.getTotalTax()));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -493,9 +493,9 @@ public class ReportZDetailsActivity extends Activity {
 
 
                 zReportPosSales.setText(Util.makePrice(zReport.getTotalPosSales()));
-                zReportTotalTax.setText(zReport.getTotalTax()+"");
-                zReportSalesBeforeTax.setText(zReport.getSalesBeforeTax()+"");
-                zReportSalesWithTax.setText(zReport.getSalesWithTax()+"");
+                zReportTotalTax.setText(Util.makePrice(zReport.getTotalTax()));
+                zReportSalesBeforeTax.setText(Util.makePrice(zReport.getSalesBeforeTax()));
+                zReportSalesWithTax.setText(Util.makePrice(zReport.getSalesWithTax()));
                 zReportTotalPrice.setText(Util.makePrice(zReport.getSalesBeforeTax()+zReport.getSalesWithTax()+zReport.getTotalTax()));
               Log.d("zReportDetials",zReport.toString());
             } catch (Exception e) {
