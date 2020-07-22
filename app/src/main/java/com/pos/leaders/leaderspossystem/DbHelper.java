@@ -230,9 +230,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
 
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'General','General',0,0,0,0,0,0);");
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'Sever','Sever',1,.2,0,0,0,0);");
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'Golden','Golden',2,0,50,200,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'General','General',0,0,0,0,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'Sever','Sever',1,.2,0,0,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'Golden','Golden',2,0,50,200,0,0,1);");
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (4,'test1','test1','test1','"+new Timestamp(System.currentTimeMillis())+"','12',0,046316969,20,35,0);");
 
         db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);

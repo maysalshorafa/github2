@@ -155,7 +155,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                             if (SESSION._CHECKS_HOLDER!=null&&SESSION._CHECKS_HOLDER.size() > 0) {
                                 Intent i = new Intent(MultiCurrenciesPaymentActivity.this, SalesCartActivity.class);
                                 if(usedPointFlag){
-                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.toString());
+                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
                                 }
                                 i.putExtra("MultiRecipt","Recipt");
                                 i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
@@ -173,7 +173,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
                                 i.putExtra("MultiRecipt","Recipt");
                                 if(usedPointFlag){
-                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.toString());
+                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
                                 }
                                 i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
                                 i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
@@ -192,7 +192,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                                 i.putExtra("MultiRecipt","Recipt");
                                 Log.d("totalMu",totalPrice+"");
                                 if(usedPointFlag){
-                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.toString());
+                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
                                 }
                                 i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
                                 i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
@@ -210,7 +210,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                             i.putExtra("MultiRecipt","Recipt");
                             Log.d("totalMu",totalPrice+"");
                             if(usedPointFlag){
-                                i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.toString());
+                                i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
                             }
                             i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
                             i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
@@ -227,7 +227,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                         if(usedPointFlag){
                             Log.d("totJoj", usedPoint.toString());
 
-                            i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.toString());
+                            i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
                         }
 
                         i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
@@ -419,10 +419,12 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
                 }
                 point.setText((totalPoint-unUsedPoint)+"");
-                final double totalAmount = (club.getAmount()*(totalPoint-unUsedPoint))/club.getPoint();
+                final double totalAmount = (club.getValueOfPoint()*(totalPoint-unUsedPoint));
+                Log.d("clllub",club.toString());
                 pointAmount.setText(Util.makePrice(totalAmount));
                 final LinearLayout  partialLayOut = (LinearLayout)pointDialog.findViewById(R.id.partialLayout);
                 final EditText partialAmount =(EditText)pointDialog.findViewById(R.id.partialAmount);
+                final Button okPartially=(Button)pointDialog.findViewById(R.id.btnOkPartially);
 
                 btAll.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -433,7 +435,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
                         }else if(totalAmount>=totalPrice){
                             insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
-                            int pluseAmount = (int) (((totalAmount-totalPrice)*club.getPoint())/club.getAmount());
+                            int pluseAmount = (int) (((totalAmount-totalPrice)/club.getValueOfPoint()));
                             usedPoint = new UsedPoint(pluseAmount,customerN.getCustomerId());
                         }else {
                             Toast.makeText(MultiCurrenciesPaymentActivity.this,"Sorry Cant Pay totalPrice more than the Point amount please check partial button",Toast.LENGTH_LONG).show();
@@ -445,22 +447,31 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         partialLayOut.setVisibility(View.VISIBLE);
-                        double amount=0;
-                        if(Util.isDouble(partialAmount.getText().toString())){
-                         amount = Double.parseDouble(partialAmount.getText().toString());
-                        }
-                        if(amount<=totalPrice){
-                            insertNewRow(amount, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
-                            int pluseAmount = (int) (((totalPrice-amount)*club.getPoint())/club.getAmount());
-                            usedPoint = new UsedPoint(pluseAmount,customerN.getCustomerId());
-                        }else {
-                            Toast.makeText(MultiCurrenciesPaymentActivity.this,"Sorry Cant Pay ",Toast.LENGTH_LONG).show();
-                        }
-                        pointDialog.dismiss();
+                        okPartially.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                double amount=0;
+                                if(Util.isDouble(partialAmount.getText().toString())){
+                                    amount = Double.parseDouble(partialAmount.getText().toString());
+                                }
+                                if(amount<=totalPrice&&amount<=totalAmount){
+                                    insertNewRow(amount, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
+                                    int pluseAmount = (int)(( totalPrice-amount)*club.getValueOfPoint());
+                                    usedPoint = new UsedPoint(pluseAmount,customerN.getCustomerId());
+                                     pointDialog.dismiss();
 
+                                }else {
+                                    Toast.makeText(MultiCurrenciesPaymentActivity.this,"Sorry Cant Pay ",Toast.LENGTH_LONG).show();
+                                      pointDialog.dismiss();
+
+                                }
+
+                            }
+                        });
                     }
-                });
-            }
+                });}
+
+
         });
         checkButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -589,7 +600,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     public void deleteRow(int position) {
         Log.d("position",position+"");
-        Log.d("paymentTablesrraytempArray",paymentTables.toString());
         paymentTables.remove(position);
 
         ArrayList<PaymentTable> tempArray = new ArrayList<>(paymentTables);
