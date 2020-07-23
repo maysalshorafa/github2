@@ -335,7 +335,6 @@ public class OrdersManagementActivity extends AppCompatActivity {
                 Log.d("testInvoice",list.size()+"" +position);
                 if(list.get(position-1) instanceof  Order){
                     final Order sale = (Order) list.get(position-1);
-                    Log.d("testttt",sale.toString());
 
                     CustomerDBAdapter customerDBAdapter = new CustomerDBAdapter(OrdersManagementActivity.this);
                     customerDBAdapter.open();

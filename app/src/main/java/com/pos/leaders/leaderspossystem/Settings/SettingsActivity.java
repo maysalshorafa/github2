@@ -476,8 +476,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                   List<String>  list=convertObjectToList(newValue);
 
                     if (list.size()==3){
-                    Log.d("listSize", list.size()+"");
-                    Log.d("list",list.toString());
                         List<String>  currenciesChoose=new ArrayList<String>();
                         currenciesChoose.add(SETTINGS.currencyCode);
                         for (int i=0;i<list.size();i++)  {

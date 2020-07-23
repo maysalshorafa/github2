@@ -50,9 +50,9 @@ public class OrderDetailsDBAdapter {
 
 	public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table OrderDetails rename to OrderDetails_v;", DATABASE_CREATE + "; ",
 			"insert into OrderDetails (id,product_id,quantity,userOffer,order_id,paid_amount,unit_price,discount,custmerAssestID,key,price_after_discount,offerId" +
-					",productSerialNo,paid_amount_after_tax,SerialNo,secondTypeAmount)" +
+					",productSerialNo,paid_amount_after_tax,SerialNo)" +
 					"select id,product_id,quantity,userOffer,order_id,paid_amount,unit_price,discount,custmerAssestID,key,price_after_discount,offerId" +
-					",productSerialNo,paid_amount_after_tax,SerialNo,secondTypeAmount from OrderDetails_v;"};
+					",productSerialNo,paid_amount_after_tax,SerialNo from OrderDetails_v;"};
 
 	// Variable to hold the database instance
 	private SQLiteDatabase db;
