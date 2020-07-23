@@ -209,8 +209,8 @@ class StartConnection extends AsyncTask<String,Void,String> {
         messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
     }
 
-    final ProgressDialog progressDialog = new ProgressDialog(ThisApp.getContext());
-    final ProgressDialog progressDialog2 = new ProgressDialog(ThisApp.getContext());
+    final ProgressDialog progressDialog = new ProgressDialog(SetupNewPOSOnlineActivity.context);
+    final ProgressDialog progressDialog2 = new ProgressDialog(SetupNewPOSOnlineActivity.context);
 
     @Override
     protected void onPreExecute() {

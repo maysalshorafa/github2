@@ -235,11 +235,11 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
                             try {
                             for(int a= 0;a<cartDetailsList.length();a++){
 
-                                    if(cartDetailsList.getJSONObject(a).getLong("productId")==product.getProductId()){
+                                  //  if(cartDetailsList.getJSONObject(a).getLong("productId")==product.getProductId()){
                                         newCartJson=cartDetailsList.getJSONObject(a);
 
-                                    }
-                                }
+                                    //}
+
                                 for(int p=0;p<newCartDetails.length();p++){
 
                                     if(newCartDetails.getJSONObject(p).getLong("productId")==newCartJson.getLong("productId")){
@@ -474,6 +474,7 @@ public class CreateCreditInvoiceActivity extends AppCompatActivity {
 
 
                                 }
+                            }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
