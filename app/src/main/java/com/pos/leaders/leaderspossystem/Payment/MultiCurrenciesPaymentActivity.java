@@ -433,10 +433,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                             insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
                             usedPoint = new UsedPoint(0,customerN.getCustomerId());
 
-                        }else if(totalAmount>=totalPrice){
-                            insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
-                            int pluseAmount = (int) (((totalAmount-totalPrice)/club.getValueOfPoint()));
-                            usedPoint = new UsedPoint(pluseAmount,customerN.getCustomerId());
                         }else {
                             Toast.makeText(MultiCurrenciesPaymentActivity.this,"Sorry Cant Pay totalPrice more than the Point amount please check partial button",Toast.LENGTH_LONG).show();
                         }
@@ -454,9 +450,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                                 if(Util.isDouble(partialAmount.getText().toString())){
                                     amount = Double.parseDouble(partialAmount.getText().toString());
                                 }
-                                if(amount<=totalPrice&&amount<=totalAmount){
+                                if(amount<=totalAmount){
                                     insertNewRow(amount, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
-                                    int pluseAmount = (int)(( totalPrice-amount)*club.getValueOfPoint());
+                                    int pluseAmount = (int)(( totalAmount-amount)/club.getValueOfPoint());
                                     usedPoint = new UsedPoint(pluseAmount,customerN.getCustomerId());
                                      pointDialog.dismiss();
 

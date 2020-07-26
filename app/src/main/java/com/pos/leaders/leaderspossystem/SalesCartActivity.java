@@ -345,8 +345,8 @@ public class SalesCartActivity extends AppCompatActivity {
     private List<CurrencyType> currencyTypesList = null;
 
     //Cart Discount View
-    private LinearLayout llCartDiscount;
-    private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount;
+    private LinearLayout llCartDiscount,customerPointLayOut;
+    private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount ,customerPointTv;
     String invoiceNum;
     double  customerGeneralLedger=0.0;
     boolean orderDocumentFlag=false;
@@ -507,6 +507,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
         //cart discount init view
         llCartDiscount = (LinearLayout) findViewById(R.id.saleCart_llCartDiscount);
+        customerPointLayOut =(LinearLayout)findViewById(R.id.linearLayoutCustomerPointInfo);
+        customerPointTv=(TextView)findViewById(R.id.customerPoint);
+
         tvCartDiscountValue = (TextView) findViewById(R.id.saleCart_llCartDiscountValue);
         tvTotalPriceBeforeCartDiscount = (TextView) findViewById(R.id.saleCart_tvTotalPriceBeforeCartDiscount);
       /*  productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
@@ -6511,6 +6514,23 @@ public class SalesCartActivity extends AppCompatActivity {
         } else if (clubType == 2) {
             clubAmount = club.getAmount();
             clubPoint = club.getPoint();
+            customerPointLayOut.setVisibility(View.VISIBLE);
+            Sum_PointDbAdapter sum_pointDbAdapter=new Sum_PointDbAdapter(SalesCartActivity.this);
+            sum_pointDbAdapter.open();
+            UsedPointDBAdapter usedPointDBAdapter = new UsedPointDBAdapter(SalesCartActivity.this);
+            usedPointDBAdapter.open();
+            int unUsedPoint=0;
+            if(usedPointDBAdapter.getUnusedPointInfo(customer.getCustomerId())>0){
+                unUsedPoint = usedPointDBAdapter.getUnusedPointInfo(customer.getCustomerId());
+
+            }
+            int totalPoint=0;
+            if(sum_pointDbAdapter.getPointInfo(customer.getCustomerId())>0) {
+                totalPoint = sum_pointDbAdapter.getPointInfo(customer.getCustomerId());
+                Log.d("customerN",totalPoint + "ooooo");
+
+            }
+            customerPointTv.setText((totalPoint-unUsedPoint)+"");
         } else if (clubType == 0) {
         }
 

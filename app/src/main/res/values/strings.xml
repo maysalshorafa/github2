@@ -593,6 +593,8 @@
     <string name="type"> Type</string>
     <string name="_amount">Amount</string>
     <string name="point">  Point</string>
+    <string name="value">Value</string>
+
     <string name="group_name"> Club Name</string>
     <string name="add_group"> Add Group</string>
     <string name="please_insert_club_name">Please insert Club Name.</string>
