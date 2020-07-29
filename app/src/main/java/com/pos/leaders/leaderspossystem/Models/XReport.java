@@ -41,6 +41,7 @@ public class XReport  implements Serializable {
     private double salesBeforeTax;
     private double salesWithTax;
     private double totalTax;
+    private double payPoint;
     public XReport() {
 
 
@@ -49,7 +50,7 @@ public class XReport  implements Serializable {
     public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,
                    double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,
                    double firstTypeAmount,double secondTypeAmount, double thirdTypeAmount,
-                   double fourthTypeAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,double salesBeforeTax,double salesWithTax,double totalTax) {
+                   double fourthTypeAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,double salesBeforeTax,double salesWithTax,double totalTax,double payPoint) {
         this.xReportId = xReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -74,6 +75,7 @@ public class XReport  implements Serializable {
         this.salesBeforeTax=salesBeforeTax;
         this.salesWithTax=salesWithTax;
         this.totalTax=totalTax;
+        this.payPoint=payPoint;
     }
 
     public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -196,6 +198,14 @@ public class XReport  implements Serializable {
 
     public Order getEndSale() {
         return endSale;
+    }
+
+    public double getPayPoint() {
+        return payPoint;
+    }
+
+    public void setPayPoint(double payPoint) {
+        this.payPoint = payPoint;
     }
 
     public void setEndSale(Order endSale) {
@@ -378,6 +388,7 @@ public class XReport  implements Serializable {
                 ", salesBeforeTax=" + salesBeforeTax +
                 ", salesWithTax=" + salesWithTax +
                 ", totalTax=" + totalTax +
+                ", payPoint=" + payPoint+
                 '}';
     }
 }

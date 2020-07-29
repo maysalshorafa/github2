@@ -36,7 +36,7 @@ public class UsedPointDBAdapter {
 // Sum Of UnUsed Point
     public int getUnusedPointInfo(long customerId) {
 
-        Cursor cur = db.rawQuery("SELECT SUM(unUsedPointAmount) from " + USED_POINT_TABLE_NAME + "  where customerId='" + customerId + "'", null);
+        Cursor cur = db.rawQuery("SELECT unUsedPointAmount from " + USED_POINT_TABLE_NAME + "  where customerId ='" + customerId + "'"+"  ORDER BY id DESC LIMIT 1", null);
 
         if (cur.moveToFirst()) {
             return (int) cur.getLong(0);

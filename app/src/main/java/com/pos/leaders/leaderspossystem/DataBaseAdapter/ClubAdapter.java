@@ -118,6 +118,7 @@ public class ClubAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
+        Log.d("testttt",group.toString());
         ContentValues val = new ContentValues();
         //Assign values for each row.
         val.put(Group_COLUMN__ID, group.getClubId());

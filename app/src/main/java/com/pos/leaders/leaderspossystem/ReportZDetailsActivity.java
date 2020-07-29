@@ -69,7 +69,7 @@ public class ReportZDetailsActivity extends Activity {
             zReportTotalCheck,zReportTotalAmount,zReportOpiningReportAmount,zReportOpiningReportCount,zReportPullReportAmount
             ,zReportDepositReportAmount,zReportFirstTypeAmount,zReportSecondTypeAmount,zReportThirdTypeAmount,zReportFourthTypeAmount
             ,zReportPosSales,zReportSalesWithTax,zReportSalesBeforeTax,zReportTotalPrice,zReportTotalTax,minusGeneralItemCount
-            ,zReportMinusGeneralItem,firstType,secondType,thirdType,fourthType,firstTypeCount,secondTypeCount,thirdTypeCount,fourthTypeCount;
+            ,zReportMinusGeneralItem,firstType,secondType,thirdType,fourthType,firstTypeCount,secondTypeCount,thirdTypeCount,fourthTypeCount ,totalPayPoint,totalPointCount;
     POSSDK pos;
     public static  Bitmap p;
     PrintTools pt;
@@ -165,6 +165,8 @@ public class ReportZDetailsActivity extends Activity {
         secondTypeCount=(TextView) findViewById(R.id.secondTypeCount);
         thirdTypeCount=(TextView) findViewById(R.id.thirdTypeCount);
         fourthTypeCount=(TextView) findViewById(R.id.fourthTypeCount);
+        totalPayPoint =(TextView)findViewById(R.id.zReportTotalPayPoint);
+        totalPointCount=(TextView)findViewById(R.id.zReportPayPointCount);
 
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -303,6 +305,7 @@ public class ReportZDetailsActivity extends Activity {
                 }
                 invoiceReceiptCountText.setText(zReportCount.getInvoiceReceiptCount()+"");
                 zReportTotalInvoiceReceipt.setText(Util.makePrice(xReport.getInvoiceReceiptAmount()));
+                totalPayPoint.setText(Util.makePrice(xReport.getPayPoint()));
                 invoiceCountText.setText(zReportCount.getInvoiceCount()+"");
                 zReportInvoice.setText(Util.makePrice(xReport.getInvoiceAmount()));
                 creditInvoiceCount.setText(zReportCount.getCreditInvoiceCount()+"");
@@ -313,7 +316,7 @@ public class ReportZDetailsActivity extends Activity {
                 zReportFirstTypeCount.setText(zReportCount.getFirstTYpeCount()+"");
                 zReportTotalFirstType.setText(Util.makePrice(xReport.getFirstTypeAmount()));
 
-
+                totalPointCount.setText(zReportCount.getPayPointCount()+"");
                 zReportCreditCardCount.setText(zReportCount.getCreditCount()+"");
                 zReportTotalCreditCard.setText(Util.makePrice(xReport.getCreditTotal()));
                 zReportCheckCount.setText(zReportCount.getCheckCount()+"");
@@ -473,6 +476,8 @@ public class ReportZDetailsActivity extends Activity {
                 zReportFirstTypeCount.setText(zReportCount.getFirstTYpeCount()+"");
                 Log.d("kwdjkd",Util.makePrice(zReport.getFirstTypeAmount()));
                 zReportTotalFirstType.setText(Util.makePrice(zReport.getFirstTypeAmount()));
+                totalPayPoint.setText(Util.makePrice(zReport.getTotalPayPoint()));
+                totalPointCount.setText(zReportCount.getPayPointCount());
 
 
 

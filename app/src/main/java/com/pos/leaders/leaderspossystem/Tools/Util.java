@@ -79,7 +79,6 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -970,7 +969,7 @@ public class Util {
             long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                     zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
                     ,Double.parseDouble(Util.makePrice(zReport.getTotalPosSales())),(zReport.getTotalAmount()/(1+SETTINGS.tax/100))*(SETTINGS.tax/100),invoiceAmount,
-                    creditInvoiceAmount,firstType_plus,(secondType_plus-secondType_minus)+aReportDetailsForSecondCurrency,(thirdType_plus-thirdType_minus)+aReportDetailsForThirdCurrency,(fourthType_plus-fourthType_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
+                    creditInvoiceAmount,firstType_plus,(secondType_plus-secondType_minus)+aReportDetailsForSecondCurrency,(thirdType_plus-thirdType_minus)+aReportDetailsForThirdCurrency,(fourthType_plus-fourthType_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax(),zReport.getTotalPayPoint());
             zReport.setzReportId(zID);
             zReport.setInvoiceAmount(invoiceAmount);
             zReport.setCreditInvoiceAmount(creditInvoiceAmount);
@@ -1442,7 +1441,7 @@ public class Util {
         long xID = xReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                 zReport.getTotalAmount(),zReport.getTotalSales(),zReport.getCashTotal(),zReport.getCheckTotal(),zReport.getCreditTotal()
                 ,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,zReport.getInvoiceAmount(),
-                zReport.getCreditInvoiceAmount(),zReport.getFirstTypeAmount(),zReport.getSecondTypeAmount(),zReport.getThirdTypeAmount(),zReport.getFourthTypeAmount(),zReport.getInvoiceReceiptAmount(),zReport.getPullReportAmount(),zReport.getDepositReportAmount(),zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
+                zReport.getCreditInvoiceAmount(),zReport.getFirstTypeAmount(),zReport.getSecondTypeAmount(),zReport.getThirdTypeAmount(),zReport.getFourthTypeAmount(),zReport.getInvoiceReceiptAmount(),zReport.getPullReportAmount(),zReport.getDepositReportAmount(),zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax(),zReport.getTotalPayPoint());
         XReport finalX = xReportDBAdapter.getByID(xID);
 
         return finalX;

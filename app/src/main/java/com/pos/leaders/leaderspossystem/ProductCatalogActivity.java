@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -22,14 +24,26 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Reports.NumberOfSaleProductReport;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +52,7 @@ import java.util.List;
  */
 
 public class ProductCatalogActivity extends AppCompatActivity {
-    private Button btCreate, btImport;
+    private Button btCreate, btImport ,sync;
     EditText etSearch;
     TextView tvCount;
     private GridView gvProducts;
@@ -56,6 +70,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
     int productLoadItemOffset=0;
     int productCountLoad=80;
     int departmentID=-1;
+    public static Context context=null;
     ProductCatalogGridViewAdapter adapter;
     public static int Product_Management_View ;
     public  static int  Product_Management_Edit;
@@ -104,13 +119,14 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
         TitleBar.setTitleBar(this);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
-
+        context=this;
         btCreate = (Button) findViewById(R.id.productCatalog_BTCreateNewProduct);
         btImport = (Button) findViewById(R.id.productCatalog_BTImport);
         gvProducts = (GridView) findViewById(R.id.productCatalog_GVProducts);
         etSearch = (EditText) findViewById(R.id.productCatalog_ETSearch);
         llDepartments=(LinearLayout)findViewById(R.id.productCatalog_LLDepartment);
         tvCount = (TextView) findViewById(R.id.productCatalog_etProductCount);
+        sync=(Button) findViewById(R.id.productCatalog_etSync);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -192,6 +208,14 @@ public class ProductCatalogActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(ProductCatalogActivity.this,ProductsActivity.class);
                 startActivity(intent);
+            }
+        });
+        sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartConnectionForProduct startConnectionForProduct = new StartConnectionForProduct();
+                startConnectionForProduct.execute("s");
+
             }
         });
 
@@ -462,3 +486,76 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
 
 }
+class StartConnectionForProduct extends AsyncTask<String,Void,String> {
+    private MessageTransmit messageTransmit;
+
+    StartConnectionForProduct() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    }
+
+    final ProgressDialog progressDialog = new ProgressDialog(ProductCatalogActivity.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(ProductCatalogActivity.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+//        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {//args{key,uuid}
+        String productRes = "";
+        ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try {
+            String url = ApiURL.Sync+"/Product/";
+
+            productRes = messageTransmit.authGetNormal(url, SESSION.token);
+            JSONObject productJson = new JSONObject(productRes);
+            String msgData = productJson.getString(MessageKey.responseBody);
+            if (msgData.startsWith("[")) {
+
+                try {
+                    JSONArray jsonArray = new JSONArray(msgData);
+                    for (int i = 0; i <= jsonArray.length() - 1; i++) {
+                        msgData = jsonArray.getJSONObject(i).toString();
+                        JSONObject msgDataJson = new JSONObject(msgData);
+                        Product p = null;
+                        p = objectMapper.readValue(msgDataJson.toString(), Product.class);
+                        ProductDBAdapter productDBAdapter = new ProductDBAdapter(ProductCatalogActivity.context);
+                        productDBAdapter.open();
+                        try {
+                            productDBAdapter.insertEntry(p);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+
+                    }
+
+
+                } catch (Exception e) {
+                    Log.d("exception1", e.toString());
+                }
+            }
+
+
+    } catch (JSONException e) {
+            Log.d("exception2", e.toString());
+
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.d("exception3", e.toString());
+
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+        @Override
+    protected void onPostExecute(String s) {
+
+
+        //endregion
+
+
+}}

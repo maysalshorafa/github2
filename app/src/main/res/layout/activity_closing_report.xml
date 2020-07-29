@@ -23,7 +23,7 @@
             android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp"
-            android:weightSum="7">
+            android:weightSum="8">
 
             <TextView
                 android:layout_width="match_parent"
@@ -47,6 +47,13 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/credit_card"
+                android:textSize="25dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/pay_point"
                 android:textSize="25dp" />
 
             <TextView
@@ -90,7 +97,7 @@
             android:background="@drawable/bubble"
             android:orientation="vertical"
             android:padding="5dp"
-            android:weightSum="7">
+            android:weightSum="8">
 
             <TextView
                 android:layout_width="match_parent"
@@ -111,6 +118,14 @@
 
             <EditText
                 android:id="@+id/actualCreditValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="@string/TouchPad_0"
+                android:inputType="numberSigned" />
+            <EditText
+                android:id="@+id/actualPayPointValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -164,7 +179,7 @@
             android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp"
-            android:weightSum="7">
+            android:weightSum="8">
 
             <TextView
                 android:layout_width="match_parent"
@@ -183,6 +198,12 @@
 
             <TextView
                 android:id="@+id/expectedCreditValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+            <TextView
+                android:id="@+id/expectedPayPointValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -225,7 +246,7 @@
             android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp"
-            android:weightSum="7">
+            android:weightSum="8">
 
             <TextView
                 android:layout_width="match_parent"
@@ -244,6 +265,12 @@
 
             <TextView
                 android:id="@+id/differentCreditValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+            <TextView
+                android:id="@+id/differentPayPoint"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

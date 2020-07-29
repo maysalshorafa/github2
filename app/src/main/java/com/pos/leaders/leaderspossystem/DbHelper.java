@@ -43,6 +43,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
@@ -227,7 +228,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Timestamp(System.currentTimeMillis())+"');");
 //        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0,0.0,0.0);");
 
-
+        db.execSQL(PayPointDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
 
         db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'General','General',0,0,0,0,0,0,0);");

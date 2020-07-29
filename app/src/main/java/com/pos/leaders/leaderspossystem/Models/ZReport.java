@@ -42,6 +42,7 @@ public class ZReport implements Serializable {
     private double salesBeforeTax;
     private double salesWithTax;
     private double totalTax;
+    private double totalPayPoint;
     public ZReport() {
 
 
@@ -49,7 +50,7 @@ public class ZReport implements Serializable {
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,
                    double firstTypeAmount,double secondTypeAmount, double thirdTypeAmount,
-                   double fourthTypeAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax, double totalTax  ) {
+                   double fourthTypeAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,String closeOpenReport,double salesBeforeTax,double salesWithTax, double totalTax ,double totalPayPoint ) {
         this.zReportId = zReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -75,7 +76,7 @@ public class ZReport implements Serializable {
         this.salesBeforeTax=salesBeforeTax;
         this.salesWithTax=salesWithTax;
         this.totalTax=totalTax;
-
+        this.totalPayPoint=totalPayPoint;
     }
 
     public ZReport(long zReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -122,6 +123,14 @@ public class ZReport implements Serializable {
         this.endOrderId = zReport.endOrderId;
         this.totalSales=zReport.totalSales;
         this.totalAmount =zReport.totalAmount;
+    }
+
+    public double getTotalPayPoint() {
+        return totalPayPoint;
+    }
+
+    public void setTotalPayPoint(double totalPayPoint) {
+        this.totalPayPoint = totalPayPoint;
     }
 
     public long getzReportId() {
@@ -392,6 +401,7 @@ public class ZReport implements Serializable {
                 ", salesBeforeTax=" + salesBeforeTax +
                 ", salesWithTax=" + salesWithTax +
                 ", totalTax=" + totalTax +
+                ", totalPayPoint=" + totalPayPoint +
                 '}';
     }
 

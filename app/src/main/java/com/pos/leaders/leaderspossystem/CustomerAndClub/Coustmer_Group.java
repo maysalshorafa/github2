@@ -174,7 +174,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                             long i = clubAdapter.insertEntry(etClubName.getText().toString(), etDescription.getText().toString(), id,discount, amount, point,branchId,valueOfPoint);
 
                             if (i > 0) {
-                                Log.i("success", "adding new Club");
+                                Log.d("success", "adding new Club");
 
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_club), Toast.LENGTH_LONG).show();
                                 try {

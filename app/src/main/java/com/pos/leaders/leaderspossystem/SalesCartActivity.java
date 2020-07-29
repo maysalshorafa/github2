@@ -84,6 +84,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -125,6 +126,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
+import com.pos.leaders.leaderspossystem.Payment.PaymentMethod;
 import com.pos.leaders.leaderspossystem.Payment.PaymentTable;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
@@ -3309,6 +3311,7 @@ public class SalesCartActivity extends AppCompatActivity {
         clubPoint = 0;
         clubAmount = 0;
         Ppoint = 0;
+        customerPointLayOut.setVisibility(View.GONE);
         salesSaleMan.setText(getString(R.string.sales_man));
         // SESSION._ORDERS.cartDiscount = 0;
         // SESSION._ORDERS.setCartDiscount(0);
@@ -5734,6 +5737,16 @@ public class SalesCartActivity extends AppCompatActivity {
                             zReport.setCreditTotal(zReport.getCreditTotal()+ccp.getAmount());
                             zReportCount.setCreditCount(zReportCount.getCreditCount()+1);
                         }
+                        else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(PaymentMethod.PAY_POINT)){
+                            PayPointDBAdapter payPointDBAdapter = new PayPointDBAdapter(this);
+                            payPointDBAdapter.open();
+                            payPointDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
+                           zReport.setTotalPayPoint(zReport.getTotalPayPoint()+jsonObject.getDouble("tendered")* getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")));
+                           zReportCount.setPayPointCount(zReportCount.getPayPointCount()+1);
+                            payPointDBAdapter.close();
+
+
+                        }
                     }
                     if(SESSION._CHECKS_HOLDER.size()>0){
 
@@ -5766,8 +5779,10 @@ public class SalesCartActivity extends AppCompatActivity {
                         sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId());
                         int strUsed = data.getIntExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE,0);
                         Log.d("usedPoint",strUsed+"");
+                        if(strUsed>0){
 
                             usedpointDbAdapter.insertEntry( strUsed, SESSION._ORDERS.getCustomerId());
+                        }
 
                     }
 

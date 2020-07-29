@@ -75,6 +75,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     //'\u20aa'
     private String excessCurrency = "ILS";//ILS
     String haveCreditCard="";
+    int totalPoint=0;
 
     private TextView tvTotalPrice,tvExcess,tvTotalPriceWithMultiCurrency,tvActualCurrencyRate;
     private Spinner spCurrency;
@@ -389,7 +390,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 usedPointFlag=true;
-                payPoint.setClickable(false);
                 final Dialog pointDialog = new Dialog(MultiCurrenciesPaymentActivity.this);
                 pointDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 //discountDialog.setTitle(R.string.please_select_discount_offer);
@@ -412,7 +412,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                      unUsedPoint = usedPointDBAdapter.getUnusedPointInfo(customerN.getCustomerId());
 
                 }
-                int totalPoint=0;
                 if(sum_pointDbAdapter.getPointInfo(customerN.getCustomerId())>0) {
                      totalPoint = sum_pointDbAdapter.getPointInfo(customerN.getCustomerId());
                     Log.d("customerN",totalPoint + "ooooo");
@@ -429,13 +428,10 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 btAll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(totalAmount==totalPrice){
-                            insertNewRow(totalPrice, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
-                            usedPoint = new UsedPoint(0,customerN.getCustomerId());
+                            insertNewRow(totalAmount, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
+                            usedPoint = new UsedPoint(totalPoint,customerN.getCustomerId());
 
-                        }else {
-                            Toast.makeText(MultiCurrenciesPaymentActivity.this,"Sorry Cant Pay totalPrice more than the Point amount please check partial button",Toast.LENGTH_LONG).show();
-                        }
+
                         pointDialog.dismiss();
                     }
                 });
