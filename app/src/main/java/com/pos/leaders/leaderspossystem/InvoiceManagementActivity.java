@@ -72,7 +72,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
     public static  LinearLayout customerLayOut;
     List<Long>invoiceNumberWantToPay=new ArrayList<>();
     TextView payAmount ,RequiredAmount;
-    Button btnOk , addRecipt;
+    Button btnOk , addRecipt,btnCancel;
     public static  List<BoInvoice>newInvoiceList=new ArrayList<BoInvoice>();
 
     @Override
@@ -97,6 +97,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         gvCustomer = (GridView) findViewById(R.id.popUp_gvCustomer);
         customerLayOut =(LinearLayout)findViewById(R.id.invoiceManagement_LVCustomerLayout);
         btnOk=(Button)findViewById(R.id.reciptPaymentInvoiceActivity);
+        btnCancel=(Button)findViewById(R.id.reciptPaymentInvoiceCancelActivity);
         payAmount=(TextView)findViewById(R.id.payAmount);
         RequiredAmount=(TextView)findViewById(R.id.requoredAmount);
         invoiceList=new ArrayList<>();
@@ -135,6 +136,13 @@ public class InvoiceManagementActivity extends AppCompatActivity {
 
 
             }});
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              finish();
+                         }
+       });
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

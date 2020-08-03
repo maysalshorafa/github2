@@ -156,17 +156,35 @@
                 />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/reciptPaymentInvoiceActivity"
-                style="@style/AppTheme.bt_green"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:text="@android:string/ok"
-                android:textColor="#fff"
-                android:textSize="20dp"
-                android:layout_weight="1.85"/>
+                android:layout_weight="1.85"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/reciptPaymentInvoiceActivity"
+                    style="@style/AppTheme.bt_green"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:text="@android:string/ok"
+                    android:textColor="#fff"
+                    android:textSize="20dp"
+                    android:layout_weight=".925"/>
+                <Button
+                    android:id="@+id/reciptPaymentInvoiceCancelActivity"
+                    style="@style/AppTheme.bt_dangers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:text="@android:string/cancel"
+                    android:textColor="#fff"
+                    android:textSize="20dp"
+                    android:layout_weight=".925"/>
+            </LinearLayout>
+
         </LinearLayout>
 
 
