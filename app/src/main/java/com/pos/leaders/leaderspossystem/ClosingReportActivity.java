@@ -194,6 +194,10 @@ public class ClosingReportActivity extends AppCompatActivity {
                                                    res.put("expectedFirstType",expectedFirstType);
                                                    res.put("expectedSecondType",expectedSecondType);
                                                    res.put("expectedTirdType",expectedTirdType);
+                                                   res.put("actualPayPoint",actualPayPoint);
+                                                   res.put("expectedPayPointValue",expectedPayPointValue);
+
+
                                                    res.put("expectedFourthType",expectedFourthType);
                                                   int result = Util.sendClosingReport(ClosingReportActivity.this,res.toString());
 
