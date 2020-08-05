@@ -5,21 +5,20 @@ package com.pos.leaders.leaderspossystem.Models;
  */
 
 public class UsedPoint {
-    public long id;
+    public long usedPointId;
     public int unUsed_point_amount;
     public long customerId;
 
     public UsedPoint() {
     }
 
-    public UsedPoint(long id, int unUsed_point_amount, long customerId) {
-        this.id = id;
+    public UsedPoint(long usedPointId, int unUsed_point_amount, long customerId) {
+        this.usedPointId = usedPointId;
         this.unUsed_point_amount = unUsed_point_amount;
         this.customerId = customerId;
     }
 
     public UsedPoint( int unUsed_point_amount, long customerId) {
-        this.id = id;
         this.unUsed_point_amount = unUsed_point_amount;
         this.customerId = customerId;
     }
@@ -41,17 +40,17 @@ public class UsedPoint {
     }
 
     public long getId() {
-        return id;
+        return usedPointId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(long usedPointId) {
+        this.usedPointId = usedPointId;
     }
 
     @Override
     public String toString() {
         return "UsedPoint{" +
-                "id=" + id +
+                "usedPointId=" + usedPointId +
                 ", unUsed_point_amount=" + unUsed_point_amount +
                 ", customerId=" + customerId +
                 '}';
