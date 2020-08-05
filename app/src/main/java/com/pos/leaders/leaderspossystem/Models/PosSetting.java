@@ -20,12 +20,15 @@ public class PosSetting {
     private String currencyCode;
     private String currencySymbol;
     private String country;
+    private String customerEmail;
+    private String customerEmailPassword;
+
 
     public PosSetting() {
     }
 
     public PosSetting(long posSettingId, boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String currencyCode,String currencySymbol,String country
-    ,boolean enableDuplicateInvoice) {
+    ,boolean enableDuplicateInvoice,String customerEmail,String customerEmailPassword) {
         this.posSettingId = posSettingId;
         this.enableCurrency = enableCurrency;
         this.enableCreditCard = enableCreditCard;
@@ -41,8 +44,11 @@ public class PosSetting {
         this.currencySymbol=currencySymbol;
         this.country=country;
         this.enableDuplicateInvoice=enableDuplicateInvoice;
+        this.customerEmail=customerEmail;
+        this.customerEmailPassword=customerEmailPassword;
+
     }
-    public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId) {
+    public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,String customerEmail,String customerEmailPassword) {
         this.enableCurrency = enableCurrency;
         this.enableCreditCard = enableCreditCard;
         this.enablePinPad = enablePinPad;
@@ -53,8 +59,27 @@ public class PosSetting {
         this.posVersionNo = posVersionNo;
         this.posDbVersionNo = posDbVersionNo;
         this.branchId = branchId;
+        this.customerEmail=customerEmail;
+        this.customerEmailPassword=customerEmailPassword;
 
     }
+
+    public String getCustomerEmailPassword() {
+        return customerEmailPassword;
+    }
+
+    public void setCustomerEmailPassword(String customerEmailPassword) {
+        this.customerEmailPassword = customerEmailPassword;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
     public long getPosSettingId() {
         return posSettingId;
     }
@@ -193,6 +218,11 @@ public class PosSetting {
                 ", currencyCode='" + currencyCode + '\'' +
                 ", currencySymbol='" + currencySymbol + '\'' +
                 ", country='" + country + '\'' +
+
+                        ", customerEmail='" + customerEmail + '\'' +
+
+
+                        ", customerEmailPassword='" + customerEmailPassword + '\'' +
                 '}';
     }
 }

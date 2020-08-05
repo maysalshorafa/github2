@@ -1546,6 +1546,9 @@ public class Util {
                             boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
                             int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
                             String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
+                            String customerEmail = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL,"lead2018pos@gmail.com");
+                            String customerEmailPassWord = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord,"lead2018POS@gmail.com");
+
                             String companyStatus = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, CompanyStatus.BO_COMPANY.name());
                             int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
                             PackageInfo pInfo = null;
@@ -1557,7 +1560,7 @@ public class Util {
                             String verCode = pInfo.versionName;
                             PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                             posSettingDbAdapter.open();
-                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SETTINGS.currencyCode,SETTINGS.currencySymbol,SETTINGS.country,SETTINGS.enableDuplicateInvoice);
+                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SETTINGS.currencyCode,SETTINGS.currencySymbol,SETTINGS.country,SETTINGS.enableDuplicateInvoice,customerEmail,customerEmailPassWord);
                             //finish();
                         } else {
                             Log.e("setup",jsonObject.getString(MessageKey.responseType));

@@ -495,6 +495,9 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
                     int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
                     String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
+                    String customerEmail = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL, "lead2018pos@gmail.com");
+                    String customerEmailPassword = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord, "");
+
                     int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
                     String companyStatus = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, CompanyStatus.BO_AUTHORIZED_DEALER.name());
 
@@ -508,7 +511,7 @@ class StartConnection extends AsyncTask<String,Void,String> {
                     String verCode = pInfo.versionName;
                     PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                     posSettingDbAdapter.open();
-                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SetupNewPOSOnlineActivity.currencyCode,SetupNewPOSOnlineActivity.currencySymbol,SetupNewPOSOnlineActivity.country,SETTINGS.   enableDuplicateInvoice);
+                    posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SetupNewPOSOnlineActivity.currencyCode,SetupNewPOSOnlineActivity.currencySymbol,SetupNewPOSOnlineActivity.country,SETTINGS.   enableDuplicateInvoice,customerEmail,customerEmailPassword);
                     posSetting=posSettingDbAdapter.getPosSettingID();
                     addPosSetting(posSetting);
                     Log.d("idPosSettingPO",posSetting.toString());

@@ -5738,6 +5738,7 @@ public class SalesCartActivity extends AppCompatActivity {
                             zReportCount.setCreditCount(zReportCount.getCreditCount()+1);
                         }
                         else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(PaymentMethod.PAY_POINT)){
+                            Log.d("tessstPayPoint","havePayPont");
                             PayPointDBAdapter payPointDBAdapter = new PayPointDBAdapter(this);
                             payPointDBAdapter.open();
                             payPointDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));

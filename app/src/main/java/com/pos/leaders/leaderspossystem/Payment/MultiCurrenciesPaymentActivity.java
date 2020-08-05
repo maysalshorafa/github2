@@ -448,7 +448,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                                 }
                                 if(amount<=totalAmount){
                                     insertNewRow(amount, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
-                                    int pluseAmount = (int)(( totalAmount-amount)/club.getValueOfPoint());
+                                    int pluseAmount = (int)(( amount)/club.getValueOfPoint());
                                     usedPoint = new UsedPoint(pluseAmount,customerN.getCustomerId());
                                      pointDialog.dismiss();
 

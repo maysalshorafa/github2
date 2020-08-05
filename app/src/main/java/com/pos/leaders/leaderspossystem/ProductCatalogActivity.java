@@ -36,11 +36,9 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
-import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -508,17 +506,20 @@ class StartConnectionForProduct extends AsyncTask<String,Void,String> {
         String productRes = "";
         ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
-            String url = ApiURL.Sync+"/Product/";
+            String url = ApiURL.Sync+"/product/";
 
             productRes = messageTransmit.authGetNormal(url, SESSION.token);
-            JSONObject productJson = new JSONObject(productRes);
-            String msgData = productJson.getString(MessageKey.responseBody);
-            if (msgData.startsWith("[")) {
+            Log.d("teasssdfff",productRes);
+            Log.d("teasssdfff222",SESSION.token);
+
+
+
+            if (productRes.startsWith("[")) {
 
                 try {
-                    JSONArray jsonArray = new JSONArray(msgData);
+                    JSONArray jsonArray = new JSONArray(productRes);
                     for (int i = 0; i <= jsonArray.length() - 1; i++) {
-                        msgData = jsonArray.getJSONObject(i).toString();
+                     String   msgData = jsonArray.getJSONObject(i).toString();
                         JSONObject msgDataJson = new JSONObject(msgData);
                         Product p = null;
                         p = objectMapper.readValue(msgDataJson.toString(), Product.class);
@@ -539,11 +540,7 @@ class StartConnectionForProduct extends AsyncTask<String,Void,String> {
             }
 
 
-    } catch (JSONException e) {
-            Log.d("exception2", e.toString());
-
-            e.printStackTrace();
-        } catch (IOException e) {
+    } catch (IOException e) {
             Log.d("exception3", e.toString());
 
             e.printStackTrace();

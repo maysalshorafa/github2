@@ -81,8 +81,9 @@ public class SendLog {
 
     }
     public static void sendListFile(String to,String pa){
-        String from = "lead2018pos@gmail.com";
-        final String password = "lead2018POS@gmail.com";
+        String from = SETTINGS.CustomerEmail;
+        final String password = SETTINGS.ccPassword;
+
         String subject ="List Invoices File for"+"Company Name :"+SETTINGS.companyName +"  "+ "to POS No:"+SETTINGS.posID+"  "+DateConverter.currentDateTime();
         String filename1="customerInvoicesList.pdf";
         File path = new File( Environment.getExternalStorageDirectory(), pa );
@@ -93,5 +94,6 @@ public class SendLog {
         gmailClient.sendFromGMailInvoices(from,password,to,subject,file);
 
     }
+
 
 }

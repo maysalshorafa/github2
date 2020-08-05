@@ -96,7 +96,7 @@ public class GmailClient {
 
     }
     public static void sendFromGMailInvoices(final String from, final String pass, final String to, final String subject, final String file) {
-        Log.d("adddddd",to);
+        Log.d("adddddd",from);
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");

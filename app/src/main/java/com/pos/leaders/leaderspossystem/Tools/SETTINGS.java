@@ -25,6 +25,9 @@ public class SETTINGS {
 	public static String customer_name ;
 	public static int branchId;
 	public static PrinterType printer ;
+	public static String  CustomerEmail;
+	public static String  CustomerEmailPassword;
+
 	public static CompanyStatus company;
 	public static boolean enableCurrencies ;
 	public static boolean enableFoodStamp ;
