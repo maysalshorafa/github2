@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.pos.leaders.leaderspossystem.InvoiceManagementActivity;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.ReciptObject;
 import com.pos.leaders.leaderspossystem.R;
@@ -70,6 +71,7 @@ public class ReciptManagementListViewAdapter extends ArrayAdapter {
             holder.tvTotalAmount = (TextView) convertView.findViewById(R.id.listInvoiceManagement_TVTotalAmount);
             holder.tvTotalPaid = (TextView) convertView.findViewById(R.id.listInvoiceManagement_TVTotalPaid);
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.paidCheckBox);
+        //    holder.checkBox.setChecked(reciptObjectList.get(position).isAll());
             holder.checkBoxPartial = (CheckBox) convertView.findViewById(R.id.paidPartialCheckBox);
             holder.checkBoxPartial.setText(partiallyString.get(position));
 
@@ -85,6 +87,7 @@ public class ReciptManagementListViewAdapter extends ArrayAdapter {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
 
         holder.checkBoxPartial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

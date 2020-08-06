@@ -739,4 +739,8 @@
 
     <string name="price_with_tax">מחיר כולל מע"מ</string>
     <string name="price_with_out_tax">מחיר לפני מע"מ</string>
+
+    <string name="select_all">בחר הכל</string>
+    <string name="select_partial">תשלום חלקי</string>
+    <string name="invoice_number">מספר חשבונית</string>
 </resources>

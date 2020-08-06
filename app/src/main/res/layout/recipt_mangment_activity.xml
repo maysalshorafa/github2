@@ -71,10 +71,18 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="horizontal"
-                        android:weightSum="2"
+                        android:weightSum="3"
                         android:layout_gravity="center">
-
-
+                        <Button
+                            android:id="@+id/checkAllRecipt"
+                            style="@style/AppTheme.bt_normal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="@string/select_all"
+                            android:textColor="#fff"
+                            android:textSize="20dp"
+                            android:layout_weight="1"/>
 
                         <TextView
                             android:id="@+id/textView3"

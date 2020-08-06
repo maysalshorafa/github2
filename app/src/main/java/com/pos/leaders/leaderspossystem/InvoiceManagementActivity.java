@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -72,7 +74,8 @@ public class InvoiceManagementActivity extends AppCompatActivity {
     public static  LinearLayout customerLayOut;
     List<Long>invoiceNumberWantToPay=new ArrayList<>();
     TextView payAmount ,RequiredAmount;
-    Button btnOk , addRecipt,btnCancel;
+    public static boolean CheckAll=false;
+    Button btnOk , addRecipt,btnCancel,btnCheckAllRecipt;
     public static  List<BoInvoice>newInvoiceList=new ArrayList<BoInvoice>();
 
     @Override
@@ -91,8 +94,10 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         context=this;
         ThisApp.setCurrentActivity(this);
         Bundle bundle = getIntent().getExtras();
-
-       invoiceListView = (ListView)findViewById(R.id.invoiceManagement_LVInvoice);
+        LayoutInflater inflater = getLayoutInflater();
+        invoiceListView = (ListView)findViewById(R.id.invoiceManagement_LVInvoice);
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.list_adapter_head_row_invoice_management, invoiceListView, false);
+        invoiceListView.addHeaderView(header, null, false);
         customer_id = (EditText) findViewById(R.id.customer_name);
         gvCustomer = (GridView) findViewById(R.id.popUp_gvCustomer);
         customerLayOut =(LinearLayout)findViewById(R.id.invoiceManagement_LVCustomerLayout);
@@ -104,6 +109,25 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         invoiceNumberList=new ArrayList<>();
         partiallyString=new ArrayList<>();
         reciptObjectList=new ArrayList<>();
+        btnCheckAllRecipt=(Button) findViewById(R.id.checkAllRecipt);
+        btnCheckAllRecipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ReciptManagementListViewAdapter invoiceManagementListViewAdapter = new ReciptManagementListViewAdapter(InvoiceManagementActivity.context, R.layout.list_adapter_row_recipt, InvoiceManagementActivity.invoiceList, InvoiceManagementActivity.invoiceNumberList, InvoiceManagementActivity.reciptObjectList, InvoiceManagementActivity.partiallyString);
+                for (int i=0;i<InvoiceManagementActivity.reciptObjectList.size();i++){
+                    InvoiceManagementActivity.reciptObjectList.get(i).setAll(true);
+                }
+                invoiceListView.setAdapter(invoiceManagementListViewAdapter);
+                invoiceManagementListViewAdapter.notifyDataSetChanged();
+
+
+            }
+
+        });
+
+
+
         addRecipt=(Button)findViewById(R.id.addRecipt);
         addRecipt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,14 +164,17 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+              InvoiceManagementActivity.newInvoiceList=null;
               finish();
+
+
                          }
        });
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 totalAmount=0;
-           newInvoiceList=new ArrayList<BoInvoice>();
+               newInvoiceList=new ArrayList<BoInvoice>();
                 Log.d("reciptObjectList",ReciptManagementListViewAdapter.reciptObjectList.toString());
 
                 for(int i=0;i<ReciptManagementListViewAdapter.reciptObjectList.size();i++) {
@@ -169,8 +196,46 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                         }
 
                         totalAmount+=reciptObject.getAllAmount();
-                    }else if(reciptObject.isPartially()){
+                    }
+
+
+                    else if(reciptObject.isPartially()){
                         try {
+
+                            double d= Double.parseDouble(jsonObject.getString("totalPaid"));
+
+                            double x =d+reciptObject.getPartialAmount();
+                            Log.d("SUMPPINVOice",x+"");
+                            if(x==jsonObject.getDouble("total")){
+                                Log.d("totalPInvoice",jsonObject.getDouble("total")+"");
+                                jsonObject.remove("totalPaid");
+                                jsonObject.put("totalPaid",d+reciptObject.getPartialAmount());
+
+                                jsonObject.remove("invoiceStatus");
+                                jsonObject.put("invoiceStatus", InvoiceStatus.PAID.getValue());
+                            }else {
+                                Log.d("totalPInvoice2",jsonObject.getDouble("total")+"");
+                                jsonObject.remove("totalPaid");
+                                jsonObject.put("totalPaid",d+reciptObject.getPartialAmount());
+                                jsonObject.remove("invoiceStatus");
+                                jsonObject.put("invoiceStatus", InvoiceStatus.PARTIALLY_PAID.getValue());
+                            }
+
+
+                            boInvoice.setDocumentsData(jsonObject);
+                            Log.d("testTotalPaid",boInvoice.toString());
+                            newInvoiceList.add(boInvoice);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        totalAmount+=reciptObject.getPartialAmount();
+                    }
+
+
+
+
+                    /*else if(reciptObject.isPartially()){
+                        try {Log.d("totalAmountParially",jsonObject.getDouble("totalPaid")+"");
                             jsonObject.remove("invoiceStatus");
                             jsonObject.put("invoiceStatus", InvoiceStatus.PARTIALLY_PAID.getValue());
                             double d= Double.parseDouble(jsonObject.getString("totalPaid"));
@@ -183,7 +248,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         totalAmount+=reciptObject.getPartialAmount();
-                    }
+                    }*/
 
                 }
                 RequiredAmount.setText(Util.makePrice(totalAmount-pay));
@@ -263,7 +328,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                     paymentReceiptDialog.setContentView(R.layout.recipt_cash_dialog);
                     final EditText etAmount = (EditText) paymentReceiptDialog.findViewById(R.id.recipthPaymentDialog_TECash);
                     final TextView tvDebtAmount = (TextView) paymentReceiptDialog.findViewById(R.id.TvTotalAmountDebt);
-                    tvDebtAmount.setText(Util.makePrice(debtAmount));
+                    tvDebtAmount.setText(Util.makePrice(InvoiceManagementActivity.debtAmount));
                     final TextView totalAmountAfterPay = (TextView) paymentReceiptDialog.findViewById(R.id.totalAmountAfterPay);
                     Button btnOk = (Button)paymentReceiptDialog.findViewById(R.id.reciptPaymentDialog_BTOk);
 
@@ -272,7 +337,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             pay= Double.parseDouble(etAmount.getText().toString());
                             payAmount.setText( etAmount.getText().toString());
-                            RequiredAmount.setText( etAmount.getText().toString());
+                            RequiredAmount.setText(etAmount.getText().toString());
                             String checkStr = etAmount.getText().toString();
                             if(!checkStr.matches("")){
                                 StartInvoiceConnection startInvoiceConnection = new StartInvoiceConnection();
@@ -356,6 +421,14 @@ public class InvoiceManagementActivity extends AppCompatActivity {
 
 
 
+    }
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        // Do Here what ever you want do on back press;
     }
     public static void edit(int pos, String value,List<ReciptObject>list){
         partiallyString.set(pos,value);
@@ -582,6 +655,7 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
     }
 
 }
+
 class StartInvoiceConnectionGetCustomerDebt extends AsyncTask<String,Void,String> {
     private MessageTransmit messageTransmit;
     ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -654,6 +728,8 @@ class StartInvoiceConnectionGetCustomerDebt extends AsyncTask<String,Void,String
 
         //endregion
     }
+
+
 
 }
 

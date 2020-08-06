@@ -845,7 +845,10 @@
     <string name="due_date">Expiry Date</string>
     <string name="text_dialog_lincess">The history of the license is over, please contact the company to activate.</string>
     <string name="please_choose_three_currencies">Please choose three currencies</string>
-
+    
+    <string name="select_all">Select All</string>
+    <string name="select_partial">Select partial</string>
+    <string name="invoice_number">Invoice number</string>
 
 
 

@@ -28,4 +28,6 @@ public class getCurrencyCodeForBoss {
         settingsDBAdapter.close();
         return defultCurrency;
     }
+
+
 }
