@@ -24,10 +24,12 @@ public class Sum_PointDbAdapter {
     protected static final String SUM_POINT_COLUMN_ID = "id";
     protected static final String SUM_POINT_COLUMN_SALE_ID = "orderId";
     protected static final String SUM_POINT_COLUMN_POINT = "pointAmount";
+    protected static final String SUM_POINT_COLUMN_TOTAL_POINT = "totalPoint";
+
     protected static final String SUM_POINT_COLUMN_CUSTOMER = "customerId";
 
 
-    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `orderId` INTEGER ,"+" `pointAmount` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `_Order.id` )";
+    public static final String DATABASE_CREATE= "CREATE TABLE sumPoint ( `id` INTEGER PRIMARY KEY AUTOINCREMENT  , `orderId` INTEGER ,"+" `pointAmount` INTEGER , `"+" `totalPoint` INTEGER , `"+ SUM_POINT_COLUMN_CUSTOMER +"` INTEGER, FOREIGN KEY(`orderId`) REFERENCES `_Order.id` )";
     private SQLiteDatabase db;
 
     private final Context context;
@@ -61,7 +63,7 @@ public class Sum_PointDbAdapter {
         return db;
     }
 
-    public long insertEntry( long  saleId, int point,long custmerId) {
+    public long insertEntry( long  saleId, int point,long custmerId,int totalPoint) {
         if(db.isOpen()){
 
         }else {
@@ -72,7 +74,7 @@ public class Sum_PointDbAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        SumPoint sumPoint = new SumPoint(Util.idHealth(this.db, SUM_POINT_TABLE_NAME, SUM_POINT_COLUMN_ID),saleId, point,custmerId);
+        SumPoint sumPoint = new SumPoint(Util.idHealth(this.db, SUM_POINT_TABLE_NAME, SUM_POINT_COLUMN_ID),saleId, point,custmerId,totalPoint);
         sendToBroker(MessageType.ADD_SUM_POINT, sumPoint, this.context);
 
         try {
@@ -100,6 +102,8 @@ public class Sum_PointDbAdapter {
         //Assign values for each row.
         val.put(SUM_POINT_COLUMN_SALE_ID, sumPoint.getOrderId());
         val.put(SUM_POINT_COLUMN_POINT, sumPoint.getPointAmount());
+        val.put(SUM_POINT_COLUMN_TOTAL_POINT, sumPoint.getTotalPoint());
+
         val.put(SUM_POINT_COLUMN_CUSTOMER,sumPoint.getCustomerId());
 
         try {
@@ -109,6 +113,100 @@ public class Sum_PointDbAdapter {
             return 0;
         }
     }
+    public SumPoint getLastRow() throws Exception {
+        if(db.isOpen()){
 
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
+        SumPoint sumPoint = null;
+        Cursor cursor = db.rawQuery("select * from " + SUM_POINT_TABLE_NAME , null);
+        if (cursor.getCount() < 1) // zReport Not Exist
+        {
+            cursor.close();
+            throw new Exception("there is no rows on A Report Table");
+        }
+        cursor.moveToFirst();
+        sumPoint = makeSumPoint(cursor);
+        cursor.close();
+        close();
+        return sumPoint;
+    }
+    public void updateEntry(SumPoint sumPoint) {
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
+        Sum_PointDbAdapter sum_pointDbAdapter = new Sum_PointDbAdapter(context);
+        sum_pointDbAdapter.open();
+        ContentValues val = new ContentValues();
+        //Assign values for each row.
+        val.put(SUM_POINT_COLUMN_TOTAL_POINT,sumPoint.getTotalPoint());
+
+        String where = SUM_POINT_COLUMN_ID + " = ?";
+        db.update(SUM_POINT_TABLE_NAME, val, where, new String[]{sumPoint.getSumPointId() + ""});
+        SumPoint d=sum_pointDbAdapter.getSumPointByID(sumPoint.getSumPointId());
+        Log.d("Update object",d.toString());
+        sendToBroker(MessageType.UPDATE_CATEGORY, d, this.context);
+        sum_pointDbAdapter.close();
+        close();
+    }
+    public SumPoint getSumPointByID(long id) {
+        if(db.isOpen()){
+
+        }else {
+            try {
+                open();
+            }
+            catch (SQLException ex) {
+                Log.d("Exception",ex.toString());
+            }
+        }
+        SumPoint sumPoint = null;
+        Cursor cursor = db.rawQuery("select * from " + SUM_POINT_TABLE_NAME + " where id='" + id + "'", null);
+        if (cursor.getCount() < 1) // UserName Not Exist
+        {
+            cursor.close();
+            return sumPoint;
+        }
+        cursor.moveToFirst();
+        sumPoint =new SumPoint(Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_ID))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_SALE_ID))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_POINT))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_CUSTOMER))),
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_TOTAL_POINT))));
+        cursor.close();
+        close();
+        return sumPoint;
+    }
+
+
+    private SumPoint makeSumPoint(Cursor cursor) {
+        try {
+            SumPoint d = new SumPoint(Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_ID))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_SALE_ID))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_POINT))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_CUSTOMER))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_TOTAL_POINT))));
+
+            return d;
+        } catch (Exception ex) {
+            SumPoint d = new SumPoint(Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_ID))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_SALE_ID))), Integer.parseInt(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_POINT))),
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_CUSTOMER))),
+                    Integer.parseInt(cursor.getString(cursor.getColumnIndex(SUM_POINT_COLUMN_TOTAL_POINT))));
+
+            return d;
+        }
+    }
 
 }

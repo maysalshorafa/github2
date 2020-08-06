@@ -413,7 +413,11 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
                 }
                 if(sum_pointDbAdapter.getPointInfo(customerN.getCustomerId())>0) {
-                     totalPoint = sum_pointDbAdapter.getPointInfo(customerN.getCustomerId());
+                    try {
+                        totalPoint = sum_pointDbAdapter.getLastRow().getTotalPoint();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     Log.d("customerN",totalPoint + "ooooo");
 
                 }

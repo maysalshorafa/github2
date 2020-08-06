@@ -36,6 +36,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
 import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
 import org.json.JSONArray;
@@ -517,12 +518,13 @@ class StartConnectionForProduct extends AsyncTask<String,Void,String> {
             if (productRes.startsWith("[")) {
 
                 try {
+
                     JSONArray jsonArray = new JSONArray(productRes);
                     for (int i = 0; i <= jsonArray.length() - 1; i++) {
-                     String   msgData = jsonArray.getJSONObject(i).toString();
-                        JSONObject msgDataJson = new JSONObject(msgData);
+                        JSONObject msgDataJson =  jsonArray.getJSONObject(i);
                         Product p = null;
-                        p = objectMapper.readValue(msgDataJson.toString(), Product.class);
+                        String msgData = msgDataJson.getString(MessageKey.Data);
+                        p = objectMapper.readValue(msgData.toString(), Product.class);
                         ProductDBAdapter productDBAdapter = new ProductDBAdapter(ProductCatalogActivity.context);
                         productDBAdapter.open();
                         try {
@@ -532,7 +534,6 @@ class StartConnectionForProduct extends AsyncTask<String,Void,String> {
                         }
 
                     }
-
 
                 } catch (Exception e) {
                     Log.d("exception1", e.toString());

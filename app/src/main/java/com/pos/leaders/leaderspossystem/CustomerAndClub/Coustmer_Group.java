@@ -259,7 +259,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             tvPercent.setVisibility(View.VISIBLE);
             etPercent.setVisibility(View.VISIBLE);
             tvAmount.setVisibility(View.GONE);
-            tvValueOfPoint.setText(View.GONE);
+            tvValueOfPoint.setVisibility(View.GONE);
             tvPoint.setVisibility(View.GONE);
             etAmount.setVisibility(View.GONE);
             etPoint.setVisibility(View.GONE);

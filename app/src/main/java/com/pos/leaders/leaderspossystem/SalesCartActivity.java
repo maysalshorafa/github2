@@ -121,6 +121,7 @@ import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
+import com.pos.leaders.leaderspossystem.Models.SumPoint;
 import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
@@ -4844,7 +4845,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 // Club with point and amount
                 if (clubType == 2) {
                  //   pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
+                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId,0);
                 }
 
                 if (equalUsedPoint) {
@@ -5165,7 +5166,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 // Club with point and amount
                 if (clubType == 2 && clubAmount!=0) {
                 //    pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
+                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId,0);
                 }
 
                 if (equalUsedPoint) {
@@ -5327,7 +5328,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 /// Club with point and amount
                 if (clubType == 2) {
                  //   pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId,0);
                 }
 
                 if (equalUsedPoint) {
@@ -5480,7 +5481,7 @@ public class SalesCartActivity extends AppCompatActivity {
                 // Club with point and amount
                 if (clubType == 2) {
                  //   pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId,0);
                 }
 
                 if (equalUsedPoint) {
@@ -5777,12 +5778,16 @@ public class SalesCartActivity extends AppCompatActivity {
 
                     if(clubType==2){
                         int amount = (int) ((int)(totalPrice*club.getPoint())/club.getAmount());
-                        sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId());
+                        SumPoint s = sum_pointDbAdapter.getLastRow();
+                        sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId(),s.getTotalPoint()+amount);
                         int strUsed = data.getIntExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE,0);
                         Log.d("usedPoint",strUsed+"");
                         if(strUsed>0){
 
                             usedpointDbAdapter.insertEntry( strUsed, SESSION._ORDERS.getCustomerId());
+                            s.setTotalPoint(s.getTotalPoint()-strUsed);
+                            sum_pointDbAdapter.updateEntry(s);
+
                         }
 
                     }
@@ -6542,7 +6547,11 @@ public class SalesCartActivity extends AppCompatActivity {
             }
             int totalPoint=0;
             if(sum_pointDbAdapter.getPointInfo(customer.getCustomerId())>0) {
-                totalPoint = sum_pointDbAdapter.getPointInfo(customer.getCustomerId());
+                try {
+                    totalPoint = sum_pointDbAdapter.getLastRow().getTotalPoint();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Log.d("customerN",totalPoint + "ooooo");
 
             }
