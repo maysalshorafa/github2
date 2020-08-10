@@ -1393,29 +1393,21 @@ public class SalesCartActivity extends AppCompatActivity {
                             productList = new ArrayList<Product>();
                             super.onPreExecute();
                         }
-
                         @Override
-                        protected Void doInBackground(final String... params) {
-
-                            runOnUiThread(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    productDBAdapter.open();
-                                    productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 50));
-                                    productDBAdapter.close();
-                                    // Stuff that updates the UI
-                                }
-                            });
-
+                        protected Void doInBackground(String... params) {
+                            /*try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }*/
+                            productList.addAll(productDBAdapter.getAllProductsByHint(params[0], productList.size()-1, 50));
                             return null;
+
                         }
 
                         @Override
                         protected void onPostExecute(Void aVoid) {
                             super.onPostExecute(aVoid);
-                            Log.d("tttttttt",productList.toString());
-                            Log.d("tttttttt",productList.size()+"");
 
                         /*    if(productList.size()==1){
                                 productList.remove(1);
@@ -1428,14 +1420,14 @@ public class SalesCartActivity extends AppCompatActivity {
                             //    }
                         }
                     }.execute(word);
-                } else {
+                } /*else {
                     productList = All_productsList;
                     ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), productList);
                     gvProducts.setAdapter(adapter);
                     lvProducts.setAdapter(adapter);
                     productCatalogGridViewAdapter.notifyDataSetChanged();
 
-                }
+                }*/
 
             }
         });
@@ -2060,6 +2052,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
 
         lvOrder.setAdapter(saleDetailsListViewAdapter);
+        saleDetailsListViewAdapter.notifyDataSetChanged();
 
 
         //endregion
@@ -3638,7 +3631,7 @@ public class SalesCartActivity extends AppCompatActivity {
             Log.d("testVat",SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()+""+i);
             double rateCurrency= ConverterCurrency.getRateCurrency(SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType(),SalesCartActivity.this);
             if(!SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
-                if(SESSION._ORDERS.getCartDiscount()>0){
+                if(SESSION._ORDERS!=null && SESSION._ORDERS.getCartDiscount()>0){
                     SalesWithoutTax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
                 }else {
                     SalesWithoutTax +=( SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
@@ -3646,7 +3639,7 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 }
             }else {
-                if(SESSION._ORDERS.getCartDiscount()>0){
+                if(SESSION._ORDERS!=null && SESSION._ORDERS.getCartDiscount()>0){
                     Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
                     salesaftertax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
                     SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100))*rateCurrency;

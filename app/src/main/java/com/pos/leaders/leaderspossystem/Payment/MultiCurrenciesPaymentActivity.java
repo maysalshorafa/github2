@@ -237,7 +237,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 }
                 ;
                 invoice= InvoiceManagementActivity.newInvoiceList;
-                Log.d("newInvoiceList",invoice.toString());
             }
             totalPrice = (double) extras.get(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
 
