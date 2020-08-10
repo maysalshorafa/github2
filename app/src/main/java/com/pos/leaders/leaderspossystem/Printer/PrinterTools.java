@@ -662,9 +662,10 @@ public class PrinterTools {
             }
             h += bitmap.get(i).getHeight();
         }
-        Bitmap temp;
+        Bitmap temp = null;
         if(w==0||h==0){
-            temp=bitmapList.get(0);
+            if (bitmapList!=null &&!bitmapList.isEmpty()){
+            temp=bitmapList.get(0);}
         }else {
         temp= Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(temp);
