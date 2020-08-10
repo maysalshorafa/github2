@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -27,15 +28,15 @@ import java.util.List;
  * Created by Win8.1 on 6/21/2020.
  */
 
-public class ReciptManagementListViewAdapter extends ArrayAdapter {
+public class ReciptManagementListViewAdapter extends ArrayAdapter  {
     private List<BoInvoice> invoicesList;
     private int resource;
     private LayoutInflater inflater;
     private Context context;
     private ArrayList<String> invoiceNumbers;
     public static List<ReciptObject> reciptObjectList;
-     double amount =0;
-  public static   ReciptManagementListViewAdapter.ViewHolder holder = null;
+    double amount =0;
+    public static   ReciptManagementListViewAdapter.ViewHolder holder = null;
     List<String> partiallyString;
 
 
@@ -52,7 +53,7 @@ public class ReciptManagementListViewAdapter extends ArrayAdapter {
         this.resource = resource;
         this.invoicesList = objects;
         this.invoiceNumbers = invoiceNumbers;
-       this.reciptObjectList = reciptObjec;
+        this.reciptObjectList = reciptObjec;
         this.partiallyString=partialyCheckBoxString;
 
 
@@ -79,64 +80,66 @@ public class ReciptManagementListViewAdapter extends ArrayAdapter {
 
         try {
             holder.tvTotalAmount.setText(invoicesList.get(position).getDocumentsData().getDouble("total") + getContext().getString(R.string.ins));
-           holder.tvID.setText(invoicesList.get(position).getDocNum()+"");
+            holder.tvID.setText(invoicesList.get(position).getDocNum()+"");
             holder.tvTotalPaid.setText(invoicesList.get(position).getDocumentsData().getDouble("total")-invoicesList.get(position).getDocumentsData().getDouble("totalPaid") + getContext().getString(R.string.ins));
             if(InvoiceManagementActivity.reciptObjectList.get(position).isAll()){
-                holder.checkBox.setSelected(true);
+                Log.d("testcjjj","ppppp");
+                holder.checkBox.setChecked(true);
             }
             if(InvoiceManagementActivity.reciptObjectList.get(position).isPartially()){
-                holder.checkBoxPartial.setSelected(true);
+                holder.checkBoxPartial.setChecked(true);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        holder.checkBoxPartial.setOnClickListener(new View.OnClickListener() {
+        holder.checkBoxPartial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
             @Override
-            public void onClick(View view) {
-              if(holder.checkBoxPartial.isChecked()){
-                  InvoiceManagementActivity.reciptObjectList.get(position).setPartially(true);
-                  final Dialog customerDialog = new Dialog(context);
-                  customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                  customerDialog.show();
-                  customerDialog.setContentView(R.layout.recipt_dialog_layout);
-                  final EditText   customer_amount = (EditText) customerDialog.findViewById(R.id.customer_email);
-                  final  Button button = (Button)customerDialog.findViewById(R.id.done);
-                  button.setOnClickListener(new View.OnClickListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if ( isChecked )
+                {
+                    InvoiceManagementActivity.reciptObjectList.get(position).setPartially(true);
+                    final Dialog customerDialog = new Dialog(context);
+                    customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    customerDialog.show();
+                    customerDialog.setContentView(R.layout.recipt_dialog_layout);
+                    final EditText   customer_amount = (EditText) customerDialog.findViewById(R.id.customer_email);
+                    final  Button button = (Button)customerDialog.findViewById(R.id.done);
+                    button.setOnClickListener(new View.OnClickListener() {
 
-                      public void onClick(View arg0) {
-                          if(!customer_amount.getText().toString().isEmpty()){
-                              double amount =Double.parseDouble(customer_amount.getText().toString());
-                              InvoiceManagementActivity. reciptObjectList.get(position).setPartialAmount(amount);
-                              //    Log.d("reciptObjectList",reciptObjectList.toString());
-                              //  InvoiceManagementActivity.edit(position,String.valueOf(amount),reciptObjectList);
+                        public void onClick(View arg0) {
+                            if(!customer_amount.getText().toString().isEmpty()){
+                                double amount =Double.parseDouble(customer_amount.getText().toString());
+                                InvoiceManagementActivity. reciptObjectList.get(position).setPartialAmount(amount);
+                                //    Log.d("reciptObjectList",reciptObjectList.toString());
+                                //  InvoiceManagementActivity.edit(position,String.valueOf(amount),reciptObjectList);
 
-                              customerDialog.dismiss();
-                          }
-                          else {
-                              customerDialog.dismiss();
-                          }
-
-
-                      }
-                  });
-
-              }else {
-                  InvoiceManagementActivity. reciptObjectList.get(position).setPartially(false);
-                  InvoiceManagementActivity.reciptObjectList.get(position).setPartialAmount(0);
-
-              }
+                                customerDialog.dismiss();
+                            }
+                            else {
+                                customerDialog.dismiss();
+                            }
 
 
+                        }
+                    });
 
+                }else {
+                    InvoiceManagementActivity. reciptObjectList.get(position).setPartially(false);
+                    InvoiceManagementActivity.reciptObjectList.get(position).setPartialAmount(0);
+
+                }
             }
         });
-
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
             @Override
-            public void onClick(View view) {
-                if(holder.checkBox.isChecked()){
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if ( isChecked )
+                {
                     InvoiceManagementActivity.reciptObjectList.get(position).setAll(true);
                     try {
                         InvoiceManagementActivity. reciptObjectList.get(position).setAllAmount(invoicesList.get(position).getDocumentsData().getDouble("total"));

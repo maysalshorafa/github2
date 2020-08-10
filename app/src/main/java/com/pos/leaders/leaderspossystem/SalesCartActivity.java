@@ -3054,8 +3054,7 @@ public class SalesCartActivity extends AppCompatActivity {
                         DocumentControl.sendReciptDoc(SalesCartActivity.this, invoiceList, CONSTANT.CREDIT_CARD, totalPrice, creditCardResult, customerJsonM);
 
                     }
-
-
+                getIntent().removeExtra("MultiRecipt");
 
             }
             if (extras.containsKey("orderJson")) {
