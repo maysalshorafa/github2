@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -115,14 +116,58 @@ public class InvoiceManagementActivity extends AppCompatActivity {
         btnCheckAllRecipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                newInvoiceList=new ArrayList<BoInvoice>();
 
-                ReciptManagementListViewAdapter invoiceManagementListViewAdapter = new ReciptManagementListViewAdapter(InvoiceManagementActivity.context, R.layout.list_adapter_row_recipt, InvoiceManagementActivity.invoiceList, InvoiceManagementActivity.invoiceNumberList, InvoiceManagementActivity.reciptObjectList, InvoiceManagementActivity.partiallyString);
                 for (int i=0;i<InvoiceManagementActivity.reciptObjectList.size();i++){
+                    JSONObject jsonObject = invoiceList.get(i).getDocumentsData();
                     InvoiceManagementActivity.reciptObjectList.get(i).setAll(true);
-                }
-                invoiceListView.setAdapter(invoiceManagementListViewAdapter);
-                invoiceManagementListViewAdapter.notifyDataSetChanged();
+                    try {
+                        InvoiceManagementActivity.reciptObjectList.get(i).setAllAmount(jsonObject.getDouble("balanceDue"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
+                }
+                ReciptManagementListViewAdapter invoiceManagementListViewAdapter = new ReciptManagementListViewAdapter(InvoiceManagementActivity.context, R.layout.list_adapter_row_recipt, InvoiceManagementActivity.invoiceList, InvoiceManagementActivity.invoiceNumberList, InvoiceManagementActivity.reciptObjectList, InvoiceManagementActivity.partiallyString);
+                invoiceListView.setAdapter(invoiceManagementListViewAdapter);
+
+
+                for(int i=0;i<InvoiceManagementActivity.reciptObjectList.size();i++) {
+                    ReciptObject reciptObject = InvoiceManagementActivity.reciptObjectList.get(i);
+                    BoInvoice boInvoice = invoiceList.get(i);
+                    JSONObject jsonObject =boInvoice.getDocumentsData();
+
+                    if(reciptObject.isAll()){
+                        try {
+                            jsonObject.remove("invoiceStatus");
+                            jsonObject.put("invoiceStatus", InvoiceStatus.PAID.getValue());
+                            jsonObject.put("balanceDue",0);
+                            jsonObject.remove("totalPaid");
+                            jsonObject.put("totalPaid",reciptObject.getAllAmount());
+                            boInvoice.setDocumentsData(jsonObject);
+                            newInvoiceList.add(boInvoice);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        totalAmount+=reciptObject.getAllAmount();
+                    }
+                }
+                RequiredAmount.setText(Util.makePrice(totalAmount-pay));
+                Log.d("totalAmount111",totalAmount+"    "+ pay);
+
+                if(totalAmount!=pay){
+                    Toast.makeText(InvoiceManagementActivity.this,"insert the required amount",Toast.LENGTH_LONG).show();
+                }else {
+                    Intent intent=new Intent(InvoiceManagementActivity.this,MultiCurrenciesPaymentActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("com_pos_leaders_cart_total_price",totalAmount);
+                    intent.putExtra("Receipt","ReceiptWay");
+                    intent.putExtra("customer",customer.toString());
+                    startActivityForResult(intent, REQUEST_RECIPT_ACTIVITY_CODE);
+                    //v.getContext().startActivity(intent);
+
+
+                }
 
             }
 
@@ -293,12 +338,20 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                 if (userScrolled && firstVisibleItem + visibleItemCount == totalItemCount) {
                     userScrolled = false;
 
-                    adapter = new ReciptManagementListViewAdapter(InvoiceManagementActivity.context,R.layout.list_adapter_row_recipt,InvoiceManagementActivity.invoiceList,InvoiceManagementActivity.invoiceNumberList,InvoiceManagementActivity.reciptObjectList,InvoiceManagementActivity.partiallyString);
-                    InvoiceManagementActivity.invoiceListView.setAdapter(InvoiceManagementActivity.adapter);
-                    adapter.notifyDataSetChanged();
-
                 }
             }
+        });
+
+
+        invoiceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+
+                adapter.notifyDataSetChanged();
+            }
+
         });
 
         gvCustomer.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -347,6 +400,18 @@ public class InvoiceManagementActivity extends AppCompatActivity {
                     tvDebtAmount.setText(Util.makePrice(InvoiceManagementActivity.debtAmount));
                     final TextView totalAmountAfterPay = (TextView) paymentReceiptDialog.findViewById(R.id.totalAmountAfterPay);
                     Button btnOk = (Button)paymentReceiptDialog.findViewById(R.id.reciptPaymentDialog_BTOk);
+                    ImageView imageView =(ImageView) paymentReceiptDialog.findViewById(R.id.closeDialog);
+
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                                paymentReceiptDialog.dismiss();
+                            }
+
+
+                    });
+
 
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -517,9 +582,11 @@ class StartInvoiceConnection extends AsyncTask<String,Void,String> {
                     super.onPreExecute();
                     progressDialog2.setTitle("Success.");
                     progressDialog2.show();
+
                     InvoiceManagementActivity.customerLayOut.setVisibility(View.GONE);
+                    InvoiceManagementActivity.invoiceListView.invalidate();
                   InvoiceManagementActivity.adapter = new ReciptManagementListViewAdapter(InvoiceManagementActivity.context,R.layout.list_adapter_row_recipt,InvoiceManagementActivity.invoiceList,InvoiceManagementActivity.invoiceNumberList,InvoiceManagementActivity.reciptObjectList,InvoiceManagementActivity.partiallyString);
-                    InvoiceManagementActivity.invoiceListView.setAdapter(InvoiceManagementActivity.adapter);
+                  InvoiceManagementActivity.invoiceListView.setAdapter(InvoiceManagementActivity.adapter);
 
                 }
 
@@ -595,4 +662,5 @@ class StartGetCustomerGeneralLedgerConnectionForInvoice extends AsyncTask<String
     }
 
 }
+
 
