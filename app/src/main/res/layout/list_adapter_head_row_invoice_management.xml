@@ -46,7 +46,7 @@
             android:layout_width="0dp"
             android:background="#A9A9A9"
             android:padding="8dp"
-            android:text="The amount paid"
+            android:text="@string/total_required"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"></TextView>

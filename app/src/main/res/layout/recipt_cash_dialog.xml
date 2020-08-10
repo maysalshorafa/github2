@@ -120,7 +120,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:paddingLeft="16dp"
-                android:text="@string/amount_of_dept"
+                android:text="@string/CustomerLedger"
                 android:textColor="@color/black"
                 android:textDirection="anyRtl"
                 android:textSize="24sp"
