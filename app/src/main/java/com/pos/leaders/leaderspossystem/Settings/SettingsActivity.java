@@ -14,6 +14,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
@@ -425,6 +426,39 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     return true;
                 }
             });
+            EditTextPreference emailText= (EditTextPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL");
+
+            emailText.setOnPreferenceChangeListener(
+                    new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object o) {
+                            Log.e("", "New value is: " + o.toString());
+                            String s = (String) o;
+                            if(!s.isEmpty()){
+                                SETTINGS.CustomerEmail=s;
+                            }
+
+                            // True to update the state of the Preference with the new value.
+                            return true;
+                        }
+                    });
+
+            EditTextPreference emailTextPassWord= (EditTextPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord");
+
+            emailTextPassWord.setOnPreferenceChangeListener(
+                    new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object o) {
+                            Log.e("", "New value is: " + o.toString());
+                            String s = (String) o;
+                            if(!s.isEmpty()){
+                                SETTINGS.CustomerEmailPassword=s;
+                            }
+
+                            // True to update the state of the Preference with the new value.
+                            return true;
+                        }
+                    });
 
             final MultiSelectListPreference multiSelectListPreference=(MultiSelectListPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST");
 
@@ -490,17 +524,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         }
 
                              currencyTypeDBAdapter.delete();
-                              Log.d("currencyTypeDBAdapterSize",currencyTypeDBAdapter.getAllCurrencyType().size()+"");
-                              for (int i=0;i<currenciesChoose.size();i++)     {
-                                currencyTypeDBAdapter.insertEntry(new CurrencyType(i,currenciesChoose.get(i)));     }
-                              //    currencyTyhhhpeDBAdapter.insertEntry(currenciesChoose.get(i));   }
-                                   Log.d("currencyTypeDBAdapterFirstItem",currencyTypeDBAdapter.getAllCurrencyType().get(0).getType()+" "+
-                                   currencyTypeDBAdapter.getAllCurrencyType().get(1).getType()+""+
-                                   currencyTypeDBAdapter.getAllCurrencyType().get(2).getType()+""+
-                                   currencyTypeDBAdapter.getAllCurrencyType().get(3).getType()+"");
 
                        Log.d("currencirsChoose",currenciesChoose.toString());
                         multiSelectListPreference.setEnabled(false);
+
                    }
                    else {
                        Toast.makeText(getContext(), R.string.please_choose_three_currencies, Toast.LENGTH_SHORT).show();

@@ -2861,12 +2861,16 @@ public class PdfUA {
 
             }
             int totalPoint = 0;
-            if (sum_pointDbAdapter.getPointInfo(SESSION._ORDERS.getCustomerId()) > 0) {
-                totalPoint = sum_pointDbAdapter.getPointInfo(SESSION._ORDERS.getCustomerId());
+            if (sum_pointDbAdapter.getSumPointByID(SESSION._ORDERS.getCustomerId()).getTotalPoint() > 0) {
+                try {
+                    totalPoint = sum_pointDbAdapter.getLastRow(SESSION._ORDERS.getCustomerId()).getTotalPoint();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Log.d("customerN", totalPoint + "ooooo");
 
             }
-            insertCell(headingTable, context.getString(R.string.point) + ":  " + (totalPoint - unUsedPoint), Element.ALIGN_CENTER, 1, urFontName1);
+            insertCell(headingTable, context.getString(R.string.point) + ":  " + (totalPoint ), Element.ALIGN_CENTER, 1, urFontName1);
         }
 
             if(isCopy) {

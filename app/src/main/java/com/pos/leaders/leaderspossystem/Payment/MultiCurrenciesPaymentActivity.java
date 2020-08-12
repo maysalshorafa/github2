@@ -414,15 +414,15 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 }
                 if(sum_pointDbAdapter.getPointInfo(customerN.getCustomerId())>0) {
                     try {
-                        totalPoint = sum_pointDbAdapter.getLastRow().getTotalPoint();
+                        totalPoint = sum_pointDbAdapter.getLastRow(SESSION._ORDERS.getCustomerId()).getTotalPoint();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     Log.d("customerN",totalPoint + "ooooo");
 
                 }
-                point.setText((totalPoint-unUsedPoint)+"");
-                final double totalAmount = (club.getValueOfPoint()*(totalPoint-unUsedPoint));
+                point.setText((totalPoint)+"");
+                final double totalAmount = (club.getValueOfPoint()*(totalPoint));
                 Log.d("clllub",club.toString());
                 pointAmount.setText(Util.makePrice(totalAmount));
                 final LinearLayout  partialLayOut = (LinearLayout)pointDialog.findViewById(R.id.partialLayout);

@@ -142,17 +142,19 @@ public class PayPointDBAdapter {
     public List<PayPoint> getPaymentBySaleID(long orderId) {
         List<PayPoint> salePaymentList = new ArrayList<PayPoint>();
         try {
-            if (db.isOpen()) {
+            if (db.isOpen()){
 
-            } else {
+            }
+            else {
                 try {
                     open();
-                } catch (SQLException ex) {
-                    Log.d("Exception", ex.toString());
+                }
+                catch (SQLException ex) {
+                    Log.d("Exception",ex.toString());
                 }
             }
 
-            Cursor cursor = db.rawQuery("select * from " + PAY_POINT_TABLE_NAME + " where " + PAY_POINT_COLUMN_OrderID + "=" + orderId, null);
+            Cursor cursor = db.rawQuery("select * from " + PAY_POINT_TABLE_NAME +" where "+PAY_POINT_COLUMN_OrderID+"="+orderId, null);
             cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
@@ -161,7 +163,7 @@ public class PayPointDBAdapter {
             }
             close();
         } catch (Exception e) {
-            Log.d("exception", e.toString());
+            Log.d("exception",e.toString());
 
         }
         return salePaymentList;
@@ -171,7 +173,7 @@ public class PayPointDBAdapter {
         return new PayPoint(Long.parseLong(cursor.getString(cursor.getColumnIndex(PAY_POINT_COLUMN_ID))),
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(PAY_POINT_COLUMN_OrderID))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PAY_POINT_COLUMN_AMOUNT))),
-                Long.parseLong(cursor.getString(cursor.getColumnIndex(PAY_POINT_COLUMN_CurrencyType))),
+              0,
                 Timestamp.valueOf(cursor.getString(cursor.getColumnIndex(PAY_POINT_COLUMN_CREATEDATE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PAY_POINT_COLUMN_CurrencyRATE))),
                 Double.parseDouble(cursor.getString(cursor.getColumnIndex(PAY_POINT_COLUMN_ActualCurrencyRATE))));

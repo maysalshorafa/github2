@@ -278,6 +278,8 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                             try
                                             {
+                                                Log.d("adddddd",reciveEmail);
+
                                                 SendLog.sendListFile(reciveEmail,context.getPackageName());
                                                 //pdfLoadImages1(data);
                                             }

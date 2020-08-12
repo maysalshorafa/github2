@@ -5773,23 +5773,26 @@ public class SalesCartActivity extends AppCompatActivity {
                     cashPaymentDBAdapter.close();
                     clubAdapter=new ClubAdapter(this);
                     clubAdapter.open();
+                    if(SESSION._ORDERS.getCustomer()!=null){
                     Club club =clubAdapter.getClubById(SESSION._ORDERS.getCustomer().getClub());
                     Log.d("clubffff",club.toString()+"ffff");
 
                     if(clubType==2){
-                        int amount = (int) ((int)(totalPrice*club.getPoint())/club.getAmount());
-                        SumPoint s = sum_pointDbAdapter.getLastRow();
-                        sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId(),s.getTotalPoint()+amount);
                         int strUsed = data.getIntExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE,0);
                         Log.d("usedPoint",strUsed+"");
-                        if(strUsed>0){
+                        if(strUsed<=0){
+                            int amount = (int) ((int)(totalPrice*club.getPoint())/club.getAmount());
+                            SumPoint s = sum_pointDbAdapter.getLastRow(SESSION._ORDERS.getCustomerId());
+                            sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId(),s.getTotalPoint()+amount);
+                        }else {
 
                             usedpointDbAdapter.insertEntry( strUsed, SESSION._ORDERS.getCustomerId());
-                            s.setTotalPoint(s.getTotalPoint()-strUsed);
-                            sum_pointDbAdapter.updateEntry(s);
-
+                            int amount = (int) ((int)(totalPrice*club.getPoint())/club.getAmount());
+                            SumPoint s = sum_pointDbAdapter.getLastRow(SESSION._ORDERS.getCustomerId());
+                            sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId(),(s.getTotalPoint()+amount)-strUsed);
                         }
 
+                    }
                     }
 
 
@@ -6548,14 +6551,14 @@ public class SalesCartActivity extends AppCompatActivity {
             int totalPoint=0;
             if(sum_pointDbAdapter.getPointInfo(customer.getCustomerId())>0) {
                 try {
-                    totalPoint = sum_pointDbAdapter.getLastRow().getTotalPoint();
+                    totalPoint = sum_pointDbAdapter.getLastRow(customer.getCustomerId()).getTotalPoint();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.d("customerN",totalPoint + "ooooo");
 
             }
-            customerPointTv.setText((totalPoint-unUsedPoint)+"");
+            customerPointTv.setText((totalPoint)+"");
         } else if (clubType == 0) {
         }
 
