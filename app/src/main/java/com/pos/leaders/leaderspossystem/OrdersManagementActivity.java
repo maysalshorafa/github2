@@ -278,7 +278,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                             try
                                             {
-                                                SendLog.sendListFile(reciveEmail,context.getPackageName());
+                                                SendLog.sendListFile(reciveEmail,context.getPackageName(),"customerInvoicesList.pdf");
                                                 //pdfLoadImages1(data);
                                             }
                                             catch(Exception ignored) {

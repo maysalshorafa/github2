@@ -79,7 +79,6 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -1156,7 +1155,7 @@ public class Util {
 
     }
 
-    public static void logInLogOutReport(final Context context, final JSONObject res){
+    public static void logInLogOutReport(final Context context, final JSONObject res, final String reciveEmail){
         final String SAMPLE_FILE = "loginreport.pdf";
         new AsyncTask<Void, Void, Void>(){
             @Override
@@ -1189,6 +1188,9 @@ public class Util {
 
                     try {
                         pdfUA.printLogInLogOutUserReport(context,res);
+                        SendLog.sendListFile(reciveEmail,context.getPackageName(),"loginreport.pdf");
+
+
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     }

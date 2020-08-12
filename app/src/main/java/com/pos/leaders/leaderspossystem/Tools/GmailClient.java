@@ -95,7 +95,7 @@ public class GmailClient {
         }.execute();
 
     }
-    public static void sendFromGMailInvoices(final String from, final String pass, final String to, final String subject, final String file) {
+    public static void sendFromGMailInvoices(final String from, final String pass, final String to, final String subject, final String file, final String fileNameS) {
         Log.d("adddddd",to);
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -133,7 +133,7 @@ public class GmailClient {
                     Multipart multipart = new MimeMultipart();
 
                     messageBodyPart = new MimeBodyPart();
-                    String fileName = "customerInvoicesList.pdf";
+                    String fileName =fileNameS;
                     DataSource source = new FileDataSource(file);
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName(fileName);

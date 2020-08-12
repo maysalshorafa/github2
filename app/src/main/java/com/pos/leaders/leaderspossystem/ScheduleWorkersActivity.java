@@ -1,6 +1,9 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -81,14 +84,31 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                         long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getEmployeeId());
                         if(scheduleID>0){
                             Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.welcome)+user.getFullName()+getString(R.string.we_wish_to_you_a_happy_business_day),Toast.LENGTH_LONG).show();
-                            JSONObject jsonObject = new JSONObject();
+                            final JSONObject jsonObject = new JSONObject();
                             try {
                                 jsonObject.put("user_name",user.getFullName());
                                 jsonObject.put("case","logIn");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            Util.logInLogOutReport(ScheduleWorkersActivity.this,jsonObject);
+
+                            final Dialog customerDialog = new Dialog(ScheduleWorkersActivity.this);
+                            customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            customerDialog.show();
+                            customerDialog.setContentView(R.layout.customer_email_layout);
+                            final EditText   customer_email = (EditText) customerDialog.findViewById(R.id.customer_email);
+                            ((Button) customerDialog.findViewById(R.id.done))
+                                    .setOnClickListener(new View.OnClickListener() {
+
+                                        @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                                        public void onClick(View arg0) {
+                                            if(customer_email.getText().toString()!=""){
+                                          String     reciveEmail=customer_email.getText().toString();
+                                                Util.logInLogOutReport(getApplicationContext(),jsonObject,reciveEmail);
+                                            }
+                                        }
+                        });
+
                           //  onBackPressed();
                         }
                 }
@@ -112,7 +132,7 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                         m = ((r - (h * 1000 * 60 * 60)) / (1000 * 60));
                         s = (r - (m * 1000 * 60) - (h * 1000 * 60 * 60)) / (1000);
                         Toast.makeText(ScheduleWorkersActivity.this, getString(R.string.thanks) + user.getFullName() + getString(R.string.the_number_of_hours_you_work_is) + String.format("%02d:%02d:%02d", h, m, s), Toast.LENGTH_LONG).show();
-                        JSONObject jsonObject = new JSONObject();
+                        final JSONObject jsonObject = new JSONObject();
                         try {
                             jsonObject.put("user_name", user.getFullName());
                             jsonObject.put("case", "logOut");
@@ -120,7 +140,22 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Util.logInLogOutReport(ScheduleWorkersActivity.this, jsonObject);
+                        final Dialog customerDialog = new Dialog(ScheduleWorkersActivity.this);
+                        customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        customerDialog.show();
+                        customerDialog.setContentView(R.layout.customer_email_layout);
+                        final EditText   customer_email = (EditText) customerDialog.findViewById(R.id.customer_email);
+                        ((Button) customerDialog.findViewById(R.id.done))
+                                .setOnClickListener(new View.OnClickListener() {
+
+                                    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                                    public void onClick(View arg0) {
+                                        if(customer_email.getText().toString()!=""){
+                                            String     reciveEmail=customer_email.getText().toString();
+                                            Util.logInLogOutReport(getApplicationContext(),jsonObject,reciveEmail);
+                                        }
+                                    }
+                                });
                         //  onBackPressed();
                     }else {
                         Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.please_remember_your_password),Toast.LENGTH_LONG).show();
