@@ -969,7 +969,7 @@ public class Util {
             long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                     zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
                     ,Double.parseDouble(Util.makePrice(zReport.getTotalPosSales())),(zReport.getTotalAmount()/(1+SETTINGS.tax/100))*(SETTINGS.tax/100),invoiceAmount,
-                    creditInvoiceAmount,firstType_plus,(secondType_plus-secondType_minus)+aReportDetailsForSecondCurrency,(thirdType_plus-thirdType_minus)+aReportDetailsForThirdCurrency,(fourthType_plus-fourthType_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
+                    creditInvoiceAmount,firstType_plus,(secondType_plus-secondType_minus)+aReportDetailsForSecondCurrency,(thirdType_plus-thirdType_minus)+aReportDetailsForThirdCurrency,(fourthType_plus-fourthType_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax(),zReport.getTotalPayPoint());
             zReport.setzReportId(zID);
             zReport.setInvoiceAmount(invoiceAmount);
             zReport.setCreditInvoiceAmount(creditInvoiceAmount);
@@ -1444,7 +1444,7 @@ public class Util {
         long xID = xReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                 zReport.getTotalAmount(),zReport.getTotalSales(),zReport.getCashTotal(),zReport.getCheckTotal(),zReport.getCreditTotal()
                 ,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,zReport.getInvoiceAmount(),
-                zReport.getCreditInvoiceAmount(),zReport.getFirstTypeAmount(),zReport.getSecondTypeAmount(),zReport.getThirdTypeAmount(),zReport.getFourthTypeAmount(),zReport.getInvoiceReceiptAmount(),zReport.getPullReportAmount(),zReport.getDepositReportAmount(),zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
+                zReport.getCreditInvoiceAmount(),zReport.getFirstTypeAmount(),zReport.getSecondTypeAmount(),zReport.getThirdTypeAmount(),zReport.getFourthTypeAmount(),zReport.getInvoiceReceiptAmount(),zReport.getPullReportAmount(),zReport.getDepositReportAmount(),zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax(),zReport.getTotalPayPoint());
         XReport finalX = xReportDBAdapter.getByID(xID);
 
         return finalX;
@@ -1549,6 +1549,9 @@ public class Util {
                             boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
                             int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
                             String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
+                            String customerEmail = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL,"lead2018pos@gmail.com");
+                            String customerEmailPassWord = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord,"lead2018POS@gmail.com");
+
                             String companyStatus = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, CompanyStatus.BO_COMPANY.name());
                             int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
                             PackageInfo pInfo = null;
@@ -1560,7 +1563,7 @@ public class Util {
                             String verCode = pInfo.versionName;
                             PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                             posSettingDbAdapter.open();
-                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SETTINGS.currencyCode,SETTINGS.currencySymbol,SETTINGS.country,SETTINGS.enableDuplicateInvoice);
+                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SETTINGS.currencyCode,SETTINGS.currencySymbol,SETTINGS.country,SETTINGS.enableDuplicateInvoice,customerEmail,customerEmailPassWord);
                             //finish();
                         } else {
                             Log.e("setup",jsonObject.getString(MessageKey.responseType));

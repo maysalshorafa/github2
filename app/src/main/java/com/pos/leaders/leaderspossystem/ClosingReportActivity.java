@@ -32,6 +32,7 @@ import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Payment.PaymentMethod;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
@@ -51,13 +52,13 @@ import HPRTAndroidSDK.HPRTPrinterHelper;
 import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 public class ClosingReportActivity extends AppCompatActivity {
-    EditText  checkActualValue ,creditActualValue ,actualFirstTypeValue ,actualSecondTypeValue , actualTirdTypeValue , actualFourthTypeValue ;
-    TextView  checkExpectedValue ,creditExpectedValue ,expectedFirstTypeValue ,expectedSecondTypeValue , expectedThirdTypeValue , expectedFourthTypeValue ;
+    EditText  checkActualValue ,creditActualValue ,actualFirstTypeValue ,actualSecondTypeValue , actualTirdTypeValue , actualFourthTypeValue,actualPayPointValue ;
+    TextView  checkExpectedValue ,creditExpectedValue ,expectedFirstTypeValue ,expectedSecondTypeValue , expectedThirdTypeValue , expectedFourthTypeValue , expactedPayPointValue;
     TextView   checkDifferentValue ,creditDifferentValue ,differentFirstTypeValue ,differentSecondTypeValue , differentThirdTypeValue , differentFourthTypeValue
-            ,firstType,secondType,thirdType,fourthType;
+            ,firstType,secondType,thirdType,fourthType , diffrentPayPointValue;
     Button calculate , print ;
-    double  expectedOpining=0, expectedCheck=0 ,expectedCredit=0 , expectedFirstType=0 , expectedSecondType=0 , expectedTirdType=0 , expectedFourthType=0 , expectedTotal=0,expectedOpiningShekel=0,expectedOpiningUsd=0,expectedOpiningEur=0,expectedOpiningGbp=0;
-    double actualOpining=0 , actualCheck=0 , actualCredit=0 , actualFirstType=0 , actualSecondType=0 , actualThirdType=0 , actualFourthType=0 ,actualTotal=0,cashReceipt=0 , checkReceipt=0;
+    double  expectedOpining=0, expectedCheck=0 ,expectedCredit=0 , expectedFirstType=0 , expectedSecondType=0 , expectedTirdType=0 , expectedFourthType=0 , expectedTotal=0,expectedOpiningShekel=0,expectedOpiningUsd=0,expectedOpiningEur=0,expectedOpiningGbp=0,expectedPayPointValue;
+    double actualOpining=0 , actualCheck=0 , actualCredit=0 , actualFirstType=0 , actualSecondType=0 , actualThirdType=0 , actualFourthType=0 ,actualTotal=0,cashReceipt=0 , checkReceipt=0 , actualPayPoint=0;
     OpiningReport opiningReport = null;
     private List<CurrencyType> currencyTypesList = null;
     @Override
@@ -90,12 +91,14 @@ public class ClosingReportActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        actualPayPointValue=(EditText)findViewById(R.id.actualPayPointValue);
         checkActualValue = (EditText) findViewById(R.id.actualCheckValue);
         creditActualValue = (EditText) findViewById(R.id.actualCreditValue);
         actualFirstTypeValue = (EditText) findViewById(R.id.actualFirstTypeValue);
         actualSecondTypeValue = (EditText) findViewById(R.id.actualSecondTypeValue);
         actualTirdTypeValue = (EditText) findViewById(R.id.actualTirdTypeValue);
         actualFourthTypeValue = (EditText) findViewById(R.id.actualFourthTypeValue);
+        expactedPayPointValue=(TextView)findViewById(R.id.expectedPayPointValue);
         checkExpectedValue =(TextView)findViewById(R.id.expectedCheckValue);
         creditExpectedValue =(TextView)findViewById(R.id.expectedCreditValue);
         expectedFirstTypeValue =(TextView)findViewById(R.id.expectedFirstTypeValue);
@@ -108,6 +111,7 @@ public class ClosingReportActivity extends AppCompatActivity {
         differentSecondTypeValue =(TextView)findViewById(R.id.differentSecondTypeValue);
         differentThirdTypeValue =(TextView)findViewById(R.id.differentThirdTypeValue);
         differentFourthTypeValue =(TextView)findViewById(R.id.differentFourthTypeValue);
+        diffrentPayPointValue=(TextView)findViewById(R.id.differentPayPoint);
 
 
         firstType=(TextView) findViewById(R.id.firstType);
@@ -175,6 +179,8 @@ public class ClosingReportActivity extends AppCompatActivity {
                                                    closingReportDetailsDBAdapter.insertEntry(i,actualCheck,expectedCheck,actualCheck-expectedCheck,CONSTANT.CHECKS,currencyTypesList.get(0).getType());
                                                    closingReportDetailsDBAdapter.insertEntry(i,actualCredit,expectedCredit,actualCredit-expectedCredit,CONSTANT.CREDIT_CARD,currencyTypesList.get(0).getType());
                                                    closingReportDetailsDBAdapter.insertEntry(i,actualFirstType,expectedFirstType,actualFirstType-expectedFirstType,CONSTANT.CASH,currencyTypesList.get(0).getType());
+                                                   closingReportDetailsDBAdapter.insertEntry(i,actualPayPoint,expectedPayPointValue,actualPayPoint-expectedPayPointValue, PaymentMethod.PAY_POINT,currencyTypesList.get(0).getType());
+
                                                    //print report
                                                    JSONObject res = new JSONObject();
                                                    res.put("actualCheck",actualCheck);
@@ -188,6 +194,10 @@ public class ClosingReportActivity extends AppCompatActivity {
                                                    res.put("expectedFirstType",expectedFirstType);
                                                    res.put("expectedSecondType",expectedSecondType);
                                                    res.put("expectedTirdType",expectedTirdType);
+                                                   res.put("actualPayPoint",actualPayPoint);
+                                                   res.put("expectedPayPointValue",expectedPayPointValue);
+
+
                                                    res.put("expectedFourthType",expectedFourthType);
                                                   int result = Util.sendClosingReport(ClosingReportActivity.this,res.toString());
 
@@ -507,6 +517,10 @@ public class ClosingReportActivity extends AppCompatActivity {
             expectedFourthType=lastZReport.getFourthTypeAmount();
             checkExpectedValue.setText(Util.makePrice(expectedCheck));
             creditExpectedValue.setText(Util.makePrice(expectedCredit));
+            expectedPayPointValue=lastZReport.getTotalPayPoint();
+            expactedPayPointValue.setText(Util.makePrice(expectedPayPointValue));
+
+
             Log.d("zreportLast",lastZReport.toString());
 
             firstType.setText(currencyTypesList.get(0).getType());
@@ -580,6 +594,9 @@ public class ClosingReportActivity extends AppCompatActivity {
       if(!checkActualValue.getText().toString().equals("")){
           actualCheck= Double.parseDouble(checkActualValue.getText().toString());
       }
+        if(!actualPayPointValue.getText().toString().equals("")){
+            actualPayPoint= Double.parseDouble(actualPayPointValue.getText().toString());
+        }
       if(!creditActualValue.getText().toString().equals("")){
           actualCredit= Double.parseDouble(creditActualValue.getText().toString());
       }
@@ -598,6 +615,7 @@ public class ClosingReportActivity extends AppCompatActivity {
         }
 
       checkDifferentValue.setText(Util.makePrice(actualCheck-expectedCheck));
+        diffrentPayPointValue.setText(Util.makePrice(actualPayPoint-expectedPayPointValue));
       creditDifferentValue.setText(Util.makePrice(actualCredit-expectedCredit));
         differentFirstTypeValue.setText(Util.makePrice(actualFirstType-expectedFirstType));
 

@@ -41,6 +41,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -76,6 +77,7 @@ import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.PayPoint;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
@@ -1354,6 +1356,11 @@ public class SyncMessage extends Service {
                     List<String> jsonList = new ArrayList<>();
                     List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
                     List<Check> checkList = new ArrayList<Check>();
+                    List<PayPoint> payPointList = new ArrayList<PayPoint>();
+                    PayPointDBAdapter payPointDBAdapter = new PayPointDBAdapter(getApplicationContext());
+                    payPointDBAdapter.open();
+                    payPointList=payPointDBAdapter.getPaymentBySaleID(orderId);
+                    payPointDBAdapter.close();
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
                     cashPaymentDBAdapter.open();
                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
@@ -1361,6 +1368,11 @@ public class SyncMessage extends Service {
                     if(cashPaymentList.size()>0){
                         for(int i=0;i<cashPaymentList.size();i++){
                             jsonList.add(cashPaymentList.get(i).toString());
+                        }
+                    }
+                    if(payPointList.size()>0){
+                        for(int i=0;i<payPointList.size();i++){
+                            jsonList.add(payPointList.get(i).toString());
                         }
                     }
                     CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(getApplicationContext());
@@ -1523,7 +1535,7 @@ public class SyncMessage extends Service {
             case MessageType.UPDATE_USED_POINT:
                 UsedPoint usedPoint =null;
                 usedPoint=objectMapper.readValue(msgData, UsedPoint.class);
-                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token,usedPoint.getUsedPointId());
+                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token,usedPoint.getId());
                 break;
             case MessageType.DELETE_USED_POINT:
                 res = messageTransmit.authDelete(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);

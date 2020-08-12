@@ -593,6 +593,8 @@
     <string name="type"> Type</string>
     <string name="_amount">Amount</string>
     <string name="point">  Point</string>
+    <string name="value">Value</string>
+
     <string name="group_name"> Club Name</string>
     <string name="add_group"> Add Group</string>
     <string name="please_insert_club_name">Please insert Club Name.</string>
@@ -619,6 +621,8 @@
     <string name="update_measurement">Update Measurement</string>
     <string name="no_of_measurement">No Of Measurement</string>
     <string name="food_stamp"> Food Stamp</string>
+    <string name="pay_point"> Pay Point</string>
+
 
 
     <string name="different"> Different</string>

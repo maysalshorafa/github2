@@ -11,15 +11,16 @@ public class Club {
     private String description;
     private int type;
     private float percent;
-    private int amount;
+    private double amount;
     private int point;
     private boolean hide=false;
     private int branchId;
+    private double valueOfPoint;
 
     public Club() {
     }
 
-    public Club(long clubId, String name, String description, int type, float percent, int amount, int point, boolean hide,int branchId) {
+    public Club(long clubId, String name, String description, int type, float percent, double amount, int point, boolean hide,int branchId,double valueOfPoint) {
         this.clubId = clubId;
         this.name=name;
         this.description=description;
@@ -29,8 +30,9 @@ public class Club {
         this.point=point;
         this.hide=hide;
         this.branchId=branchId;
+        this.valueOfPoint=valueOfPoint;
     }
-    public Club(long clubId, String name, String description, int type, float percent, int amount, int point,int branchId) {
+    public Club(long clubId, String name, String description, int type, float percent, double amount, int point,int branchId,double valueOfPoint) {
         this.clubId = clubId;
         this.name=name;
         this.description=description;
@@ -39,9 +41,18 @@ public class Club {
         this.amount=amount;
         this.point=point;
         this.branchId=branchId;
+        this.valueOfPoint=valueOfPoint;
     }
     public Club(Club club) {
-        this(club.getClubId(),club.getName(),club.getDescription(),club.getType(),club.getPercent(),club.getAmount(),club.getPoint(),club.getBranchId());
+        this(club.getClubId(),club.getName(),club.getDescription(),club.getType(),club.getPercent(),club.getAmount(),club.getPoint(),club.getBranchId(),club.getValueOfPoint());
+    }
+
+    public double getValueOfPoint() {
+        return valueOfPoint;
+    }
+
+    public void setValueOfPoint(double valueOfPoint) {
+        this.valueOfPoint = valueOfPoint;
     }
 
     public int getBranchId() {
@@ -72,7 +83,7 @@ public class Club {
         return percent;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
@@ -104,7 +115,7 @@ public class Club {
         this.percent = percent;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -114,5 +125,21 @@ public class Club {
 
     public void setHide(boolean hide) {
         this.hide = hide;
+    }
+
+    @Override
+    public String toString() {
+        return "Club{" +
+                "clubId=" + clubId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", percent=" + percent +
+                ", amount=" + amount +
+                ", point=" + point +
+                ", hide=" + hide +
+                ", branchId=" + branchId +
+                ", valueOfPoint=" + valueOfPoint +
+                '}';
     }
 }

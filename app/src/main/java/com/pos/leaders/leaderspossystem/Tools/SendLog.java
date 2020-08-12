@@ -80,10 +80,12 @@ public class SendLog {
         gmailClient.sendFromGMail(from,password,to,subject,file);
 
     }
+
     public static void sendListFile(String to,String pa,String fileName){
-        String from = "lead2018pos@gmail.com";
-        final String password = "lead2018POS@gmail.com";
-        String subject ="List Invoices File for"+"Company Name :"+SETTINGS.companyName +"  "+ "to POS No:"+SETTINGS.posID+"  "+DateConverter.currentDateTime();
+
+        String from = SETTINGS.CustomerEmail;
+        final String password = SETTINGS.CustomerEmailPassword;
+        String subject ="List File for"+"Company Name :"+SETTINGS.companyName +"  "+ "to POS No:"+SETTINGS.posID+"  "+DateConverter.currentDateTime();
         String filename1=fileName;
         File path = new File( Environment.getExternalStorageDirectory(), pa );
 
@@ -92,6 +94,8 @@ public class SendLog {
         GmailClient gmailClient = new GmailClient();
         gmailClient.sendFromGMailInvoices(from,password,to,subject,file,fileName);
 
+
     }
+
 
 }

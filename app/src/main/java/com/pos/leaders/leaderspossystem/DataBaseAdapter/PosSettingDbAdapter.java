@@ -44,10 +44,13 @@ public class PosSettingDbAdapter {
     protected static final String POS_SETTING_COLUMN_CURRENCY_SYMBOL= "currencySymbol";
     protected static final String POS_SETTING_COLUMN_COUNTRY= "country";
     protected static final String POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE="duplicateInvoice";
+    protected static final String POS_SETTING_COLUMN_Customer_Email="customerEmail";
+    protected static final String POS_SETTING_COLUMN_Customer_EmailPassWord="customerEmailPassWord";
+
 
     public static final String DATABASE_CREATE = "CREATE TABLE PosSetting ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "`enableCurrency` INTEGER DEFAULT 0 ,`duplicateInvoice` INTEGER DEFAULT 0, `enableCreditCard` INTEGER DEFAULT 0, " +
-            "`enablePinPad` INTEGER DEFAULT 0, `enableCustomerMeasurement` INTEGER DEFAULT 0,`noOfFloatPoint` INTEGER DEFAULT 0,`posVersionNo` TEXT ,`posDbVersionNo` TEXT , `printerType` TEXT  , `companyStatus` TEXT  ,`branchId` INTEGER DEFAULT 0 , `currencyCode` TEXT  , `currencySymbol` TEXT ,`country` TEXT )";
+            "`enablePinPad` INTEGER DEFAULT 0, `enableCustomerMeasurement` INTEGER DEFAULT 0,`noOfFloatPoint` INTEGER DEFAULT 0,`posVersionNo` TEXT ,`customerEmail` TEXT  ,`customerEmailPassWord` TEXT ,`posDbVersionNo` TEXT , `printerType` TEXT  , `companyStatus` TEXT  ,`branchId` INTEGER DEFAULT 0 , `currencyCode` TEXT  , `currencySymbol` TEXT ,`country` TEXT )";
     // Variable to hold the database instance
     private static SQLiteDatabase db;
     // Context of the application using the database.
@@ -83,7 +86,7 @@ public class PosSettingDbAdapter {
     public long insertEntry( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad,
                              boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType,
                              String companyStatus, String posVersionNo, String posDbVersionNo, int branchId,
-                             String currencyCode,String currencySymbol,String country,boolean  enableDuplicateInvoice){
+                             String currencyCode,String currencySymbol,String country,boolean  enableDuplicateInvoice,String customerEmail,String customerEmailPassword){
         if(db.isOpen()){
 
         }else {
@@ -94,7 +97,7 @@ public class PosSettingDbAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,companyStatus,posVersionNo,posDbVersionNo,branchId,currencyCode,currencySymbol,country,enableDuplicateInvoice);
+        PosSetting posSetting = new PosSetting(Util.idHealth(this.db, POS_SETTING_TABLE_NAME, POS_SETTING_COLUMN_ID),enableCurrency,enableCreditCard,enablePinPad,enableCustomerMeasurement,noOfFloatPoint,printerType,companyStatus,posVersionNo,posDbVersionNo,branchId,currencyCode,currencySymbol,country,enableDuplicateInvoice,customerEmail,customerEmailPassword);
        // sendToBroker(MessageType.ADD_POS_SETTING, posSetting, this.context);
 
         try {
@@ -133,6 +136,9 @@ public class PosSettingDbAdapter {
         val.put(POS_SETTING_COLUMN_CURRENCY_CODE,posSetting.getCurrencyCode());
         val.put(POS_SETTING_COLUMN_CURRENCY_SYMBOL,posSetting.getCurrencySymbol());
         val.put(POS_SETTING_COLUMN_COUNTRY,posSetting.getCountry());
+        val.put(POS_SETTING_COLUMN_Customer_Email,posSetting.getCustomerEmail());
+        val.put(POS_SETTING_COLUMN_Customer_EmailPassWord,posSetting.getCustomerEmailPassword());
+
         val.put(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE, posSetting.isEnableDuplicateInvoice() ? 1 : 0);
         try {
 
@@ -169,6 +175,9 @@ public class PosSettingDbAdapter {
         val.put(POS_SETTING_COLUMN_CURRENCY_CODE,posSetting.getCurrencyCode());
         val.put(POS_SETTING_COLUMN_CURRENCY_SYMBOL,posSetting.getCurrencySymbol());
         val.put(POS_SETTING_COLUMN_COUNTRY,posSetting.getCountry());
+        val.put(POS_SETTING_COLUMN_Customer_Email,posSetting.getCustomerEmail());
+        val.put(POS_SETTING_COLUMN_Customer_EmailPassWord,posSetting.getCustomerEmailPassword());
+
 
         SharedPreferences cSharedPreferences = context.getSharedPreferences(POS_Management, MODE_PRIVATE);
         final SharedPreferences.Editor editor = cSharedPreferences.edit();
@@ -206,6 +215,18 @@ public class PosSettingDbAdapter {
                 editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, editPrinterType);
                 PrinterType printer = PrinterType.valueOf(editPrinterType);
                 SETTINGS.printer = printer;
+            }
+            //CustomerEmail
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL)) {
+                String editCustomerEmail = posSetting.getCustomerEmail();
+                editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL, editCustomerEmail);
+                SETTINGS.CustomerEmail = editCustomerEmail;
+            }
+            //CustomerEmailPassword
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord)) {
+                String editCustomerEmailPassword = posSetting.getCustomerEmailPassword();
+                editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord, editCustomerEmailPassword);
+                SETTINGS.CustomerEmailPassword = editCustomerEmailPassword;
             }
             //BranchId
             if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID)) {
@@ -274,6 +295,9 @@ public class PosSettingDbAdapter {
         val.put(POS_SETTING_COLUMN_CURRENCY_CODE,posSetting.getCurrencyCode());
         val.put(POS_SETTING_COLUMN_CURRENCY_SYMBOL,posSetting.getCurrencySymbol());
         val.put(POS_SETTING_COLUMN_COUNTRY,posSetting.getCountry());
+        val.put(POS_SETTING_COLUMN_Customer_Email,posSetting.getCustomerEmail());
+        val.put(POS_SETTING_COLUMN_Customer_EmailPassWord,posSetting.getCustomerEmailPassword());
+
 
         String where = POS_SETTING_COLUMN_ID + " = ?";
         db.update(POS_SETTING_TABLE_NAME, val, where, new String[]{posSetting.getPosSettingId() + ""});
@@ -313,7 +337,7 @@ public class PosSettingDbAdapter {
                 cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COMPANY_STATUS)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_VERSION_NO)),
                         cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_DB_VERSION_NO)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_BRANCH_ID))),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_CODE)),
                 cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_SYMBOL)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COUNTRY)),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE)))
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE))),  cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_Customer_Email)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_Customer_EmailPassWord))
                 );
         cursor.close();
         close();
@@ -364,7 +388,7 @@ public class PosSettingDbAdapter {
                 cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COMPANY_STATUS)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_VERSION_NO)),
                 cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_POS_DB_VERSION_NO)), Integer.parseInt(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_BRANCH_ID))),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_CODE)),
                 cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_CURRENCY_SYMBOL)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_COUNTRY)),
-                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE)))
+                Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_ENABLE_DUPLICATE_INVOICE))),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_Customer_Email)),cursor.getString(cursor.getColumnIndex(POS_SETTING_COLUMN_Customer_EmailPassWord))
         );
     }
 

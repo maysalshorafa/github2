@@ -51,9 +51,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
@@ -86,6 +84,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -122,10 +121,13 @@ import com.pos.leaders.leaderspossystem.Models.OrderDocuments;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
+import com.pos.leaders.leaderspossystem.Models.SumPoint;
+import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
 import com.pos.leaders.leaderspossystem.Payment.MultiCurrenciesPaymentActivity;
+import com.pos.leaders.leaderspossystem.Payment.PaymentMethod;
 import com.pos.leaders.leaderspossystem.Payment.PaymentTable;
 import com.pos.leaders.leaderspossystem.Pinpad.PinpadActivity;
 import com.pos.leaders.leaderspossystem.Printer.InvoiceImg;
@@ -249,7 +251,7 @@ public class SalesCartActivity extends AppCompatActivity {
     String customerName = "";
     // Club
     int newPoint = 0;
-    int clubAmount;
+    double clubAmount;
     int clubType;
     int clubPoint;
     int pointFromSale = 0;
@@ -346,8 +348,8 @@ public class SalesCartActivity extends AppCompatActivity {
     private List<CurrencyType> currencyTypesList = null;
 
     //Cart Discount View
-    private LinearLayout llCartDiscount;
-    private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount;
+    private LinearLayout llCartDiscount,customerPointLayOut;
+    private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount ,customerPointTv;
     String invoiceNum;
     double  customerGeneralLedger=0.0;
     boolean orderDocumentFlag=false;
@@ -508,6 +510,9 @@ public class SalesCartActivity extends AppCompatActivity {
 
         //cart discount init view
         llCartDiscount = (LinearLayout) findViewById(R.id.saleCart_llCartDiscount);
+        customerPointLayOut =(LinearLayout)findViewById(R.id.linearLayoutCustomerPointInfo);
+        customerPointTv=(TextView)findViewById(R.id.customerPoint);
+
         tvCartDiscountValue = (TextView) findViewById(R.id.saleCart_llCartDiscountValue);
         tvTotalPriceBeforeCartDiscount = (TextView) findViewById(R.id.saleCart_tvTotalPriceBeforeCartDiscount);
       /*  productInventoryDbAdapter = new ProductInventoryDbAdapter(context);
@@ -3312,6 +3317,7 @@ public class SalesCartActivity extends AppCompatActivity {
         clubPoint = 0;
         clubAmount = 0;
         Ppoint = 0;
+        customerPointLayOut.setVisibility(View.GONE);
         salesSaleMan.setText(getString(R.string.sales_man));
         // SESSION._ORDERS.cartDiscount = 0;
         // SESSION._ORDERS.setCartDiscount(0);
@@ -4842,8 +4848,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 long tempSaleId = 0;
                 // Club with point and amount
                 if (clubType == 2) {
-                    pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
+                 //   pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
+                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId,0);
                 }
 
                 if (equalUsedPoint) {
@@ -4851,20 +4857,20 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry( newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry( newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(newPoint, customerId);
                 }
                 saleDBAdapter.close();
                 CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(this);
@@ -5163,8 +5169,8 @@ public class SalesCartActivity extends AppCompatActivity {
                 Order order = saleDBAdapter.getOrderById(saleID);
                 // Club with point and amount
                 if (clubType == 2 && clubAmount!=0) {
-                    pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId);
+                //    pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
+                    sum_pointDbAdapter.insertEntry(saleID, pointFromSale, customerId,0);
                 }
 
                 if (equalUsedPoint) {
@@ -5172,20 +5178,20 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry( newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry( newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleID, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(newPoint, customerId);
                 }
                 saleDBAdapter.close();
 
@@ -5325,8 +5331,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 /// Club with point and amount
                 if (clubType == 2) {
-                    pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                 //   pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId,0);
                 }
 
                 if (equalUsedPoint) {
@@ -5334,20 +5340,20 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry( newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry( newPoint, customerId);
                 }
                 // insert in ORDER_DETAILS , CustomerAssistant
                 if (forSaleMan) {
@@ -5478,8 +5484,8 @@ public class SalesCartActivity extends AppCompatActivity {
 
                 // Club with point and amount
                 if (clubType == 2) {
-                    pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
-                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId);
+                 //   pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
+                    sum_pointDbAdapter.insertEntry(saleIDforCash, pointFromSale, customerId,0);
                 }
 
                 if (equalUsedPoint) {
@@ -5487,20 +5493,20 @@ public class SalesCartActivity extends AppCompatActivity {
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry( newPoint, customerId);
                 }
                 if (lessUsedPoint) {
                     saleTotalPrice = 0.0;
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry( newPoint, customerId);
                 }
                 if (biggerUsedPoint) {
                     SESSION._ORDERS.setNumberDiscount(Order.calculateNumberDiscount(saleTotalPrice,Double.parseDouble(Util.makePrice(saleTotalPrice))));
                     SESSION._ORDERS.setTotalPrice(Double.parseDouble(Util.makePrice(saleTotalPrice)));
                     saleDBAdapter.updateEntry(SESSION._ORDERS);
-                    usedpointDbAdapter.insertEntry(saleIDforCash, newPoint, customerId);
+                    usedpointDbAdapter.insertEntry(newPoint, customerId);
                 }
                 if (forSaleMan) {
                     tempSaleId = saleIDforCash;
@@ -5612,13 +5618,13 @@ public class SalesCartActivity extends AppCompatActivity {
                     paymentDBAdapter.open();
                     double TotalPaidAmount = 0;
                     double change = 0;
-
+                    ObjectMapper objectMapper = new ObjectMapper();
                     String MultiCurrencyResult = data.getStringExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE);
+
                     double totalPrice = data.getDoubleExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, 0.0f);
                     SESSION._ORDERS.setTotalPrice(totalPrice);
                     jsonArray = new JSONArray(MultiCurrencyResult);
                     Log.d("MultiCurrencyResult", MultiCurrencyResult);
-                    ObjectMapper objectMapper = new ObjectMapper();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         PaymentTable paymentTable= objectMapper.readValue(jsonObject.toString(), PaymentTable.class);
@@ -5662,80 +5668,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                 SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
                             }
                         }
-                        //  }
 
-
-
-/*
-                        if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType()==1){
-                            double rateCurrency= ConverterCurrency.getRateCurrency("USD",SalesCartActivity.this);
-                            if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
-                                if(SESSION._ORDERS.getCartDiscount()>0){
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100))))));
-                                    SalesWithoutTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }else {
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
-                                    SalesWithoutTax += (SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }
-                            }else {
-                                if(SESSION._ORDERS.getCartDiscount()>0){
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
-                                    Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
-                                    salesaftertax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
-                                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }else {
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                    salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
-                                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }
-                            }
-                        }
-                        if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType()==2){
-                            double rateCurrency= ConverterCurrency.getRateCurrency("GBP",SalesCartActivity.this);
-                            if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
-                                if(SESSION._ORDERS.getCartDiscount()>0){
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100))))));
-                                    SalesWithoutTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }else {
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
-                                    SalesWithoutTax += (SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }
-                            }else {
-                                if(SESSION._ORDERS.getCartDiscount()>0){
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
-                                    Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
-                                    salesaftertax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
-                                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }else {
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                    salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
-                                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }
-                            }
-                        }
-                        if (SESSION._ORDER_DETAILES.get(i).getProduct().getCurrencyType()==3){
-                            double rateCurrency= ConverterCurrency.getRateCurrency("EUR",SalesCartActivity.this);
-                            if(SESSION._ORDER_DETAILES.get(i).getProduct().isWithTax()){
-                                if(SESSION._ORDERS.getCartDiscount()>0){
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100))))));
-                                    SalesWithoutTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }else {
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount())));
-                                    SalesWithoutTax += (SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }
-                            }else {
-                                if(SESSION._ORDERS.getCartDiscount()>0){
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))/ (1 + (SETTINGS.tax / 100)))));
-                                    Log.d("salesaftertax", SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()+"ko2333"+SESSION._ORDER_DETAILES.get(i).getPaidAmount()+"ko2333"+(SESSION._ORDERS.getCartDiscount()/100));
-                                    salesaftertax+=((SESSION._ORDER_DETAILES.get(i).getPaidAmount()-(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*(SESSION._ORDERS.getCartDiscount()/100)))*rateCurrency);
-                                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }else {
-                                    SESSION._ORDER_DETAILES.get(i).setPaidAmountAfterTax(Double.parseDouble(Util.makePrice(SESSION._ORDER_DETAILES.get(i).getPaidAmount() / (1 + (SETTINGS.tax / 100)))));
-                                    salesaftertax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmount()*rateCurrency);
-                                    SalesWitheTax+=(SESSION._ORDER_DETAILES.get(i).getPaidAmountAfterTax()*rateCurrency);
-                                }
-                            }
-                        }*/
 
 
 
@@ -5809,6 +5742,17 @@ public class SalesCartActivity extends AppCompatActivity {
                             zReport.setCreditTotal(zReport.getCreditTotal()+ccp.getAmount());
                             zReportCount.setCreditCount(zReportCount.getCreditCount()+1);
                         }
+                        else if(jsonObject.getString("paymentMethod").equalsIgnoreCase(PaymentMethod.PAY_POINT)){
+                            Log.d("tessstPayPoint","havePayPont");
+                            PayPointDBAdapter payPointDBAdapter = new PayPointDBAdapter(this);
+                            payPointDBAdapter.open();
+                            payPointDBAdapter.insertEntry(saleIDforCash, jsonObject.getDouble("tendered"), getCurrencyIdByType(jsonObject.getJSONObject("currency").getString("type")), new Timestamp(System.currentTimeMillis()), getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")), jsonObject.getDouble("actualCurrencyRate"));
+                           zReport.setTotalPayPoint(zReport.getTotalPayPoint()+jsonObject.getDouble("tendered")* getCurrencyRate(jsonObject.getJSONObject("currency").getString("type")));
+                           zReportCount.setPayPointCount(zReportCount.getPayPointCount()+1);
+                            payPointDBAdapter.close();
+
+
+                        }
                     }
                     if(SESSION._CHECKS_HOLDER.size()>0){
 
@@ -5831,6 +5775,31 @@ public class SalesCartActivity extends AppCompatActivity {
                     zReportCount.setInvoiceReceiptCount(zReportCount.getInvoiceReceiptCount()+1);
                     zReportCountDbAdapter.updateEntry(zReportCount);
                     cashPaymentDBAdapter.close();
+                    clubAdapter=new ClubAdapter(this);
+                    clubAdapter.open();
+                    if(SESSION._ORDERS.getCustomer()!=null){
+                    Club club =clubAdapter.getClubById(SESSION._ORDERS.getCustomer().getClub());
+                    Log.d("clubffff",club.toString()+"ffff");
+
+                    if(clubType==2){
+                        int strUsed = data.getIntExtra(MultiCurrenciesPaymentActivity.RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE,0);
+                        Log.d("usedPoint",strUsed+"");
+                        if(strUsed<=0){
+                            int amount = (int) ((int)(totalPrice*club.getPoint())/club.getAmount());
+                            SumPoint s = sum_pointDbAdapter.getLastRow(SESSION._ORDERS.getCustomerId());
+                            sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId(),s.getTotalPoint()+amount);
+                        }else {
+
+                            usedpointDbAdapter.insertEntry( strUsed, SESSION._ORDERS.getCustomerId());
+                            int amount = (int) ((int)(totalPrice*club.getPoint())/club.getAmount());
+                            SumPoint s = sum_pointDbAdapter.getLastRow(SESSION._ORDERS.getCustomerId());
+                            sum_pointDbAdapter.insertEntry(saleIDforCash,amount,SESSION._ORDERS.getCustomerId(),(s.getTotalPoint()+amount)-strUsed);
+                        }
+
+                    }
+                    }
+
+
                     // Club with point and amount
                   /*  if (clubType == 2) {
                         pointFromSale = ((int) (SESSION._ORDERS.getTotalPrice() * clubPoint) / clubAmount);
@@ -6573,6 +6542,27 @@ public class SalesCartActivity extends AppCompatActivity {
         } else if (clubType == 2) {
             clubAmount = club.getAmount();
             clubPoint = club.getPoint();
+            customerPointLayOut.setVisibility(View.VISIBLE);
+            Sum_PointDbAdapter sum_pointDbAdapter=new Sum_PointDbAdapter(SalesCartActivity.this);
+            sum_pointDbAdapter.open();
+            UsedPointDBAdapter usedPointDBAdapter = new UsedPointDBAdapter(SalesCartActivity.this);
+            usedPointDBAdapter.open();
+            int unUsedPoint=0;
+            if(usedPointDBAdapter.getUnusedPointInfo(customer.getCustomerId())>0){
+                unUsedPoint = usedPointDBAdapter.getUnusedPointInfo(customer.getCustomerId());
+
+            }
+            int totalPoint=0;
+            if(sum_pointDbAdapter.getPointInfo(customer.getCustomerId())>0) {
+                try {
+                    totalPoint = sum_pointDbAdapter.getLastRow(customer.getCustomerId()).getTotalPoint();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+            customerPointTv.setText((totalPoint)+"");
         } else if (clubType == 0) {
         }
 

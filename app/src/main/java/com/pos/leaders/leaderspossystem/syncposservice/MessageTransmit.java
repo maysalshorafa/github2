@@ -151,6 +151,13 @@ public class MessageTransmit {
         updateLincessStatus(response);
         return response.body().string();
     }
+    public String authGetNormal(String url,String token) throws IOException {
+        Request request = new Request.Builder().url(domainURL + url).addHeader(AUTHORIZATION, token).build();
+
+        Response response = client.newCall(request).execute();
+
+        return response.body().string();
+    }
 
     public String authDelete(String url,String id,String token) throws IOException {
         Request request = new Request.Builder().url(domainURL + url + "/" + id).delete().addHeader(AUTHORIZATION, token).build();

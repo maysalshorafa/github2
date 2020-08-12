@@ -33,13 +33,15 @@ public class ZReportCountDbAdapter {
     protected static final String Z_REPORT_COUNT_COLUMN_THIRD_TYPE= "thirdTypeCount";
     protected static final String Z_REPORT_COLUMN_COUNT_FOURTH_TYPE= "fourthTypeCount";
     protected static final String Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT= "totalInvoiceReceiptCount";
+    protected static final String Z_REPORT_COLUMN_COUNT_Pay_Point= "payPointCount";
+
 
     public static final String DATABASE_CREATE = "CREATE TABLE `" + Z_REPORT_COUNT_TABLE_NAME + "` ( `" + Z_REPORT_COUNT_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT,"
             +"`" + Z_REPORT_COUNT_COLUMN_ZREPORT_ID + "` INTEGER default 0, `" + Z_REPORT_COUNT_COLUMN_CASH + "` INTEGER default 0," +
             " `" + Z_REPORTCOUNT_COLUMN_CHECK + "` INTEGER default 0," +
             " `" + Z_REPORT_COUNT_COLUMN_CREDIT + "` INTEGER default 0,`" + Z_REPORT_COUNT_COLUMN_INVOICE + "` INTEGER,`" +
             Z_REPORT_COUNT_COLUMN_CREDIT_INVOICE + "` INTEGER default 0,`" +  Z_REPORT_COUNT_COLUMN_FIRST_TYPE + "` INTEGER default 0,`" +  Z_REPORT_COUNT_COLUMN_SECOND_TYPE + "` INTEGER default 0,`"
-            + Z_REPORT_COUNT_COLUMN_THIRD_TYPE + "` INTEGER default 0,`"  + Z_REPORT_COLUMN_COUNT_FOURTH_TYPE + "` INTEGER default 0, "+"`" +
+            + Z_REPORT_COUNT_COLUMN_THIRD_TYPE + "` INTEGER default 0,`"   + Z_REPORT_COLUMN_COUNT_Pay_Point + "` INTEGER default 0,`"  + Z_REPORT_COLUMN_COUNT_FOURTH_TYPE + "` INTEGER default 0, "+"`" +
             Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT + "` INTEGER default 0)";
 
 
@@ -99,13 +101,14 @@ public class ZReportCountDbAdapter {
         val.put(Z_REPORT_COUNT_COLUMN_THIRD_TYPE,zReport.getThirdTypeCount());
         val.put(Z_REPORT_COLUMN_COUNT_FOURTH_TYPE,zReport.getFourthTypeCount());
         val.put(Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT,zReport.getInvoiceReceiptCount());
+        val.put(Z_REPORT_COLUMN_COUNT_Pay_Point,zReport.getPayPointCount());
         Log.d("testZReportCount",zReport.toString());
 
 
         try {
             return db.insert(Z_REPORT_COUNT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
-            Log.e(Z_REPORT_COUNT_TABLE_NAME+" DB insert", "inserting Entry at " + Z_REPORT_COUNT_TABLE_NAME + ": " + ex.getMessage());
+            Log.e(Z_REPORT_COUNT_TABLE_NAME+" DB", "inserting Entry at " + Z_REPORT_COUNT_TABLE_NAME + ": " + ex.getMessage());
             return -1;
         }
     }
@@ -145,7 +148,7 @@ public class ZReportCountDbAdapter {
                 c.getInt(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_SECOND_TYPE)),
                 c.getInt(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_THIRD_TYPE)),  c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_COUNT_FOURTH_TYPE)),
                 c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT))
-                ,c.getLong(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_ZREPORT_ID)));
+                ,c.getLong(c.getColumnIndex(Z_REPORT_COUNT_COLUMN_ZREPORT_ID)),c.getInt(c.getColumnIndex(Z_REPORT_COLUMN_COUNT_Pay_Point)));
     }
     public void updateEntry(ZReportCount zReport) {
         if(db.isOpen()){
@@ -169,6 +172,7 @@ public class ZReportCountDbAdapter {
         val.put(Z_REPORT_COUNT_COLUMN_THIRD_TYPE,zReport.getThirdTypeCount());
         val.put(Z_REPORT_COLUMN_COUNT_FOURTH_TYPE,zReport.getFourthTypeCount());
         val.put(Z_REPORT_COLUMN_COUNT_INVOICE_RECEIPT,zReport.getInvoiceReceiptCount());
+        val.put(Z_REPORT_COLUMN_COUNT_Pay_Point,zReport.getPayPointCount());
         Log.d("testZReport",zReport.toString());
 
         String where = Z_REPORT_COUNT_COLUMN_ID + " = ?";

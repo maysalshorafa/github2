@@ -17,11 +17,12 @@ public class ZReportCount {
     private int thirdTypeCount;
     private int fourthTypeCount;
     private int invoiceReceiptCount;
+    private int payPointCount;
 
     public ZReportCount() {
     }
 
-    public ZReportCount(long zReportCountId, int cashCount, int checkCount, int creditCount, int invoiceCount, int creditInvoiceCount, int firstTYpeCount, int secondTypeCount, int thirdTypeCount, int fourthTypeCount, int invoiceReceiptCount,long zReportCountZReportId) {
+    public ZReportCount(long zReportCountId, int cashCount, int checkCount, int creditCount, int invoiceCount, int creditInvoiceCount, int firstTYpeCount, int secondTypeCount, int thirdTypeCount, int fourthTypeCount, int invoiceReceiptCount,long zReportCountZReportId,int payPointCount) {
         this.zReportCountId = zReportCountId;
         this.cashCount = cashCount;
         this.checkCount = checkCount;
@@ -34,6 +35,15 @@ public class ZReportCount {
         this.fourthTypeCount = fourthTypeCount;
         this.invoiceReceiptCount = invoiceReceiptCount;
         this.zReportCountZReportId=zReportCountZReportId;
+        this.payPointCount=payPointCount;
+    }
+
+    public int getPayPointCount() {
+        return payPointCount;
+    }
+
+    public void setPayPointCount(int payPointCount) {
+        this.payPointCount = payPointCount;
     }
 
     public long getzReportCountZReportId() {
@@ -147,6 +157,7 @@ public class ZReportCount {
                 ", thirdTypeCount=" + thirdTypeCount +
                 ", fourthTypeCount=" + fourthTypeCount +
                 ", invoiceReceiptCount=" + invoiceReceiptCount +
+                ", payPointCount=" + payPointCount +
                 '}';
     }
 }

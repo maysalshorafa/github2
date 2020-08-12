@@ -183,7 +183,7 @@
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
-                    android:weightSum="5">
+                    android:weightSum="6">
 
                     <TextView
                         android:id="@+id/textView17"
@@ -220,6 +220,14 @@
                         android:text="@string/checks"
                         android:textSize="25dp" />
                     <TextView
+                        android:id="@+id/textView88"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/pay_point"
+                        android:textSize="25dp" />
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/total_amount"
@@ -236,7 +244,7 @@
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
-                    android:weightSum="5">
+                    android:weightSum="6">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -266,6 +274,12 @@
                         android:layout_weight="1"
                         android:gravity="center"/>
                     <TextView
+                        android:id="@+id/zReportPayPointCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
                         android:id="@+id/zReportTotalAmountCount"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -281,7 +295,7 @@
                     android:orientation="vertical"
                     android:padding="5dp"
                     android:layout_weight="1"
-                    android:weightSum="5">
+                    android:weightSum="6">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -304,6 +318,12 @@
                     android:gravity="center"/>
                     <TextView
                         android:id="@+id/zReportTotalCheck"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/zReportTotalPayPoint"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

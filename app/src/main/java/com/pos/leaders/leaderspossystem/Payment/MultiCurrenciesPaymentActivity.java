@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Payment;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -26,20 +28,23 @@ import com.pos.leaders.leaderspossystem.ChecksActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.CreditCard.MainCreditCardActivity;
 import com.pos.leaders.leaderspossystem.CurrencyReturnsCustomDialogActivity;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.CustomerDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.InvoiceManagementActivity;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.Customer;
+import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.ReportsManagementActivity;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.ConverterCurrency;
-import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
@@ -51,7 +56,6 @@ import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.SalesCartActivity.REQUEST_CHECKS_ACTIVITY_CODE;
 import static com.pos.leaders.leaderspossystem.SalesCartActivity.REQUEST_CREDIT_CARD_ACTIVITY_CODE;
-import static com.pos.leaders.leaderspossystem.SalesCartActivity.REQUEST_RECIPT_ACTIVITY_CODE;
 import static com.pos.leaders.leaderspossystem.Tools.getCurrencyCodeForBoss.getCurrencyCodeDefault;
 
 public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
@@ -61,6 +65,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER";
     public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY = "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_WAY";
     public static final String RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CREDIT= "RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CREDIT";
+    public static final String RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE = "RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE";
 
 
     private double totalPrice_defaultCurrency, excess_defaultCurrency, totalPaid = 0.0;
@@ -71,6 +76,7 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     //'\u20aa'
     private String excessCurrency = "ILS";//ILS
     String haveCreditCard="";
+    int totalPoint=0;
 
     private TextView tvTotalPrice,tvExcess,tvTotalPriceWithMultiCurrency,tvActualCurrencyRate;
     private Spinner spCurrency;
@@ -91,12 +97,14 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
     boolean multiCurrencyFromCheck=false;
     boolean multiCurrencyFromCreditCurrentlyInsert=false;
     boolean multiCurrencyFromCheckCurrentlyInsert=false;
-    Button cashButton , checkButton , creditCardButton,btnQuickPrice_5,btnQuickPrice_10,btnQuickPrice_20,btnQuickPrice_50,btnQuickPrice_100,btnQuickPrice_200 , foodStampBtn;
+    Button cashButton , checkButton , creditCardButton,btnQuickPrice_5,btnQuickPrice_10,btnQuickPrice_20,btnQuickPrice_50,btnQuickPrice_100,btnQuickPrice_200 , foodStampBtn , payPoint;
     int positionItem;
     Customer customer=null;
+    Customer customerN=null;
     List<BoInvoice>invoice;
-
-
+    Club club=null;
+    UsedPoint usedPoint=null;
+    boolean usedPointFlag=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +123,19 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
         btnQuickPrice_50=(Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_50);
         btnQuickPrice_100=(Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_100);
         btnQuickPrice_200=(Button) findViewById(R.id.MultiCurrenciesPaymentActivity_btQuickPrice_1);
+        payPoint=(Button)findViewById(R.id.MultiCurrenciesPaymentActivity_btPayWithPoint);
+        CustomerDBAdapter customerDBAdapter =new CustomerDBAdapter(MultiCurrenciesPaymentActivity.this);
+        customerDBAdapter.open();
+        if(SESSION._ORDERS.getCustomer()!=null){
+         customerN =customerDBAdapter.getCustomerByID(SESSION._ORDERS.getCustomerId());
+        ClubAdapter clubAdapter=new ClubAdapter(this);
+        clubAdapter.open();
+         club = clubAdapter.getClubById(customerN.getClub());
+        if(club.getType()==2){
+            payPoint.setVisibility(View.VISIBLE);
+        }
+        }
+
 
         btnQuickPrice_5.setText(5+SETTINGS.currencySymbol);
         btnQuickPrice_10.setText(10+SETTINGS.currencySymbol);
@@ -135,6 +156,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                         if(invoice.size()>0){
                             if (SESSION._CHECKS_HOLDER!=null&&SESSION._CHECKS_HOLDER.size() > 0) {
                                 Intent i = new Intent(MultiCurrenciesPaymentActivity.this, SalesCartActivity.class);
+                                if(usedPointFlag){
+                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
+                                }
                                 i.putExtra("MultiRecipt","Recipt");
                                 i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
                                 i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
@@ -150,6 +174,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                               //  Intent i = new Intent();
 
                                 i.putExtra("MultiRecipt","Recipt");
+                                if(usedPointFlag){
+                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
+                                }
                                 i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
                                 i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
                                 i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
@@ -166,6 +193,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                                // Intent i = new Intent();
                                 i.putExtra("MultiRecipt","Recipt");
                                 Log.d("totalMu",totalPrice+"");
+                                if(usedPointFlag){
+                                    i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
+                                }
                                 i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
                                 i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
                                 i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
@@ -181,6 +211,9 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                             //Intent i = new Intent();
                             i.putExtra("MultiRecipt","Recipt");
                             Log.d("totalMu",totalPrice+"");
+                            if(usedPointFlag){
+                                i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
+                            }
                             i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT, invoice.toString());
                             i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
                             i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVIY_RECIPT_CUSTOMER,customer.toString());
@@ -192,8 +225,13 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
                     }else {
                         Log.d("PaymentTables",paymentTables.toString());
-                        Log.d("totJoj", String.valueOf(totalPrice));
                         Intent i = new Intent();
+                        if(usedPointFlag){
+                            Log.d("totJoj", usedPoint.toString());
+
+                            i.putExtra(RESULT_INTENT_CODE_USED_POINT_ACTIVITY_FULL_RESPONSE, usedPoint.getUnUsed_point_amount());
+                        }
+
                         i.putExtra(RESULT_INTENT_CODE_CASH_MULTI_CURRENCY_ACTIVITY_FULL_RESPONSE, paymentTables.toString());
                         i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
                         if(CreditCardActivity.LEAD_POS_RESULT_INTENT_CODE_CREDIT_CARD_ACTIVITY_MerchantNote!="") {
@@ -349,7 +387,89 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
             }
         });
 
+        payPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                usedPointFlag=true;
+                final Dialog pointDialog = new Dialog(MultiCurrenciesPaymentActivity.this);
+                pointDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                //discountDialog.setTitle(R.string.please_select_discount_offer);
+                pointDialog.setContentView(R.layout.point_customer_dialog);
+                pointDialog.show();
+                final TextView TvCustomer = (TextView) pointDialog.findViewById(R.id.TvCustomerName);
+                final TextView TvTotalPrice = (TextView) pointDialog.findViewById(R.id.TvTotalPrice);
+                final TextView point = (TextView) pointDialog.findViewById(R.id.customerPointforCustomer);
+                final TextView pointAmount = (TextView) pointDialog.findViewById(R.id.customerPointAmount);
+                final Button btAll = (Button) pointDialog.findViewById(R.id.btnAll);
+                final Button btPartial = (Button) pointDialog.findViewById(R.id.btnPartially);
+                TvCustomer.setText(customerN.getFullName());
+                TvTotalPrice.setText(Util.makePrice(totalPrice));
+                Sum_PointDbAdapter sum_pointDbAdapter=new Sum_PointDbAdapter(MultiCurrenciesPaymentActivity.this);
+                sum_pointDbAdapter.open();
+                UsedPointDBAdapter usedPointDBAdapter = new UsedPointDBAdapter(MultiCurrenciesPaymentActivity.this);
+                usedPointDBAdapter.open();
+                int unUsedPoint=0;
+                if(usedPointDBAdapter.getUnusedPointInfo(customerN.getCustomerId())>0){
+                     unUsedPoint = usedPointDBAdapter.getUnusedPointInfo(customerN.getCustomerId());
 
+                }
+                if(sum_pointDbAdapter.getPointInfo(customerN.getCustomerId())>0) {
+                    try {
+                        totalPoint = sum_pointDbAdapter.getLastRow(SESSION._ORDERS.getCustomerId()).getTotalPoint();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("customerN",totalPoint + "ooooo");
+
+                }
+                point.setText((totalPoint)+"");
+                final double totalAmount = (club.getValueOfPoint()*(totalPoint));
+                Log.d("clllub",club.toString());
+                pointAmount.setText(Util.makePrice(totalAmount));
+                final LinearLayout  partialLayOut = (LinearLayout)pointDialog.findViewById(R.id.partialLayout);
+                final EditText partialAmount =(EditText)pointDialog.findViewById(R.id.partialAmount);
+                final Button okPartially=(Button)pointDialog.findViewById(R.id.btnOkPartially);
+
+                btAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                            insertNewRow(totalAmount, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
+                            usedPoint = new UsedPoint(totalPoint,customerN.getCustomerId());
+
+
+                        pointDialog.dismiss();
+                    }
+                });
+                btPartial.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        partialLayOut.setVisibility(View.VISIBLE);
+                        okPartially.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                double amount=0;
+                                if(Util.isDouble(partialAmount.getText().toString())){
+                                    amount = Double.parseDouble(partialAmount.getText().toString());
+                                }
+                                if(amount<=totalAmount){
+                                    insertNewRow(amount, mcf.currencySpinner.getSelectedItem().toString(), getCurrencyRate(mcf.currencySpinner.getSelectedItem().toString()), getString(R.string.pay_point),false);
+                                    int pluseAmount = (int)(( amount)/club.getValueOfPoint());
+                                    usedPoint = new UsedPoint(pluseAmount,customerN.getCustomerId());
+                                     pointDialog.dismiss();
+
+                                }else {
+                                    Toast.makeText(MultiCurrenciesPaymentActivity.this,"Sorry Cant Pay ",Toast.LENGTH_LONG).show();
+                                      pointDialog.dismiss();
+
+                                }
+
+                            }
+                        });
+                    }
+                });}
+
+
+        });
         checkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -477,7 +597,6 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
 
     public void deleteRow(int position) {
         Log.d("position",position+"");
-        Log.d("paymentTablesrraytempArray",paymentTables.toString());
         paymentTables.remove(position);
 
         ArrayList<PaymentTable> tempArray = new ArrayList<>(paymentTables);
@@ -664,6 +783,38 @@ public class MultiCurrenciesPaymentActivity extends AppCompatActivity {
                 }
             }
         }}
+        else if(paymentMethod.equalsIgnoreCase(PaymentMethod.PAY_POINT)){
+
+                if (paymentTables.size()==1){
+                    totalPaid += val * currencyRate;
+                    double beforeChangeExcess = excess;
+                    setExcess();
+                    updateView();
+                    Log.d("currencycurrency",currency);
+                    Log.d("spCurrency",spCurrency.getSelectedItem().toString());
+                    paymentTables.add(paymentTables.size() - 1, new PaymentTable(SETTINGS.currencyCode, beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.PAY_POINT, new CurrencyType(1, currency + ""), actualCurrencyRate));
+                    Log.d("paymentTablesAdd",paymentTables.toString());
+                    updateLastRow();
+                    lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                }
+                else {
+                    for(int i=0 ;i<paymentTables.size()-1;i++){
+                        if (currency.equals(paymentTables.get(i).getCurrency().getType())&&paymentTables.get(i).getPaymentMethod().equals(PaymentMethod.PAY_POINT)){
+                            haveRow = true;
+                            totalPaid += val * currencyRate;
+                            double beforeChangeExcess = excess;
+                            setExcess();
+                            updateView();
+                            paymentTables.get(i).setTendered(paymentTables.get(i).getTendered()+val);
+                            //  paymentTables.add(paymentTables.size() - 1, new PaymentTable(spCurrency.getSelectedItem().toString(), beforeChangeExcess, val, ((excess <= 0) ? (excess) : Double.NaN), PaymentMethod.CASH, new CurrencyType(1, currency + ""), actualCurrencyRate));
+                            updateLastRow();
+                            lvPaymentTable.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                        }
+
+                    }
+        }
+    }
+
     }
       /*  }
         else {

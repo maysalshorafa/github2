@@ -19,8 +19,8 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.pos.leaders.leaderspossystem.CreditCard.CreditCardActivity;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClubAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CreditCardPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
@@ -32,12 +32,16 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Sum_PointDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.UsedPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Club;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
@@ -52,6 +56,7 @@ import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.PayPoint;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
 import com.pos.leaders.leaderspossystem.Models.Product;
@@ -59,6 +64,7 @@ import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
 import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
+import com.pos.leaders.leaderspossystem.Payment.PaymentMethod;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
@@ -417,6 +423,11 @@ public class PdfUA {
         insertCell(dataTable,  Util.makePrice(zReport.getCashTotal() ), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCashCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
+
+        insertCell(dataTable,  Util.makePrice(zReport.getTotalPayPoint() ), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getPayPointCount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.pay_point), Element.ALIGN_RIGHT,2, font);
+
         ///// CreditCard region
         insertCell(dataTable, Util.makePrice(zReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
@@ -1778,6 +1789,11 @@ public class PdfUA {
         insertCell(dataTable,zReportCount.getCashCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
+        insertCell(dataTable,  Util.makePrice(zReport.getTotalPayPoint() ), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getPayPointCount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.pay_point), Element.ALIGN_RIGHT,2, font);
+
+
         insertCell(dataTable, Util.makePrice(xReport.getCheckTotal()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCheckCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.checks), Element.ALIGN_RIGHT, 2, font);
@@ -2182,6 +2198,10 @@ public class PdfUA {
         insertCell(dataTable,zReportCount.getCashCount() + " ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.cash), Element.ALIGN_RIGHT,2, font);
 
+        insertCell(dataTable,Util.makePrice(zReport.getTotalPayPoint()), Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable,zReportCount.getPayPointCount() + " ", Element.ALIGN_RIGHT, 1, font);
+        insertCell(dataTable, context.getString(R.string.pay_point), Element.ALIGN_RIGHT,2, font);
+
         insertCell(dataTable, Util.makePrice(zReport.getCreditTotal()), Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable,zReportCount.getCreditCount()+" ", Element.ALIGN_RIGHT, 1, font);
         insertCell(dataTable, context.getString(R.string.credit_card), Element.ALIGN_RIGHT, 2, font);
@@ -2370,6 +2390,7 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, urFontName1);
+        Club club=null;
         try {
             if (order.getCustomer_name() == null) {
                 customerName = context.getString(R.string.general_customer);
@@ -2382,12 +2403,35 @@ public class PdfUA {
                     customerName = order.getCustomer_name();
 
                 }
+                ClubAdapter groupDbAdapter =new ClubAdapter(context);
+                groupDbAdapter.open();
+                 club =groupDbAdapter.getClubById(SESSION._ORDERS.getCustomer().getClub());
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
 
         insertCell(headingTable, context.getString(R.string.customer_name)+":  " + customerName, Element.ALIGN_CENTER, 1, urFontName1);
+        if(club.getType()==2){
+            Sum_PointDbAdapter sum_pointDbAdapter=new Sum_PointDbAdapter(context);
+            sum_pointDbAdapter.open();
+            UsedPointDBAdapter usedPointDBAdapter = new UsedPointDBAdapter(context);
+            usedPointDBAdapter.open();
+            int unUsedPoint=0;
+            if(usedPointDBAdapter.getUnusedPointInfo(SESSION._ORDERS.getCustomerId())>0){
+                unUsedPoint = usedPointDBAdapter.getUnusedPointInfo(SESSION._ORDERS.getCustomerId());
+
+            }
+            int    totalPoint=0;
+            if(sum_pointDbAdapter.getPointInfo(SESSION._ORDERS.getCustomerId())>0) {
+                totalPoint = sum_pointDbAdapter.getPointInfo(SESSION._ORDERS.getCustomerId());
+                Log.d("customerN",totalPoint + "ooooo");
+
+            }
+            insertCell(headingTable, context.getString(R.string.point)+":  " + (totalPoint-unUsedPoint), Element.ALIGN_CENTER, 1, urFontName1);
+
+        }
         if(isCopy) {
             insertCell(headingTable, context.getString(R.string.copyinvoice), Element.ALIGN_CENTER, 1, urFontName1);
         }else {
@@ -2505,10 +2549,17 @@ public class PdfUA {
         double cash_plus = 0;
         double check_plus = 0;
         double creditCard_plus = 0;
+        int payPoint=0;
         List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(order.getOrderId());
         cashPaymentDBAdapter.close();
         for(int i=0;i<cashPaymentList.size();i++){
             cash_plus+=cashPaymentList.get(i).getAmount()*cashPaymentList.get(i).getCurrencyRate();
+
+        }
+        PayPointDBAdapter payPointDBAdapter =new PayPointDBAdapter(context);
+        List<PayPoint>payPointList=payPointDBAdapter.getPaymentBySaleID(order.getOrderId());
+        for(int i=0;i<payPointList.size();i++){
+            payPoint+=payPointList.get(i).getAmount()*payPointList.get(i).getCurrencyRate();
 
         }
         List<Check>checkList=checksDBAdapter.getPaymentBySaleID(order.getOrderId());
@@ -2526,6 +2577,12 @@ public class PdfUA {
             insertCell(paidByTable,Util.makePrice(cash_plus), Element.ALIGN_CENTER, 1, urFontName);
             insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, urFontName);
             insertCell(paidByTable,CONSTANT.CASH, Element.ALIGN_CENTER, 1, urFontName);
+        }
+        if(payPointList.size()>0){
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-payPoint), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(paidByTable,Util.makePrice(payPoint), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(paidByTable,PaymentMethod.PAY_POINT, Element.ALIGN_CENTER, 1, urFontName);
         }
         if(checkList.size()>0){
             insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-check_plus), Element.ALIGN_CENTER, 1, urFontName);
@@ -2776,6 +2833,7 @@ public class PdfUA {
         insertCell(headingTable,  SETTINGS.companyName , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, "P.C" + ":" + SETTINGS.companyID , Element.ALIGN_CENTER, 1, urFontName1);
         insertCell(headingTable, context.getString(R.string.date) +":  "+new Timestamp(System.currentTimeMillis()), Element.ALIGN_CENTER, 1, urFontName1);
+        Club club=new Club();
         try {
             if (order.getCustomer_name() == null) {
                 customerName = context.getString(R.string.general_customer);
@@ -2788,13 +2846,39 @@ public class PdfUA {
                     customerName = order.getCustomer_name();
 
                 }
+                ClubAdapter clubAdapter=new ClubAdapter(context);
+                clubAdapter.open();
+                 club=clubAdapter.getClubById(SESSION._ORDERS.getCustomerId());
             }
         }catch (Exception e){
             e.printStackTrace();
         }
 
         insertCell(headingTable, context.getString(R.string.customer_name)+":  " + customerName, Element.ALIGN_CENTER, 1, urFontName1);
-        if(isCopy) {
+        if(club.getType()==2) {
+            Sum_PointDbAdapter sum_pointDbAdapter = new Sum_PointDbAdapter(context);
+            sum_pointDbAdapter.open();
+            UsedPointDBAdapter usedPointDBAdapter = new UsedPointDBAdapter(context);
+            usedPointDBAdapter.open();
+            int unUsedPoint = 0;
+            if (usedPointDBAdapter.getUnusedPointInfo(SESSION._ORDERS.getCustomerId()) > 0) {
+                unUsedPoint = usedPointDBAdapter.getUnusedPointInfo(SESSION._ORDERS.getCustomerId());
+
+            }
+            int totalPoint = 0;
+            if (sum_pointDbAdapter.getSumPointByID(SESSION._ORDERS.getCustomerId()).getTotalPoint() > 0) {
+                try {
+                    totalPoint = sum_pointDbAdapter.getLastRow(SESSION._ORDERS.getCustomerId()).getTotalPoint();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.d("customerN", totalPoint + "ooooo");
+
+            }
+            insertCell(headingTable, context.getString(R.string.point) + ":  " + (totalPoint ), Element.ALIGN_CENTER, 1, urFontName1);
+        }
+
+            if(isCopy) {
             insertCell(headingTable, context.getString(R.string.copyinvoice), Element.ALIGN_CENTER, 1, urFontName1);
         }else {
             insertCell(headingTable, context.getString(R.string.source_invoice), Element.ALIGN_CENTER, 1, urFontName1);
@@ -2917,10 +3001,17 @@ public class PdfUA {
         double cash_plus = 0;
         double check_plus = 0;
         double creditCard_plus = 0;
+        double paypoint=0;
         List<CashPayment>cashPaymentList=cashPaymentDBAdapter.getPaymentBySaleID(order.getOrderId());
         cashPaymentDBAdapter.close();
         for(int i=0;i<cashPaymentList.size();i++){
             cash_plus+=cashPaymentList.get(i).getAmount()*cashPaymentList.get(i).getCurrencyRate();
+        }
+        PayPointDBAdapter payPointDBAdapter = new PayPointDBAdapter(context);
+        payPointDBAdapter.open();
+        List<PayPoint>payPointList=payPointDBAdapter.getPaymentBySaleID(order.getOrderId());
+        for(int i=0;i<payPointList.size();i++){
+            paypoint+=payPointList.get(i).getAmount()*payPointList.get(i).getCurrencyRate();
         }
         List<Check>checkList=checksDBAdapter.getPaymentBySaleID(order.getOrderId());
         checksDBAdapter.close();
@@ -2937,6 +3028,13 @@ public class PdfUA {
             insertCell(paidByTable,Util.makePrice(cash_plus), Element.ALIGN_CENTER, 1, urFontName);
             insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, urFontName);
             insertCell(paidByTable,CONSTANT.CASH, Element.ALIGN_CENTER, 1, urFontName);
+        }
+        if(payPointList.size()>0){
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-paypoint), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(paidByTable,Util.makePrice(paypoint), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(paidByTable,Util.makePrice(order.getTotalPrice()), Element.ALIGN_CENTER, 1, urFontName);
+            insertCell(paidByTable, PaymentMethod.PAY_POINT, Element.ALIGN_CENTER, 1, urFontName);
+            Log.d("havePoint",paypoint+"");
         }
         if(checkList.size()>0){
             insertCell(paidByTable,Util.makePrice(order.getTotalPrice()-check_plus), Element.ALIGN_CENTER, 1, urFontName);
