@@ -278,7 +278,7 @@ public class OrdersManagementActivity extends AppCompatActivity {
 
                                             try
                                             {
-                                                SendLog.sendListFile(reciveEmail,context.getPackageName(),"customerInvoicesList.pdf");
+                                                SendLog.sendListFile(reciveEmail,context.getPackageName(),"customerInvoicesList.pdf",getApplicationContext());
 
 
                                                 //pdfLoadImages1(data);
@@ -989,19 +989,19 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                     .setMessage(getString(R.string.print_copy_invoice))
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            BoInvoice boInvoice = (BoInvoice) list.get(position-1);
+                                            BoInvoice boInvoice = (BoInvoice) list.get(position - 1);
                                             try {
                                                 if (boInvoice.getType().equals(DocumentType.RECEIPT)) {
-                                                   DocumentControl.sendREc(getApplicationContext(), boInvoice, "");
-                                                } else{
+                                                    DocumentControl.sendREc(getApplicationContext(), boInvoice, "");
+                                                } else {
 
                                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                                     SETTINGS.copyInvoiceBitMap = invoiceImg.copyInvoice(boInvoice);
                                                     startActivity(i);
                                                 }
-                                            }catch (Exception e){
+                                            } catch (Exception e) {
                                                 e.printStackTrace();
-                                                Log.d("exception",e.toString());
+                                                Log.d("exception", e.toString());
                                                 sendLogFile();
 
                                             }
@@ -1016,12 +1016,12 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                     .show();
                         }
                     });
-                    final BoInvoice boInvoice = (BoInvoice) list.get(position-1);
+                    final BoInvoice boInvoice = (BoInvoice) list.get(position - 1);
                     Button btnRN = (Button) view.findViewById(R.id.listSaleManagement_BTReturn);
 
-                    if(boInvoice.getType().getValue().equalsIgnoreCase(DocumentType.RECEIPT.getValue())){
+                    if (boInvoice.getType().getValue().equalsIgnoreCase(DocumentType.RECEIPT.getValue())) {
                         btnRN.setVisibility(View.INVISIBLE);
-                    }else {
+                    } else {
                         btnRN.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -1029,9 +1029,9 @@ public class OrdersManagementActivity extends AppCompatActivity {
                                     Intent i = new Intent(OrdersManagementActivity.this, SalesHistoryCopySales.class);
                                     SETTINGS.copyInvoiceBitMap = invoiceImg.replaceInvoice(boInvoice);
                                     startActivity(i);
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    Log.d("exception",e.toString());
+                                    Log.d("exception", e.toString());
                                     sendLogFile();
 
                                 }
@@ -1040,12 +1040,93 @@ public class OrdersManagementActivity extends AppCompatActivity {
                     }
                     Button btnCan = (Button) view.findViewById(R.id.listSaleManagement_BTCancel);
                     btnCan.setVisibility(View.INVISIBLE);
-                    Button btnDublicate= (Button) view.findViewById(R.id.listSaleManagement_BTDuplicate);
+                    Button btnDublicate = (Button) view.findViewById(R.id.listSaleManagement_BTDuplicate);
                     btnDublicate.setVisibility(View.INVISIBLE);
 
-                }
-            }
-        });
+                    Button btnEmail = (Button) view.findViewById(R.id.listSaleManagement_BTEmail);
+                    btnEmail.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final Dialog customerDialog = new Dialog(OrdersManagementActivity.this);
+                            customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            customerDialog.show();
+                            customerDialog.setContentView(R.layout.customer_email_layout);
+                            final EditText customer_email = (EditText) customerDialog.findViewById(R.id.customer_email);
+                            ((Button) customerDialog.findViewById(R.id.done))
+                                    .setOnClickListener(new View.OnClickListener() {
+
+                                        @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                                        public void onClick(View arg0) {
+                                            if (customer_email.getText().toString() != "") {
+                                                reciveEmail = customer_email.getText().toString();
+                                                new AsyncTask<Void, Void, Void>() {
+                                                    @Override
+                                                    protected void onPreExecute() {
+                                                        super.onPreExecute();
+                                                    }
+
+                                                    @Override
+                                                    protected void onPostExecute(Void aVoid) {
+
+
+                                                        try {
+                                                            if (boInvoice.getType().getValue().equalsIgnoreCase(DocumentType.RECEIPT.getValue())) {
+                                                                SendLog.sendListFile(reciveEmail, context.getPackageName(), "receipt.pdf", getApplicationContext());
+
+                                                            }else {
+
+                                                                SendLog.sendListFile(reciveEmail, context.getPackageName(), "copyinvoice.pdf", getApplicationContext());
+                                                            }
+
+
+                                                            //pdfLoadImages1(data);
+                                                        } catch (Exception ignored) {
+
+
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    protected Void doInBackground(Void... voids) {
+                                                        try {
+                                                            PdfUA pdfUA = new PdfUA();
+
+                                                            try {
+                                                                if (boInvoice.getType().getValue().equalsIgnoreCase(DocumentType.RECEIPT.getValue())) {
+                                                                    pdfUA.printReceiptReportOrder(context,boInvoice.toString(),"");
+
+                                                                }else {
+                                                                    pdfUA.printCopyInvoiceReport(context, boInvoice);
+                                                                }
+                                                            } catch (DocumentException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                            try {
+                                                                Thread.sleep(100);
+                                                            } catch (InterruptedException e) {
+                                                                e.printStackTrace();
+                                                            }
+
+
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        return null;
+                                                    }
+                                                }.execute();
+                                                customerDialog.dismiss();
+                                            }
+
+
+                                        }
+                                    });
+
+
+                        }
+                    });
+                }}});
         searchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

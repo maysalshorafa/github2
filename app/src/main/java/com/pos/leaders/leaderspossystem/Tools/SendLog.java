@@ -1,6 +1,10 @@
 package com.pos.leaders.leaderspossystem.Tools;
 
+import android.content.Context;
 import android.os.Environment;
+
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
+import com.pos.leaders.leaderspossystem.Models.PosSetting;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -81,10 +85,17 @@ public class SendLog {
 
     }
 
-    public static void sendListFile(String to,String pa,String fileName){
+    public static void sendListFile(String to, String pa, String fileName, Context context){
 
         String from = SETTINGS.CustomerEmail;
-        final String password = SETTINGS.CustomerEmailPassword;
+        String password = SETTINGS.CustomerEmailPassword;
+        if(from ==null|| password==null){
+            PosSettingDbAdapter settingDbAdapter = new PosSettingDbAdapter(context);
+            settingDbAdapter.open();
+            PosSetting posSetting=settingDbAdapter.getPosSettingID();
+            from=posSetting.getCustomerEmail();
+            password=posSetting.getCustomerEmailPassword();
+        }
         String subject ="List File for"+"Company Name :"+SETTINGS.companyName +"  "+ "to POS No:"+SETTINGS.posID+"  "+DateConverter.currentDateTime();
         String filename1=fileName;
         File path = new File( Environment.getExternalStorageDirectory(), pa );

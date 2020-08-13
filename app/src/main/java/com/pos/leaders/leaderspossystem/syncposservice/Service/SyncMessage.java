@@ -113,6 +113,7 @@ import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -1094,12 +1095,44 @@ public class SyncMessage extends Service {
                 //region ScheduleWorker
                 case MessageType.ADD_SCHEDULE_WORKERS:
                     ScheduleWorkers scheduleWorkers = null;
-                    scheduleWorkers = objectMapper.readValue(msgData, ScheduleWorkers.class);
-                    ScheduleWorkersDBAdapter scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
+                    JSONObject scJson =new JSONObject(msgData);
+                    Log.d("tesssssss",scJson.toString());
 
+                    String dateStr = scJson.getString("startTime");
+                    Date parsedDate = DateConverter.stringToDate(dateStr);
+                    Timestamp startTime = new Timestamp(parsedDate.getTime());
+                    jsonObject.remove("startTime");
+                    scJson.put("startTime",startTime.getTime());
+
+                    String dateStr1 = scJson.getString("exitTime");
+                    Date parsedDate1 = DateConverter.stringToDate(dateStr1);;
+                    Timestamp exitTime = new Timestamp(parsedDate1.getTime());
+                    jsonObject.remove("exitTime");
+                    scJson.put("exitTime",exitTime.getTime());
+
+                    String dateStr2 = scJson.getString("date");
+                    Date parsedDate2 = DateConverter.stringToDate(dateStr2);
+                    Timestamp createdAt = new Timestamp(parsedDate2.getTime());
+                    jsonObject.remove("date");
+                    scJson.put("date",createdAt.getTime());
+
+                    scheduleWorkers = objectMapper.readValue(scJson.toString(), ScheduleWorkers.class);
+                    ScheduleWorkersDBAdapter scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
                     scheduleWorkersDBAdapter.open();
                     rID = scheduleWorkersDBAdapter.insertEntry(scheduleWorkers);
                     scheduleWorkersDBAdapter.close();
+
+                    break;
+                //end
+                //region ScheduleWorker
+                case MessageType.UPDATE_SCHEDULE_WORKERS:
+                    ScheduleWorkers scheduleWorker = null;
+                    scheduleWorker = objectMapper.readValue(msgData, ScheduleWorkers.class);
+                    ScheduleWorkersDBAdapter scheduleWorkersDBAdapterN = new ScheduleWorkersDBAdapter(this);
+
+                    scheduleWorkersDBAdapterN.open();
+                     scheduleWorkersDBAdapterN.updateEntry(scheduleWorker);
+                    scheduleWorkersDBAdapterN.close();
                     break;
                 //end
                 case MessageType.UPDATE_COMPANY_CREDENTIALS:

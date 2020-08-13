@@ -1155,7 +1155,7 @@ public class Util {
 
     }
 
-    public static void logInLogOutReport(final Context context, final JSONObject res, final String reciveEmail){
+    public static void logInLogOutReport(final Context context, final JSONObject res){
         final String SAMPLE_FILE = "loginreport.pdf";
         new AsyncTask<Void, Void, Void>(){
             @Override
@@ -1188,7 +1188,6 @@ public class Util {
 
                     try {
                         pdfUA.printLogInLogOutUserReport(context,res);
-                        SendLog.sendListFile(reciveEmail,context.getPackageName(),"loginreport.pdf");
 
 
                     } catch (DocumentException e) {

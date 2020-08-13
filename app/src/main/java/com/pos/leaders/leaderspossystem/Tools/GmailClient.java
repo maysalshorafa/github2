@@ -101,8 +101,13 @@ public class GmailClient {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
+        if(from.contains("gmail")){
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+        }else {
+            props.put("mail.smtp.host", "smtp.live.com");
+            props.put("mail.smtp.port", "587");
+        }
 
         final Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {

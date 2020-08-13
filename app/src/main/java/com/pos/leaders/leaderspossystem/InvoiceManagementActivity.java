@@ -426,10 +426,7 @@ public class InvoiceManagementActivity extends AppCompatActivity {
 
 
 
-    @Override
-    public void onBackPressed() {
-        // Do Here what ever you want do on back press;
-    }
+
     public static void edit(int pos, String value,List<ReciptObject>list){
         partiallyString.set(pos,value);
         ReciptManagementListViewAdapter invoiceManagementListViewAdapter = new ReciptManagementListViewAdapter(InvoiceManagementActivity.context,R.layout.list_adapter_row_recipt,InvoiceManagementActivity.invoiceList,InvoiceManagementActivity.invoiceNumberList,list,partiallyString
