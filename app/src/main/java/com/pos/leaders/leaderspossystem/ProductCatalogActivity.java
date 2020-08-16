@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -22,14 +24,25 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Reports.NumberOfSaleProductReport;
 import com.pos.leaders.leaderspossystem.Tools.ProductCatalogGridViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +51,7 @@ import java.util.List;
  */
 
 public class ProductCatalogActivity extends AppCompatActivity {
-    private Button btCreate, btImport;
+    private Button btCreate, btImport ,sync;
     EditText etSearch;
     TextView tvCount;
     private GridView gvProducts;
@@ -56,6 +69,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
     int productLoadItemOffset=0;
     int productCountLoad=80;
     int departmentID=-1;
+    public static Context context=null;
     ProductCatalogGridViewAdapter adapter;
     public static int Product_Management_View ;
     public  static int  Product_Management_Edit;
@@ -75,9 +89,11 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
         prseedButtonDepartments = btAll;
         filter_productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
+        productDBAdapter.close();
         productsList = filter_productsList;
         adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
         gvProducts.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         super.onResume();
     }
 
@@ -102,13 +118,14 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
         TitleBar.setTitleBar(this);
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
-
+        context=this;
         btCreate = (Button) findViewById(R.id.productCatalog_BTCreateNewProduct);
         btImport = (Button) findViewById(R.id.productCatalog_BTImport);
         gvProducts = (GridView) findViewById(R.id.productCatalog_GVProducts);
         etSearch = (EditText) findViewById(R.id.productCatalog_ETSearch);
         llDepartments=(LinearLayout)findViewById(R.id.productCatalog_LLDepartment);
         tvCount = (TextView) findViewById(R.id.productCatalog_etProductCount);
+        sync=(Button) findViewById(R.id.productCatalog_etSync);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -149,7 +166,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                            productDBAdapter.open();
                             filter_productsList = productDBAdapter.getAllProductsByHint(params[0], productLoadItemOffset, productCountLoad);
+                            productDBAdapter.close();
                             return null;
                         }
 
@@ -158,12 +177,14 @@ public class ProductCatalogActivity extends AppCompatActivity {
                             super.onPostExecute(aVoid);
                             ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                             gvProducts.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                         }
                     }.execute(word);
                 } else {
                     filter_productsList = productsList;
                     ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                     gvProducts.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
 
             }
@@ -175,15 +196,25 @@ public class ProductCatalogActivity extends AppCompatActivity {
         tvCount.setText(getString(R.string.product_count) + productDBAdapter.getProductsCount());
 
         productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
+        productDBAdapter.close();
         filter_productsList = productsList;
         adapter = new ProductCatalogGridViewAdapter(this, productsList);
 
         gvProducts.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         btCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(ProductCatalogActivity.this,ProductsActivity.class);
                 startActivity(intent);
+            }
+        });
+        sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartConnectionForProduct startConnectionForProduct = new StartConnectionForProduct();
+                startConnectionForProduct.execute("s");
+
             }
         });
 
@@ -271,7 +302,9 @@ public class ProductCatalogActivity extends AppCompatActivity {
                                     .setMessage(getString(R.string.delete))
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
+                                            productDBAdapter.open();
                                             productDBAdapter.deleteEntry(filter_productsList.get(position).getProductId());
+                                            productDBAdapter.close();
                                             productsList.remove(filter_productsList.get(position));
                                             gvProducts.setAdapter(adapter);
                                             adapter.notifyDataSetChanged();
@@ -357,10 +390,13 @@ public class ProductCatalogActivity extends AppCompatActivity {
                     v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
                     final long departmentID = ((Category) v.getTag()).getCategoryId();
                     prseedButtonDepartments = v;
+                    productDBAdapter.open();
                     productsList = productDBAdapter.getAllProductsByCategory(departmentID, productLoadItemOffset, productCountLoad);
+                    productDBAdapter.close();
                     filter_productsList = productsList;
                     adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                     gvProducts.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
 
                 }
             });
@@ -387,11 +423,13 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 v.setBackground(getResources().getDrawable(R.drawable.bt_normal_pressed));
 
                 prseedButtonDepartments = v;
-
+                productDBAdapter.open();
                 filter_productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
+                productDBAdapter.close();
                 productsList = filter_productsList;
                 adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                 gvProducts.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
                 return true;
             }
         });
@@ -404,6 +442,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
     }
 
     protected void LoadMoreProducts(){
+        productDBAdapter.open();
         productLoadItemOffset+=productCountLoad;
         final int id=prseedButtonDepartments.getId();
         final ProgressDialog dialog=new ProgressDialog(ProductCatalogActivity.this);
@@ -434,8 +473,7 @@ public class ProductCatalogActivity extends AppCompatActivity {
                 return null;
             }
         }.execute();
-
-
+        productDBAdapter.close();
 
     }
 
@@ -447,3 +485,75 @@ public class ProductCatalogActivity extends AppCompatActivity {
 
 
 }
+class StartConnectionForProduct extends AsyncTask<String,Void,String> {
+    private MessageTransmit messageTransmit;
+
+    StartConnectionForProduct() {
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+    }
+
+    final ProgressDialog progressDialog = new ProgressDialog(ProductCatalogActivity.context);
+    final ProgressDialog progressDialog2 =new ProgressDialog(ProductCatalogActivity.context);
+
+    @Override
+    protected void onPreExecute() {
+        progressDialog.setTitle("Please Wait");
+        progressDialog2.setTitle("Please Wait");
+//        progressDialog.show();
+    }
+
+    @Override
+    protected String doInBackground(String... args) {//args{key,uuid}
+        String productRes = "";
+        ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try {
+            String url = ApiURL.Sync+"/product/";
+
+            productRes = messageTransmit.authGetNormal(url, SESSION.token);
+            Log.d("teasssdfff",productRes);
+            Log.d("teasssdfff222",SESSION.token);
+
+
+
+            if (productRes.startsWith("[")) {
+
+                try {
+
+                    JSONArray jsonArray = new JSONArray(productRes);
+                    for (int i = 0; i <= jsonArray.length() - 1; i++) {
+                        JSONObject msgDataJson =  jsonArray.getJSONObject(i);
+                        Product p = null;
+                        String msgData = msgDataJson.getString(MessageKey.Data);
+                        p = objectMapper.readValue(msgData.toString(), Product.class);
+                        ProductDBAdapter productDBAdapter = new ProductDBAdapter(ProductCatalogActivity.context);
+                        productDBAdapter.open();
+                        try {
+                            productDBAdapter.insertEntry(p);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    Log.d("exception1", e.toString());
+                }
+            }
+
+
+    } catch (IOException e) {
+            Log.d("exception3", e.toString());
+
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+        @Override
+    protected void onPostExecute(String s) {
+
+
+        //endregion
+
+
+}}

@@ -22,6 +22,7 @@ import com.pos.leaders.leaderspossystem.Models.Category;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.updateCurrencyType;
 
 import java.io.File;
 import java.io.IOException;
@@ -186,9 +187,12 @@ public class ImportProductsActivity extends Activity {
                         boolean availableBarCode= productDBAdapter.isValidSku(p.getSku());
                         boolean availableProductName= productDBAdapter.availableProductName(p.getDisplayName());
                         if(availableProductName&&availableBarCode) {
+                            if (p.getCurrencyType().equals("0")){
+                                updateCurrencyType.updateCurrencyToShekl(ImportProductsActivity.this,p);
+                            }
                             productDBAdapter.insertEntry(p.getProductCode(), p.getBarCode(),
-                                    "", p.getPrice(), p.getCostPrice(), true, depID, p.getByEmployee(), 1, 1,
-                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock(),p.getUnit(),p.getWeight(),p.getCurrencyType(),p.getBranchId(),0,p.getLastCostPriceInventory(),p.isWithSerialNumber());
+                                    "", p.getPriceWithTax(), p.getCostPrice(), true, depID, p.getByEmployee(), 1, 1,
+                                    p.getSku(), p.getStatus(), p.getDisplayName(), p.getRegularPrice(), p.getStockQuantity(), p.isManageStock(), p.isInStock(),p.getUnit(),p.getWeight(),p.getCurrencyType(),p.getBranchId(),0,p.getLastCostPriceInventory(),p.isWithSerialNumber(),p.getPriceWithOutTax());
 
                         }
                     }

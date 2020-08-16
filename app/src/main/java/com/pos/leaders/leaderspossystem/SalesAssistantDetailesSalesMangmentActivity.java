@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.pos.leaders.leaderspossystem.Tools.SalesManDetailsGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,7 +102,7 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
         });
 
         customerAssests = customerAssetDB.getBetweenTwoDates(userId,from.getTime(),to.getTime());
-        double amount=customerAssetDB.getTotalAmountForAssistant(userId,from.getTime(),to.getTime());
+        final double amount=customerAssetDB.getTotalAmountForAssistant(userId,from.getTime(),to.getTime());
         etAmount.setText(": "+Util.makePrice(amount));
         All_custmerAssestint = customerAssests;
         All_custmerAssestint = customerAssests;
@@ -192,7 +194,7 @@ public class SalesAssistantDetailesSalesMangmentActivity extends AppCompatActivi
         print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.salesManReport(SalesAssistantDetailesSalesMangmentActivity.this,customerAssests);
+                Util.salesManReport(SalesAssistantDetailesSalesMangmentActivity.this,customerAssests,amount,new Timestamp(from.getTime()),new Timestamp(to.getTime()));
 
             }
         });

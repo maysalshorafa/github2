@@ -171,9 +171,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:layout_weight="1"
                         android:orientation="horizontal"
-                        android:weightSum="1"
-                        android:layout_weight="1">
+                        android:weightSum="1">
 
                         <TextView
                             android:layout_width="120dp"
@@ -197,9 +197,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:layout_weight="1"
                         android:orientation="horizontal"
-                        android:weightSum="1"
-                        android:layout_weight="1">
+                        android:weightSum="1">
 
                         <TextView
                             android:layout_width="120dp"
@@ -218,6 +218,7 @@
                             android:layout_height="40dp"
                             android:paddingLeft="5dp" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -278,7 +279,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:weightSum="2">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -293,20 +294,58 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="@string/price"
+                            android:text="@string/price_with_tax"
                             android:textAlignment="textStart"
                             android:textColor="@color/black"
                             android:textSize="20dp"
                             android:textStyle="bold" />
 
                         <EditText
-                            android:id="@+id/ETPrice"
+                            android:id="@+id/ETPrice_withTax"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bubble"
                             android:inputType="numberDecimal"
                             android:padding="8dp" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/price_with_out_tax"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/ETPrice_withOutTax"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bubble"
+                            android:inputType="numberDecimal"
+                            android:padding="8dp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
 
                     <LinearLayout
@@ -339,35 +378,35 @@
 
                     </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal"
-                    android:weightSum="1"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="120dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="@string/inventory_price"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/ETInventoryCostPrice"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bubble"
-                        android:inputType="numberDecimal"
-                        android:padding="8dp" />
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/inventory_price"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/ETInventoryCostPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bubble"
+                            android:inputType="numberDecimal"
+                            android:padding="8dp" />
 
 
-                </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -400,7 +439,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:orientation="horizontal"
@@ -409,10 +448,19 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
                         android:layout_marginTop="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_linear_layout"
                         android:orientation="horizontal"
-                        android:weightSum="1"
-                        android:layout_weight="1">
+                        android:weightSum="1">
+
+                        <Switch
+                            android:id="@+id/SWWithTax"
+                            android:layout_width="60dp"
+                            android:layout_height="40dp"
+                            android:paddingLeft="5dp" />
 
                         <TextView
                             android:layout_width="120dp"
@@ -425,20 +473,23 @@
                             android:textSize="20dp"
                             android:textStyle="bold" />
 
-                        <Switch
-                            android:id="@+id/SWWithTax"
-                            android:layout_width="90dp"
-                            android:layout_height="40dp"
-                            android:paddingLeft="5dp" />
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_linear_layout"
                         android:orientation="horizontal"
-                        android:weightSum="1"
-                        android:layout_weight="1">
+                        android:weightSum="1">
+
+                        <Switch
+                            android:id="@+id/SWManageStock"
+                            android:layout_width="60dp"
+                            android:layout_height="40dp"
+                            android:paddingLeft="5dp" />
 
                         <TextView
                             android:layout_width="120dp"
@@ -451,19 +502,23 @@
                             android:textSize="20dp"
                             android:textStyle="bold" />
 
-                        <Switch
-                            android:id="@+id/SWManageStock"
-                            android:layout_width="90dp"
-                            android:layout_height="40dp"
-                            android:paddingLeft="5dp" />
+
                     </LinearLayout>
+
                     <LinearLayout
-                        android:layout_weight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_linear_layout"
                         android:orientation="horizontal"
                         android:weightSum="1">
+
+                        <Switch
+                            android:id="@+id/SWWithSerialNo"
+                            android:layout_width="60dp"
+                            android:layout_height="40dp"
+                            android:paddingLeft="5dp" />
 
                         <TextView
                             android:id="@+id/textView10"
@@ -477,11 +532,7 @@
                             android:textSize="20dp"
                             android:textStyle="bold" />
 
-                        <Switch
-                            android:id="@+id/SWWithSerialNo"
-                            android:layout_width="90dp"
-                            android:layout_height="40dp"
-                            android:paddingLeft="5dp" />
+
                     </LinearLayout>
                 </LinearLayout>
 

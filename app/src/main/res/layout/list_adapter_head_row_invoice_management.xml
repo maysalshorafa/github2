@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*"
+    >
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="0dp"
+            android:background="#A9A9A9"
+            android:padding="8dp"
+            android:text="@string/select_all"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"></TextView>
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="0dp"
+            android:background="#A9A9A9"
+            android:padding="8dp"
+            android:text="select partial"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"></TextView>
+        <TextView
+            android:layout_width="0dp"
+            android:background="#A9A9A9"
+            android:padding="8dp"
+            android:text="Invoice number"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"></TextView>
+        <TextView
+            android:layout_width="0dp"
+            android:background="#A9A9A9"
+            android:padding="8dp"
+            android:text="@string/price"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"></TextView>
+
+        <TextView
+            android:layout_width="0dp"
+            android:background="#A9A9A9"
+            android:padding="8dp"
+            android:text="The amount paid"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"></TextView>
+
+
+
+
+
+
+    </TableRow>
+</TableLayout>

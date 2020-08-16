@@ -20,8 +20,10 @@ import android.util.Log;
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.CategoryDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
@@ -37,8 +39,10 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.Category;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.CustomerAssistant;
 import com.pos.leaders.leaderspossystem.Models.DepositAndPullReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
@@ -90,7 +94,6 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImages;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesClosingReport;
 import static com.pos.leaders.leaderspossystem.Tools.DocumentControl.pdfLoadImagesOpiningReport;
-
 
 /**
  * Created by KARAM on 19/01/2017.
@@ -455,8 +458,8 @@ public class Util {
             Order order = orderDBAdapter.getLast();
             lastZReport.setEndOrderId(order.getOrderId());
         }
-
         double amount = zReportDBAdapter.getZReportAmount(lastZReport.getStartOrderId(), lastZReport.getEndOrderId());
+
         Log.d("amount",amount+"amount");
         try {
             ZReport zReport1 = zReportDBAdapter.getLastRow();
@@ -733,10 +736,10 @@ public class Util {
             double creditInvoiceAmount=0;
             double receiptInvoiceAmount=0;
             double receiptInvoiceAmountCheck=0;
-            double sheqle_plus = 0, sheqle_minus = 0;
-            double usd_plus = 0, usd_minus = 0;
-            double eur_plus = 0, eur_minus = 0;
-            double gbp_plus = 0, gbp_minus = 0;
+            double firstType_plus = 0, firstType_minus = 0;
+            double secondType_plus = 0, secondType_minus = 0;
+            double thirdType_plus = 0, thirdType_minus = 0;
+            double fourthType_plus = 0, fourthType_minus = 0;
             double aReportDetailsForFirstCurrency=0;
             double aReportDetailsForSecondCurrency=0;
             double aReportDetailsForThirdCurrency=0;
@@ -751,6 +754,22 @@ public class Util {
                 lastZReport.setEndOrderId(0);
                 lastZReport.setzReportId(0);
             }
+            List<CurrencyType> currencyTypesList = null;
+            List<Currency> currencyList=new ArrayList<>();
+            CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(context);
+            currencyTypeDBAdapter.open();
+            currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+
+
+            for (int i=0;i<currencyTypesList.size();i++){
+                CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(context);
+                currencyDBAdapter.open();
+                currencyList.add(currencyDBAdapter.getCurrencyByCode(currencyTypesList.get(i).getType()));
+                currencyDBAdapter.close();
+            }
+
+
+            currencyTypeDBAdapter.close();
             OpiningReportDBAdapter opiningReportDBAdapter = new OpiningReportDBAdapter(context);
             opiningReportDBAdapter.open();
             List<OpiningReport> opiningReportList = opiningReportDBAdapter.getListByLastZReport(lastZReport.getzReportId());
@@ -763,12 +782,20 @@ public class Util {
                 for (int a=0 ;a<opiningReportList.size();a++) {
                     //aReportAmount+=opiningReportList.get(a).getAmount();
                     OpiningReport opiningReport = opiningReportList.get(a);
-                    aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
-                    aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
-                    aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
-                    aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
+                    aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+                    aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(1).getId(), opiningReport.getOpiningReportId());
+                    aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(2).getId(), opiningReport.getOpiningReportId());
+                    aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow((int) currencyList.get(3).getId(), opiningReport.getOpiningReportId());
                 }
 
+            }
+           else {
+                OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
+                aReportDetailsDBAdapter.open();
+                for (int a=0 ;a<opiningReportList.size();a++) {
+                    OpiningReport opiningReport = opiningReportList.get(a);
+                    aReportDetailsForFirstCurrency += aReportDetailsDBAdapter.getLastRow((int) currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+                }
             }
             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
             zReportDBAdapter.open();
@@ -798,7 +825,24 @@ public class Util {
 
             if (SETTINGS.enableCurrencies) {
                 for (CurrencyOperation cp : currencyOperationList) {
-                    switch (cp.getCurrencyType()) {
+
+
+                    if (cp.getCurrencyType().equals(currencyTypesList.get(0).getType())){
+
+                        firstType_plus+=cp.getAmount();
+                    }
+                    else   if (cp.getCurrencyType().equals(currencyTypesList.get(1).getType())){
+                        secondType_plus += cp.getAmount();
+                    }
+                    else   if (cp.getCurrencyType().equals(currencyTypesList.get(2).getType())){
+                        thirdType_plus += cp.getAmount();
+                    }
+                    else if (cp.getCurrencyType().equals(currencyTypesList.get(3).getType())){
+                        fourthType_plus += cp.getAmount();
+                    }
+
+
+                   /* switch (cp.getCurrencyType()) {
 
                         case "ILS":
                             sheqle_plus += cp.getAmount();
@@ -813,12 +857,27 @@ public class Util {
                         case "GBP":
                             gbp_plus += cp.getAmount();
                             break;
-                    }
+                    }*/
                 }
 
 
                 for (CurrencyReturns cp : currencyReturnList) {
-                    switch ((int) cp.getCurrency_type()) {
+                    if ((int) cp.getCurrency_type()==(int) currencyList.get(0).getId()){
+                        firstType_minus+=cp.getAmount();
+                    }
+
+                   else if ((int) cp.getCurrency_type()==(int) currencyList.get(1).getId()){
+                        secondType_minus+=cp.getAmount();
+                    }
+                   else if ((int) cp.getCurrency_type()==(int) currencyList.get(2).getId()){
+                        thirdType_minus+=cp.getAmount();
+                    }
+                   else if ((int) cp.getCurrency_type()==(int) currencyList.get(3).getId()){
+                        fourthType_minus+=cp.getAmount();
+                    }
+
+
+                  /*  switch ((int) cp.getCurrency_type()) {
                         case CONSTANT.Shekel:
                             sheqle_minus += cp.getAmount();
                             break;
@@ -833,11 +892,11 @@ public class Util {
                         case CONSTANT.GBP:
                             gbp_minus += cp.getAmount();
                             break;
-                    }
+                    }*/
                 }
 
             }else {
-                sheqle_plus+=cash_plus;
+                firstType_plus+=cash_plus;
             }
             if(zReportDBAdapter.getProfilesCount()==0){
                 PosInvoiceDBAdapter posInvoiceDBAdapter =new PosInvoiceDBAdapter(context);
@@ -903,14 +962,14 @@ public class Util {
             zReport.setTotalAmount(zReport.getTotalAmount()+aReportAmount+receiptInvoiceAmount);
             zReport.setTotalSales(zReport.getTotalSales()+invoiceAmount+creditInvoiceAmount);
             if(SETTINGS.enableCurrencies){
-                sheqle_plus=(sheqle_plus-sheqle_minus)+aReportDetailsForFirstCurrency+receiptInvoiceAmount;
+                firstType_plus=(firstType_plus-firstType_minus)+aReportDetailsForFirstCurrency+receiptInvoiceAmount;
             }else {
-                sheqle_plus=(sheqle_plus-sheqle_minus)+aReportAmount+receiptInvoiceAmount;
+                firstType_plus=(firstType_plus-firstType_minus)+aReportAmount+receiptInvoiceAmount;
             }
             long zID = zReportDBAdapter.insertEntry(zReport.getCreatedAt(), zReport.getByUser(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                     zReport.getTotalAmount(),zReport.getTotalSales(),cash_plus,check_plus+receiptInvoiceAmountCheck,creditCard_plus
                     ,Double.parseDouble(Util.makePrice(zReport.getTotalPosSales())),(zReport.getTotalAmount()/(1+SETTINGS.tax/100))*(SETTINGS.tax/100),invoiceAmount,
-                    creditInvoiceAmount,sheqle_plus,(usd_plus-usd_minus)+aReportDetailsForSecondCurrency,(eur_plus-eur_minus)+aReportDetailsForThirdCurrency,(gbp_plus-gbp_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
+                    creditInvoiceAmount,firstType_plus,(secondType_plus-secondType_minus)+aReportDetailsForSecondCurrency,(thirdType_plus-thirdType_minus)+aReportDetailsForThirdCurrency,(fourthType_plus-fourthType_minus)+aReportDetailsForForthCurrency,zReport.getInvoiceReceiptAmount(),0,0,"close",zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax(),zReport.getTotalPayPoint());
             zReport.setzReportId(zID);
             zReport.setInvoiceAmount(invoiceAmount);
             zReport.setCreditInvoiceAmount(creditInvoiceAmount);
@@ -1109,7 +1168,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,"");
 
                 }
                 catch(Exception ignored)
@@ -1129,6 +1188,8 @@ public class Util {
 
                     try {
                         pdfUA.printLogInLogOutUserReport(context,res);
+
+
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     }
@@ -1144,7 +1205,7 @@ public class Util {
         }.execute();
 
     }
-    public static void salesManReport(final Context context, final List<CustomerAssistant>customerAssistantList){
+    public static void salesManReport(final Context context, final List<CustomerAssistant>customerAssistantList, final double amount, final Timestamp from , final Timestamp to){
         final String SAMPLE_FILE = "salesmanreport.pdf";
         new AsyncTask<Void, Void, Void>(){
             @Override
@@ -1157,7 +1218,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,"");
 
                 }
                 catch(Exception ignored)
@@ -1176,7 +1237,7 @@ public class Util {
                     PdfUA pdfUA = new PdfUA();
 
                     try {
-                        pdfUA.createSalesManReport(context,customerAssistantList);
+                        pdfUA.createSalesManReport(context,customerAssistantList,amount,from ,to);
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     }
@@ -1190,7 +1251,7 @@ public class Util {
         }.execute();
 
     }
-    public static void printPauseInvoice(final Context context, final List<OrderDetails>orderDetailsList){
+    public static void printPauseInvoice(final Context context, final List<OrderDetails>orderDetailsList, final double carDiscount){
         final String SAMPLE_FILE = "pauseInvoice.pdf";
         new AsyncTask<Void, Void, Void>(){
             @Override
@@ -1203,7 +1264,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,"Pause");
 
                 }
                 catch(Exception ignored)
@@ -1222,7 +1283,7 @@ public class Util {
                     PdfUA pdfUA = new PdfUA();
 
                     try {
-                        pdfUA.createPauseInvoice(context,orderDetailsList);
+                        pdfUA.createPauseInvoice(context,orderDetailsList,carDiscount);
                     } catch (DocumentException e) {
                         e.printStackTrace();
                     }
@@ -1363,8 +1424,9 @@ public class Util {
 
         double amount = zReportDBAdapter.getZReportAmount(zReport.getStartOrderId(), zReport.getEndOrderId());
         try {
-            ZReport zReport1 = zReportDBAdapter.getLastRow();
-            ZReport z =zReportDBAdapter.getByID(zReport1.getzReportId()-1);
+         //   ZReport zReport1 = zReportDBAdapter.getLastRow();
+            ZReport z =zReportDBAdapter.getByID(zReport.getzReportId()-1);
+            Log.d("zjojo","eoeo"+z.toString());
             totalZReportAmount=z.getTotalPosSales()+amount;
         } catch (Exception e) {
             totalZReportAmount=amount;
@@ -1381,7 +1443,7 @@ public class Util {
         long xID = xReportDBAdapter.insertEntry(new Timestamp(System.currentTimeMillis()), SESSION._EMPLOYEE.getEmployeeId(), zReport.getStartOrderId(), zReport.getEndOrderId(),
                 zReport.getTotalAmount(),zReport.getTotalSales(),zReport.getCashTotal(),zReport.getCheckTotal(),zReport.getCreditTotal()
                 ,zReport.getTotalPosSales(),zReport.getTotalAmount()*SETTINGS.tax/100,zReport.getInvoiceAmount(),
-                zReport.getCreditInvoiceAmount(),zReport.getShekelAmount(),zReport.getUsdAmount(),zReport.getEurAmount(),zReport.getGbpAmount(),zReport.getInvoiceReceiptAmount(),zReport.getPullReportAmount(),zReport.getDepositReportAmount(),zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax());
+                zReport.getCreditInvoiceAmount(),zReport.getFirstTypeAmount(),zReport.getSecondTypeAmount(),zReport.getThirdTypeAmount(),zReport.getFourthTypeAmount(),zReport.getInvoiceReceiptAmount(),zReport.getPullReportAmount(),zReport.getDepositReportAmount(),zReport.getSalesBeforeTax(),zReport.getSalesWithTax(),zReport.getTotalTax(),zReport.getTotalPayPoint());
         XReport finalX = xReportDBAdapter.getByID(xID);
 
         return finalX;
@@ -1426,7 +1488,7 @@ public class Util {
                     RandomAccessFile f = new RandomAccessFile(file, "r");
                     byte[] data = new byte[(int)f.length()];
                     f.readFully(data);
-                    pdfLoadImages(data,context);
+                    pdfLoadImages(data,context,"");
                     Log.d("tesrr11",bitmapList.size()+"");
 
                 }
@@ -1486,6 +1548,10 @@ public class Util {
                             boolean customerMeasurementEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT, false);
                             int floatP = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FLOAT_POINT, "2"));
                             String printerType = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, PrinterType.HPRT_TP805.name());
+                            String customerEmail = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL,"lead2018pos@gmail.com");
+                            String customerEmailPassWord = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord,"lead2018POS@gmail.com");
+
+                            String companyStatus = cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, CompanyStatus.BO_COMPANY.name());
                             int branchI = Integer.parseInt(cSharedPreferences.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, "0"));
                             PackageInfo pInfo = null;
                             try {
@@ -1496,7 +1562,7 @@ public class Util {
                             String verCode = pInfo.versionName;
                             PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(context);
                             posSettingDbAdapter.open();
-                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,verCode, DbHelper.DATABASE_VERSION+"",branchI);
+                            posSettingDbAdapter.insertEntry(currencyEnable,creditCardEnable,pinPadEnable,customerMeasurementEnable,floatP,printerType,companyStatus,verCode, DbHelper.DATABASE_VERSION+"",branchI,SETTINGS.currencyCode,SETTINGS.currencySymbol,SETTINGS.country,SETTINGS.enableDuplicateInvoice,customerEmail,customerEmailPassWord);
                             //finish();
                         } else {
                             Log.e("setup",jsonObject.getString(MessageKey.responseType));
@@ -1520,6 +1586,7 @@ public class Util {
             protected String doInBackground(Void... params) {
                 MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                 try {
+
                     String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
                     Log.e("CCC", res);
                     Log.e("CCC",SETTINGS.BO_SERVER_URL.toString());
@@ -1587,7 +1654,7 @@ public class Util {
                         SettingsDBAdapter settingsDBAdapter = new SettingsDBAdapter(context);
                         settingsDBAdapter.open();
                         settingsDBAdapter.updateEntry( SETTINGS.companyID,SETTINGS.companyName,  SETTINGS.posID, (float) SETTINGS.tax, SETTINGS.returnNote,SETTINGS.endOfInvoice,SETTINGS.ccNumber,SETTINGS.ccPassword,
-                                respnse.getInt("branchId"));
+                                respnse.getInt("branchId"),SETTINGS.currencyCode,SETTINGS.currencySymbol,SETTINGS.country);
                         ProductDBAdapter productDBAdapter = new ProductDBAdapter(context);
                         List<Product>productList=productDBAdapter.getAllProducts();
                         CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(context);
@@ -1623,6 +1690,7 @@ public class Util {
             protected String doInBackground(Void... params) {
                 MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
                 try {
+
                     String res = messageTransmit.authGet(ApiURL.INVENTORY + "/forPos", SESSION.token);
                     Log.e("CCC", res);
 

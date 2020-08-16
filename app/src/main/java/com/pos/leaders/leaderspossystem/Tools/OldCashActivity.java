@@ -108,13 +108,13 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
          tvExcess.setText(0 + " " + getResources().getText(R.string.ins));
          tvExcess.setTextColor(getResources().getColor(R.color.primaryColor));**/
         tvTotalInserted = (TextView) findViewById(R.id.cashActivity_TVTotalInserted);
-        tvTotalInserted.setText(0.0 + " " + getResources().getText(R.string.ins));
+        tvTotalInserted.setText(0.0 + " " + SETTINGS.currencySymbol);
 
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             totalPrice = (double) extras.get(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE);
             custmer_nameS = (String) extras.get("_custmer");
-            tv.setText(valueView(totalPrice) + " " + getResources().getText(R.string.ins));
+            tv.setText(valueView(totalPrice) + " " + SETTINGS.currencySymbol);
             custmer_name.setText(custmer_nameS);
             custmer_nameS = "";
         } else {
@@ -237,7 +237,7 @@ public class OldCashActivity extends AppCompatActivity implements View.OnTouchLi
             deltaPrice = (float) (totalPid - (float) totalPrice);
             btnDone.performClick();
         }
-        tvTotalInserted.setText(totalPid + " " + getResources().getText(R.string.ins));
+        tvTotalInserted.setText(totalPid + " " + SETTINGS.currencySymbol);
 
         deltaPrice = (float) (totalPid - (float) totalPrice);
         if (deltaPrice >= 0) {

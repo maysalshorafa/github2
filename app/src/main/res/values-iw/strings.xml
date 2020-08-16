@@ -51,11 +51,13 @@
     <string name="product">פריט</string>
     <string name="productID">מק\'\'ט</string>
     <string name="qty">כמות</string>
+    <string name="test">מבחן</string>
     <string name="refresh">רענון</string>
     <string name="returned">עודף</string>
-    <string name="total_price">סה\'\'כ מחיר</string>
+    <string name="total_price">סה"כ מכירות</string>
     <string name="total_paid">סה\'\'כ הוכנס</string>
     <string name="total_saved">חסכת</string>
+    <string name="vat">מע"מ</string>
     <string name="transfer_credit_card">תעביר כרטיס אשראי</string>
     <string name="try_again">נסה שוב</string>
     <string name="with_tax">חייב למע\'\'מ</string>
@@ -78,7 +80,7 @@
     <string name="cant_do_this_function_discount">לא תוכל לתת את ההנחה הזו</string>
     <string name="card_expiry">תאריך הכרטיס</string>
     <string name="check_number">מס\' צ\'ק</string>
-    <string name="tax">מע\'\'מ</string>
+    <string name="tax">מע"מ</string>
     <string name="general">כללי</string>
     <string name="extracting_files">הפקת קבצים</string>
     <string name="credit">-</string>
@@ -212,6 +214,7 @@
     <string name="a_report_amount">קרן</string>
     <string name="total_with_a_report_amount">כה\'\'כ קופה</string>
     <string name="total_sales">סה\'\'כ עסקאות</string>
+    <string name="minus_general_item">פריט כללי במינוס</string>
     <string name="in_put">נכנס</string>
     <string name="out_put">זיכוי</string>
     <string name="details">פריט</string>
@@ -522,6 +525,33 @@
         <item>WINTEC_BUILDIN</item>
 
     </string-array>
+
+    <string-array name="currency_code_list_preference">
+        <item>USD</item>
+        <item>GBP</item>
+        <item>JPY</item>
+        <item>EUR</item>
+        <item>AUD</item>
+
+        <item>CAD</item>
+        <item>DKK</item>
+        <item>NOK</item>
+        <item>SEK</item>
+        <item>CHF</item>
+
+        <item>JOD</item>
+        <item>ZAR</item>
+        <item>LBP</item>
+        <item>EGP</item>
+
+    </string-array>
+
+    <string-array name="Company_status_list_preference">
+        <item>BO_COMPANY</item>
+        <item>BO_AUTHORIZED_DEALER</item>
+        <item>BO_EXEMPT_DEALER</item>
+    </string-array>
+
     <string-array name="float_point_list_preference">
         <item>0</item>
         <item>1</item>
@@ -588,7 +618,7 @@
     <string name="receipt">קבלה</string>
     <string name="product_code">מק\"ט</string>
     <string name="order_document">הזמנת לקוח</string>
-    <string name="create_credit_invoice_doc">ערוך חשבונית מס זיכוי</string>
+    <string name="create_credit_invoice_doc">חשבונית מס זיכוי</string>
     <string name="create_credit_invoice_management_activity">Create Credit Invoice ManagementActivity</string>
     <string name="actual">ספירת קופה</string>
     <string name="are_you_want_to_print_and_save_closing_report">אתה רוצה להדפיס ולשמור סגירת משמרת?</string>
@@ -609,7 +639,7 @@
     <string name="opining_report">Opining Report</string>
     <string name="order_document_management_activity">Order Document ManagementActivity</string>
     <string name="view_credit_invoice_management_activity">View Credit Invoice ManagementActivity</string>
-    <string name="view_credit_invoice_doc">צפה בחשבונית מס זיכוי</string>
+    <string name="view_credit_invoice_doc">הצגת חשבונית זיכוי</string>
     <string name="no_of_items">מס\' פריטים</string>
     <string name="cant_make_invoice_check_internet_connection">לא ניתן להנפיק חשבונית מס, בדוק חיבור אינטרניט</string>
     <string name="user_password_is_not_available_try_to_use_another_user_password">סיסמת משתמש אינה נכונה, נסה עם סיסמה אחרת</string>
@@ -649,7 +679,7 @@
     <string name="pin_pad">פין פאד</string>
     <string name="inventory_doc">תעודת כניסה למחסן</string>
     <string name="inventory_in">הכנסת מוצרים למחסן</string>
-    <string name="inventory_management_activity">ניהול מחסנים</string>
+    <string name="inventory_management_activity">ניהול מחסנים</string>f
     <string name="inventory_out">הוצאת מוצרים ממחסן</string>
     <string name="please_choose_your_provider">בחירת ספק</string>
     <string name="please_enable_credit_card">נא לעדכן הגדרות ספק אשראי</string>
@@ -676,11 +706,41 @@
     <string name="there_are_no_sales">אין מכירות</string>
     <string name="product_count">כמות מוצרים</string>
     <string name="accounting_information">מידע חשבונאי</string>
-    <string name="Sales_Without_tax">מכירות ללא מע"מ</string>
-    <string name="Sales_With_tax">מכירות עם מע"מ</string>
+    <string name="Sales_Without_tax">מכירות פטורות ממע"מ</string>
+    <string name="Sales_With_tax">מכירות חייבות מע"מ</string>
     <string name="all_sales">כל המכירות</string>
     <string name="plzwait">אנא המתן</string>
     <string name="loadingdata">טוען נתונים</string>
 
 
+
+    <!--SetUp Managment Activity-->
+    <string name="company_status">מעמד חברה</string>
+    <string name="exempt_dealer">עוסק פטור</string>
+    <string name="company">חברה</string>
+    <string name="authorized_dealer">עוסק מורשה</string>
+    <string name="currency_code">Currency Code</string>
+    <string name="currency_Symbol">Symbol Currency</string>
+
+
+    <string name="invoice_recipte_company_status">חשבון קבלה</string>
+    <string name="invoice_company_status">חשבון</string>
+    <string name="privet_company_status" >ע.פ</string>
+    <string name="credit_invoice_doc_company_status">חשבון זיכוי</string>
+
+    <string name="date_end_zreport">תאריך סגירת דו"ח Z</string>
+    <string name="view_credit_invoice_doc_company_status">הצגת חשבון זיכוי</string>
+
+    <string name="due_date">תאריך תפוגה</string>
+    <string name="text_dialog_lincess">ההיסטוריה של הרישיון הסתיימה, אנא צרו קשר עם החברה להפעלה.</string>
+    <string name="please_choose_three_currencies">אנא בחר שלושה מטבעות</string>
+    <string name="there_are_no_currencies">אין מטבעות</string>
+
+
+    <string name="price_with_tax">מחיר כולל מע"מ</string>
+    <string name="price_with_out_tax">מחיר לפני מע"מ</string>
+
+    <string name="select_all">בחר הכל</string>
+    <string name="select_partial">תשלום חלקי</string>
+    <string name="invoice_number">מספר חשבונית</string>
 </resources>

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -52,6 +53,7 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         TitleBar.setTitleBar(this);
+        ThisApp.setCurrentActivity(this);
         context = this;
         etCompanyName = (EditText) findViewById(R.id.settings_etCompanyName);
         etCompanyName.setEnabled(false);
@@ -126,10 +128,17 @@ public class SettingActivity extends AppCompatActivity {
             final String TerminalNumber =   jsonObject.getString(MessageKey.CCUN);
             final String TerminalPassword =jsonObject.getString(MessageKey.CCPW);
             final int InvoiceNote =jsonObject.getInt(MessageKey.endOfReturnNote);
+            if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
+                s =SettingActivity.context.getString(R.string.company_name)
+                        + ":"+CompanyName +"\n"+SettingActivity.context.getString(R.string.privet_company_status)+":"+PrivateCompany +"\n"+SettingActivity.context.getString(R.string.tax)+":"+Tax+"\n"+SettingActivity.context.getString(R.string.terminal_number)+":"+TerminalNumber +"\n"
+                        +SettingActivity.context.getString(R.string.terminal_password)+":"+TerminalPassword +"\n"+ SettingActivity.context.getString(R.string.invoice_note)+ ":"+InvoiceNote;
+            }
+            else {
+                s =SettingActivity.context.getString(R.string.company_name)
+                        + ":"+CompanyName +"\n"+SettingActivity.context.getString(R.string.private_company)+":"+PrivateCompany +"\n"+SettingActivity.context.getString(R.string.tax)+":"+Tax+"\n"+SettingActivity.context.getString(R.string.terminal_number)+":"+TerminalNumber +"\n"
+                        +SettingActivity.context.getString(R.string.terminal_password)+":"+TerminalPassword +"\n"+ SettingActivity.context.getString(R.string.invoice_note)+ ":"+InvoiceNote;
+            }
 
-            s =SettingActivity.context.getString(R.string.company_name)
-                    + ":"+CompanyName +"\n"+SettingActivity.context.getString(R.string.private_company)+":"+PrivateCompany +"\n"+SettingActivity.context.getString(R.string.tax)+":"+Tax+"\n"+SettingActivity.context.getString(R.string.terminal_number)+":"+TerminalNumber +"\n"
-                    +SettingActivity.context.getString(R.string.terminal_password)+":"+TerminalPassword +"\n"+ SettingActivity.context.getString(R.string.invoice_note)+ ":"+InvoiceNote;
             new AlertDialog.Builder(SettingActivity.this)
                     .setTitle(getString(R.string.update_general_setting))
                     .setMessage(getString(R.string.if_you_want_to_update_general_setting_click_ok)+"\n"+s)
@@ -173,23 +182,22 @@ public class SettingActivity extends AppCompatActivity {
         JSONObject jsonObject = null;
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
-            String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
-            jsonObject = new JSONObject(res);
-            try {
+                String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
+                jsonObject = new JSONObject(res);
+                try {
 
-                if(!jsonObject.getString(MessageKey.status).equals("200"))
-                    return;
-                SettingActivity.jsonObject = jsonObject.getJSONObject(MessageKey.responseBody);
-                Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
+                    if (!jsonObject.getString(MessageKey.status).equals("200"))
+                        return;
+                    SettingActivity.jsonObject = jsonObject.getJSONObject(MessageKey.responseBody);
+                    Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
 
-            }
-            catch (JSONException e){
-                JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
-                jsonObject = jsonArray.getJSONObject(0);
-                SettingActivity.jsonObject = jsonObject;
-                 Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
+                } catch (JSONException e) {
+                    JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.responseBody);
+                    jsonObject = jsonArray.getJSONObject(0);
+                    SettingActivity.jsonObject = jsonObject;
+                    Log.i(SettingActivity.LOG_TAG, jsonObject.toString());
 
-            }
+                }
 
 
         } catch (IOException | JSONException e) {

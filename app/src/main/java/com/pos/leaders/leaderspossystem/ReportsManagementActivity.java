@@ -41,6 +41,7 @@ import com.pos.leaders.leaderspossystem.Models.XReport;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Reports.SalesReportActivity;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
@@ -328,11 +329,19 @@ public class ReportsManagementActivity  extends AppCompatActivity {
         btnInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String[] items = {
+                final String[] items;
+                if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")){
+                items = new String[]{
+                        getString(R.string.invoice_company_status),
+                        getString(R.string.receipt), getString(R.string.order_document), getString(R.string.credit_invoice_doc_company_status), getString(R.string.view_credit_invoice_doc)
+
+                };}
+                  else {
+                items = new String[]{
                         getString(R.string.invoice),
                         getString(R.string.receipt),getString(R.string.order_document),getString(R.string.create_credit_invoice_doc),getString(R.string.view_credit_invoice_doc)
 
-                };
+                };}
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ReportsManagementActivity.this);
                 builder.setTitle(getBaseContext().getString(R.string.make_your_selection));
                 builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -683,10 +692,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                                 depositAndPullReportDetailsDbAdapter.insertEntry(pullReportId, forthCurrencyInDefaultValue, forthCurrency.getName());
                                             }
                                             z.setPullReportAmount(z.getPullReportAmount()-pullReport.getAmount());
-                                            z.setShekelAmount(z.getShekelAmount()-firstCurrencyInDefaultValue);
-                                            z.setUsdAmount(z.getUsdAmount()-secondCurrencyInDefaultValue);
-                                            z.setGbpAmount(z.getGbpAmount()-thirdCurrencyInDefaultValue);
-                                            z.setEurAmount(z.getEurAmount()-forthCurrencyInDefaultValue);
+                                            z.setFirstTypeAmount(z.getFirstTypeAmount()-firstCurrencyInDefaultValue);
+                                            z.setSecondTypeAmount(z.getSecondTypeAmount()-secondCurrencyInDefaultValue);
+                                            z.setThirdTypeAmount(z.getThirdTypeAmount()-thirdCurrencyInDefaultValue);
+                                            z.setFourthTypeAmount(z.getFourthTypeAmount()-forthCurrencyInDefaultValue);
                                             zreportDbAdapter.updateEntry(z);
 
                                             pullReportDialog.cancel();
@@ -1016,10 +1025,10 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                             pullReportDBAdapter.close();
                                             depositAndPullReportDetailsDbAdapter.close();
                                             z.setDepositReportAmount(z.getDepositReportAmount()+pullReport.getAmount());
-                                            z.setShekelAmount(z.getShekelAmount()+firstCurrencyInDefaultValue);
-                                            z.setUsdAmount(z.getUsdAmount()+secondCurrencyInDefaultValue);
-                                            z.setGbpAmount(z.getGbpAmount()+thirdCurrencyInDefaultValue);
-                                            z.setEurAmount(z.getEurAmount()+forthCurrencyInDefaultValue);
+                                            z.setFirstTypeAmount(z.getFirstTypeAmount()+firstCurrencyInDefaultValue);
+                                            z.setSecondTypeAmount(z.getSecondTypeAmount()+secondCurrencyInDefaultValue);
+                                            z.setThirdTypeAmount(z.getThirdTypeAmount()+thirdCurrencyInDefaultValue);
+                                            z.setFourthTypeAmount(z.getFourthTypeAmount()+forthCurrencyInDefaultValue);
                                             zreportDbAdapter.updateEntry(z);
                                             final ArrayList<String> hintForCurrencyType = new ArrayList<String>();
                                             final ArrayList<Double> hintForCurrencyAmount = new ArrayList<Double>();

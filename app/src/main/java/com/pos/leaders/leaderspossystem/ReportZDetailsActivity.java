@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.itextpdf.text.DocumentException;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
@@ -25,6 +28,8 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.XReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Currency.Currency;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
@@ -59,11 +64,12 @@ public class ReportZDetailsActivity extends Activity {
 
     TextView invoiceReceiptCountText,zReportTotalInvoiceReceipt,invoiceCountText,zReportInvoice,creditInvoiceCount,
             zReportCreditInvoice,zReportTotalSales,zReportCashPaymentCount,zReportTotalCashPayment,
-            zReportShekelCount,zReportTotalShekel,zReportUsdCount,zReportTotalUsd,zReportEurCount,zReportTotalEur,
-            zReportGbpCount,zReportTotalGbp,zReportCreditCardCount,zReportTotalCreditCard,zReportCheckCount,
+            zReportFirstTypeCount,zReportTotalFirstType,zReportSecondTypeCount,zReportTotalSecondType,zReportThirdTypeCount,zReportTotalThirdType,
+            zReportFourthTypeCount,zReportTotalFourthType,zReportCreditCardCount,zReportTotalCreditCard,zReportCheckCount,
             zReportTotalCheck,zReportTotalAmount,zReportOpiningReportAmount,zReportOpiningReportCount,zReportPullReportAmount
-            ,zReportDepositReportAmount,zReportShekelAmount,zReportUsdAmount,zReportGbpAmount,zReportEurAmount
-            ,zReportPosSales,zReportSalesWithTax,zReportSalesBeforeTax,zReportTotalPrice,zReportTotalTax;
+            ,zReportDepositReportAmount,zReportFirstTypeAmount,zReportSecondTypeAmount,zReportThirdTypeAmount,zReportFourthTypeAmount
+            ,zReportPosSales,zReportSalesWithTax,zReportSalesBeforeTax,zReportTotalPrice,zReportTotalTax,minusGeneralItemCount
+            ,zReportMinusGeneralItem,firstType,secondType,thirdType,fourthType,firstTypeCount,secondTypeCount,thirdTypeCount,fourthTypeCount ,totalPayPoint,totalPointCount;
     POSSDK pos;
     public static  Bitmap p;
     PrintTools pt;
@@ -88,6 +94,7 @@ public class ReportZDetailsActivity extends Activity {
     static double aReportDetailsForForthCurrency=0;
     static double aReportAmount = 0;
     Bitmap newBitmap2=null;
+    LinearLayout CurrencyLayout,CountLinear,TotalLinear;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,14 +123,14 @@ public class ReportZDetailsActivity extends Activity {
         zReportTotalSales=(TextView)findViewById(R.id.zReportTotalSales);
         zReportCashPaymentCount=(TextView)findViewById(R.id.zReportCashPaymentCount);
         zReportTotalCashPayment=(TextView)findViewById(R.id.zReportTotalCashPayment);
-        zReportShekelCount=(TextView)findViewById(R.id.zReportShekelCount);
-        zReportTotalShekel=(TextView)findViewById(R.id.zReportTotalShekel);
-        zReportUsdCount=(TextView)findViewById(R.id.zReportUsdCount);
-        zReportTotalUsd=(TextView)findViewById(R.id.zReportTotalUsd);
-        zReportEurCount=(TextView)findViewById(R.id.zReportEurCount);
-        zReportTotalEur=(TextView)findViewById(R.id.zReportTotalEur);
-        zReportGbpCount=(TextView)findViewById(R.id.zReportGbpCount);
-        zReportTotalGbp=(TextView)findViewById(R.id.zReportTotalGbp);
+        zReportFirstTypeCount=(TextView)findViewById(R.id.zReportFirstTypeCount);
+        zReportTotalFirstType=(TextView)findViewById(R.id.zReportTotalFirstType);
+        zReportSecondTypeCount=(TextView)findViewById(R.id.zReportSecondTypeCount);
+        zReportTotalSecondType=(TextView)findViewById(R.id.zReportTotalSecondType);
+        zReportThirdTypeCount=(TextView)findViewById(R.id.zReportThirdTypeCount);
+        zReportTotalThirdType=(TextView)findViewById(R.id.zReportTotalThirdType);
+        zReportFourthTypeCount=(TextView)findViewById(R.id.zReportFourthTypeCount);
+        zReportTotalFourthType=(TextView)findViewById(R.id.zReportTotalFourthType);
         zReportCreditCardCount=(TextView)findViewById(R.id.zReportCreditCardCount);
         zReportTotalCreditCard=(TextView)findViewById(R.id.zReportTotalCreditCard);
         zReportCheckCount=(TextView)findViewById(R.id.zReportCheckCount);
@@ -133,15 +140,34 @@ public class ReportZDetailsActivity extends Activity {
         zReportOpiningReportCount=(TextView)findViewById(R.id.zReportOpiningReportCount);
         zReportPullReportAmount=(TextView)findViewById(R.id.zReportPullReportAmount);
         zReportDepositReportAmount=(TextView)findViewById(R.id.zReportDepositReportAmount);
-        zReportShekelAmount=(TextView)findViewById(R.id.zReportShekelAmount);
-        zReportUsdAmount=(TextView)findViewById(R.id.zReportUsdAmount);
-        zReportGbpAmount=(TextView)findViewById(R.id.zReportGbpAmount);
-        zReportEurAmount=(TextView)findViewById(R.id.zReportEurAmount);
+        zReportFirstTypeAmount=(TextView)findViewById(R.id.zReportFirstTypeAmount);
+        zReportSecondTypeAmount=(TextView)findViewById(R.id.zReportSecondTypeAmount);
+        zReportThirdTypeAmount=(TextView)findViewById(R.id.zReportThirdTypeAmount);
+        zReportFourthTypeAmount=(TextView)findViewById(R.id.zReportFourthTypeAmount);
         zReportPosSales=(TextView)findViewById(R.id.zReportPosSales);
         zReportSalesWithTax=(TextView)findViewById(R.id.zReportSalesWithTax);
         zReportSalesBeforeTax=(TextView)findViewById(R.id.zReportSalesBeforeTax);
         zReportTotalTax=(TextView)findViewById(R.id.Tax);
         zReportTotalPrice=(TextView)findViewById(R.id.TotalPrice);
+
+
+        CountLinear=(LinearLayout)findViewById(R.id.CountLinear);
+        CurrencyLayout=(LinearLayout) findViewById(R.id.CurrencyLayout);
+        TotalLinear=(LinearLayout) findViewById(R.id.TotalLinear);
+        firstType=(TextView) findViewById(R.id.firstType);
+        secondType=(TextView) findViewById(R.id.secondType);
+        thirdType=(TextView) findViewById(R.id.thirdType);
+        fourthType=(TextView) findViewById(R.id.fourthType);
+
+
+
+        firstTypeCount=(TextView) findViewById(R.id.firstTypeCount);
+        secondTypeCount=(TextView) findViewById(R.id.secondTypeCount);
+        thirdTypeCount=(TextView) findViewById(R.id.thirdTypeCount);
+        fourthTypeCount=(TextView) findViewById(R.id.fourthTypeCount);
+        totalPayPoint =(TextView)findViewById(R.id.zReportTotalPayPoint);
+        totalPointCount=(TextView)findViewById(R.id.zReportPayPointCount);
+
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             x= getIntent().getExtras().getBoolean(ReportsManagementActivity.COM_LEADPOS_XREPORT_FLAG);
@@ -176,6 +202,11 @@ public class ReportZDetailsActivity extends Activity {
         xReportDBAdapter.open();
         pt = new PrintTools(ReportZDetailsActivity.this);
         if (x==true) {
+            List<CurrencyType> currencyTypesList = null;
+            CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(ReportZDetailsActivity.this);
+            currencyTypeDBAdapter.open();
+            currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+            currencyTypeDBAdapter.close();
             ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(ReportZDetailsActivity.this);
             zReportCountDbAdapter.open();
             ZReportCount zReportCount=null;
@@ -190,8 +221,91 @@ public class ReportZDetailsActivity extends Activity {
             getCountForZReport(ReportZDetailsActivity.this,zReport);
 
             try {
+                firstTypeCount.setText(currencyTypesList.get(0).getType());
+                firstType.setText(currencyTypesList.get(0).getType());
+                if (SETTINGS.enableCurrencies) {
+                   /* CurrencyLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,6f));
+                    CountLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,6f));
+                    TotalLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,6f));*/
+                    visibleIfGone(secondTypeCount,currencyTypesList.get(1).getType());
+                    visibleIfGone(thirdTypeCount,currencyTypesList.get(2).getType());
+                    visibleIfGone(fourthTypeCount,currencyTypesList.get(3).getType());
+                    visibleIfGone(zReportSecondTypeCount,zReportCount.getSecondTypeCount()+"");
+                    visibleIfGone(zReportTotalSecondType,Util.makePrice(xReport.getSecondTypeAmount()));
+                    visibleIfGone(zReportThirdTypeCount,zReportCount.getThirdTypeCount()+"");
+                    visibleIfGone(zReportTotalThirdType,Util.makePrice(xReport.getThirdTypeAmount()));
+                    visibleIfGone(zReportFourthTypeCount,zReportCount.getFourthTypeCount()+"");
+                    visibleIfGone(zReportTotalFourthType,Util.makePrice(xReport.getFourthTypeAmount()));
+                    visibleIfGone(secondType,currencyTypesList.get(1).getType());
+                    visibleIfGone(thirdType,currencyTypesList.get(2).getType());
+                    visibleIfGone(fourthType,currencyTypesList.get(3).getType());
+                    visibleIfGone(zReportSecondTypeAmount,Util.makePrice(aReportDetailsForSecondCurrency));
+                    visibleIfGone(zReportThirdTypeAmount,Util.makePrice(aReportDetailsForThirdCurrency));
+                    visibleIfGone(zReportFourthTypeAmount,Util.makePrice(aReportDetailsForForthCurrency));
+
+                   /* secondTypeCount.setText(currencyTypesList.get(1).getType());
+                    thirdTypeCount.setText(currencyTypesList.get(2).getType());
+                    fourthTypeCount.setText(currencyTypesList.get(3).getType());
+
+                    zReportSecondTypeCount.setText(zReportCount.getSecondTypeCount()+"");
+                    zReportTotalSecondType.setText(Util.makePrice(xReport.getSecondTypeAmount()));
+                    zReportThirdTypeCount.setText(zReportCount.getThirdTypeCount()+"");
+                    zReportTotalThirdType.setText(Util.makePrice(xReport.getThirdTypeAmount()));
+                    zReportFourthTypeCount.setText(zReportCount.getFourthTypeCount()+"");
+                    zReportTotalFourthType.setText(Util.makePrice(xReport.getFourthTypeAmount()));
+
+                    secondType.setText(currencyTypesList.get(1).getType());
+                    thirdType.setText(currencyTypesList.get(2).getType());
+                    fourthType.setText(currencyTypesList.get(3).getType());
+
+
+                    zReportSecondTypeAmount.setText(Util.makePrice(aReportDetailsForSecondCurrency));
+                    zReportThirdTypeAmount.setText(Util.makePrice(aReportDetailsForThirdCurrency));;
+                    zReportFourthTypeAmount.setText(Util.makePrice(aReportDetailsForForthCurrency));;*/
+                }
+                else {
+                   /* CurrencyLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,3f));
+                    CountLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,3f));
+                    TotalLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,3f));*/
+
+                    goneIfVisible(secondTypeCount);
+                    goneIfVisible(thirdTypeCount);
+                    goneIfVisible(fourthTypeCount);
+                    goneIfVisible(zReportSecondTypeCount);
+                    goneIfVisible(zReportTotalSecondType);
+                    goneIfVisible(zReportThirdTypeCount);
+                    goneIfVisible(zReportTotalThirdType);
+                    goneIfVisible(zReportFourthTypeCount);
+                    goneIfVisible(zReportTotalFourthType);
+                    goneIfVisible(secondType);
+                    goneIfVisible(thirdType);
+                    goneIfVisible(fourthType);
+                    goneIfVisible(zReportSecondTypeAmount);
+                    goneIfVisible(zReportThirdTypeAmount);
+                    goneIfVisible(zReportFourthTypeAmount);
+                    /*secondTypeCount.setVisibility(View.GONE);
+                    thirdTypeCount.setVisibility(View.GONE);
+                    fourthTypeCount.setVisibility(View.GONE);
+
+                    zReportSecondTypeCount.setVisibility(View.GONE);
+                    zReportTotalSecondType.setVisibility(View.GONE);
+                    zReportThirdTypeCount.setVisibility(View.GONE);
+                    zReportTotalThirdType.setVisibility(View.GONE);
+                    zReportFourthTypeCount.setVisibility(View.GONE);
+                    zReportTotalFourthType.setVisibility(View.GONE);
+
+                    secondType.setVisibility(View.GONE);
+                    thirdType.setVisibility(View.GONE);
+                    fourthType.setVisibility(View.GONE);
+
+
+                    zReportSecondTypeAmount.setVisibility(View.GONE);
+                    zReportThirdTypeAmount.setVisibility(View.GONE);
+                    zReportFourthTypeAmount.setVisibility(View.GONE);*/
+                }
                 invoiceReceiptCountText.setText(zReportCount.getInvoiceReceiptCount()+"");
                 zReportTotalInvoiceReceipt.setText(Util.makePrice(xReport.getInvoiceReceiptAmount()));
+                totalPayPoint.setText(Util.makePrice(xReport.getPayPoint()));
                 invoiceCountText.setText(zReportCount.getInvoiceCount()+"");
                 zReportInvoice.setText(Util.makePrice(xReport.getInvoiceAmount()));
                 creditInvoiceCount.setText(zReportCount.getCreditInvoiceCount()+"");
@@ -199,14 +313,10 @@ public class ReportZDetailsActivity extends Activity {
                 zReportTotalSales.setText(Util.makePrice(xReport.getTotalSales()));
                 zReportCashPaymentCount.setText(zReportCount.getCashCount()+"");
                 zReportTotalCashPayment.setText(Util.makePrice(xReport.getCashTotal()));
-                zReportShekelCount.setText(zReportCount.getShekelCount()+"");
-                zReportTotalShekel.setText(Util.makePrice(xReport.getShekelAmount()));
-                zReportUsdCount.setText(zReportCount.getUsdCount()+"");
-                zReportTotalUsd.setText(Util.makePrice(xReport.getUsdAmount()));
-                zReportEurCount.setText(zReportCount.getEurCount()+"");
-                zReportTotalEur.setText(Util.makePrice(xReport.getEurAmount()));
-                zReportGbpCount.setText(zReportCount.getGbpCount()+"");
-                zReportTotalGbp.setText(Util.makePrice(xReport.getGbpAmount()));
+                zReportFirstTypeCount.setText(zReportCount.getFirstTYpeCount()+"");
+                zReportTotalFirstType.setText(Util.makePrice(xReport.getFirstTypeAmount()));
+
+                totalPointCount.setText(zReportCount.getPayPointCount()+"");
                 zReportCreditCardCount.setText(zReportCount.getCreditCount()+"");
                 zReportTotalCreditCard.setText(Util.makePrice(xReport.getCreditTotal()));
                 zReportCheckCount.setText(zReportCount.getCheckCount()+"");
@@ -216,16 +326,14 @@ public class ReportZDetailsActivity extends Activity {
                 zReportOpiningReportCount.setText(opiningReportList.size()+"");
                 zReportPullReportAmount.setText(Util.makePrice(xReport.getPullReportAmount()));
                 zReportDepositReportAmount.setText(Util.makePrice(xReport.getDepositReportAmount()));
-                zReportShekelAmount.setText(Util.makePrice(aReportDetailsForFirstCurrency));
-                zReportUsdAmount.setText(Util.makePrice(aReportDetailsForSecondCurrency));
-                zReportGbpAmount.setText(Util.makePrice(aReportDetailsForThirdCurrency));;
-                zReportEurAmount.setText(Util.makePrice(aReportDetailsForForthCurrency));;
-                zReportPosSales.setText(Util.makePrice(xReport.getTotalPosSales()));
-                zReportTotalTax.setText(xReport.getTotalTax()+"");
-                zReportSalesBeforeTax.setText(xReport.getSalesBeforeTax()+"");
-                zReportSalesWithTax.setText(xReport.getSalesWithTax()+"");
-                zReportTotalPrice.setText(Util.makePrice(xReport.getSalesBeforeTax()+xReport.getSalesWithTax()+xReport.getTotalTax()));
+                zReportFirstTypeAmount.setText(Util.makePrice(aReportDetailsForFirstCurrency));
 
+
+                zReportPosSales.setText(Util.makePrice(xReport.getTotalPosSales()));
+                zReportTotalTax.setText(Util.makePrice(xReport.getTotalTax()));
+                zReportSalesBeforeTax.setText(Util.makePrice(xReport.getSalesBeforeTax()));
+                zReportSalesWithTax.setText(Util.makePrice(xReport.getSalesWithTax()));
+                zReportTotalPrice.setText(Util.makePrice(xReport.getSalesBeforeTax()+xReport.getSalesWithTax()+xReport.getTotalTax()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -254,6 +362,11 @@ public class ReportZDetailsActivity extends Activity {
             }
 
         } else {
+            List<CurrencyType> currencyTypesList = null;
+            CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(ReportZDetailsActivity.this);
+            currencyTypeDBAdapter.open();
+            currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+            currencyTypeDBAdapter.close();
             ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(ReportZDetailsActivity.this);
             zReportCountDbAdapter.open();
             final ZReportCount zReportCount = zReportCountDbAdapter.getByID(zReport.getzReportId());
@@ -262,6 +375,95 @@ public class ReportZDetailsActivity extends Activity {
                 getCountForZReport(ReportZDetailsActivity.this, zReport);
             }
             try {
+
+                firstTypeCount.setText(currencyTypesList.get(0).getType());
+                firstType.setText(currencyTypesList.get(0).getType());
+                if (SETTINGS.enableCurrencies) {
+                   /* CurrencyLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,6f));
+                    CountLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,6f));
+                    TotalLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,6f));*/
+                    visibleIfGone(secondTypeCount,currencyTypesList.get(1).getType());
+                    visibleIfGone(thirdTypeCount,currencyTypesList.get(2).getType());
+                    visibleIfGone(fourthTypeCount,currencyTypesList.get(3).getType());
+                    visibleIfGone(zReportSecondTypeCount,zReportCount.getSecondTypeCount()+"");
+                    visibleIfGone(zReportTotalSecondType,Util.makePrice(zReport.getSecondTypeAmount()));
+                    visibleIfGone(zReportThirdTypeCount,zReportCount.getThirdTypeCount()+"");
+                    visibleIfGone(zReportTotalThirdType,Util.makePrice(zReport.getThirdTypeAmount()));
+                    visibleIfGone(zReportFourthTypeCount,zReportCount.getFourthTypeCount()+"");
+                    visibleIfGone(zReportTotalFourthType,Util.makePrice(zReport.getFourthTypeAmount()));
+                    visibleIfGone(secondType,currencyTypesList.get(1).getType());
+                    visibleIfGone(thirdType,currencyTypesList.get(2).getType());
+                    visibleIfGone(fourthType,currencyTypesList.get(3).getType());
+                    visibleIfGone(zReportSecondTypeAmount,Util.makePrice(aReportDetailsForSecondCurrency));
+                    visibleIfGone(zReportThirdTypeAmount,Util.makePrice(aReportDetailsForThirdCurrency));
+                    visibleIfGone(zReportFourthTypeAmount,Util.makePrice(aReportDetailsForForthCurrency));
+
+
+
+
+                    /*secondTypeCount.setText(currencyTypesList.get(1).getType());
+                    thirdTypeCount.setText(currencyTypesList.get(2).getType());
+                    fourthTypeCount.setText(currencyTypesList.get(3).getType());
+
+                    zReportSecondTypeCount.setText(zReportCount.getSecondTypeCount()+"");
+                    zReportTotalSecondType.setText(Util.makePrice(zReport.getSecondTypeAmount()));
+                    zReportThirdTypeCount.setText(zReportCount.getThirdTypeCount()+"");
+                    zReportTotalThirdType.setText(Util.makePrice(zReport.getThirdTypeAmount()));
+                    zReportFourthTypeCount.setText(zReportCount.getFourthTypeCount()+"");
+                    zReportTotalFourthType.setText(Util.makePrice(zReport.getFourthTypeAmount()));
+
+                    secondType.setText(currencyTypesList.get(1).getType());
+                    thirdType.setText(currencyTypesList.get(2).getType());
+                    fourthType.setText(currencyTypesList.get(3).getType());
+
+
+                    zReportSecondTypeAmount.setText(Util.makePrice(aReportDetailsForSecondCurrency));
+                    zReportThirdTypeAmount.setText(Util.makePrice(aReportDetailsForThirdCurrency));;
+                    zReportFourthTypeAmount.setText(Util.makePrice(aReportDetailsForForthCurrency));;*/
+                }
+                else {
+                   // CurrencyLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,3f));
+                   // CountLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,3f));
+                  //  TotalLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT,3f));
+                    goneIfVisible(secondTypeCount);
+                    goneIfVisible(thirdTypeCount);
+                    goneIfVisible(fourthTypeCount);
+                    goneIfVisible(zReportSecondTypeCount);
+                    goneIfVisible(zReportTotalSecondType);
+                    goneIfVisible(zReportThirdTypeCount);
+                    goneIfVisible(zReportTotalThirdType);
+                    goneIfVisible(zReportFourthTypeCount);
+                    goneIfVisible(zReportTotalFourthType);
+                    goneIfVisible(secondType);
+                    goneIfVisible(thirdType);
+                    goneIfVisible(fourthType);
+                    goneIfVisible(zReportSecondTypeAmount);
+                    goneIfVisible(zReportThirdTypeAmount);
+                    goneIfVisible(zReportFourthTypeAmount);
+                  /*  secondTypeCount.setVisibility(View.GONE);
+                    thirdTypeCount.setVisibility(View.GONE);
+                    fourthTypeCount.setVisibility(View.GONE);
+
+                    zReportSecondTypeCount.setVisibility(View.GONE);
+                    zReportTotalSecondType.setVisibility(View.GONE);
+                    zReportThirdTypeCount.setVisibility(View.GONE);
+                    zReportTotalThirdType.setVisibility(View.GONE);
+                    zReportFourthTypeCount.setVisibility(View.GONE);
+                    zReportTotalFourthType.setVisibility(View.GONE);
+
+                    secondType.setVisibility(View.GONE);
+                    thirdType.setVisibility(View.GONE);
+                    fourthType.setVisibility(View.GONE);
+
+
+                    zReportSecondTypeAmount.setVisibility(View.GONE);
+                    zReportThirdTypeAmount.setVisibility(View.GONE);
+                    zReportFourthTypeAmount.setVisibility(View.GONE);*/
+                }
+
+
+
+
                 invoiceReceiptCountText.setText(zReportCount.getInvoiceReceiptCount()+"");
                 zReportTotalInvoiceReceipt.setText(Util.makePrice(zReport.getInvoiceReceiptAmount()));
                 invoiceCountText.setText(zReportCount.getInvoiceCount()+"");
@@ -271,14 +473,17 @@ public class ReportZDetailsActivity extends Activity {
                 zReportTotalSales.setText(Util.makePrice(zReport.getTotalSales()));
                 zReportCashPaymentCount.setText(zReportCount.getCashCount()+"");
                 zReportTotalCashPayment.setText(Util.makePrice(zReport.getCashTotal()));
-                zReportShekelCount.setText(zReportCount.getShekelCount()+"");
-                zReportTotalShekel.setText(Util.makePrice(zReport.getShekelAmount()));
-                zReportUsdCount.setText(zReportCount.getUsdCount()+"");
-                zReportTotalUsd.setText(Util.makePrice(zReport.getUsdAmount()));
-                zReportEurCount.setText(zReportCount.getEurCount()+"");
-                zReportTotalEur.setText(Util.makePrice(zReport.getEurAmount()));
-                zReportGbpCount.setText(zReportCount.getGbpCount()+"");
-                zReportTotalGbp.setText(Util.makePrice(zReport.getGbpAmount()));
+                zReportFirstTypeCount.setText(zReportCount.getFirstTYpeCount()+"");
+                Log.d("kwdjkd",Util.makePrice(zReport.getFirstTypeAmount()));
+                zReportTotalFirstType.setText(Util.makePrice(zReport.getFirstTypeAmount()));
+                totalPayPoint.setText(Util.makePrice(zReport.getTotalPayPoint()));
+                totalPointCount.setText(zReportCount.getPayPointCount());
+
+
+
+
+
+
                 zReportCreditCardCount.setText(zReportCount.getCreditCount()+"");
                 zReportTotalCreditCard.setText(Util.makePrice(zReport.getCreditTotal()));
                 zReportCheckCount.setText(zReportCount.getCheckCount()+"");
@@ -288,14 +493,14 @@ public class ReportZDetailsActivity extends Activity {
                 zReportOpiningReportCount.setText(opiningReportList.size()+"");
                 zReportPullReportAmount.setText(Util.makePrice(zReport.getPullReportAmount()));
                 zReportDepositReportAmount.setText(Util.makePrice(zReport.getDepositReportAmount()));
-                zReportShekelAmount.setText(Util.makePrice(aReportDetailsForFirstCurrency));
-                zReportUsdAmount.setText(Util.makePrice(aReportDetailsForSecondCurrency));
-                zReportGbpAmount.setText(Util.makePrice(aReportDetailsForThirdCurrency));;
-                zReportEurAmount.setText(Util.makePrice(aReportDetailsForForthCurrency));;
+                zReportFirstTypeAmount.setText(Util.makePrice(aReportDetailsForFirstCurrency));
+
+
+
                 zReportPosSales.setText(Util.makePrice(zReport.getTotalPosSales()));
-                zReportTotalTax.setText(zReport.getTotalTax()+"");
-                zReportSalesBeforeTax.setText(zReport.getSalesBeforeTax()+"");
-                zReportSalesWithTax.setText(zReport.getSalesWithTax()+"");
+                zReportTotalTax.setText(Util.makePrice(zReport.getTotalTax()));
+                zReportSalesBeforeTax.setText(Util.makePrice(zReport.getSalesBeforeTax()));
+                zReportSalesWithTax.setText(Util.makePrice(zReport.getSalesWithTax()));
                 zReportTotalPrice.setText(Util.makePrice(zReport.getSalesBeforeTax()+zReport.getSalesWithTax()+zReport.getTotalTax()));
               Log.d("zReportDetials",zReport.toString());
             } catch (Exception e) {
@@ -458,7 +663,22 @@ public class ReportZDetailsActivity extends Activity {
         }
 
     }
+    public static void visibleIfGone (View v,String text)
+    {
+        if (v.getVisibility() == View.INVISIBLE){
+            v.setVisibility(View.VISIBLE);
+            ((TextView)v).setText(text);
+        }
+        else {
+            ((TextView)v).setText(text);
+        }
+    }
 
+    public static void goneIfVisible (View v)
+    {
+        if (v.getVisibility() == View.VISIBLE)
+            v.setVisibility(View.INVISIBLE);
+    }
     private List<OrderDetails> orderList(List<Order> sales){
         List<OrderDetails> ol=new ArrayList<OrderDetails>();
         OrderDetailsDBAdapter orderDBAdapter=new OrderDetailsDBAdapter(this);
@@ -566,6 +786,23 @@ public class ReportZDetailsActivity extends Activity {
         return temp;
     }
     public void getCountForZReport(Context context, ZReport z) {
+        List<CurrencyType> currencyTypesList = null;
+        List<Currency> currencyList=new ArrayList<>();
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(ReportZDetailsActivity.this);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        Log.d("currencyTypesListooo",currencyTypesList.toString());
+
+        for (int i=0;i<currencyTypesList.size();i++){
+            CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
+            currencyDBAdapter.open();
+            currencyList.add(currencyDBAdapter.getCurrencyByCode(currencyTypesList.get(i).getType()));
+            currencyDBAdapter.close();
+        }
+        Log.d("currencyKdd",currencyList.toString());
+        Log.d("hyyg",currencyList.get(0).getId()+"");
+
+        currencyTypeDBAdapter.close();
         ZReportDBAdapter zReportDBAdapter =new ZReportDBAdapter(context);
         zReportDBAdapter.open();
         JSONObject res = new JSONObject();
@@ -594,12 +831,21 @@ public class ReportZDetailsActivity extends Activity {
             for (int a=0 ;a<opiningReportList.size();a++) {
                 //aReportAmount+=opiningReportList.get(a).getAmount();
                 OpiningReport opiningReport = opiningReportList.get(a);
-                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.Shekel, opiningReport.getOpiningReportId());
-                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.USD, opiningReport.getOpiningReportId());
-                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.GBP, opiningReport.getOpiningReportId());
-                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(CONSTANT.EUR, opiningReport.getOpiningReportId());
+                aReportDetailsForFirstCurrency+= aReportDetailsDBAdapter.getLastRow(currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForSecondCurrency+= aReportDetailsDBAdapter.getLastRow(currencyList.get(1).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForThirdCurrency+= aReportDetailsDBAdapter.getLastRow(currencyList.get(2).getId(), opiningReport.getOpiningReportId());
+                aReportDetailsForForthCurrency+= aReportDetailsDBAdapter.getLastRow(currencyList.get(3).getId(), opiningReport.getOpiningReportId());
             }
 
+
+        }
+        else {
+            OpiningReportDetailsDBAdapter aReportDetailsDBAdapter=new OpiningReportDetailsDBAdapter(context);
+            aReportDetailsDBAdapter.open();
+            for (int a=0 ;a<opiningReportList.size();a++) {
+                OpiningReport opiningReport = opiningReportList.get(a);
+                aReportDetailsForFirstCurrency += aReportDetailsDBAdapter.getLastRow(currencyList.get(0).getId(), opiningReport.getOpiningReportId());
+            }
         }
        /* checkList=new ArrayList<>();
         cashAmount=0;

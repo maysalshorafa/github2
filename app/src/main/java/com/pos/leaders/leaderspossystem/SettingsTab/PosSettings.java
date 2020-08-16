@@ -21,7 +21,7 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
  */
 
 public class PosSettings extends Fragment {
-    CheckBox currencyCheckBox , creditCardCheckBox ,cbPinPad, customerMeasurementCheckBox ;
+    CheckBox currencyCheckBox , creditCardCheckBox ,cbPinPad, customerMeasurementCheckBox ,foodStamp ;
     TextView floatPointNo , printerTypeTv ;
     public static final String LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT = "LEAD_POS_RESULT_INTENT_SETTING_ENABLE_EDIT";
     Button btnEditPosSetting;
@@ -41,6 +41,7 @@ public class PosSettings extends Fragment {
         creditCardImage = (ImageView) v.findViewById(R.id.creditCardImage);
         ivPinpad = (ImageView) v.findViewById(R.id.creditCardPinPadImage);
         customerMeasurementImage = (ImageView) v.findViewById(R.id.customerMeasurementImage);
+        foodStamp=(CheckBox)v.findViewById(R.id.setUpManagementFoodStampCheckBox);
         floatPointNo.setText(SETTINGS.decimalNumbers+" ");
         printerTypeTv.setText(SETTINGS.printer.toString());
         if(SETTINGS.enableCurrencies){
@@ -54,6 +55,9 @@ public class PosSettings extends Fragment {
         }
         if(SETTINGS.enableCustomerMeasurement){
             customerMeasurementCheckBox.setChecked(true);
+        }
+        if(SETTINGS.enableFoodStamp){
+            foodStamp.setChecked(true);
         }
         btnEditPosSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +74,16 @@ public class PosSettings extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.currency_is_activated_in_pos), Toast.LENGTH_LONG).show();
                 }else {
                     Toast.makeText(getContext(), getString(R.string.currency_is_not_activated_in_pos), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        foodStamp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SETTINGS.enableFoodStamp){
+                    Toast.makeText(getContext(), getString(R.string.food_stamp_is_activated_in_pos), Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(getContext(), getString(R.string.food_stamp_is_not_activated_in_pos), Toast.LENGTH_LONG).show();
                 }
             }
         });

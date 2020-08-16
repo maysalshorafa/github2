@@ -84,6 +84,7 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View gridView=convertView;
+		String currencyTypeSymbol;
 		if(convertView==null){
 			inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			gridView=inflater.inflate(R.layout.grid_view_item_product_catalog,null);
@@ -91,21 +92,16 @@ public class ProductCatalogGridViewAdapter extends BaseAdapter {
 		TextView tvName=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVName);
 		TextView tvBarcode=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVBarCode);
 		TextView tvPrice=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVPrice);
-
+         if (products!=null){
 		tvName.setText(products.get(position).getDisplayName());
 		tvBarcode.setText(products.get(position).getSku());
-		if(products.get(position).getCurrencyType()==0) {
-			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.ins));
-		}
-		if(products.get(position).getCurrencyType()==1) {
-			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.dolor_sign));
-		}
-		if(products.get(position).getCurrencyType()==2) {
-			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.eur_sign));
-		}
-		if(products.get(position).getCurrencyType()==3) {
-			tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.gbp));
-		}
+		 String currencyType=products.get(position).getCurrencyType();
+			 if (currencyType.equals("0")){
+				 currencyTypeSymbol = "₪";
+			 }
+			 else {
+		 currencyTypeSymbol = String.valueOf(symbolWithCodeHashMap.valueOf(products.get(position).getCurrencyType()).getValue());}
+		tvPrice.setText(products.get(position).getPriceWithTax() + " " + currencyTypeSymbol);}
 
 		return gridView;
 	}

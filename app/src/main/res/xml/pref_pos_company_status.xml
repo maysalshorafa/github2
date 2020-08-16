@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="BO_COMPANY"
+        android:entries="@array/Company_status_list_preference"
+        android:entryValues="@array/Company_status_list_preference"
+        android:key="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/company_status" />
+
+</PreferenceScreen>

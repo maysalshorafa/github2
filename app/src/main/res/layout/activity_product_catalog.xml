@@ -12,7 +12,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.9"
+        tools:layout_editor_absoluteY="799dp"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/productCatalog_BTCreateNewProduct"
@@ -21,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:text="@string/create_new_product"
@@ -40,7 +42,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.57" />
+        app:layout_constraintGuide_percent="0.57"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="438dp" />
 
     <Button
 
@@ -57,7 +61,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/productCatalog_BTCancel"
         app:layout_constraintRight_toLeftOf="@+id/guideline8"
-        app:layout_constraintTop_toTopOf="@+id/guideline7" />
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <com.pos.leaders.leaderspossystem.Elements.CustomEditText
         android:id="@+id/productCatalog_ETSearch"
@@ -66,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="30dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:drawableLeft="@drawable/search_icon"
@@ -97,7 +103,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline7"
         tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginStart="8dp" />
 
     <HorizontalScrollView
         android:id="@+id/productCatalog_svDepartment1"
@@ -108,11 +115,12 @@
         android:layout_marginRight="16dp"
         android:layoutDirection="rtl"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1">
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
 
         <LinearLayout
@@ -134,7 +142,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="100dp"
         android:horizontalSpacing="24dp"
         android:numColumns="4"
         android:paddingLeft="20dp"
@@ -145,16 +153,31 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productCatalog_ETSearch"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/productCatalog_etProductCount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/productCatalog_ETSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/productCatalog_etSync"
+        android:layout_marginStart="8dp" />
+
+    <Button
+        android:id="@+id/productCatalog_etSync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="135dp"
+        android:text="Get Product"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/productCatalog_ETSearch"
+        style="@style/AppTheme.bt_normal"
+        android:layout_marginStart="135dp" />
+
 
 </android.support.constraint.ConstraintLayout>

@@ -9,16 +9,26 @@ public class SumPoint {
     private long orderId;
     private int pointAmount;
     private long customerId;
+    private int totalPoint;
 
 
     public SumPoint() {
     }
 
-    public SumPoint(long sumPointId, long orderId, int pointAmount, long customerId) {
+    public SumPoint(long sumPointId, long orderId, int pointAmount, long customerId,int totalPoint) {
         this.sumPointId = sumPointId;
         this.orderId = orderId;
         this.pointAmount = pointAmount;
         this.customerId = customerId;
+        this.totalPoint=totalPoint;
+    }
+
+    public int getTotalPoint() {
+        return totalPoint;
+    }
+
+    public void setTotalPoint(int totalPoint) {
+        this.totalPoint = totalPoint;
     }
 
     public long getSumPointId() {
@@ -51,5 +61,16 @@ public class SumPoint {
 
     public void setCustomerId(long customerId) {
         this.customerId = customerId;
+    }
+
+    @Override
+    public String toString() {
+        return "SumPoint{" +
+                "sumPointId=" + sumPointId +
+                ", orderId=" + orderId +
+                ", pointAmount=" + pointAmount +
+                ", customerId=" + customerId +
+                ", totalPoint=" + totalPoint +
+                '}';
     }
 }

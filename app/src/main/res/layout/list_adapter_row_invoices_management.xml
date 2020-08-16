@@ -44,38 +44,7 @@
             android:textSize="24sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/listInvoiceManagement_FLMore"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/listInvoiceManagement_BTCreateCashReceipt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="@string/cash"
-            />
-        <Button
-            android:id="@+id/listInvoiceManagement_BTCreateCheckReceipt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="@string/checks"
-           />
-        <Button
-        android:id="@+id/listInvoiceManagement_BTCreateCreditReceipt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_weight="1"
-        android:text="@string/credit_card"
-        />
-    </LinearLayout>
 
 </LinearLayout>
+

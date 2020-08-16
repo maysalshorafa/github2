@@ -100,7 +100,6 @@
             android:layout_marginTop="8dp"
             android:text="@string/delete_check"
             android:layout_gravity="center"
-
             android:src="@drawable/delete_button"
           />
     </LinearLayout>

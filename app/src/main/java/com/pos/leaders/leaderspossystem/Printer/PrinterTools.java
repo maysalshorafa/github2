@@ -84,13 +84,13 @@ public class PrinterTools {
     private static void Print_BTB880(Bitmap _bitmap,Context context) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
         // final UsbPrinter printer = new UsbPrinter(1155, 30016);
-        final ProgressDialog dialog = new ProgressDialog(context);
+      //  final ProgressDialog dialog = new ProgressDialog(context);
         final Bitmap bitmap = _bitmap;
-        dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
+        //dialog.setTitle(context.getString(R.string.wait_for_finish_printing));
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
-                dialog.show();
+                //dialog.show();
                 ////Hebrew 15 Windows-1255
 
                 int i = posInterfaceAPI.OpenDevice();
@@ -115,7 +115,7 @@ public class PrinterTools {
                 // pos.cashdrawerOpen(0,20,20);
 
                 posInterfaceAPI.CloseDevice();
-                dialog.cancel();
+            //    dialog.cancel();
 
             }
 
@@ -159,8 +159,13 @@ public class PrinterTools {
                 }
                 catch(Exception ignored)
                 {
+                    ignored.printStackTrace();
 
                 }
+                if ((dialog != null) && dialog.isShowing()) {
+                    dialog.cancel();
+                }
+
 
             }
 
@@ -213,14 +218,17 @@ public class PrinterTools {
                 }
                 catch(Exception ignored)
                 {
-
+                    ignored.printStackTrace();
                 }
-
+                if ((dialog != null) && dialog.isShowing()) {
+                    dialog.cancel();
+                }
             }
 
             @Override
             protected Void doInBackground(Void... params) {
                 PdfUA pdfUA = new PdfUA();
+                Log.d("exception55555",SESSION._TEMP_ORDERS_COPY.toString());
 
                 try {
                     pdfUA.createNormalInvoiceForCopy(context,SESSION._TEMP_ORDER_DETAILES_COPY,SESSION._TEMP_ORDERS_COPY,false,mainMer);
@@ -268,7 +276,9 @@ public class PrinterTools {
             }
 
 
-            dialog.cancel();
+            if ((dialog != null) && dialog.isShowing()) {
+                dialog.cancel();
+            }
         } else {
             new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                     .setTitle(context.getString(R.string.printer))
@@ -315,8 +325,9 @@ public class PrinterTools {
 
             }
 
-
-            dialog.cancel();
+            if ((dialog != null) && dialog.isShowing()) {
+                dialog.cancel();
+            }
         } else {
             new android.support.v7.app.AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                     .setTitle(context.getString(R.string.printer))
@@ -361,7 +372,9 @@ public class PrinterTools {
                     }
 
 
-                    dialog.cancel();
+                    if ((dialog != null) && dialog.isShowing()) {
+                        dialog.cancel();
+                    }
 
                 }
 
@@ -428,7 +441,9 @@ public class PrinterTools {
                 }
 
 
-                dialog.cancel();
+                if ((dialog != null) && dialog.isShowing()) {
+                    dialog.cancel();
+                }
 
             }
 
@@ -647,9 +662,10 @@ public class PrinterTools {
             }
             h += bitmap.get(i).getHeight();
         }
-        Bitmap temp;
+        Bitmap temp = null;
         if(w==0||h==0){
-            temp=bitmapList.get(0);
+            if (bitmapList!=null &&!bitmapList.isEmpty()){
+            temp=bitmapList.get(0);}
         }else {
         temp= Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(temp);
@@ -678,7 +694,7 @@ public class PrinterTools {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     //feed paper
-
+                    if (dialog.isShowing())
                     dialog.cancel();
                 }
 

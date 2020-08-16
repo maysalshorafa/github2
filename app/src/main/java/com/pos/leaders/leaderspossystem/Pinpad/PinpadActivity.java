@@ -21,7 +21,6 @@ import com.credix.pinpad.jni.PinPadAPI;
 import com.credix.pinpad.jni.PinPadResponse;
 import com.credix.pinpad.jni.PinPadSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.NumberOfPaymentException;
@@ -30,15 +29,16 @@ import com.pos.leaders.leaderspossystem.Pinpad.Credix.SendRequestType;
 import com.pos.leaders.leaderspossystem.Pinpad.Credix.TransactionCode;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
-import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_IP;
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PASSWORD;
@@ -65,7 +65,7 @@ public class PinpadActivity extends AppCompatActivity {
     public static final int PAYMENTS_MIN_NUMBER = 1;
     boolean creditReceipt=false;
     JSONObject invoiceJson=new JSONObject();
-    BoInvoice invoice ;
+    List<BoInvoice> invoice ;
 
 
     @Override
@@ -88,27 +88,16 @@ public class PinpadActivity extends AppCompatActivity {
             if (extras.containsKey("creditReceipt")) {
                 creditReceipt = true;
                 totalPrice = (double) extras.get("_Price");
-                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
-                try {
-                    invoiceJson = new JSONObject(extras.getString("invoice"));
-                    JSONObject docJson = invoiceJson.getJSONObject("documentsData");
-                    docJson.remove("@type");
-                    docJson.put("type", "Invoice");
-                    invoiceJson.remove("documentsData");
-                    invoiceJson.put("documentsData", docJson);
-                    invoice = new BoInvoice(DocumentType.INVOICE, docJson, invoiceJson.getString("docNum"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
+                invoice = (List<BoInvoice>) extras.get("invoice");
             } else {
                 creditReceipt=false;
                 totalPrice = (double) extras.get(LEADERS_POS_PIN_PAD_TOTAL_PRICE);
-                tvTotalPrice.append(" " + Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+                tvTotalPrice.append(" " + Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
             }
         }else {
             finish();
         }
-
         pinpadSP = this.getSharedPreferences(PINPAD_PREFERENCES, 0);
         if (pinpadSP.contains(PINPAD_IP) || pinpadSP.contains(PINPAD_USERNAME)) {
             ip = (pinpadSP.getString(PINPAD_IP, ""));
@@ -224,7 +213,7 @@ public class PinpadActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             SESSION._TEMP_CREDITCARD_PAYMNET=ccp;
-            DocumentControl.sendDoc(PinpadActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice);
+          //  DocumentControl.sendReciptDoc(PinpadActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice,"");
 
         }else {
             Intent i = new Intent();

@@ -3,6 +3,7 @@ package com.pos.leaders.leaderspossystem.Payment;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.symbolWithCodeHashMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,9 +69,15 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         // Get the data item for this position
         final PaymentTable paymentTable = getItem(position);
 
+/*
         String sym = " " + currencySymbols.get(paymentTable.getCurrency().getType());
-        String sym1 = " " + currencySymbols.get(paymentTable.getTempCurrency());
+        String sym1 = " " + currencySymbols.get(paymentTable.getTempCurrency());*/
+         if (paymentTable.getTempCurrency()==null){
+             paymentTable.setTempCurrency(paymentTable.getCurrency().getType());
+         }
 
+        String sym = " " + String.valueOf(symbolWithCodeHashMap.valueOf(paymentTable.getCurrency().getType()).getValue());
+        String sym1 = " " + String.valueOf(symbolWithCodeHashMap.valueOf(paymentTable.getTempCurrency()).getValue());
         holder.tvDue.setText(Util.makePrice(paymentTable.getDue()) + sym1);
         if(!Double.isNaN(paymentTable.getTendered())) {
             holder.tvTendered.setText(Util.makePrice(paymentTable.getTendered()) + sym);
@@ -89,7 +97,7 @@ public class PaymentTableAdapter extends ArrayAdapter<PaymentTable> {
         });
 
         if(!Double.isNaN(paymentTable.getChange()))
-            holder.tvChange.setText(Util.makePrice(paymentTable.getChange()) + sym);
+            holder.tvChange.setText(Util.makePrice(paymentTable.getChange()) + sym1);
         else
             holder.tvChange.setText("");
 

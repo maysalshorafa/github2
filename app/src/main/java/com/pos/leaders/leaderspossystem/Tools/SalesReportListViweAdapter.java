@@ -20,7 +20,6 @@ import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.R;
-import com.pos.leaders.leaderspossystem.Reports.SalesReportActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -134,7 +133,7 @@ public class SalesReportListViweAdapter  extends ArrayAdapter {
             }
             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
             holder.tvDate.setText(String.format(new Locale("en"),format.format(order.getCreatedAt())));
-            holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+            holder.tvPrice.setText(Util.makePrice(price) + " " + SETTINGS.currencySymbol);
 
             holder.tvStatus.setText("INRC");
 
@@ -176,7 +175,7 @@ public class SalesReportListViweAdapter  extends ArrayAdapter {
                 Date date = DateConverter.stringToDate(doc.getString("date"));
 
                 holder.tvDate.setText(DateConverter.geDate(date));
-                holder.tvPrice.setText(Util.makePrice(price) + " " + context.getString(R.string.ins));
+                holder.tvPrice.setText(Util.makePrice(price) + " " + SETTINGS.currencySymbol);
                 JSONObject customerJson= doc.getJSONObject("customer");
                 holder.tvCustomerName.setText(customerJson.get("firstName")+" "+customerJson.get("lastName"));
                 int count =0;

@@ -3,14 +3,19 @@ package com.pos.leaders.leaderspossystem.Tools;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.ExtractedTextRequest;
+import android.view.inputmethod.InputConnection;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.pos.leaders.leaderspossystem.ChecksActivity;
 import com.pos.leaders.leaderspossystem.Models.Check;
@@ -33,6 +38,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 	private int bgColor = 0;
 	private  double amount=0;
 
+	ViewHolder holder = null;
 	public ChecksListViewAdapter(Context context, int resource, List<Check> checks) {
 		super(context, resource, checks);
 		this.context = context;
@@ -46,11 +52,9 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 
-		ViewHolder holder = null;
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = inflater.inflate(resource, null);
-
 			holder.etAccountNum = (EditText) convertView.findViewById(R.id.listChecks_ETAccountNum);
 			holder.etAmount = (EditText) convertView.findViewById(R.id.listChecks_ETAmount);
 			holder.etBankNum = (EditText) convertView.findViewById(R.id.listChecks_ETBankNum);
@@ -65,7 +69,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		}
 
 		if (checks.get(position) != null) {
-			if(position==0){
+		/*	if(position==0){
 				holder.etAmount.setHint(checks.get(position).getAmount() + "");
 				holder.etBankNum.setHint(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setHint(checks.get(position).getBranchNum() + "");
@@ -73,16 +77,19 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 				holder.etAccountNum.setHint(checks.get(position).getAccountNum() + "");
 				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
 				amount=checks.get(position).getAmount() ;
-			}else {
+			}*/
+		//	else {
+				holder.etAccountNum.setText(checks.get(position).getAccountNum() + "");
 				holder.etAccountNum.setText(checks.get(position).getAccountNum() + "");
 				holder.etAmount.setText(checks.get(position).getAmount() + "");
 				holder.etBankNum.setText(checks.get(position).getBankNum() + "");
 				holder.etBenchNum.setText(checks.get(position).getBranchNum() + "");
 				holder.etCheckNum.setText(checks.get(position).getCheckNum() + "");
 				holder.etDate.setText(DateConverter.toDate(new Date(checks.get(position).getCreatedAt().getTime())));
-
-			}
+		//	}
 		}
+
+
 		if(bgColor%2==0){
 			convertView.setBackgroundColor(context.getResources().getColor(R.color.backgroundColor));
 		}
@@ -116,14 +123,22 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.i("delete click", "onClick: "+position);
+				Log.d("delete click", "onClick: "+position);
 				ChecksActivity checksActivity = (ChecksActivity)getContext();
 				checksActivity.delete(position);
 			}
 		});
 		return convertView;
 	}
-
+	public static void checkText (View v,String text)
+	{
+		if (((TextView)v).getText().equals("0")){
+			((TextView)v).setText("");
+		}
+		else {
+			((TextView)v).setText(text);
+		}
+	}
 	public void updateDate(int position, long date){
 		Date date1 = new Date(date);
 		Calendar cal = Calendar.getInstance();
@@ -132,6 +147,7 @@ public class ChecksListViewAdapter extends ArrayAdapter {
 		checks.get(position).setCreatedAt(new java.sql.Timestamp(date1.getTime()));
 		this.notifyDataSetChanged();
 	}
+
 
 	public class ViewHolder {
 		private EditText etAmount;

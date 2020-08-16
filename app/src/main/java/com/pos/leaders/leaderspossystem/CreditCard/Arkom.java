@@ -24,10 +24,10 @@ public class Arkom {
     static private final String NAMESPACE = "https://secure.arkom.co.il/";
 
     //For release mode
-    static private final String URL = "https://cc.arkom.co.il/MTS_WebService.asmx";
+  static private final String URL = "https://cc.arkom.co.il/MTS_WebService.asmx";
 
     //For test mode
-    //static private final String URL = "https://secure.arkom.co.il/wsdev/MTS_WebService.asmx";
+  //  static private final String URL = "https://secure.arkom.co.il/wsdev/MTS_WebService.asmx";
 
     static private final String SOAP_ACTION_MTS_PING = "https://secure.arkom.co.il/MTS_Ping";
     static private final String METHOD_NAME_MTS_PING = "MTS_Ping";
@@ -280,7 +280,7 @@ public class Arkom {
                             Arkom.CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,transID,CreditCardNumber,CardExpiry,TransSum,
                                     TransPoints,Last4Digits,CVV2,ID,TransCurrency,ISO_Currency,CreditType,ApprovalCode,FirstPayment,
                                     FixedPayment,NumOfFixedPayments,TransRef,J_Prm,Z_Prm,Q_Prm,R_Prm);*/
-        double totalPrice = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", sumPrice));
+        double totalPrice = Double.parseDouble(String.format(Locale.US, "%.2f", sumPrice));
         double fixedPayment=0;
         double firstPayment=0;
         if(totalPrice<0){
@@ -289,8 +289,8 @@ public class Arkom {
             if(totalPrice <0 ){
                 mult=-1;
             }
-             fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", (totalPrice*mult) / numberOfPay));
-             firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", (totalPrice*mult) - (fixedPayment * (numberOfPay - 1))));
+             fixedPayment = Double.parseDouble(String.format(Locale.US, "%.2f", (totalPrice*mult) / numberOfPay));
+             firstPayment = Double.parseDouble(String.format(Locale.US, "%.2f", (totalPrice*mult) - (fixedPayment * (numberOfPay - 1))));
             try{
                 SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,
                         0,"","","",1,"ILS",CreditType,ApprovalCode,firstPayment,fixedPayment,numberOfPay,"",0,"","","");
@@ -302,8 +302,8 @@ public class Arkom {
                 //  Log.e("error",ex.getMessage());
             }
         }else {
-            fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice / numberOfPay));
-            firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
+            fixedPayment = Double.parseDouble(String.format(Locale.US, "%.2f", totalPrice / numberOfPay));
+            firstPayment = Double.parseDouble(String.format(Locale.US, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
             try{
                 SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,
                         0,"","","",1,"ILS",CreditType,ApprovalCode,firstPayment,fixedPayment,numberOfPay,"",0,"","","");
@@ -317,8 +317,8 @@ public class Arkom {
             }
         }
         }else {
-             fixedPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice / numberOfPay));
-             firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
+             fixedPayment = Double.parseDouble(String.format(Locale.US, "%.2f", totalPrice / numberOfPay));
+             firstPayment = Double.parseDouble(String.format(Locale.US, "%.2f", totalPrice - (fixedPayment * (numberOfPay - 1))));
             try{
                 SoapObject soap=CCTransaction(SETTINGS.ccNumber,SETTINGS.ccPassword,TransactionID,cardNumber,"",totalPrice,
                         0,"","","",1,"ILS",CreditType,ApprovalCode,firstPayment,fixedPayment,numberOfPay,"",0,"","","");
@@ -353,7 +353,7 @@ public class Arkom {
         request.addProperty("TransactionID", transactionID);
         request.addProperty("CardNum", cardNum);
         request.addProperty("CardExpiry", cardExpiry);
-        request.addProperty("TransSum", String.format("%.2f", transSum));
+        request.addProperty("TransSum", String.format(Locale.US,"%.2f", transSum));
         /*
         PropertyInfo TransSumProp = new PropertyInfo();
         TransSumProp.setName("TransSum");
@@ -361,7 +361,7 @@ public class Arkom {
         TransSumProp.setType(Integer.class);
         request.addProperty(TransSumProp);
         */
-        request.addProperty("TransPoints", String.format("%.2f", transPoints));
+        request.addProperty("TransPoints", String.format(Locale.US,"%.2f", transPoints));
         request.addProperty("Last4Digits", last4Digits);
         request.addProperty("CVV2", CVV2);
         request.addProperty("ID", ID);
@@ -369,15 +369,14 @@ public class Arkom {
         request.addProperty("ISO_Currency", ISO_Currenc);
         request.addProperty("CreditType", creditType);
         request.addProperty("ApprovalCode", approvalCode);
-        request.addProperty("FirstPayment", String.format("%.2f", firstPayment));
-        request.addProperty("FixedPayment", String.format("%.2f", fixedPayment));
+        request.addProperty("FirstPayment", String.format(Locale.US,"%.2f", firstPayment));
+        request.addProperty("FixedPayment", String.format(Locale.US,"%.2f", fixedPayment));
         request.addProperty("NumOfFixedPayments", numOfFixedPayments);
         request.addProperty("TransRef", transRef);
         request.addProperty("J_Prm", J_Prm);
         request.addProperty("Z_Prm", Z_Prm);
         request.addProperty("Q_Prm", Q_Prm);
         request.addProperty("A_Prm", A_Prm);
-
 
         request.addProperty("Answer", "");
         request.addProperty("MerchantNote", "");
@@ -498,11 +497,13 @@ public class Arkom {
         String last4Digits = creditCardNumber.substring(creditCardNumber.length() - 4, creditCardNumber.length());
         double fixedPayment=transSum/numOfFixedPayments;
         try {
-            double firstPayment = Double.parseDouble(String.format(Locale.ENGLISH, "%.2f", transSum - (fixedPayment * (numOfFixedPayments - 1))));
+            double firstPayment = Double.parseDouble(String.format(Locale.US,"%.2f", transSum - (fixedPayment * (numOfFixedPayments - 1))));
+            Log.d("firstPaymentCr",firstPayment+"test");
             SoapObject soapObject = Arkom.CCTransaction(SETTINGS.ccNumber, SETTINGS.ccPassword, TransactionID,
                     creditCardNumber, cardExpiry, transSum, 0, last4Digits, cvv2,
                     idNumber, 1, "ILS", CreditType, approvalCode, firstPayment,
                     fixedPayment, numOfFixedPayments, "", 0, "", "", "");
+
             PutTransactionAcknowledge(SETTINGS.ccNumber, SETTINGS.ccPassword, TransactionID);
             return soapObject;
         }

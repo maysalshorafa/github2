@@ -9,4 +9,5 @@ public class PaymentMethod {
     public static final String CHECK = "Check";
     public static final String CREDIT_CARD = "credit_card";
     public static final String PIN_PAD="Pin Pad";
+    public static final String PAY_POINT="Pay Point";
 }

@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.pos.leaders.leaderspossystem.Models.Order.newInstance;
 import static com.pos.leaders.leaderspossystem.syncposservice.Util.BrokerHelper.sendToBroker;
 
 /**
@@ -43,10 +44,11 @@ public class OrderDBAdapter {
 	protected static final String ORDER_COLUMN_CANCELING_ORDER_ID = "cancellingOrderId";
 	protected static final String ORDER_COLUMN_SALES_BEFORE_TAX = "salesBeforeTax";
 	protected static final String ORDER_COLUMN_SALES_WITH_TAX = "salesWithTax";
+	protected static final String ORDER_COLUMN_SALES_TOTAL_SAVED = "salesTotalSaved";
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE _Order( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `byEmployee` INTEGER, `order_date` TIMESTAMP DEFAULT current_timestamp, " +
-			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, salesBeforeTax REAL, salesWithTax REAL, customerId  INTEGER DEFAULT 0 ,customer_name  TEXT,cartDiscount REAL DEFAULT 0.0, key  TEXT , numberDiscount REAL DEFAULT 0.0, cancellingOrderId INTEGER DEFAULT 0," +
+			"`replacementNote` INTEGER DEFAULT 0, `status` INTEGER DEFAULT 0, total_price REAL, total_paid_amount REAL, salesBeforeTax REAL, salesWithTax REAL,salesTotalSaved REAL, customerId  INTEGER DEFAULT 0 ,customer_name  TEXT,cartDiscount REAL DEFAULT 0.0, key  TEXT , numberDiscount REAL DEFAULT 0.0, cancellingOrderId INTEGER DEFAULT 0," +
 			"FOREIGN KEY(`byEmployee`) REFERENCES `employees.id`)";
     public static final String DATABASE_UPDATE_FROM_V2_TO_V3[] = {"alter table _Order rename to _Order_v3;", DATABASE_CREATE + "; ",
             "insert into _Order (id,byEmployee,order_date,replacementNote,status,total_price,total_paid_amount,customerId,customer_name,cartDiscount,key,numberDiscount,cancellingOrderId,) " +
@@ -81,7 +83,7 @@ public class OrderDBAdapter {
 
 
 	public long insertEntry(long byUser, Timestamp saleDate, int replacementNote, boolean canceled, double totalPrice, double totalPaid, long custmer_id, String custmer_name,double cartDiscount,double numberDiscount,long cancellingOrderId,double salesBeforeTax,
-							double salesWithTax) {
+							double salesWithTax,double salesTotalSaved) {
 		if(db.isOpen()){
 
 		}else {
@@ -93,7 +95,7 @@ public class OrderDBAdapter {
 			}
 		}
 		Generators key = new Generators().setLength(6);
-		Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name,cartDiscount,key.generate(),numberDiscount,cancellingOrderId,salesBeforeTax,salesWithTax);
+		Order order = new Order(Util.idHealth(this.db, ORDER_TABLE_NAME, ORDER_COLUMN_ID), byUser, saleDate, replacementNote, canceled, totalPrice, totalPaid, custmer_id, custmer_name,cartDiscount,key.generate(),numberDiscount,cancellingOrderId,salesBeforeTax,salesWithTax,salesTotalSaved);
 
 		sendToBroker(MessageType.ADD_ORDER, order, this.context);
 
@@ -144,7 +146,7 @@ public class OrderDBAdapter {
 		}
 		if(!invoiceStatus){
 			close();
-			return insertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order.getNumberDiscount(),order.getCancellingOrderId(),salesBeforeTax,salesWithTax);
+			return insertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order.getNumberDiscount(),order.getCancellingOrderId(),salesBeforeTax,salesWithTax,order.getTotalSaved());
 		}
 		close();
 		return invoiceInsertEntry(order.getByUser(), order.getCreatedAt(), order.getReplacementNote(), order.isStatus(), order.getTotalPrice(),order.getTotalPaidAmount(),_custmer_id,custmer_name,order.getCartDiscount(),order
@@ -178,6 +180,7 @@ public class OrderDBAdapter {
 		val.put(ORDER_COLUMN_CANCELING_ORDER_ID,order.getCancellingOrderId());
 		val.put(ORDER_COLUMN_SALES_BEFORE_TAX,order.getSalesBeforeTax());
 		val.put(ORDER_COLUMN_SALES_WITH_TAX,order.getSalesWithTax());
+		val.put(ORDER_COLUMN_SALES_TOTAL_SAVED,order.getTotalSaved());
 
 		try {
 			return db.insert(ORDER_TABLE_NAME, null, val);
@@ -213,6 +216,7 @@ public class OrderDBAdapter {
 		val.put(ORDER_COLUMN_CANCELING_ORDER_ID,order.getCancellingOrderId());
 		val.put(ORDER_COLUMN_SALES_BEFORE_TAX,order.getSalesBeforeTax());
 		val.put(ORDER_COLUMN_SALES_WITH_TAX,order.getSalesWithTax());
+		val.put(ORDER_COLUMN_SALES_TOTAL_SAVED,order.getTotalSaved());
 
 		try {
 			sendToBroker(MessageType.ADD_ORDER, order, this.context);
@@ -242,7 +246,7 @@ public class OrderDBAdapter {
 			return order;
 		}
 		cursor.moveToFirst();
-		order = new Order(makeSale(cursor));
+		order = newInstance(makeSale(cursor));
 		cursor.close();
 		close();
 
@@ -304,6 +308,7 @@ public class OrderDBAdapter {
 		val.put(ORDER_COLUMN_ORDERDATE, String.valueOf(new Timestamp(System.currentTimeMillis())));
 		val.put(ORDER_COLUMN_SALES_BEFORE_TAX,sale.getSalesBeforeTax());
 		val.put(ORDER_COLUMN_SALES_WITH_TAX,sale.getSalesWithTax());
+	    val.put(ORDER_COLUMN_SALES_TOTAL_SAVED,sale.getTotalSaved());
 		String where = ORDER_COLUMN_ID + " = ?";
 		db.update(ORDER_TABLE_NAME, val, where, new String[]{sale.getOrderId() + ""});
 		OrderDBAdapter orderDBAdapter =new OrderDBAdapter(context);
@@ -340,11 +345,11 @@ public class OrderDBAdapter {
 		return salesList;
 	}
 
-	public List<Order> getAllUserSales(int userId) {
+	public List<Order> getAllUserSales(long userId) {
 		List<Order> userSaleList = new ArrayList<Order>();
 		List<Order> saleList = getAllSales();
 		for (Order d : saleList) {
-			if (d.getByUser() == userId)
+			if (d.getCustomerId() == userId)
 				userSaleList.add(d);
 		}
 		return userSaleList;
@@ -541,6 +546,7 @@ Log.d("eee",e.toString());
 					" order by id desc limit " + from + "," + count, null);
 
 		}else if(type.equals(context.getString(R.string.customer))){
+			Log.d("teeest1111",hint+"");
 
 					cursor = db.rawQuery("select * from " + ORDER_TABLE_NAME + " where " + ORDER_COLUMN_CUSTOMER_NAME + " like '%" +
 							hint + "%' "+" and " +" id like '%"+SESSION.POS_ID_NUMBER+"%'"+
@@ -568,8 +574,10 @@ Log.d("eee",e.toString());
 			orderList.add(makeSale(cursor));
 			cursor.moveToNext();
 		}
+			Log.d("teeest1111",orderList.toString()+"");
 
-       close();
+
+			close();
 
 		} catch (Exception e) {
 			Log.d("exception",e.toString());
@@ -642,7 +650,7 @@ Log.d("eee",e.toString());
 			return sale;
 		}
 		cursor.moveToFirst();
-		sale = new Order(makeSale(cursor));
+		sale = newInstance(makeSale(cursor));
 		cursor.close();
 		close();
 		Log.d("LasstSlae",sale.toString());
@@ -689,7 +697,7 @@ Log.d("eee",e.toString());
 					Long.parseLong(cursor.getString(cursor.getColumnIndex(ORDER_COLUMN_CANCELING_ORDER_ID)))
 					,
 					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_SALES_BEFORE_TAX)),
-					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_SALES_WITH_TAX))
+					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_SALES_WITH_TAX)),cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_SALES_TOTAL_SAVED))
 			);
 		}
 		catch (Exception ex){
@@ -706,7 +714,7 @@ Log.d("eee",e.toString());
 					,
 					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_SALES_BEFORE_TAX))
 					,
-					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_SALES_WITH_TAX)));
+					cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_SALES_WITH_TAX)),cursor.getDouble(cursor.getColumnIndex(ORDER_COLUMN_SALES_TOTAL_SAVED)));
 		}
 
 	}

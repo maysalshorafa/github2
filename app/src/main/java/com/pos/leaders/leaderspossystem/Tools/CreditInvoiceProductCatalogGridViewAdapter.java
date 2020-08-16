@@ -95,7 +95,7 @@ public class CreditInvoiceProductCatalogGridViewAdapter extends BaseAdapter {
         TextView tvQun=(TextView)gridView.findViewById(R.id.creditInvoiceItemProductCatalog_TVQyn);
         tvName.setText(_Substring(products.get(position).getDisplayName()));
         tvBarcode.setText(products.get(position).getSku());
-        tvPrice.setText(products.get(position).getPrice()+ " " +  context.getString(R.string.ins));
+        tvPrice.setText(products.get(position).getPriceWithTax()+ " " + SETTINGS.currencySymbol);
         tvQun.setText(quantity.get(position)+"");
         return gridView;
     }

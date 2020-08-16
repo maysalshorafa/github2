@@ -32,6 +32,7 @@ import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.OrderDocumentManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -70,6 +71,7 @@ public class OrderDocumentManagementActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_ordere_document_management);
         TitleBar.setTitleBar(this);
+        ThisApp.setCurrentActivity(this);
         Log.d("token", SESSION.token+"");
         context=this;
         Bundle bundle = getIntent().getExtras();
@@ -245,33 +247,33 @@ class StartOrderDocumentConnection extends AsyncTask<String,Void,String> {
         try {
             String url = ApiURL.Documents+"/readyOrderDocumentForCustomer/"+customerId;
             //   Log.d("invoiceUrl",url);
-            String invoiceRes = messageTransmit.authGet(url,SESSION.token);
-            // Log.d("invoiceRes",invoiceRes);
-            JSONObject jsonObject = new JSONObject(invoiceRes);
-            String msgData = jsonObject.getString(MessageKey.responseBody);
-            Log.d("invoices",msgData+"");
 
-            if (msgData.startsWith("[")) {
-                try {
-                    JSONArray jsonArray = new JSONArray(msgData);
+                String invoiceRes = messageTransmit.authGet(url, SESSION.token);
+                // Log.d("invoiceRes",invoiceRes);
+                JSONObject jsonObject = new JSONObject(invoiceRes);
+                String msgData = jsonObject.getString(MessageKey.responseBody);
+                Log.d("invoices", msgData + "");
 
-                    for (int i = 0; i < jsonArray.length() ; i++) {
-                       String msgData1 = jsonArray.getJSONObject(i).toString();
-                        JSONObject msgDataJson =new JSONObject(msgData1);
-                        OrderDocumentManagementActivity.orderNumberList.add(msgDataJson.getString("docNum"));
-                        invoice = new BoInvoice(DocumentType.ORDER_DOCUMENT,msgDataJson.getJSONObject("documentsData"),msgDataJson.getString("docNum"));
-                        OrderDocumentManagementActivity.orderDocumentsList.add(invoice);
+                if (msgData.startsWith("[")) {
+                    try {
+                        JSONArray jsonArray = new JSONArray(msgData);
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            String msgData1 = jsonArray.getJSONObject(i).toString();
+                            JSONObject msgDataJson = new JSONObject(msgData1);
+                            OrderDocumentManagementActivity.orderNumberList.add(msgDataJson.getString("docNum"));
+                            invoice = new BoInvoice(DocumentType.ORDER_DOCUMENT, msgDataJson.getJSONObject("documentsData"), msgDataJson.getString("docNum"));
+                            OrderDocumentManagementActivity.orderDocumentsList.add(invoice);
+                        }
+                        Log.d("invoices111", OrderDocumentManagementActivity.orderDocumentsList.toString() + "");
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("exception1", e.toString());
                     }
-                    Log.d("invoices111",OrderDocumentManagementActivity.orderDocumentsList.toString()+"");
 
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.d("exception1",e.toString());
                 }
-
-            }
 
         } catch (IOException e) {
             e.printStackTrace();

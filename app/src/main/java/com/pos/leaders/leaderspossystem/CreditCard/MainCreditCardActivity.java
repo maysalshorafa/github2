@@ -30,16 +30,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.DocumentType;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Printer.SM_S230I.MiniPrinterFunctions;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SalesCartActivity;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.CreditCardTransactionType;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -48,10 +45,9 @@ import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.sunmi.aidl.MSCardService;
 import com.sunmi.aidl.callback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.ksoap2.serialization.SoapObject;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class MainCreditCardActivity extends AppCompatActivity {
@@ -71,23 +67,22 @@ public class MainCreditCardActivity extends AppCompatActivity {
     static EditText etCCValue;
     EditText etPaymentsNumber;
     Spinner spCreditType;
-
     boolean advanceMode = false, byPhoneMode = false,advanceModeForPhone=false;
     double totalPrice = 0;
-
+   ProgressDialog dialog_connection;
     //page 9 on Arkom documents
     //1:normal
     int creditType = CreditCardTransactionType.NORMAL;
     int numberOfPayments = 1;
     boolean creditReceipt=false;
     boolean fromMultiCurrency=false;
-    JSONObject invoiceJson=new JSONObject();
-    BoInvoice invoice ;
+   List< BoInvoice> invoice ;
     int NumOfFixedPayments=1;
 
     private MSCardService sendservice;
     ServiceConnection serviceConnection;
     msCardReaderCallBack msCardReaderCallback=new msCardReaderCallBack();
+    boolean doneButtonLock = false;
     @Override
     protected void onDestroy() {
         unbindService(serviceConnection);
@@ -96,6 +91,16 @@ public class MainCreditCardActivity extends AppCompatActivity {
         } catch (IllegalArgumentException iae) {
 
         }
+            if(dialog_connection.isShowing()){
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        dialog_connection.dismiss();
+                    }
+                });
+            }
+
         super.onDestroy();
     }
 
@@ -148,6 +153,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
         llByPhone   = (LinearLayout) findViewById(R.id.MainCreditCardActivity_llByPhone);
 
         spCreditType= (Spinner) findViewById(R.id.MainCreditCardActivity_spPaymentType);
+        dialog_connection = new ProgressDialog(MainCreditCardActivity.this);
 
         //check extras
         Bundle extras = getIntent().getExtras();
@@ -155,27 +161,23 @@ public class MainCreditCardActivity extends AppCompatActivity {
             if(extras.containsKey("creditReceipt")){
                 creditReceipt=true;
                 totalPrice = (double) extras.get("_Price");
-                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
-                try {
-                    invoiceJson=new JSONObject(extras.getString("invoice"));
-                    JSONObject docJson = invoiceJson.getJSONObject("documentsData");
-                    docJson.remove("@type");
-                    docJson.put("type","Invoice");
-                    invoiceJson.remove("documentsData");
-                    invoiceJson.put("documentsData",docJson);
-                    invoice=new BoInvoice(DocumentType.INVOICE,docJson,invoiceJson.getString("docNum"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Log.d("totalPriceMain",totalPrice+"");
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " +  SETTINGS.currencySymbol);
+
+                invoice= (List<BoInvoice>) extras.get("invoice");
+
+
             }else {
                 creditReceipt=false;
                 fromMultiCurrency=extras.getBoolean(LEADERS_POS_CREDIT_CARD_FROM_MULTI_CURRENCY);
                 totalPrice = (double) extras.get(LEADERS_POS_CREDIT_CARD_TOTAL_PRICE);
-                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
+                Log.d("totalPriceMain",totalPrice+"");
+                tvTotalPrice.setText(Util.makePrice(totalPrice) + " " + SETTINGS.currencySymbol);
             }
         } else {
             finish();
         }
+
 
         btDone.setClickable(false);
 
@@ -359,76 +361,80 @@ public class MainCreditCardActivity extends AppCompatActivity {
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog dialog_connection = new ProgressDialog(MainCreditCardActivity.this);
-                dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
-                dialog_connection.show();
-                String creditCardNumber = etCCValue.getText().toString();
-                Log.i(LOG_TAG, creditCardNumber);
-                if(creditCardNumber.isEmpty()){
-                    //input is empty
-                    dialog_connection.dismiss();
-                    Toast.makeText(MainCreditCardActivity.this, getString(R.string.transfer_credit_card), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String str = creditCardNumber;
-
-                if (str.contains("?;")) {
-                    creditCardNumber = str.split(Pattern.quote("?;"))[1];
-                }
-
-                creditCardNumber=creditCardNumber.replace("?", "");
-                creditCardNumber.replace("?", "");
-                creditCardNumber.replace(";", "");
-                creditCardNumber.replace("�", "");
-                creditCardNumber.replace("/", "");
-                String validCCNUM = "";
-                char[] validChars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '='};
-                String validSTR = "1234567890=";
-                for (char c : creditCardNumber.toCharArray()) {
-                    if (validSTR.contains(c + "")) {
-                        validCCNUM = validCCNUM + c;
-                    }
-                }
-                //Log.e("Card Number", validCCNUM);
-                final String CCNum = validCCNUM;
-
-                Log.i(LOG_TAG, CCNum);
-                if (advanceMode) {
-                    String pn = etPaymentsNumber.getText().toString();
-                    //trying to case input
-                    int ipn;
-                    try {
-                        ipn = Integer.parseInt(pn);
-                    }
-                    catch (NumberFormatException nfe){
-                        Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
+                if (!doneButtonLock) {
+                    doneButtonLock=true;
+                    dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
+                    dialog_connection.show();
+                    String creditCardNumber = etCCValue.getText().toString();
+                    Log.i(LOG_TAG, creditCardNumber);
+                    if (creditCardNumber.isEmpty()) {
+                        //input is empty
                         dialog_connection.dismiss();
+                        Toast.makeText(MainCreditCardActivity.this, getString(R.string.transfer_credit_card), Toast.LENGTH_SHORT).show();
+                        doneButtonLock = false;
                         return;
                     }
-                    //check valid number
-                    if (ipn > 1 && ipn < 37) {
-                        numberOfPayments = ipn;
-                        int ccT = spCreditType.getSelectedItemPosition();
+                    String str = creditCardNumber;
+
+                    if (str.contains("?;")) {
+                        creditCardNumber = str.split(Pattern.quote("?;"))[1];
+                    }
+
+                    creditCardNumber = creditCardNumber.replace("?", "");
+                    creditCardNumber.replace("?", "");
+                    creditCardNumber.replace(";", "");
+                    creditCardNumber.replace("�", "");
+                    creditCardNumber.replace("/", "");
+                    String validCCNUM = "";
+                    char[] validChars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '='};
+                    String validSTR = "1234567890=";
+                    for (char c : creditCardNumber.toCharArray()) {
+                        if (validSTR.contains(c + "")) {
+                            validCCNUM = validCCNUM + c;
+                        }
+                    }
+
+                    final String CCNum = validCCNUM;
+                    Log.e("Card Number", validCCNUM);
+                    Log.i(LOG_TAG, CCNum);
+                    if (advanceMode) {
+                        String pn = etPaymentsNumber.getText().toString();
+                        //trying to case input
+                        int ipn;
+                        try {
+                            ipn = Integer.parseInt(pn);
+                        } catch (NumberFormatException nfe) {
+                            Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
+                            dialog_connection.dismiss();
+                            doneButtonLock = false;
+                            return;
+                        }
+                        //check valid number
+                        if (ipn > 1 && ipn < 37) {
+                            numberOfPayments = ipn;
+                            int ccT = spCreditType.getSelectedItemPosition();
 
                             if (ccT == 0)
-                            creditType = CreditCardTransactionType.PAYMENTS;//תשלומים
-                        else if (ccT == 1)
-                            creditType = CreditCardTransactionType.CREDIT;//קרדיט/קרדיט בתשלומים קבועים
+                                creditType = CreditCardTransactionType.PAYMENTS;//תשלומים
+                            else if (ccT == 1)
+                                creditType = CreditCardTransactionType.CREDIT;//קרדיט/קרדיט בתשלומים קבועים
 
-                        doTransaction(CCNum, numberOfPayments, creditType);
+                            doTransaction(CCNum, numberOfPayments, creditType);
 
+                        } else {
+                            //out of maximum payment number
+                            Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
+                            dialog_connection.dismiss();
+                            doneButtonLock = false;
+                            return;
+                        }
                     } else {
-                        //out of maximum payment number
-                        Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
-                        dialog_connection.dismiss();
-                        return;
+                        //normal mode with 1 payment number and normal credit type
+                        doTransaction(CCNum, 1, 1);
                     }
-                } else {
-                    //normal mode with 1 payment number and normal credit type
-                    doTransaction(CCNum, 1, 1);
-                }
 
-                dialog_connection.dismiss();
+                    dialog_connection.dismiss();
+                }
             }
         });
 
@@ -526,14 +532,26 @@ public class MainCreditCardActivity extends AppCompatActivity {
 
 
     private void doTransaction(final String cardNumber,final int paymentsNumber,final int creditType) {
-        final ProgressDialog dialog_connection = new ProgressDialog(MainCreditCardActivity.this);
+     //   final ProgressDialog dialog_connection = new ProgressDialog(MainCreditCardActivity.this);
         dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
         dialog_connection.show();
 
         new AsyncTask<SoapObject, Void, SoapObject>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                btDone.setClickable(false);
+                doneButtonLock = true;
+            }
+
             @Override
             protected void onPostExecute(SoapObject aVoid) {
-                dialog_connection.dismiss();
+                if(dialog_connection.isShowing()){
+                    dialog_connection.dismiss();
+                }
+                doneButtonLock = false;
+                btDone.setClickable(true);
                 returnTo(aVoid);
                 super.onPostExecute(aVoid);
             }
@@ -563,11 +581,12 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 creditCardPayment.setAmount(totalPrice);
                 creditCardPayment.setTransactionType(creditType);
                 creditCardPayment.setTransactionId(soap.getProperty("TransactionID").toString());
-
                 //soap.getProperty("MerchantNote").toString().equals("anyType{}");
                 if(creditReceipt){
                     SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;
-                    DocumentControl.sendDoc(MainCreditCardActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice);
+
+                   //
+                    // DocumentControl.sendReciptDoc(MainCreditCardActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice, soap.getProperty("MerchantNote").toString());
 
                 }
                 else {
@@ -639,7 +658,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
             // TODO Auto-generated method stub
             try {
                 sendservice.readRawMSCard(20000, msCardReaderCallback);
-            } catch (RemoteException e) {
+            } catch (RemoteException | NullPointerException e) {
                 e.printStackTrace();
             }
         }
@@ -669,4 +688,36 @@ public class MainCreditCardActivity extends AppCompatActivity {
         }
 
     }
+    @Override
+    protected void onPause() {
+
+        if(dialog_connection.isShowing()){
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    dialog_connection.dismiss();
+                }
+            });
+        }
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onResume() {
+
+        if(dialog_connection.isShowing()){
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    dialog_connection.dismiss();
+                }
+            });
+        }
+        super.onResume();
+    }
+
+
 }

@@ -35,6 +35,7 @@ import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.updateCurrencyType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     List<String> departmentsName;
     Spinner productUnitSp , SpProductCurrency , SpProductBranch;
     Button btSave,btnCancel;
-    EditText etName,etBarcode,etDescription,etPrice,etCostPrice,etInventoryCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight;
+    EditText etName,etBarcode,etDescription, etPriceWithTax,etCostPrice,etInventoryCostPrice,etDisplayName,etSku,etStockQuantity,etProductWeight , etPriceWithOutTax;
     Switch swWithTax,swManageStock ,swWithSerialNo;
     static ListView lvDepartment;
     Map<String,Long> departmentMap=new HashMap<String,Long>();
@@ -71,14 +72,17 @@ public class ProductsActivity  extends AppCompatActivity  {
     private Product editableProduct , lastProduct;
     long check;
     long depID;
-    boolean withTax , manageStock ,withSerialNo= false;
+
+    /////Defualt new product withTax and manageStock
+    boolean withTax=true , manageStock=true ,withSerialNo= false;
     ProductUnit unit ;
     LinearLayout llWeight;
     String currencyType="";
     List<Currency> currenciesList;
     private List<CurrencyType> currencyTypesList = null;
     private List<String> currenciesNames = null;
-    int branchId=0;
+    int branchId=0,positionItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +106,8 @@ public class ProductsActivity  extends AppCompatActivity  {
         etName=(EditText)findViewById(R.id.ETName);
         etBarcode=(EditText)findViewById(R.id.ETBarCode);
         etDescription=(EditText)findViewById(R.id.ETDescription);
-        etPrice=(EditText)findViewById(R.id.ETPrice);
+        etPriceWithTax =(EditText)findViewById(R.id.ETPrice_withTax);
+        etPriceWithOutTax=(EditText)findViewById(R.id.ETPrice_withOutTax);
         etCostPrice=(EditText)findViewById(R.id.ETCostPrice);
         etInventoryCostPrice=(EditText)findViewById(R.id.ETInventoryCostPrice);
 
@@ -112,9 +117,12 @@ public class ProductsActivity  extends AppCompatActivity  {
         swManageStock = (Switch) findViewById(R.id.SWManageStock);
 
         swWithTax=(Switch)findViewById(R.id.SWWithTax);
+        //swWithTax.setChecked(false);
         swWithSerialNo=(Switch)findViewById(R.id.SWWithSerialNo);
         productUnitSp = (Spinner)findViewById(R.id.SpProductUnit);
         SpProductCurrency = (Spinner)findViewById(R.id.SpProductCurrency);
+        if (!SETTINGS.enableCurrencies){
+            SpProductCurrency.setEnabled(false);}
         llWeight = (LinearLayout)findViewById(R.id.llWeight);
         etProductWeight = (EditText)findViewById(R.id.ETWeight);
         SpProductBranch = (Spinner)findViewById(R.id.SpBranchId);
@@ -130,10 +138,16 @@ public class ProductsActivity  extends AppCompatActivity  {
         productUnit.add(ProductUnit.QUANTITY);
         productUnit.add(ProductUnit.BARCODEWITHWEIGHT);
         productUnit.add(ProductUnit.BARCODEWITHPRICE);
+        productUnit.add(ProductUnit.GENERALPRICEPRODUCT);
+
+        productUnit.add(ProductUnit.WEIGHT);
         final List<String>productUnitString = new ArrayList<String>();
         productUnitString.add(ProductUnit.QUANTITY.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHWEIGHT.getValue());
         productUnitString.add(ProductUnit.BARCODEWITHPRICE.getValue());
+        productUnitString.add(ProductUnit.GENERALPRICEPRODUCT.getValue());
+
+        productUnitString.add(ProductUnit.WEIGHT.getValue());
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, productUnitString);
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -156,13 +170,21 @@ public class ProductsActivity  extends AppCompatActivity  {
             currenciesNames.add(currencyTypesList.get(i).getType());
         }
 
+
+        for (int i=0;i<currenciesNames.size();i++){
+            if (currenciesNames.get(i).equals(SETTINGS.currencyCode))
+                positionItem=i;
+        }
+
         // Creating adapter for spinner
         final ArrayAdapter<String> dataAdapterCurrency = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currenciesNames);
-
         // Drop down layout style - list view with radio button
         // attaching data adapter to spinner
         dataAdapterCurrency.setDropDownViewResource(R.layout.simple_spinner_dropdown);
         SpProductCurrency.setAdapter(dataAdapterCurrency);
+        SpProductCurrency.setSelection(positionItem);
+
+
         //region Add product button
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +193,46 @@ public class ProductsActivity  extends AppCompatActivity  {
                     setNewProduct();
             }
         });
+
+
+
+        //set Price with Tax
+        etPriceWithOutTax.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (withTax){
+                if (!etPriceWithOutTax.getText().toString().isEmpty()&&!etPriceWithOutTax.getText().toString().equals("")) {
+                    Double priceWithTax = priceWithTax(Double.valueOf(etPriceWithOutTax.getText().toString()));
+                    etPriceWithTax.setText(Util.makePrice(priceWithTax));
+                }}
+                else {
+                    if (!etPriceWithOutTax.getText().toString().isEmpty()&&!etPriceWithOutTax.getText().toString().equals("")) {
+                        Double priceWithTax = Double.valueOf(etPriceWithOutTax.getText().toString());
+                        etPriceWithTax.setText(Util.makePrice(priceWithTax));
+                    }
+                }
+            }
+        });
+
+
+//        set Price without Tax
+        etPriceWithTax.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (withTax){
+                if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
+                    Double priceWithOutTax = priceWithOutTax(Double.valueOf(etPriceWithTax.getText().toString()));
+                    etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                }}
+                else {
+                    if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
+                        Double priceWithOutTax = Double.valueOf(etPriceWithTax.getText().toString());
+                        etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                    }
+                }
+            }
+        });
+
 
 
         //endregion
@@ -230,9 +292,24 @@ public class ProductsActivity  extends AppCompatActivity  {
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
 
                 if(isChecked){
-                    withTax=true; //edit here
-                }else{
                     withTax=false; //edit here
+                    if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
+                        Double priceWithOutTax = Double.valueOf(etPriceWithTax.getText().toString());
+                        etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                        etPriceWithTax.setText(Util.makePrice(priceWithOutTax));
+                    }
+                   else if (!etPriceWithOutTax.getText().toString().isEmpty()&&!etPriceWithOutTax.getText().toString().equals("")) {
+                        Double priceWithOutTax = Double.valueOf(etPriceWithOutTax.getText().toString());
+                        etPriceWithTax.setText(Util.makePrice(priceWithOutTax));
+                    }
+
+                }else{
+                    withTax=true; //edit here
+                    if (!etPriceWithTax.getText().toString().isEmpty()&&!etPriceWithTax.getText().toString().equals("")) {
+                        Double priceWithOutTax = priceWithOutTax(Double.valueOf(etPriceWithTax.getText().toString()));
+                        etPriceWithOutTax.setText(Util.makePrice(priceWithOutTax));
+                    }
+
                 }
 
             }
@@ -252,11 +329,20 @@ public class ProductsActivity  extends AppCompatActivity  {
 
         swManageStock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                manageStock = b;
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    manageStock=false;
+                    Log.d("manageStock",manageStock+"");
+                }
+                else {
+                    manageStock=true;
+                    Log.d("manageStock",manageStock+"");
+                }
+
+
             }
         });
-
+        Log.d("manageStockdefult",manageStock+"");
         productUnitSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -301,9 +387,13 @@ public class ProductsActivity  extends AppCompatActivity  {
                     etDescription.setText(editableProduct.getDescription());
                     etCostPrice.setText(editableProduct.getCostPrice() + "");
                     etInventoryCostPrice.setText(editableProduct.getLastCostPriceInventory() + "");
-                    etPrice.setText(editableProduct.getPrice() + "");
+                    etPriceWithTax.setText(editableProduct.getPriceWithTax() + "");
+                    etPriceWithOutTax.setText(editableProduct.getPriceWithOutTax() + "");
                     etStockQuantity.setText(editableProduct.getStockQuantity() + "");
-                    swWithTax.setChecked(editableProduct.isWithTax());
+                  //  swWithTax.setChecked(editableProduct.isWithTax());
+                 if (!editableProduct.isWithTax()) {
+                     swWithTax.setChecked(true);
+                 }
                     swWithSerialNo.setChecked(editableProduct.isWithSerialNumber());
                     if(editableProduct.getUnit().getValue().equals(ProductUnit.WEIGHT.getValue())){
                         llWeight.setVisibility(View.VISIBLE);
@@ -322,7 +412,10 @@ public class ProductsActivity  extends AppCompatActivity  {
                     }
                     for (int i = 0; i < currencyTypesList.size(); i++) {
                         CurrencyType currencyType1 = currencyTypesList.get(i);
-                        if (currencyType1.getCurrencyTypeId() == editableProduct.getCurrencyType()) {
+                        if (editableProduct.getCurrencyType().equals("0")){
+                            updateCurrencyType.updateCurrencyToShekl(ProductsActivity.this,editableProduct);
+                        }
+                        if (currencyType1.getType() == editableProduct.getCurrencyType()) {
                             SpProductCurrency.setSelection(i);
 
                         }
@@ -351,7 +444,8 @@ public class ProductsActivity  extends AppCompatActivity  {
                         etDescription.setEnabled(false);
                         etCostPrice.setEnabled(false);
                         etInventoryCostPrice.setEnabled(false);
-                        etPrice.setEnabled(false);
+                        etPriceWithTax.setEnabled(false);
+                        etPriceWithOutTax.setEnabled(false);
                         etDisplayName.setEnabled(false);
                         etStockQuantity.setEnabled(false);
                         etSku.setEnabled(false);
@@ -384,7 +478,7 @@ public class ProductsActivity  extends AppCompatActivity  {
     }
 
     private boolean addEditProduct() {
-        double price=0 , costPrice=0 , weight=0 , inventoryCostPrice=0;
+        double price=0 , costPrice=0 , weight=0 , inventoryCostPrice=0 ,priceWithOut=0;
         int stockQuantity = 0;
         String tempBarcode = etBarcode.getText().toString();
         String newBarCode="";
@@ -401,10 +495,10 @@ public class ProductsActivity  extends AppCompatActivity  {
 
         if (editableProduct == null) {
             String currency = SpProductCurrency.getSelectedItem().toString();
-            int currencyId=0;
+            String currencyId=null;
             for(int i=0; i<currencyTypesList.size();i++) {
                 if (currencyTypesList.get(i).getType() == currency) {
-                    currencyId = (int) currencyTypesList.get(i).getCurrencyTypeId();
+                    currencyId = currencyTypesList.get(i).getType();
                 }
             }
             if(SpProductBranch.getSelectedItem().toString().equals(getString(R.string.all))){
@@ -426,9 +520,9 @@ public class ProductsActivity  extends AppCompatActivity  {
             } else if (etBarcode.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_barcode), Toast.LENGTH_LONG).show();
                 etBarcode.setBackgroundResource(R.drawable.backtext);
-            } else if (etPrice.getText().toString().equals("") ) {
+            } else if (etPriceWithTax.getText().toString().equals("") ) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
-                etPrice.setBackgroundResource(R.drawable.backtext);
+                etPriceWithTax.setBackgroundResource(R.drawable.backtext);
             }
             else if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText().toString().equals("")){
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_weight), Toast.LENGTH_LONG).show();
@@ -443,13 +537,16 @@ public class ProductsActivity  extends AppCompatActivity  {
                         depID = d.getCategoryId();
                     }
                 }
-                if(availableProductName&&availableBarCode&& !etPrice.getText().toString().equals("")){
+                if(availableProductName&&availableBarCode&& !etPriceWithTax.getText().toString().equals("")){
                     if(depID==0){
                         Toast.makeText(ProductsActivity.this,R.string.please_insert_category_name,Toast.LENGTH_LONG).show();
 
                     }else {
-                        if(!etPrice.getText().toString().equals("")){
-                            price=Double.parseDouble(etPrice.getText().toString());
+                        if(!etPriceWithTax.getText().toString().equals("")){
+                            price=Double.parseDouble(etPriceWithTax.getText().toString());
+                        }
+                        if(!etPriceWithOutTax.getText().toString().equals("")){
+                            priceWithOut=Double.parseDouble(etPriceWithOutTax.getText().toString());
                         }
                         if (etSku.getText().toString().equals("")) {
                             etSku.setText(etBarcode.getText().toString());
@@ -470,7 +567,7 @@ public class ProductsActivity  extends AppCompatActivity  {
                         }
                         check = productDBAdapter.insertEntry(etName.getText().toString(), etBarcode.getText().toString(),
                                 etDescription.getText().toString(), price, costPrice, withTax, depID, SESSION._EMPLOYEE.getEmployeeId(), with_pos, with_point_system,
-                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId,0,inventoryCostPrice,withSerialNo);
+                                etSku.getText().toString(), ProductStatus.PUBLISHED, etDisplayName.getText().toString(), price, stockQuantity, manageStock, (stockQuantity > 0),unit,weight,currencyId,branchId,0,inventoryCostPrice,withSerialNo,priceWithOut);
 
 
                         if (check > 0) {
@@ -499,10 +596,10 @@ public class ProductsActivity  extends AppCompatActivity  {
         } else {
 
             String currency = SpProductCurrency.getSelectedItem().toString();
-            int currencyId=0;
+            String currencyId=null;
             for(int i=0; i<currencyTypesList.size();i++){
                 if(currencyTypesList.get(i).getType()==currency){
-                    currencyId= (int) currencyTypesList.get(i).getCurrencyTypeId();
+                    currencyId=  currencyTypesList.get(i).getType();
                 }
             }
 
@@ -533,9 +630,9 @@ public class ProductsActivity  extends AppCompatActivity  {
             } else if (etSku.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_sku), Toast.LENGTH_LONG).show();
                 etSku.setBackgroundResource(R.drawable.backtext);
-            } else if (etPrice.getText().toString().equals("") ) {
+            } else if (etPriceWithTax.getText().toString().equals("") ) {
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_price), Toast.LENGTH_LONG).show();
-                etPrice.setBackgroundResource(R.drawable.backtext);
+                etPriceWithTax.setBackgroundResource(R.drawable.backtext);
             }
             else if(llWeight.getVisibility()==View.VISIBLE&&etProductWeight.getText().toString().equals("")){
                 Toast.makeText(getApplicationContext(), getString(R.string.insert_product_weight), Toast.LENGTH_LONG).show();
@@ -544,10 +641,15 @@ public class ProductsActivity  extends AppCompatActivity  {
                 if (etSku.getText().toString().equals("")) {
                     etSku.setText(etBarcode.getText().toString());
                 }
-                if(!etPrice.getText().toString().equals("")){
-                    price=Double.parseDouble(etPrice.getText().toString());
+                if(!etPriceWithTax.getText().toString().equals("")){
+                    price=Double.parseDouble(etPriceWithTax.getText().toString());
                 }else {
-                    price=editableProduct.getPrice();
+                    price=editableProduct.getPriceWithTax();
+                }
+                if(!etPriceWithOutTax.getText().toString().equals("")){
+                    priceWithOut=Double.parseDouble(etPriceWithOutTax.getText().toString());
+                }else {
+                    priceWithOut=editableProduct.getPriceWithOutTax();
                 }
                 if(!etCostPrice.getText().toString().equals("")){
                     costPrice=Double.parseDouble(etCostPrice.getText().toString());
@@ -581,7 +683,8 @@ public class ProductsActivity  extends AppCompatActivity  {
                     editableProduct.setSku(etSku.getText().toString());
                     editableProduct.setDescription(etDescription.getText().toString());
                     editableProduct.setStockQuantity(stockQuantity);
-                    editableProduct.setPrice(price);
+                    editableProduct.setPriceWithTax(price);
+                    editableProduct.setPriceWithOutTax(priceWithOut);
                     editableProduct.setCostPrice(costPrice);
                     editableProduct.setLastCostPriceInventory(inventoryCostPrice);
                     editableProduct.setWithTax(withTax);
@@ -615,7 +718,8 @@ public class ProductsActivity  extends AppCompatActivity  {
     private void setNewProduct() {
         etName.setBackgroundResource(R.drawable.catalogproduct_item_bg);
         etBarcode.setBackgroundResource(R.drawable.catalogproduct_item_bg);
-        etPrice.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+        etPriceWithTax.setBackgroundResource(R.drawable.catalogproduct_item_bg);
+        etPriceWithOutTax.setBackgroundResource(R.drawable.catalogproduct_item_bg);
         if (previouslySelectedItem != null)
             previouslySelectedItem.setBackgroundColor(
                     getResources().getColor(R.color.transparent));
@@ -629,7 +733,7 @@ public class ProductsActivity  extends AppCompatActivity  {
         etBarcode.setText("");
         etSku.setText("");
         etDescription.setText("");
-        etPrice.setText("");
+        etPriceWithTax.setText("");
         etStockQuantity.setText("");
         etCostPrice.setText("");
         etInventoryCostPrice.setText("");
@@ -649,10 +753,20 @@ public class ProductsActivity  extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) // Press Back Icon
-        {
+        {CurrencyReturnsCustomDialogActivity.REQUEST_CURRENCY_RETURN_ACTIVITY_CODE=false;
             finish();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public double priceWithTax(Double price){
+        Double priceWithTax = price * (1 + (SETTINGS.tax / 100));
+        return priceWithTax;
+    }
+
+    public double priceWithOutTax(Double price){
+        Double priceWithOutTax = price / (1 + (SETTINGS.tax / 100));
+        return priceWithOutTax;
     }
 }

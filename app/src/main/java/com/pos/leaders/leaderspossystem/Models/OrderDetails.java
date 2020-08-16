@@ -1,5 +1,7 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
@@ -16,7 +18,7 @@ import java.util.List;
 public class OrderDetails {
 	private long orderDetailsId;
 	private long productId;
-	private int quantity;
+	private double quantity;
 	private double userOffer;
 	private long orderId;
 
@@ -50,7 +52,7 @@ public class OrderDetails {
 
 	@JsonIgnore
 	private int objectID = 0;
-    private long offerId;
+    private long offerId = 0;
 	private long productSerialNumber;
 	private String serialNumber;
 
@@ -75,7 +77,7 @@ public class OrderDetails {
 		int hash=7;
 		int prime=31;
 		hash = prime * hash + ((int) (productId % 10000));
-		hash = hash * prime + quantity;
+		hash = (int) (hash * prime + quantity);
 		hash = hash * prime + (int) discount;
 		hash = hash * prime + (giftProduct ? 37 : 17);
 		hash = hash * prime + (offerRule ? 7 : 3);
@@ -106,7 +108,7 @@ public class OrderDetails {
 	private long customer_assistance_id;
 
 	//region Constructors
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, long customer_assistance_id) {
+	public OrderDetails(long orderDetailsId, long productId, double quantity, double userOffer, long orderId, long customer_assistance_id) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -116,7 +118,7 @@ public class OrderDetails {
 		initObjectID();
 	}
 
-	public OrderDetails(long orderDetailsId, long productId, int quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId,long productSerialNumber ,double paidAmountAfterTax,String serialNumber) {
+	public OrderDetails(long orderDetailsId, long productId, double quantity, double userOffer, long orderId, double paidAmount, double original_price, double discount, long customer_assistance_id , String key , long offerId,long productSerialNumber ,double paidAmountAfterTax,String serialNumber) {
 		this.orderDetailsId = orderDetailsId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -158,8 +160,8 @@ public class OrderDetails {
 		this.userOffer = userOffer;
 		this.product = product;
 		this.productId = product.getProductId();
-		this.paidAmount = product.getPrice();
-		this.unitPrice = product.getPrice();
+		this.paidAmount = product.getPriceWithTax();
+		this.unitPrice = product.getPriceWithTax();
 		this.discount = 0;
 		initObjectID();
 	}
@@ -220,11 +222,11 @@ public class OrderDetails {
 		return orderDetailsId;
 	}
 
-	public int getQuantity() {
+	public double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int x) {
+	public void setQuantity(double x) {
 		this.quantity = x;
 	}
 
@@ -272,10 +274,15 @@ public class OrderDetails {
 	}
 
 	public double getPaidAmount() {
+		Log.d("unitPrice",unitPrice+"");
+		Log.d("quantity",quantity+"");
 		double temp = (unitPrice * (1 - (discount / 100)));
 		if (rowDiscount == 0)
 			return temp*quantity;
 		return (temp - (temp * (rowDiscount / 100)))*this.quantity;
+	}
+	public double getPaidAmountForWeight() {
+		return this.paidAmount;
 	}
 
 	public double getDiscount() {
@@ -287,7 +294,7 @@ public class OrderDetails {
 
 	//region Setters
 
-	public int setCount(int count) {
+	public double setCount(double count) {
 		if (count >=1)
 			this.quantity = count;
 		return this.quantity;
@@ -306,7 +313,8 @@ public class OrderDetails {
 			this.paidAmount=0.0;
 		}else {
 			this.paidAmount = (unitPrice * (discount / 100));
-		}	}
+		}
+	}
 
 
 
@@ -314,12 +322,12 @@ public class OrderDetails {
 
 	//region Methods
 
-	public int increaseCount(){
+	public double increaseCount(){
 		this.quantity++;
 		return this.quantity;
 	}
 
-	public int decreaseCount(){
+	public double decreaseCount(){
 		if(this.quantity >1) {
 			this.quantity--;
 		}
@@ -355,17 +363,17 @@ public class OrderDetails {
 				", \"unitPrice\":" + unitPrice +
 				", \"paidAmount\":" + paidAmount +
 				", \"discount\":" + discount +
-
 				", \"scannable\":" + "\""+scannable +"\""+
-                        ", \"giftProduct\":" + "\""+giftProduct +"\""+
-                ", \"position\":" + "\""+position +"\""+
+				", \"giftProduct\":" + "\""+giftProduct +"\""+
+				", \"position\":" + "\""+position +"\""+
 				", \"orderKey\":" + "\""+orderKey +"\""+
+				", \"displayName\":" + "\""+product.getDisplayName()+"\""+
 				", \"offerCategory\":" + "\""+offerCategory +"\""+
 				", \"productSerialNumber\":" + "\""+productSerialNumber +"\""+
 				", \"serialNumber\":" + "\""+serialNumber +"\""+
-				", \"paid_amount_amount_after_tax\":" + "\""+paidAmountAfterTax +"\""+
-				'}';
+				", \"paid_amount_amount_after_tax\":" + "\""+paidAmountAfterTax +"\""+'}';
 	}
+
 	public Offer getOffer() {
 		return offer;
 	}

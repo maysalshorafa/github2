@@ -163,7 +163,7 @@ public interface MessageType{
     String UPDATE_CLOSING_REPORT_DETAILS = "UpdateClosingReportDetails";
     String DELETE_CLOSING_REPORT_DETAILS = "DeleteClosingReportDetails";
     String UPDATE_COMPANY_CREDENTIALS = "UpdateCompanyCredential";
-
+   // String UPDATE_COMPANY_LICENSE = "UpdateCompanyLicens";
     String ADD_X_REPORT = "AddXReport";
     String UPDATE_X_REPORT = "UpdateXReport";
     String DELETE_X_REPORT = "DeleteXReport";
@@ -183,5 +183,8 @@ public interface MessageType{
     String ADD_DEPOSIT_AND_PULL_DETAILS_REPORT = "AddDepositAndPullDetailsReport";
     String UPDATE_DEPOSIT_AND_PULL_DETAILS_REPORT = "UpdateDepositAndPullDetailsReport";
     String DELETE_DEPOSIT_AND_PULL_DETAILS_REPORT = "DeleteDepositAndPullDetailsReport";
+
+
+    String UPDATE_COMPANY_LICENSE="UpdateCompanyLicense";
 
 }

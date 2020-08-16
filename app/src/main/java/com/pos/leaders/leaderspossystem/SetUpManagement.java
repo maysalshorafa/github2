@@ -1,12 +1,19 @@
 package com.pos.leaders.leaderspossystem;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,25 +22,39 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
+import com.pos.leaders.leaderspossystem.Models.Currency.ChooseCurrencyList;
 import com.pos.leaders.leaderspossystem.Models.PosSetting;
+import com.pos.leaders.leaderspossystem.Tools.CompanyStatus;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.ServerUrl;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.countryWithCodeHasMap;
+import com.pos.leaders.leaderspossystem.Tools.symbolWithCodeHashMap;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class SetUpManagement extends AppCompatActivity {
-    CheckBox currencyCheckBox, creditCardCheckBox,cbPinpad, customerMeasurementCheckBox;
-    Spinner printerTypeSpinner, floatPointSpinner , branchSpinner,SelectServer;
+
+public class  SetUpManagement extends AppCompatActivity {
+    CheckBox currencyCheckBox, creditCardCheckBox,cbPinpad, customerMeasurementCheckBox, foodStampCheckBox;
+    Spinner printerTypeSpinner, floatPointSpinner , branchSpinner,SelectServer,CompanyStatusSpinner,currencyCodeSpinner,currencyCountrySpinner;
     Button saveButton, editButton;
-    ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad;
+    ImageView currencyImage, customerMeasurementImage, creditCardImage,ivPinpad , foodStampImg;
+    TextView customerEmail,customerEmailTV;
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PIN_PAD";
@@ -42,19 +63,44 @@ public class SetUpManagement extends AppCompatActivity {
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID";
     public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL= "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS= "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CURRENCY_CODE="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CURRENCY_CODE";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CURRENCY_SYMBOL="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CURRENCY_SYMBOL";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_COUNTRY="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_COUNTRY";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_LIST_CURRENCY_TYPE="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_LIST_CURRENCY_LIST";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST="LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL";
+    public static final String LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord = "LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord";
 
-    boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false;
+
+
+
+
+
+    boolean currencyEnable, creditCardEnable,pinpadEnable, customerMeasurementEnable = false , foodStamp;
     int noOfPoint;
-    String printerType , serverUrl;
-    ArrayAdapter<String> spinnerArrayAdapter;
+    String printerType , serverUrl,CompanyStatusSelect,currencySymbolSelect,currencyCodeSelect,currencyCountrySelect,codeDebendCountry,customerE,customerEP;
+    ArrayAdapter<String> spinnerArrayAdapter,companyStatusArryAdapter,currencyCodeArrayAdapter,currencySymbolArrayAdapter;
     ArrayAdapter<Integer> floatPointSpinnerArrayAdapter;
     Integer floatPoint[];
-    String printer[];
+    String [] CompanyStautsList;
+    String printer[],codeList[],countryList[];
     public final static String POS_Management = "POS_Management";
+    public final static String POS_Company_status ="Company_Status";
+    public final static String POS_Currency = "POS_Currency";
     public static Context context = null;
-    int branchId;
+    int branchId,companyStatusID=0;
     final List<String> branch = new ArrayList<String>();
     final List<String> ServerUrL = new ArrayList<String>();
+    List<String> ArrayCurrency = new ArrayList<String>();
+    boolean[] checkedCurrency;
+    JSONArray jsonArray1 = new JSONArray();
+    JSONObject jsontemp ;
+    List<ChooseCurrencyList> list = new ArrayList<ChooseCurrencyList>();
+    int positionCodeDependCountry;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,28 +111,73 @@ public class SetUpManagement extends AppCompatActivity {
         setContentView(R.layout.activity_set_up_management);
         Window window = getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
-        //wlp.gravity = Gravity.CENTER_VERTICAL;
+        ThisApp.setCurrentActivity(this);
+
         context = this;
+
+
+        customerEmail=(TextView)findViewById(R.id.customerEmail);
+        customerEmailTV=(TextView)findViewById(R.id.customerEmailTV);
+
         currencyCheckBox = (CheckBox) findViewById(R.id.setUpManagementCurrencyCheckBox);
         creditCardCheckBox = (CheckBox) findViewById(R.id.setUpManagementCreditCardCheckBox);
 
         cbPinpad = (CheckBox) findViewById(R.id.setUpManagementCreditCardPinPadCheckBox);
 
         customerMeasurementCheckBox = (CheckBox) findViewById(R.id.setUpManagementCustomerMeasurementCheckBox);
+        foodStampCheckBox=(CheckBox)findViewById(R.id.setUpManagementFoodStampCheckBox);
         floatPointSpinner = (Spinner) findViewById(R.id.setUpManagementFloatPointSpinner);
         printerTypeSpinner = (Spinner) findViewById(R.id.setUpManagementPrinterTypeSpinner);
         SelectServer=(Spinner) findViewById(R.id.setUpServer);
         branchSpinner = (Spinner) findViewById(R.id.setUpManagementBranchSpinner);
+        currencyCodeSpinner=(Spinner) findViewById(R.id.setUpCurrencyCode);
+        currencyCountrySpinner=(Spinner) findViewById(R.id.setUpCurrencyCountry);
+        CompanyStatusSpinner =(Spinner) findViewById(R.id.setUpCompanyStatus);
         saveButton = (Button) findViewById(R.id.setUpManagementSaveButton);
         editButton = (Button) findViewById(R.id.setUpManagementEditButton);
         currencyImage = (ImageView) findViewById(R.id.currencyImage);
+        foodStampImg=(ImageView) findViewById(R.id.foodStampImgView);
+
 
         creditCardImage = (ImageView) findViewById(R.id.creditCardImage);
         ivPinpad = (ImageView) findViewById(R.id.creditCardPinPadImage);
 
         customerMeasurementImage = (ImageView) findViewById(R.id.customerMeasurementImage);
         printer = new String[]{PrinterType.BTP880.name(), PrinterType.HPRT_TP805.name(), PrinterType.SUNMI_T1.name(), PrinterType.SM_S230I.name(), PrinterType.WINTEC_BUILDIN.name()};
+         ;
+        CompanyStautsList =new String[]{CompanyStatus.BO_COMPANY.name(),
+                CompanyStatus.BO_AUTHORIZED_DEALER.name(),
+                CompanyStatus.BO_EXEMPT_DEALER.name()};
+
+       codeList =new String[]{countryWithCodeHasMap.Israel.getValue(),countryWithCodeHasMap.Australia.getValue(),countryWithCodeHasMap.Canada.getValue(),countryWithCodeHasMap.Denmark.getValue(),
+               countryWithCodeHasMap.Egypt.getValue(),countryWithCodeHasMap.EMU.getValue(),countryWithCodeHasMap.GreatBritain.getValue(),
+               countryWithCodeHasMap.Japan.getValue(),countryWithCodeHasMap.Jordan.getValue(),countryWithCodeHasMap.Lebanon.getValue(),
+               countryWithCodeHasMap.Norway.getValue(),countryWithCodeHasMap.SouthAfrica.getValue(),countryWithCodeHasMap.USA.getValue(),
+               countryWithCodeHasMap.Sweden.getValue(),countryWithCodeHasMap.Switzerland.getValue()};
+
         floatPoint = new Integer[]{2, 0, 1, 3};
+
+        countryList=new String[]{String.valueOf(countryWithCodeHasMap.Israel),String.valueOf(countryWithCodeHasMap.Australia), String.valueOf(countryWithCodeHasMap.Canada), String.valueOf(countryWithCodeHasMap.Denmark),
+                String.valueOf(countryWithCodeHasMap.Egypt), String.valueOf(countryWithCodeHasMap.EMU), String.valueOf(countryWithCodeHasMap.GreatBritain),
+                String.valueOf(countryWithCodeHasMap.Japan), String.valueOf(countryWithCodeHasMap.Jordan),
+                String.valueOf(countryWithCodeHasMap.Lebanon), String.valueOf(countryWithCodeHasMap.Norway),
+                String.valueOf(countryWithCodeHasMap.SouthAfrica), String.valueOf(countryWithCodeHasMap.USA), String.valueOf(countryWithCodeHasMap.Sweden),
+                String.valueOf(countryWithCodeHasMap.Switzerland)};
+
+        companyStatusArryAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, CompanyStautsList);
+        companyStatusArryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view);
+        CompanyStatusSpinner.setAdapter(companyStatusArryAdapter);
+
+
+        currencyCodeArrayAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, codeList);
+        currencyCodeArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view);
+        currencyCodeSpinner.setAdapter(currencyCodeArrayAdapter);
+
+
+        currencySymbolArrayAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, countryList);
+        currencySymbolArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view);
+        currencyCountrySpinner.setAdapter(currencySymbolArrayAdapter);
+
         spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, printer);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
 
@@ -106,8 +197,13 @@ public class SetUpManagement extends AppCompatActivity {
         dataAdapterURlServer.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         SelectServer.setAdapter(dataAdapterURlServer);
 
-
-
+        List<symbolWithCodeHashMap> somethingList = Arrays.asList(symbolWithCodeHashMap.values());
+        Log.d("symbolWithCodeHashMap",somethingList.toString());
+       for (int i=0;i<somethingList.size();i++) {
+            ChooseCurrencyList regionTransportar = new ChooseCurrencyList(String.valueOf(somethingList.get(i)),String.valueOf(somethingList.get(i).getValue()));
+            list.add(regionTransportar);
+           ArrayCurrency.add(String.valueOf(somethingList.get(i)));
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -121,8 +217,20 @@ public class SetUpManagement extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     currencyEnable = true;
+                    showDialog(SetUpManagement.this);
                 } else {
                     currencyEnable = false;
+                }
+            }
+        });
+        foodStampCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    foodStamp = true;
+                } else {
+                    foodStamp = false;
                 }
             }
         });
@@ -202,8 +310,49 @@ public class SetUpManagement extends AppCompatActivity {
             }
         });
 
+        currencyCodeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                currencyCodeSelect=currencyCodeArrayAdapter.getItem(position);
+                currencySymbolSelect=String.valueOf(symbolWithCodeHashMap.valueOf(currencyCodeSelect).getValue());
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        currencyCountrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                currencyCountrySelect=currencySymbolArrayAdapter.getItem(position);
+                codeDebendCountry=countryWithCodeHasMap.valueOf(currencyCountrySelect).getValue();
+                for (int i=0;i<codeList.length;i++){
+                    if (codeDebendCountry.equals(codeList[i])){
+                currencyCodeSpinner.setSelection(i);}}
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+     CompanyStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+         @Override
+         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+             CompanyStatusSelect=companyStatusArryAdapter.getItem(position);
+         }
+
+         @Override
+         public void onNothingSelected(AdapterView<?> parent) {
+
+         }
+     });
         SelectServer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -215,10 +364,43 @@ public class SetUpManagement extends AppCompatActivity {
 
             }
         });
+        customerEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog customerDialog = new Dialog(SetUpManagement.this);
+                customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                customerDialog.show();
+                customerDialog.setContentView(R.layout.customer_email_layout);
+                final EditText customer_email = (EditText) customerDialog.findViewById(R.id.customer_email);
+                final EditText customer_email_passWord = (EditText) customerDialog.findViewById(R.id.customer_email_password);
+                customer_email_passWord.setVisibility(View.VISIBLE);
+
+
+                ((Button) customerDialog.findViewById(R.id.done))
+                        .setOnClickListener(new View.OnClickListener() {
+
+                            @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+                            public void onClick(View arg0) {
+                                if(customer_email.getText().toString()!=""){
+                                    customerE=customer_email.getText().toString();
+
+                                    if(customer_email_passWord.getText().toString()!=""){
+                                        customerEP=customer_email_passWord.getText().toString();
+                                        customerEmailTV.setText((customer_email.getText().toString()));
+
+                                        customerDialog.dismiss();
+
+                                    }
+                                }}
+                            });
+
+                                }
+        });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 SharedPreferences preferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
                 final SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, currencyEnable);
@@ -230,12 +412,36 @@ public class SetUpManagement extends AppCompatActivity {
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_PRINTER_TYPE, printerType);
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID, branchId+"");
                 editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_SERVER_URL, serverUrl);
+                editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL, customerE);
+                editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord, customerEP);
+
+                //editor.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE,)
+              // Log.d("companySelectd",CompanyStatusSelect);
                 SETTINGS.BO_SERVER_URL=serverUrl;
+            //    SETTINGS.companyStatus=CompanyStatusSelect;
 
                 editor.apply();
 
+
+                SharedPreferences preferencesCompany= getSharedPreferences(POS_Company_status, MODE_PRIVATE);
+                final SharedPreferences.Editor editorCompany = preferencesCompany.edit();
+                editorCompany.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS,CompanyStatusSelect);
+                editorCompany.apply();
+
+
+
+                //currencyCode and currencySymbol
+                SharedPreferences preferencesCurrency= getSharedPreferences(POS_Currency, MODE_PRIVATE);
+                final SharedPreferences.Editor editorCurrency = preferencesCurrency.edit();
+                editorCurrency.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CURRENCY_CODE,currencyCodeSelect);
+                editorCurrency.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CURRENCY_SYMBOL,currencySymbolSelect);
+                editorCurrency.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_COUNTRY,currencyCountrySelect);
+                editorCurrency.putString(LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_LIST_CURRENCY_TYPE,jsonArray1.toString());
+                editorCurrency.apply();
+
+
                 if (Util.isFirstLaunch(SetUpManagement.this, false)) {
-                    Intent i = new Intent(SetUpManagement.this, SetupNewPOSOnlineActivity.class);
+                    Intent i = new Intent(SetUpManagement.this,SetupNewPOSOnlineActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(i);
                 } else {
@@ -246,6 +452,12 @@ public class SetUpManagement extends AppCompatActivity {
             }
         });
         currencyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SetUpManagement.this, R.string.active_currency_service_in_pos, Toast.LENGTH_LONG).show();
+            }
+        });
+        foodStampImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(SetUpManagement.this, R.string.active_currency_service_in_pos, Toast.LENGTH_LONG).show();
@@ -273,8 +485,8 @@ public class SetUpManagement extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferences cSharedPreferences = getSharedPreferences(POS_Management, MODE_PRIVATE);
-                final SharedPreferences.Editor editor = cSharedPreferences.edit();
-                if (cSharedPreferences != null) {
+                    final SharedPreferences.Editor editor = cSharedPreferences.edit();
+                    if (cSharedPreferences != null) {
                     //CreditCard
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CREDIT_CARD)) {
                         if(creditCardCheckBox.isChecked()){
@@ -306,6 +518,17 @@ public class SetUpManagement extends AppCompatActivity {
                         editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, currencyEnable);
                         SETTINGS.enableCurrencies = currencyEnable;
                     }
+                    //
+                        //food stamp
+                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP)) {
+                            if(foodStampCheckBox.isChecked()){
+                                foodStamp=true;
+                            }else {
+                                foodStamp=false;
+                            }
+                            editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP, foodStamp);
+                            SETTINGS.enableFoodStamp = foodStamp;
+                        }
                     //CustomerMeasurement
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CUSTOMER_MEASUREMENT)) {
                         if(customerMeasurementCheckBox.isChecked()){
@@ -329,6 +552,15 @@ public class SetUpManagement extends AppCompatActivity {
                         PrinterType printer = PrinterType.valueOf(editPrinterType);
                         SETTINGS.printer = printer;
                     }
+                        //CustomerEmail
+                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL)) {
+                            String customerEm = customerE;
+                            editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL, customerEm);
+                            SETTINGS.CustomerEmail = customerEm;
+                            String customerEmP = customerEP;
+                            editor.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL, customerEP);
+                            SETTINGS.CustomerEmailPassword = customerEmP;
+                        }
                     //BranchId
                     if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_BRANCH_ID)) {
                         int branch = branchId;
@@ -340,7 +572,29 @@ public class SetUpManagement extends AppCompatActivity {
                         }
 
                     }
+
+
+
+
+
+
                 }
+
+                SharedPreferences SharedPreferencesCompanyStatus = getSharedPreferences(POS_Company_status, MODE_PRIVATE);
+                final SharedPreferences.Editor editorCompanyStatus = SharedPreferencesCompanyStatus.edit();
+                if (SharedPreferencesCompanyStatus != null) {
+                    //CompanyStatus
+                    if (SharedPreferencesCompanyStatus.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS)) {
+                        String companyStatus = CompanyStatusSelect;
+                        Log.d("CompanyStauts2",companyStatus);
+                        editorCompanyStatus.putString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS, companyStatus);
+                        CompanyStatus companyStatus1 = CompanyStatus.valueOf(companyStatus);
+                        SETTINGS.company = companyStatus1;
+
+                    }
+                }
+
+                editorCompanyStatus.apply();
                 editor.apply();
                 //    public PosSetting( boolean enableCurrency, boolean enableCreditCard, boolean enablePinPad, boolean enableCustomerMeasurement, int noOfFloatPoint, String printerType, String posVersionNo, String posDbVersionNo, int branchId) {
 
@@ -354,7 +608,7 @@ public class SetUpManagement extends AppCompatActivity {
                 }
                 String verCode = pInfo.versionName;
 
-                PosSetting posSetting = new PosSetting(currencyEnable,creditCardEnable,pinpadEnable,customerMeasurementEnable,noOfPoint,printerType,pInfo.versionName,String.valueOf(DbHelper.DATABASE_VERSION),branchId);
+                PosSetting posSetting = new PosSetting(currencyEnable,creditCardEnable,pinpadEnable,customerMeasurementEnable,noOfPoint,printerType,CompanyStatusSelect,pInfo.versionName,String.valueOf(DbHelper.DATABASE_VERSION),branchId,customerE,customerEP);
                posSettingDbAdapter.updateEntry(posSetting);
                 posSettingDbAdapter.close();
                 Toast.makeText(SetUpManagement.this, R.string.success_edit_POS_setting, Toast.LENGTH_LONG).show();
@@ -364,6 +618,88 @@ public class SetUpManagement extends AppCompatActivity {
         });
 
     }
+    private void showDialog(Activity activity){
+        if (ArrayCurrency.size() != 0) {
+        int count=0;
+        final AlertDialog.Builder builder = new AlertDialog.Builder(SetUpManagement.this);
+
+        String[] mStringArray = new String[ArrayCurrency.size()];
+        mStringArray = ArrayCurrency.toArray(mStringArray);
+            if (checkedCurrency == null) {
+                checkedCurrency = new boolean[mStringArray.length];
+                for (int i = 0; i < checkedCurrency.length; i++) {
+                    checkedCurrency[i] = false;
+                }
+            }
+            builder.setTitle("select 4 Currency");
+            builder.setMultiChoiceItems(mStringArray, checkedCurrency, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
+                    checkedCurrency[which] = isChecked;
+                    String currentItem = ArrayCurrency.get(which);
+                }
+            });
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                    jsonArray1 = new JSONArray();
+                    int count =0;
+
+                    for (int i = 0; i < checkedCurrency.length; i++) {
+
+                        boolean checked = checkedCurrency[i];
+                        if (checked) {
+                           if (count<3){
+                            try {
+                                jsontemp = new JSONObject();
+                                jsontemp.put("Key", list.get(i).getKey());
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            jsonArray1.put(jsontemp);
+                               Log.d("jsonArray1",jsonArray1.toString());
+                               count=count+1;
+                        }
+                        else {
+                               checkedCurrency[i]=false;
+                               AlertDialog dialog = builder.create();
+                               dialog.show();
+                               Toast.makeText(SetUpManagement.this, R.string.please_choose_three_currencies, Toast.LENGTH_SHORT).show();
+                           }
+                        }
+
+                    }
+                    if (count<3){
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        Toast.makeText(SetUpManagement.this, R.string.please_choose_three_currencies, Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+            builder.setNeutralButton("Cancle", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        else {
+            Toast.makeText(SetUpManagement.this,R.string.there_are_no_currencies, Toast.LENGTH_SHORT).show();
+
+        }
+
+
+
+    }
+
+
+
 
     private void PosManagementValue() {
         /// sharedPreferences for Setting
@@ -392,6 +728,13 @@ public class SetUpManagement extends AppCompatActivity {
                 boolean currencyEnable = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
                 if (currencyEnable) {
                     currencyCheckBox.setChecked(true);
+                }
+            }
+            //FoodStamp
+            if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP)) {
+                boolean foodStamp = cSharedPreferences.getBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOD_STAMP, false);
+                if (foodStamp) {
+                    foodStampCheckBox.setChecked(true);
                 }
             }
 
@@ -445,5 +788,28 @@ public class SetUpManagement extends AppCompatActivity {
 
 
         }
+
+        SharedPreferences SharedPreferencesCompany = getSharedPreferences(POS_Company_status, MODE_PRIVATE);
+        if (SharedPreferencesCompany != null) {
+            //CompanyStatus
+            if (SharedPreferencesCompany.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS)) {
+                String companyStatus =SharedPreferencesCompany.getString(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_COMPANY_STATUS,CompanyStatus.BO_AUTHORIZED_DEALER.name());
+                Log.d("CompanyStatus3",companyStatus);
+                CompanyStatus companyStatus1=CompanyStatus.valueOf(companyStatus);
+                for (int i = 0; i < CompanyStautsList.length; i++) {
+                    if (CompanyStautsList[i] == companyStatus1.name()) {
+                        int spinnerPosition = spinnerArrayAdapter.getPosition(companyStatus1.name());
+                        CompanyStatusSpinner.setSelection(spinnerPosition);
+
+                    }
+                }
+            }
+        }
     }
+
+
+
+
+
+
 }

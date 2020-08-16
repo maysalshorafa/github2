@@ -31,23 +31,26 @@ public class XReport  implements Serializable {
     private double totalPosSales;
     private double invoiceAmount;
     private double creditInvoiceAmount;
-    private double shekelAmount;
-    private double usdAmount;
-    private double eurAmount;
-    private double gbpAmount;
+    private double firstTypeAmount;
+    private double secondTypeAmount;
+    private double thirdTypeAmount;
+    private double fourthTypeAmount;
     private double invoiceReceiptAmount;
     private double pullReportAmount;
     private double depositReportAmount;
     private double salesBeforeTax;
     private double salesWithTax;
     private double totalTax;
+    private double payPoint;
     public XReport() {
 
 
     }
 
-    public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,double shekelAmount,double usdAmount, double eurAmount,
-                   double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,double salesBeforeTax,double salesWithTax,double totalTax) {
+    public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double totalAmount , double totalSales,
+                   double cashTotal,double checkTotal ,double creditTotal,double totalPosSales,double tax,double invoiceAmount, double creditInvoiceAmount,
+                   double firstTypeAmount,double secondTypeAmount, double thirdTypeAmount,
+                   double fourthTypeAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,double salesBeforeTax,double salesWithTax,double totalTax,double payPoint) {
         this.xReportId = xReportId;
         this.createdAt = createdAt;
         this.byUser = byUser;
@@ -62,16 +65,17 @@ public class XReport  implements Serializable {
         this.totalPosSales=totalPosSales;
         this.invoiceAmount=invoiceAmount;
         this.creditInvoiceAmount=creditInvoiceAmount;
-        this.shekelAmount=shekelAmount;
-        this.usdAmount=usdAmount;
-        this.eurAmount=eurAmount;
-        this.gbpAmount=gbpAmount;
+        this.firstTypeAmount=firstTypeAmount;
+        this.secondTypeAmount=secondTypeAmount;
+        this.thirdTypeAmount=thirdTypeAmount;
+        this.fourthTypeAmount=fourthTypeAmount;
         this.invoiceReceiptAmount=invoiceReceiptAmount;
         this.pullReportAmount=pullReportAmount;
         this.depositReportAmount=depositReportAmount;
         this.salesBeforeTax=salesBeforeTax;
         this.salesWithTax=salesWithTax;
         this.totalTax=totalTax;
+        this.payPoint=payPoint;
     }
 
     public XReport(long xReportId, Timestamp createdAt, long byUser, long startOrderId, long endOrderId, double amount) {
@@ -196,6 +200,14 @@ public class XReport  implements Serializable {
         return endSale;
     }
 
+    public double getPayPoint() {
+        return payPoint;
+    }
+
+    public void setPayPoint(double payPoint) {
+        this.payPoint = payPoint;
+    }
+
     public void setEndSale(Order endSale) {
         this.endSale = endSale;
     }
@@ -273,36 +285,37 @@ public class XReport  implements Serializable {
         this.creditInvoiceAmount = creditInvoiceAmount;
     }
 
-    public double getShekelAmount() {
-        return shekelAmount;
+
+    public double getFirstTypeAmount() {
+        return firstTypeAmount;
     }
 
-    public void setShekelAmount(double shekelAmount) {
-        this.shekelAmount = shekelAmount;
+    public void setFirstTypeAmount(double firstTypeAmount) {
+        this.firstTypeAmount = firstTypeAmount;
     }
 
-    public double getUsdAmount() {
-        return usdAmount;
+    public double getSecondTypeAmount() {
+        return secondTypeAmount;
     }
 
-    public void setUsdAmount(double usdAmount) {
-        this.usdAmount = usdAmount;
+    public void setSecondTypeAmount(double secondTypeAmount) {
+        this.secondTypeAmount = secondTypeAmount;
     }
 
-    public double getEurAmount() {
-        return eurAmount;
+    public double getThirdTypeAmount() {
+        return thirdTypeAmount;
     }
 
-    public void setEurAmount(double eurAmount) {
-        this.eurAmount = eurAmount;
+    public void setThirdTypeAmount(double thirdTypeAmount) {
+        this.thirdTypeAmount = thirdTypeAmount;
     }
 
-    public double getGbpAmount() {
-        return gbpAmount;
+    public double getFourthTypeAmount() {
+        return fourthTypeAmount;
     }
 
-    public void setGbpAmount(double gbpAmount) {
-        this.gbpAmount = gbpAmount;
+    public void setFourthTypeAmount(double fourthTypeAmount) {
+        this.fourthTypeAmount = fourthTypeAmount;
     }
 
     public double getInvoiceReceiptAmount() {
@@ -365,16 +378,17 @@ public class XReport  implements Serializable {
                 ", totalPosSales=" + totalPosSales +
                 ", invoiceAmount=" + invoiceAmount +
                 ", creditInvoiceAmount=" + creditInvoiceAmount +
-                ", shekelAmount=" + shekelAmount +
-                ", usdAmount=" + usdAmount +
-                ", eurAmount=" + eurAmount +
-                ", gbpAmount=" + gbpAmount +
+                ", firstTypeAmount=" + firstTypeAmount +
+                ", secondTypeAmount=" + secondTypeAmount +
+                ", thirdTypeAmount=" + thirdTypeAmount +
+                ", fourthTypeAmount=" + fourthTypeAmount +
                 ", invoiceReceiptAmount=" + invoiceReceiptAmount +
                 ", pullReportAmount=" + pullReportAmount +
                 ", depositReportAmount=" + depositReportAmount +
                 ", salesBeforeTax=" + salesBeforeTax +
                 ", salesWithTax=" + salesWithTax +
                 ", totalTax=" + totalTax +
+                ", payPoint=" + payPoint+
                 '}';
     }
 }

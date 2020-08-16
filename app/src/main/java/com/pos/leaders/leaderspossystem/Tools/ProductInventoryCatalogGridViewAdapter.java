@@ -93,7 +93,7 @@ public class ProductInventoryCatalogGridViewAdapter  extends BaseAdapter {
         TextView tvPrice=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVPrice);
         TextView sku=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVBarCode);
         TextView qty=(TextView)gridView.findViewById(R.id.itemProductCatalog_TVQty);
-        tvPrice.setText(products.get(position).getPrice() + " " + context.getString(R.string.ins));
+        tvPrice.setText(products.get(position).getPrice() + " " + SETTINGS.currencySymbol);
         tvName.setText(_Substring(products.get(position).getName()));
         ProductDBAdapter productDBAdapter =new ProductDBAdapter(context);
         productDBAdapter.open();

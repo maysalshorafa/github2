@@ -8,7 +8,7 @@ public enum ProductUnit {
     WEIGHT("WEIGHT"),
     LENGTH("LENGTH"),
     BARCODEWITHWEIGHT("BARCODEWITHWEIGHT")
-    ,BARCODEWITHPRICE("BARCODEWITHPRICE");
+    ,BARCODEWITHPRICE("BARCODEWITHPRICE"),GENERALPRICEPRODUCT("GENERALPRICEPRODUCT");
     private String value;
     public String getValue() {
         return value;

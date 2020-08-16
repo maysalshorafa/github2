@@ -1,5 +1,6 @@
 package com.pos.leaders.leaderspossystem.Printer;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -52,7 +53,12 @@ public class PrintTools {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
-                dialog.show();
+                if(!((Activity) context).isFinishing())
+                {
+                    dialog.show();
+                    //show dialog
+                }
+
                 ////Hebrew 15 Windows-1255
 
                 int i = posInterfaceAPI.OpenDevice();
@@ -71,25 +77,29 @@ public class PrintTools {
             protected void onPostExecute(Void aVoid) {
                 //printer.PRN_PrintAndFeedLine(11);
                 //printer.PRN_HalfCutPaper();
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 pos.systemFeedLine(2);
                 pos.systemCutPaper(66, 0);
 
                 // pos.cashdrawerOpen(0,20,20);
 
                 posInterfaceAPI.CloseDevice();
-                dialog.cancel();
+
+
 
             }
 
             @Override
             protected Void doInBackground(Void... params) {
+
                 pos.imageStandardModeRasterPrint(bitmap, CONSTANT.PRINTER_PAGE_WIDTH);
                 //printer.PRN_PrintDotBitmap(bitmap, 0);
                 return null;
             }
         }.execute();
     }
-
 
     private void Print_WINTEC(Bitmap _bitmap) {
         final POSInterfaceAPI posInterfaceAPI = new POSUSBAPI(context);
@@ -194,7 +204,7 @@ public class PrintTools {
             }.execute();
 
         } else {
-          //  Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -235,7 +245,7 @@ public class PrintTools {
                 }
             }.execute();
         } else {
-          //  Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_LONG).show();
+            //  Toast.makeText(context, "Printer Connect Error!", Toast.LENGTH_LONG).show();
         }
     }
 

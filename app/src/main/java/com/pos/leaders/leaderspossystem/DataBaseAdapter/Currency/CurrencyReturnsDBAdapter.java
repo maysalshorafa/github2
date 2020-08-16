@@ -175,6 +175,7 @@ public class CurrencyReturnsDBAdapter {
     }
 
     public List<CurrencyReturns> getCurencyReturnBySaleID(long saleID) {
+
         List<CurrencyReturns> saleReturns = new ArrayList<CurrencyReturns>();
         try {
             if (db.isOpen()){

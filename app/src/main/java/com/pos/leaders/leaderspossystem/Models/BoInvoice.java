@@ -1,5 +1,8 @@
 package com.pos.leaders.leaderspossystem.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.pos.leaders.leaderspossystem.DocumentType;
 
 import org.json.JSONObject;
@@ -8,7 +11,7 @@ import org.json.JSONObject;
  * Created by Win8.1 on 8/27/2018.
  */
 
-public class BoInvoice {
+public class BoInvoice implements Parcelable {
     private DocumentType type;
     private JSONObject documentsData;
     private String docNum;
@@ -51,5 +54,15 @@ public class BoInvoice {
                 "," +"\""+"documentsData\":" +documentsData  +
                 "," +"\""+"docNum\":" +"\""+docNum +"\""  +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

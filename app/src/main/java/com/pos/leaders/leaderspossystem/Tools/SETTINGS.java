@@ -25,10 +25,18 @@ public class SETTINGS {
 	public static String customer_name ;
 	public static int branchId;
 	public static PrinterType printer ;
+	public static String  CustomerEmail;
+	public static String  CustomerEmailPassword;
+
+	public static CompanyStatus company;
 	public static boolean enableCurrencies ;
+	public static boolean enableFoodStamp ;
+	public static boolean enableDuplicateInvoice;
 	public static int decimalNumbers  ;
 	public static boolean enableAllBranch;
-
+	public static boolean enableExemptDealer;
+	public static boolean enableAuthorizedDealer;
+	public static int companyStatusEnable;
 	public static boolean enableCustomerMeasurement;
 
 	public static boolean creditCardEnable;
@@ -40,7 +48,7 @@ public class SETTINGS {
 	public static String BO_SERVER_URL_V1 = "http://api.leadpos.net/webapi";
 	public static String BO_SERVER_URL_V2 = "http://apiv2.leadpos.net";
 	public static String FEEDBACK_SERVER = "http://report.leadpos.net/api";
-
+	public static  boolean havePosSetting=false;
 
 	//public static String BO_SERVER_URL = "http://185.118.252.26:8080/leadBO/webapi";
 
@@ -68,8 +76,13 @@ public class SETTINGS {
 	public static Bitmap copyInvoiceBitMap ; // add here to avoid recycle bitmap exception when used reference between two different activity
 	public static JSONObject orderDocument;
 
-
-
+	public static String currencyCode;
+	public static String currencySymbol;
+	public static String country;
+    public static String dueDate;
+	public static String statusLincess=CONSTANT.INACTIVE;
+	public static Boolean minusPrice=false;
+	public static Boolean clickCreditBtn=false;
 
 }
 

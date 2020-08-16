@@ -77,20 +77,20 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
                 if(isValidPassword){
                     // if password valid get userByPassword
                     Employee user = userDBAdapter.getEmployeesByPassword(passWord);
-                        //login case
-                        long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getEmployeeId());
-                        if(scheduleID>0){
-                            Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.welcome)+user.getFullName()+getString(R.string.we_wish_to_you_a_happy_business_day),Toast.LENGTH_LONG).show();
-                            JSONObject jsonObject = new JSONObject();
-                            try {
-                                jsonObject.put("user_name",user.getFullName());
-                                jsonObject.put("case","logIn");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            Util.logInLogOutReport(ScheduleWorkersActivity.this,jsonObject);
-                          //  onBackPressed();
+                    //login case
+                    long scheduleID = scheduleWorkersDBAdapter.insertEntry(user.getEmployeeId());
+                    if(scheduleID>0){
+                        Toast.makeText(ScheduleWorkersActivity.this,getString(R.string.welcome)+user.getFullName()+getString(R.string.we_wish_to_you_a_happy_business_day),Toast.LENGTH_LONG).show();
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("user_name",user.getFullName());
+                            jsonObject.put("case","logIn");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+                        Util.logInLogOutReport(ScheduleWorkersActivity.this,jsonObject);
+                        //  onBackPressed();
+                    }
                 }
                 else {
                     //fail password
@@ -131,6 +131,7 @@ public class ScheduleWorkersActivity extends AppCompatActivity {
 
                 }
             }});
+
 
     }
 

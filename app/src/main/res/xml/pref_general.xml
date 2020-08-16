@@ -2,17 +2,6 @@
 
     <EditTextPreference
         android:capitalize="sentences"
-        android:defaultValue="@string/company_name"
-        android:enabled="false"
-        android:inputType="textCapWords"
-        android:key="pref_title_about_company_name"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/pref_title_about_company_name" />
-
-    <EditTextPreference
-        android:capitalize="sentences"
         android:defaultValue="@string/private_company"
         android:enabled="false"
         android:inputType="textCapWords"
@@ -21,6 +10,16 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/private_company" />
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/company_name"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="pref_title_about_company_name"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_about_company_name" />
 
     <EditTextPreference
         android:capitalize="sentences"
@@ -55,5 +54,34 @@
         android:singleLine="true"
         android:title="@string/invoice_note" />
 
-
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/currency_code"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="currency_code"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/currency_code" />
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/currency_Symbol"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="currency_symbol"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/currency_Symbol" />
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="@string/country"
+        android:enabled="false"
+        android:inputType="textCapWords"
+        android:key="country"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/country" />
 </PreferenceScreen>

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.LogInActivity;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.syncposservice.Service.SyncMessage;
@@ -82,6 +83,13 @@ public class TitleBar {
         final int actionBarColor = context.getResources().getColor(R.color.primaryColor);
         actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
         final TextView tvDate = (TextView) context.findViewById(R.id.titleBar_tvClock);
+        final TextView tvDueDate=(TextView)context.findViewById(R.id.titleBar_tvDueDate);
+
+            LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(context);
+            lincessDBAdapter.open();
+            lincessDBAdapter.GetLincess();
+
+            tvDueDate.setText(SETTINGS.dueDate);
 
         final Handler someHandler = new Handler(getMainLooper());
         someHandler.postDelayed(new Runnable() {
@@ -142,7 +150,7 @@ public class TitleBar {
         ivInternet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SyncMessage.isConnected(context)) {
+               if (SyncMessage.isConnected(context)) {
                     SESSION.internetStatus = InternetStatus.CONNECTED;
                 } else {
                     SESSION.internetStatus = InternetStatus.ERROR;
@@ -210,7 +218,7 @@ public class TitleBar {
         }
     }
 
-    private static void refreshStatus(Context context){
+    public static void refreshStatus(Context context){
         switch (SESSION.internetStatus) {
             case CONNECTED:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

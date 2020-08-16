@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    TextView tvPercent, tvPoint, tvAmount;
-    EditText etClubName, etPercent, etAmount, etPoint, etDescription;
+    TextView tvPercent, tvPoint, tvAmount,tvValueOfPoint;
+    EditText etClubName, etPercent, etAmount, etPoint, etDescription,etValueOfPoint;
     Spinner clubType,SpClubBranch;
     Button btAddGroup, btCancel;
     ClubAdapter clubAdapter = new ClubAdapter(this);
@@ -41,7 +41,8 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
     GridView gvCustomer;
     int id=0;
     float discount=0;
-    int point ,amount=0,branchId=0;
+    int point,branchId=0;
+    double valueOfPoint=0 ,amount=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +60,12 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
         etPercent = (EditText) findViewById(R.id.et_parcent);
         etAmount = (EditText) findViewById(R.id.et_amount);
         etPoint = (EditText) findViewById(R.id.et_point);
+        etValueOfPoint=(EditText)findViewById(R.id.et_ValueOfPoint) ;
         etDescription = (EditText) findViewById(R.id.ET_description);
         tvPercent = (TextView) findViewById(R.id.tvParcent);
         tvPoint = (TextView) findViewById(R.id.tvPoint);
         tvAmount = (TextView) findViewById(R.id.tvAmount);
+        tvValueOfPoint=(TextView)findViewById(R.id.tvValueOfPoint);
         btCancel = (Button) findViewById(R.id.addGroup_BTCancel);
         btAddGroup = (Button) findViewById(R.id.add_group);
         gvCustomer = (GridView) findViewById(R.id.custmerManagement_GVCustmerClub);
@@ -75,6 +78,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
         SpClubBranch.setAdapter(dataAdapter);
         club = null;
         etAmount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etValueOfPoint.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         etPoint.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         etPercent.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         final ArrayList<Integer> idForClubType = new ArrayList<Integer>();
@@ -105,6 +109,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             etPercent.setText("" + club.getPercent());
             etAmount.setText("" + club.getAmount());
             etPoint.setText("" + club.getPoint());
+            etValueOfPoint.setText(""+club.getValueOfPoint());
             clubType.setSelection(club.getType());
 
         }
@@ -114,6 +119,7 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             etDescription.setEnabled(false);
             etPercent.setEnabled(false);
             etPoint.setEnabled(false);
+            etValueOfPoint.setEnabled(false);
             clubType.setEnabled(false);
             clubType.setClickable(false);
             btAddGroup.setVisibility(View.GONE);
@@ -154,7 +160,8 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                             }
                             if (id==2){
                                 point= Integer.parseInt(etPoint.getText().toString());
-                                amount= Integer.parseInt(etAmount.getText().toString());
+                                amount= Double.parseDouble(etAmount.getText().toString());
+                                valueOfPoint=Double.parseDouble(etValueOfPoint.getText().toString());
                             }
 
                                 if( !etDescription.getText().toString().equals("")&&  !etClubName.getText().toString().equals("")){
@@ -163,10 +170,11 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                                     }else {
                                         branchId= SETTINGS.branchId;
                                     }
-                            long i = clubAdapter.insertEntry(etClubName.getText().toString(), etDescription.getText().toString(), id,discount, amount, point,branchId);
+                                    Log.d("valueOfPoint",valueOfPoint+"");
+                            long i = clubAdapter.insertEntry(etClubName.getText().toString(), etDescription.getText().toString(), id,discount, amount, point,branchId,valueOfPoint);
 
                             if (i > 0) {
-                                Log.i("success", "adding new Club");
+                                Log.d("success", "adding new Club");
 
                                 Toast.makeText(getApplicationContext(), getString(R.string.success_adding_new_club), Toast.LENGTH_LONG).show();
                                 try {
@@ -215,7 +223,8 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
                                 if(club.getType()==2){
                                     club.setName(etClubName.getText().toString());
                                     club.setDescription(etDescription.getText().toString());
-                                    club.setAmount(Integer.parseInt(etAmount.getText().toString()));
+                                    club.setAmount(Double.parseDouble(etAmount.getText().toString()));
+                                    club.setValueOfPoint(Double.parseDouble(etValueOfPoint.getText().toString()));
                                     club.setPoint(Integer.parseInt(etPoint.getText().toString()));
                                     club.setBranchId(branchId);
 
@@ -250,11 +259,14 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             tvPercent.setVisibility(View.VISIBLE);
             etPercent.setVisibility(View.VISIBLE);
             tvAmount.setVisibility(View.GONE);
+            tvValueOfPoint.setVisibility(View.GONE);
             tvPoint.setVisibility(View.GONE);
             etAmount.setVisibility(View.GONE);
             etPoint.setVisibility(View.GONE);
+            etValueOfPoint.setVisibility(View.GONE);
             point=0;
             amount=0;
+            valueOfPoint=0;
 
         }
         if (id == 2) {
@@ -262,8 +274,10 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             etPoint.setVisibility(View.VISIBLE);
             tvPoint.setVisibility(View.VISIBLE);
             tvAmount.setVisibility(View.VISIBLE);
+            tvValueOfPoint.setVisibility(View.VISIBLE);
             etPercent.setVisibility(View.GONE);
             tvPercent.setVisibility(View.GONE);
+            etValueOfPoint.setVisibility(View.VISIBLE);
             discount=0;
 
 
@@ -272,12 +286,15 @@ public class Coustmer_Group extends AppCompatActivity implements AdapterView.OnI
             point=0;
             amount=0;
             discount=0;
+            valueOfPoint=0;
             etAmount.setVisibility(View.GONE);
             etPoint.setVisibility(View.GONE);
             etPercent.setVisibility(View.GONE);
             tvPercent.setVisibility(View.GONE);
             tvAmount.setVisibility(View.GONE);
             tvPoint.setVisibility(View.GONE);
+            tvValueOfPoint.setVisibility(View.GONE);
+            etValueOfPoint.setVisibility(View.GONE);
         }
 
     }

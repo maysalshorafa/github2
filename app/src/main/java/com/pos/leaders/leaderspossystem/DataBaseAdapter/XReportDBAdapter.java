@@ -44,16 +44,17 @@ public class XReportDBAdapter {
     protected static final String X_REPORT_COLUMN_TOTAL_POS_SALES = "totalPosSales";
     protected static final String X_REPORT_COLUMN_INVOICE_AMOUNT = "totalInvoiceAmount";
     protected static final String X_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT = "totalCreditInvoiceAmount";
-    protected static final String X_REPORT_COLUMN_SHEKEL_AMOUNT = "shekelAmount";
-    protected static final String X_REPORT_COLUMN_USD_AMOUNT = "usdAmount";
-    protected static final String X_REPORT_COLUMN_EUR_AMOUNT = "eurAmount";
-    protected static final String X_REPORT_COLUMN_GBP_AMOUNT = "gbpAmount";
+    protected static final String X_REPORT_COLUMN_SHEKEL_AMOUNT = "firstTypeAmount";
+    protected static final String X_REPORT_COLUMN_USD_AMOUNT = "secondTypeAmount";
+    protected static final String X_REPORT_COLUMN_EUR_AMOUNT = "thirdTypeAmount";
+    protected static final String X_REPORT_COLUMN_GBP_AMOUNT = "fourthTypeAmount";
     protected static final String X_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT = "totalInvoiceReceiptAmount";
     protected static final String X_REPORT_COLUMN_PULL_REPORT_AMOUNT= "pullReportAmount";
     protected static final String X_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT= "depositReportAmount";
     protected static final String X_REPORT_COLUMN_SALES_BEFORE_TAX_REPORT= "salesBeforeTaxReport";
     protected static final String X_REPORT_COLUMN_SALES_WITH_TAX_REPORT= "salesWithTaxReport";
     protected static final String X_REPORT_COLUMN_TOTAL_TAX_REPORT= "totalTaxReport";
+    protected static final String X_REPORT_COLUMN_TOTAL_PayPoint= "totalPayPoint";
 
     public static final String DATABASE_CREATE = "CREATE TABLE `" + X_REPORT_TABLE_NAME + "` ( `" + X_REPORT_COLUMN_ID + "` INTEGER PRIMARY KEY AUTOINCREMENT," +
             " `" + X_REPORT_COLUMN_CREATEDATE + "` TIMESTAMP DEFAULT current_timestamp, `" + X_REPORT_COLUMN_BYUSER + "`INTEGER," +
@@ -61,9 +62,14 @@ public class XReportDBAdapter {
             " `" + X_REPORT_COLUMN_TOTAL_AMOUNT + "` REAL,`"  + X_REPORT_COLUMN_TOTAL_SALES_AMOUNT + "` REAL," +
             " `" + X_REPORT_COLUMN_TAX + "` REAL,`" + X_REPORT_COLUMN_CASH_AMOUNT + "` REAL default 0.0, `" + X_REPORT_COLUMN_CHECK_AMOUNT + "` REAL default 0.0," +
             " `" + X_REPORT_COLUMN_CREDIT_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_TOTAL_POS_SALES + "` REAL,`" +
-            X_REPORT_COLUMN_INVOICE_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_SHEKEL_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_USD_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_EUR_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_GBP_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_PULL_REPORT_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT +  "` REAL default 0.0,`"+X_REPORT_COLUMN_SALES_BEFORE_TAX_REPORT + "` REAL default 0.0,`"+X_REPORT_COLUMN_TOTAL_TAX_REPORT + "` REAL default 0.0,`"+X_REPORT_COLUMN_SALES_WITH_TAX_REPORT +
+            X_REPORT_COLUMN_INVOICE_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_SHEKEL_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_USD_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_EUR_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_GBP_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_PULL_REPORT_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT + "` REAL default 0.0,`" + X_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT +  "` REAL default 0.0,`"+X_REPORT_COLUMN_SALES_BEFORE_TAX_REPORT + "` REAL default 0.0,`"+X_REPORT_COLUMN_TOTAL_TAX_REPORT + "` REAL default 0.0,`"+X_REPORT_COLUMN_TOTAL_PayPoint + "` REAL default 0.0,`"+X_REPORT_COLUMN_SALES_WITH_TAX_REPORT +
             "` REAL default 0.0,`" +
             X_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT + "` REAL default 0.0)";
+
+
+    public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table x_report rename to x_report_v10;", DATABASE_CREATE + "; ",
+            "insert into x_report (id,createDate,byUser,startOrderId,endOrderId,amount,totalSales,tax,cashTotal,checkTotal,creditTotal,totalPosSales,totalInvoiceAmount,totalCreditInvoiceAmount,firstTypeAmount,secondTypeAmount,thirdTypeAmount,fourthTypeAmount,totalInvoiceReceiptAmount,pullReportAmount,depositReportAmount,salesBeforeTaxReport,salesWithTaxReport,totalTaxReport) " +
+                    "select id,createDate,byUser,startOrderId,endOrderId,amount,totalSales,tax,cashTotal,checkTotal,creditTotal,totalPosSales,totalInvoiceAmount,totalCreditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,totalInvoiceReceiptAmount,pullReportAmount,depositReportAmount,salesBeforeTaxReport,salesWithTaxReport,totalTaxReport from x_report_v10;"};
 
     // Variable to hold the database instance
     private SQLiteDatabase db;
@@ -97,7 +103,7 @@ public class XReportDBAdapter {
     public SQLiteDatabase getDatabaseInstance() {
         return db;
     }
-    public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double totalSales, double totalCashAmount , double totalCheckAmount , double totalCreditAmount, double totalPosSalesAmount, double amountWithTax, double invoiceAmount , double creditInvoiceAmount, double shekelAmount, double usdAmount , double eurAmount , double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,double salesBeforeTax,double salesWithTax,double totalTax){
+    public long insertEntry(Timestamp creatingDate, long byUserID, long startSaleID, long endSaleID, double amount, double totalSales, double totalCashAmount , double totalCheckAmount , double totalCreditAmount, double totalPosSalesAmount, double amountWithTax, double invoiceAmount , double creditInvoiceAmount, double shekelAmount, double usdAmount , double eurAmount , double gbpAmount, double invoiceReceiptAmount,double pullReportAmount,double depositReportAmount,double salesBeforeTax,double salesWithTax,double totalTax,double totaPayPint){
         if(db.isOpen()){
 
         }else {
@@ -108,7 +114,7 @@ public class XReportDBAdapter {
                 Log.d("Exception",ex.toString());
             }
         }
-        XReport xReport = new XReport(Util.idHealth(this.db, X_REPORT_TABLE_NAME, X_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,totalSales,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,pullReportAmount,depositReportAmount,salesBeforeTax,salesWithTax,totalTax);
+        XReport xReport = new XReport(Util.idHealth(this.db, X_REPORT_TABLE_NAME, X_REPORT_COLUMN_ID),creatingDate, byUserID, startSaleID, endSaleID,amount,totalSales,totalCashAmount,totalCheckAmount,totalCreditAmount,totalPosSalesAmount,amountWithTax,invoiceAmount,creditInvoiceAmount,shekelAmount,usdAmount,eurAmount,gbpAmount,invoiceReceiptAmount,pullReportAmount,depositReportAmount,salesBeforeTax,salesWithTax,totalTax,totaPayPint);
         sendToBroker(MessageType.ADD_X_REPORT, xReport, this.context);
         try {
             close();
@@ -146,15 +152,17 @@ public class XReportDBAdapter {
         val.put(X_REPORT_COLUMN_TOTAL_POS_SALES,xReport.getTotalPosSales());
         val.put(X_REPORT_COLUMN_INVOICE_AMOUNT,xReport.getInvoiceAmount());
         val.put(X_REPORT_COLUMN_CREDIT_INVOICE_AMOUNT,xReport.getCreditInvoiceAmount());
-        val.put(X_REPORT_COLUMN_SHEKEL_AMOUNT,xReport.getShekelAmount());
-        val.put(X_REPORT_COLUMN_USD_AMOUNT,xReport.getUsdAmount());
-        val.put(X_REPORT_COLUMN_EUR_AMOUNT,xReport.getEurAmount());
+        val.put(X_REPORT_COLUMN_SHEKEL_AMOUNT,xReport.getFirstTypeAmount());
+        val.put(X_REPORT_COLUMN_USD_AMOUNT,xReport.getSecondTypeAmount());
+        val.put(X_REPORT_COLUMN_EUR_AMOUNT,xReport.getThirdTypeAmount());
+        val.put(X_REPORT_COLUMN_GBP_AMOUNT,xReport.getFourthTypeAmount());
         val.put(X_REPORT_COLUMN_INVOICE_RECEIPT_AMOUNT,xReport.getInvoiceReceiptAmount());
         val.put(X_REPORT_COLUMN_PULL_REPORT_AMOUNT,xReport.getPullReportAmount());
         val.put(X_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT,xReport.getDepositReportAmount());
         val.put(X_REPORT_COLUMN_SALES_BEFORE_TAX_REPORT,xReport.getSalesBeforeTax());
         val.put(X_REPORT_COLUMN_SALES_WITH_TAX_REPORT,xReport.getSalesWithTax());
         val.put(X_REPORT_COLUMN_TOTAL_TAX_REPORT,xReport.getTotalTax());
+        val.put(X_REPORT_COLUMN_TOTAL_PayPoint,xReport.getPayPoint());
         try {
             return db.insert(X_REPORT_TABLE_NAME, null, val);
         } catch (SQLException ex) {
@@ -280,7 +288,7 @@ public class XReportDBAdapter {
                 c.getDouble(c.getColumnIndex(X_REPORT_COLUMN_PULL_REPORT_AMOUNT)),
                 c.getDouble(c.getColumnIndex(X_REPORT_COLUMN_DEPOSIT_REPORT_AMOUNT)), c.getDouble(c.getColumnIndex(X_REPORT_COLUMN_SALES_BEFORE_TAX_REPORT)),
                         c.getDouble(c.getColumnIndex(X_REPORT_COLUMN_SALES_WITH_TAX_REPORT))
-        , c.getDouble(c.getColumnIndex(X_REPORT_COLUMN_TOTAL_TAX_REPORT)));
+        , c.getDouble(c.getColumnIndex(X_REPORT_COLUMN_TOTAL_TAX_REPORT)),  c.getDouble(c.getColumnIndex(X_REPORT_COLUMN_TOTAL_PayPoint)));
     }
 
 

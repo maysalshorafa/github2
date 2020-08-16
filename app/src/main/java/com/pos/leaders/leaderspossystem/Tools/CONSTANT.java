@@ -18,4 +18,10 @@ public class CONSTANT {
     public static final int USD = 1;
     public static final int GBP = 2 ;
     public static final int EUR = 3;
+    public static final String ACTIVE="active";
+    public static final String INACTIVE="inActive";
+
+    public static final String ACTIVATION_DATE_LICENCESS="2020-06-01";
+   public static final String DUE_DATE_LICENCESS="2021-06-01";
+   public static final String YEARLY_ACTIVATION_LICENSS="yearly";
 }

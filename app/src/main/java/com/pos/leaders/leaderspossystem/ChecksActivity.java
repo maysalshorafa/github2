@@ -2,6 +2,7 @@ package com.pos.leaders.leaderspossystem;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,16 +25,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.BoInvoice;
-import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
+import com.pos.leaders.leaderspossystem.Models.Check;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Tools.ChecksListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.DocumentControl;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
+import com.pos.leaders.leaderspossystem.Tools.symbolWithCodeHashMap;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
@@ -55,6 +57,7 @@ public class ChecksActivity extends AppCompatActivity {
 	Button btDone,btCancel;
     TextView tv , tvCheckCustomer , tvChecksRequired;
 	ListView lvChecks;
+	Check _check ;
 	static List<Check> checkList = new ArrayList<Check>();
 	static List<Check> firstCheckList = new ArrayList<Check>();
 
@@ -69,8 +72,9 @@ public class ChecksActivity extends AppCompatActivity {
 	double requiredAmount=0;
     Bundle extras;
 	JSONObject invoiceJson=new JSONObject();
-	BoInvoice invoice ;
+	List<BoInvoice >invoice ;
 	boolean fromMultiCurrency=false;
+	Context context;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,6 +95,8 @@ public class ChecksActivity extends AppCompatActivity {
 
 		int width = dm.widthPixels;
 		int height = dm.heightPixels;
+
+		context=ChecksActivity.this;
         checkList = new ArrayList<Check>();
 
 		getWindow().setLayout((int) (width * 0.9), (int) (height * 0.75));
@@ -100,41 +106,39 @@ public class ChecksActivity extends AppCompatActivity {
 		tvCheckCustomer = (TextView) findViewById(R.id.custmer_name);
 
 		LlCustomer = (LinearLayout) findViewById(R.id.checkActivity_llCustomer);
+
+		//Getting default currencies name and values
+		List<CurrencyType> currencyTypesList = null;
+		CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(context);
+		currencyTypeDBAdapter.open();
+		currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+		currencyTypeDBAdapter.close();
+
 		firstCheckList=SESSION._CHECKS_HOLDER;
 
 		 extras = getIntent().getExtras();
         if (extras != null) {
-			Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
 			if(!extras.containsKey("checksReceipt")) {
 				currencyType = (String) extras.get("_CurrencyType");
 			}
 
 			totalPrice = (double) extras.get("_Price");
+			Log.d("totalPricekkk",totalPrice+"");
 			customer_name =(String)extras.get("_custmer");
 			fromMultiCurrency=extras.getBoolean(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY);
-
-			if(currencyType.equalsIgnoreCase("ILS")){
-            tv.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
-			}else if(currencyType.equalsIgnoreCase(getString(R.string.usd))){
-				tv.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.dolor_sign));
-			}else if(currencyType.equalsIgnoreCase(getString(R.string.eur))){
-				tv.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.eur_sign));
-			}else if(currencyType.equalsIgnoreCase(getString(R.string.gbp))){
-				tv.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.gbp_sign));
+			if(currencyType.equalsIgnoreCase(currencyTypesList.get(0).getType())){
+            tv.setText(Util.makePrice(totalPrice) + " " +String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(0).getType()).getValue()));
 			}
+			if (SETTINGS.enableCurrencies){if(currencyType.equalsIgnoreCase(currencyTypesList.get(1).getType())){
+				tv.setText(Util.makePrice(totalPrice) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(1).getType()).getValue()));
+			}else if(currencyType.equalsIgnoreCase(currencyTypesList.get(2).getType())){
+				tv.setText(Util.makePrice(totalPrice) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(2).getType()).getValue()));
+			}else if(currencyType.equalsIgnoreCase(currencyTypesList.get(3).getType())){
+				tv.setText(Util.makePrice(totalPrice) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(3).getType()).getValue()));
+			}}
 			tvCheckCustomer.setText(customer_name);
 			if(extras.containsKey("checksReceipt")){
-				try {
-					invoiceJson=new JSONObject(extras.getString("invoice"));
-					JSONObject docJson = invoiceJson.getJSONObject("documentsData");
-					docJson.remove("@type");
-					docJson.put("type","Invoice");
-					invoiceJson.remove("documentsData");
-					invoiceJson.put("documentsData",docJson);
-					invoice=new BoInvoice(DocumentType.INVOICE,docJson,invoiceJson.getString("docNum"));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+					invoice= (List<BoInvoice>) extras.get("invoice");
 				//sendReceipt();
 			}
         } else {
@@ -189,36 +193,47 @@ public class ChecksActivity extends AppCompatActivity {
 
     private double getTotalPid(){
         double d=0.0f;
+		Log.d("checkList",checkList.toString());
         for(Check c:checkList){
             d += c.getAmount();
+			Log.d("dAdd",d+"");
         }
         return d;
     }
 	private double getTotal(){
+		//Getting default currencies name and values
+		List<CurrencyType> currencyTypesList = null;
+		CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(context);
+		currencyTypeDBAdapter.open();
+		currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+		currencyTypeDBAdapter.close();
 		double d=0.0f;
 		for(Check c:checkList){
 			d += c.getAmount();
 			requiredAmount=totalPrice-d;
 			if(requiredAmount>0){
-				if(currencyType.equalsIgnoreCase("ILS")){
-					tvChecksRequired.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.ins));
-				}else if(currencyType.equalsIgnoreCase(getString(R.string.usd))){
-					tvChecksRequired.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.dolor_sign));
-				}else if(currencyType.equalsIgnoreCase(getString(R.string.eur))){
-					tvChecksRequired.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.eur_sign));
-				}else if(currencyType.equalsIgnoreCase(getString(R.string.gbp))){
-					tvChecksRequired.setText(Util.makePrice(totalPrice) + " " + getResources().getText(R.string.gbp_sign));
+				if(currencyType.equalsIgnoreCase(currencyTypesList.get(0).getType())){
+					tvChecksRequired.setText(Util.makePrice(requiredAmount) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(0).getType()).getValue()));
 				}
+				if (SETTINGS.enableCurrencies){
+					if(currencyType.equalsIgnoreCase(currencyTypesList.get(1).getType())){
+					tvChecksRequired.setText(Util.makePrice(requiredAmount) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(1).getType()).getValue()));
+				}else if(currencyType.equalsIgnoreCase(currencyTypesList.get(2).getType())){
+					tvChecksRequired.setText(Util.makePrice(requiredAmount) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(2).getType()).getValue()));
+				}else if(currencyType.equalsIgnoreCase(currencyTypesList.get(3).getType())){
+					tvChecksRequired.setText(Util.makePrice(requiredAmount) + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(3).getType()).getValue()));
+				}}
 			}else {
-				if(currencyType.equalsIgnoreCase("ILS")){
-					tvChecksRequired.setText(0 + " " + getResources().getText(R.string.ins));
-				}else if(currencyType.equalsIgnoreCase(getString(R.string.usd))){
-					tvChecksRequired.setText(0 + " " + getResources().getText(R.string.dolor_sign));
-				}else if(currencyType.equalsIgnoreCase(getString(R.string.eur))){
-					tvChecksRequired.setText(0 + " " + getResources().getText(R.string.eur_sign));
-				}else if(currencyType.equalsIgnoreCase(getString(R.string.gbp))){
-					tvChecksRequired.setText(0 + " " + getResources().getText(R.string.gbp_sign));
-				}			}
+				if(currencyType.equalsIgnoreCase(currencyTypesList.get(0).getType())){
+					tvChecksRequired.setText(0 + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(0).getType()).getValue()));
+				}if (SETTINGS.enableCurrencies){
+				 if(currencyType.equalsIgnoreCase(currencyTypesList.get(1).getType())){
+					tvChecksRequired.setText(0 + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(1).getType()).getValue()));
+				}else if(currencyType.equalsIgnoreCase(currencyTypesList.get(2).getType())){
+					tvChecksRequired.setText(0 + " " + String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(2).getType()).getValue()));
+				}else if(currencyType.equalsIgnoreCase(currencyTypesList.get(3).getType())){
+					tvChecksRequired.setText(0 + " " +String.valueOf(symbolWithCodeHashMap.valueOf(currencyTypesList.get(3).getType()).getValue()));
+				}			}}
 
 		}
 		return d;
@@ -228,7 +243,7 @@ public class ChecksActivity extends AppCompatActivity {
 		btDone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                Check _check = new Check();
+				_check = new Check();
 				if(lvChecks.getChildCount()>1) {
                     ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lvChecks.getChildCount() - 1).getTag();
 
@@ -262,7 +277,7 @@ public class ChecksActivity extends AppCompatActivity {
 								finalCheckList.add(_check);
 							}
 							SESSION._CHECKS_HOLDER = finalCheckList;
-							DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice);
+							//DocumentControl.sendReciptDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,totalPrice,"",);
 						}else {
 
 							 List<Check> finalCheckList = new ArrayList<Check>();
@@ -283,17 +298,25 @@ public class ChecksActivity extends AppCompatActivity {
 							}
 
 							SESSION._CHECKS_HOLDER = finalCheckList;
-							if(firstCheckList.size()>0){
-								SESSION._CHECKS_HOLDER .addAll(firstCheckList);
+							boolean checkList=true;
+							Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
+							for (int i=0;i<SESSION._CHECKS_HOLDER.size();i++){
+								Check check=SESSION._CHECKS_HOLDER.get(i);
+								if (check.getBankNum()==0 || check.getAccountNum()==0|| check.getBranchNum()==0){
+									checkList=false;
+								}
 
 							}
-							Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
-							Intent i = new Intent();
-							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
-							i.putExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, totalPrice);
-							i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
-							setResult(RESULT_OK, i);
-							finish();
+							if (checkList){
+								Intent i = new Intent();
+								i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
+								i.putExtra(SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE, totalPrice);
+								i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
+								setResult(RESULT_OK, i);
+								finish();}
+							else {
+								Toast.makeText(ChecksActivity.this,"يرجى التأكد من تعبئة البيانات", Toast.LENGTH_SHORT).show();
+							}
 						}
                     }
                     else{
@@ -325,7 +348,9 @@ public class ChecksActivity extends AppCompatActivity {
 							finalCheckList.add(_check);
 						}
 						SESSION._CHECKS_HOLDER = finalCheckList;
-						DocumentControl.sendDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,t);
+						finish();
+						//DocumentControl.sendReciptDoc(ChecksActivity.this,invoice, CONSTANT.CHECKS,t,"");
+
 					}else {
 						double d = getTotalPid() - checkList.get(checkList.size() - 1).getAmount();
 						double needAmount = totalPrice - d;
@@ -354,16 +379,39 @@ public class ChecksActivity extends AppCompatActivity {
 							SESSION._CHECKS_HOLDER .addAll(firstCheckList);
 
 						}
+						Log.d("SESSION._CHECKS_HOLDERx",SESSION._CHECKS_HOLDER.toString());
+                        /* for (int i=0;i<SESSION._CHECKS_HOLDER.size();i++){
+							 Check check=SESSION._CHECKS_HOLDER.get(i);
+							 if (check.getBankNum()==0){
+								 SESSION._CHECKS_HOLDER.get(i).setBankNum(1);
+							 }
+							 if (check.getAccountNum()==0){
+								 SESSION._CHECKS_HOLDER.get(i).setAccountNum(1);
+							 }
+							 if (check.getBranchNum()==0){
+								 SESSION._CHECKS_HOLDER.get(i).setBranchNum(1);
+							 }
+						 }
+						Log.d("CHECKS_HOLDERAfterChange",SESSION._CHECKS_HOLDER.toString());*/
+						boolean checkList=true;
 						Log.d("SESSION._CHECKS_HOLDER",SESSION._CHECKS_HOLDER.toString());
+						for (int i=0;i<SESSION._CHECKS_HOLDER.size();i++){
+							Check check=SESSION._CHECKS_HOLDER.get(i);
+							if (check.getBankNum()==0 || check.getAccountNum()==0|| check.getBranchNum()==0){
+								checkList=false;
+							}
 
-						Intent i = new Intent();
-						i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
-						i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
-						i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
-						setResult(RESULT_OK, i);
-						finish();
-
-
+						}
+						if (checkList){
+							Intent i = new Intent();
+							i.putExtra(LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY, getTotalPid());
+							i.putExtra( SalesCartActivity.COM_POS_LEADERS_LEADERSPOSSYSTEM_MAIN_ACTIVITY_CART_TOTAL_PRICE,totalPrice);
+							i.putExtra(ChecksActivity.LEAD_POS_RESULT_INTENT_CODE_CHECKS_ACTIVITY_FROM_MULTI_CURRENCY,fromMultiCurrency);
+							setResult(RESULT_OK, i);
+							finish();}
+						else {
+							Toast.makeText(ChecksActivity.this,"يرجى التأكد من تعبئة البيانات", Toast.LENGTH_SHORT).show();
+						}
 					}
                 } else {
                     Toast.makeText(ChecksActivity.this, getString(R.string.check_pid_error), Toast.LENGTH_SHORT).show();
@@ -387,9 +435,10 @@ public class ChecksActivity extends AppCompatActivity {
 					Toast.makeText(ChecksActivity.this,getString(R.string.dont_need_to_add_another_check),Toast.LENGTH_LONG).show();
 
 				}else {
-
+					Log.d("checkListAct",checkList.toString());
 					Check check=new Check();
 					int lsttchildID = lvChecks.getChildCount()-1;
+					Log.d("lsttchildID",lsttchildID+"" +lvChecks.getChildCount());
 					if(lvChecks.getChildCount()>1) {
 						ChecksListViewAdapter.ViewHolder lastItem = (ChecksListViewAdapter.ViewHolder) lvChecks.getChildAt(lsttchildID).getTag();
 
@@ -412,6 +461,7 @@ public class ChecksActivity extends AppCompatActivity {
 						newCheck.setCheckNum(check.getCheckNum()+1);
 					}
 					checkList.add(newCheck);
+					Log.d("checkListAftre",checkList.toString());
 					lvChecks.setAdapter(adapter);
 					getTotal();
 				}
@@ -578,8 +628,10 @@ public class ChecksActivity extends AppCompatActivity {
 	}
 
 	public void delete(int pos){
+		Log.d("pos",pos+"");
 		checkList.remove(pos);
 		adapter.remove(pos);
+		Log.d("checkList",checkList.toString());
 		adapter = new ChecksListViewAdapter(this, R.layout.list_adapter_row_checks, checkList);
 		lvChecks.setAdapter(adapter);
 		adapter.notifyDataSetChanged();

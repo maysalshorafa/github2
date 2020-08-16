@@ -23,7 +23,7 @@ public class Order {
 	private double totalPrice;
 	private double totalPaidAmount;
 	private long customerId;
-	public double cartDiscount = 0;
+	public double cartDiscount;
 	@JsonIgnore
 	private String customer_name = null;
 	@JsonIgnore
@@ -47,10 +47,11 @@ public class Order {
 	public long cancellingOrderId;
 
 
+
 	public Order() {
 	}
 
-	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount,long cancellingOrderId,double salesBeforeTax,double salesWithTax) {
+	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount,long cancellingOrderId,double salesBeforeTax,double salesWithTax,double salesTotalSaved) {
 		this.orderId = orderId;
 		this.byUser = byUser;
 		this.createdAt = createdAt;
@@ -66,6 +67,7 @@ public class Order {
 		this.cancellingOrderId=cancellingOrderId;
 		this.salesBeforeTax=salesBeforeTax;
 		this.salesWithTax=salesWithTax;
+		this.totalSaved=salesTotalSaved;
 	}
 	public Order(long orderId, long byUser, Timestamp createdAt, int replacementNote, boolean status, double totalPrice, double totalPaidAmount, long customerId, String customer_name,double cartDiscount , String orderKey,double numberDiscount) {
 		this.orderId = orderId;
@@ -122,8 +124,9 @@ public class Order {
 	}
 
 	public static Order newInstance(Order s) {
-		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey(),s.getNumberDiscount(),s.getCancellingOrderId(),s.getSalesBeforeTax(),s.getSalesWithTax());
+		return new Order(s.getOrderId(), s.getByUser(), s.getCreatedAt(), s.getReplacementNote(), s.isStatus(), s.getTotalPrice(), s.getTotalPaidAmount(), s.getCustomerId(), s.getCustomer_name(),s.getCartDiscount(),s.getOrderKey(),s.getNumberDiscount(),s.getCancellingOrderId(),s.getSalesBeforeTax(),s.getSalesWithTax(),s.getTotalSaved());
 	}
+
 
 	@JsonIgnore
 	public int getNumberOfItems(){
@@ -209,6 +212,14 @@ public class Order {
 
 	//region Setter
 
+
+	public double getTotalSaved() {
+		return totalSaved;
+	}
+
+	public void setTotalSaved(double totalSaved) {
+		this.totalSaved = totalSaved;
+	}
 
 	public void setCartDiscount(double cartDiscount) {
 		this.cartDiscount = cartDiscount;

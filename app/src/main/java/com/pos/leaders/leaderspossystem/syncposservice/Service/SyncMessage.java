@@ -38,8 +38,10 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.DrawerDepositAndPullRepo
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.EmployeePermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
@@ -75,6 +77,7 @@ import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.OpiningReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.OrderDetails;
+import com.pos.leaders.leaderspossystem.Models.PayPoint;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
@@ -90,6 +93,7 @@ import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.syncposservice.DBHelper.Broker;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -105,9 +109,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -136,7 +142,7 @@ public class SyncMessage extends Service {
     private static String token = SESSION.token;
 
     private Broker broker;
-    private MessageTransmit messageTransmit;
+    private MessageTransmit messageTransmit = new MessageTransmit();
 
     private long LOOP_TIME = 1 * 30 * 1000;
 
@@ -231,6 +237,7 @@ public class SyncMessage extends Service {
                         String currencyRes="";
                         broker.open();
                         List<BrokerMessage> bms = broker.getAllNotSyncedCommand();
+                        Log.d("onStartCommandBoker",bms.toString());
                         for (BrokerMessage bm : bms) {
                             try {
                                 if (doSync(bm)) {
@@ -251,13 +258,15 @@ public class SyncMessage extends Service {
                         //Log.i("date", DateConverter.toDate(timestamp.getTime()));
                         //if(!(DateConverter.toDate(currency.getLastUpdate().getTime()) == DateConverter.toDate(timestamp.getTime()))){
 
-                       /* try {
+                        try {
+                         //   if (SETTINGS.enableCurrencies){
                             updateCurrency();
+                        //}
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }*/
+                        }
                         //}
 
                         try {
@@ -289,12 +298,20 @@ public class SyncMessage extends Service {
         List<Integer> AksFail = new ArrayList<>();
         String res = "";
         try {
+            Log.d("multiSync","multiSync");
+            Log.d("tokenmultisync",token);
+            Log.d("ApiURLSync",ApiURL.Sync);
+            messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
             res = messageTransmit.authGet(ApiURL.Sync, token);
-            Log.e("syncResponse",res);
+            Log.d("syncResponse",res +" "+ "response");
+        } catch(SocketTimeoutException e){
+            Log.e("socketTime exception", e.getMessage(), e);
         } catch (IOException e) {
             Log.e("getsync exception", e.getMessage(), e);
         }
-
+        finally {
+            Log.e("getSync exception","finally block executed");
+        }
         if (res.length() != 0) {
             if (!res.equals(MessageResult.Invalid)) {
                 Log.w("getSync", res);
@@ -334,6 +351,7 @@ public class SyncMessage extends Service {
         try {
             Log.i("token", token);
             Log.i("sync", ApiURL.Sync);
+
             res = messageTransmit.authGet(ApiURL.Sync, token);
         } catch (Exception ex) {
             Log.e("getsync exception", ex.getMessage());
@@ -389,8 +407,9 @@ public class SyncMessage extends Service {
         long rID = 0;
         if (jsonObject.has(MessageKey.MessageType)) {
             String msgType = jsonObject.getString(MessageKey.MessageType);
+            Log.d("MassageTypeREsponse",msgType+" "+"massage");
             String msgData = jsonObject.getString(MessageKey.Data);
-
+            Log.d("MassageDataResponse",msgData.toString());
             if (msgData.startsWith("[")) {
                 try {
                     JSONArray jsonArray = jsonObject.getJSONArray(MessageKey.Data);
@@ -498,6 +517,8 @@ public class SyncMessage extends Service {
                     CategoryDBAdapter categoryDBAdapter = new CategoryDBAdapter(this);
                     categoryDBAdapter.open();
                     rID = categoryDBAdapter.insertEntry(category);
+                    Log.d("categpryADD",category.toString());
+                    Log.d("addCategoryyy","adddCategory");
                     categoryDBAdapter.close();
                     break;
                 case MessageType.UPDATE_CATEGORY:
@@ -610,7 +631,6 @@ public class SyncMessage extends Service {
                 case MessageType.DELETE_OFFER:
                     Offer deleteOffer = null;
                     deleteOffer = objectMapper.readValue(msgData, Offer.class);
-
                     OfferDBAdapter deleteOfferDBAdapter = new OfferDBAdapter(this);
                     deleteOfferDBAdapter.open();
                     try {
@@ -815,7 +835,6 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_PRODUCT:
                     Product p = null;
                     p = objectMapper.readValue(msgData, Product.class);
-
                     ProductDBAdapter productDBAdapter = new ProductDBAdapter(this);
                     productDBAdapter.open();
                     try {
@@ -1076,12 +1095,44 @@ public class SyncMessage extends Service {
                 //region ScheduleWorker
                 case MessageType.ADD_SCHEDULE_WORKERS:
                     ScheduleWorkers scheduleWorkers = null;
-                    scheduleWorkers = objectMapper.readValue(msgData, ScheduleWorkers.class);
-                    ScheduleWorkersDBAdapter scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
+                    JSONObject scJson =new JSONObject(msgData);
+                    Log.d("tesssssss",scJson.toString());
 
+                    String dateStr = scJson.getString("startTime");
+                    Date parsedDate = DateConverter.stringToDate(dateStr);
+                    Timestamp startTime = new Timestamp(parsedDate.getTime());
+                    jsonObject.remove("startTime");
+                    scJson.put("startTime",startTime.getTime());
+
+                    String dateStr1 = scJson.getString("exitTime");
+                    Date parsedDate1 = DateConverter.stringToDate(dateStr1);;
+                    Timestamp exitTime = new Timestamp(parsedDate1.getTime());
+                    jsonObject.remove("exitTime");
+                    scJson.put("exitTime",exitTime.getTime());
+
+                    String dateStr2 = scJson.getString("date");
+                    Date parsedDate2 = DateConverter.stringToDate(dateStr2);
+                    Timestamp createdAt = new Timestamp(parsedDate2.getTime());
+                    jsonObject.remove("date");
+                    scJson.put("date",createdAt.getTime());
+
+                    scheduleWorkers = objectMapper.readValue(scJson.toString(), ScheduleWorkers.class);
+                    ScheduleWorkersDBAdapter scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
                     scheduleWorkersDBAdapter.open();
                     rID = scheduleWorkersDBAdapter.insertEntry(scheduleWorkers);
                     scheduleWorkersDBAdapter.close();
+
+                    break;
+                //end
+                //region ScheduleWorker
+                case MessageType.UPDATE_SCHEDULE_WORKERS:
+                    ScheduleWorkers scheduleWorker = null;
+                    scheduleWorker = objectMapper.readValue(msgData, ScheduleWorkers.class);
+                    ScheduleWorkersDBAdapter scheduleWorkersDBAdapterN = new ScheduleWorkersDBAdapter(this);
+
+                    scheduleWorkersDBAdapterN.open();
+                     scheduleWorkersDBAdapterN.updateEntry(scheduleWorker);
+                    scheduleWorkersDBAdapterN.close();
                     break;
                 //end
                 case MessageType.UPDATE_COMPANY_CREDENTIALS:
@@ -1090,10 +1141,36 @@ public class SyncMessage extends Service {
                     JSONObject respnse = new JSONObject(msgData);
                     int i = settingsDBAdapter.updateEntry(respnse.getString(MessageKey.companyID), respnse.getString(MessageKey.companyName), SESSION.POS_ID_NUMBER + "",
                             (float) respnse.getDouble(MessageKey.tax), respnse.getString(MessageKey.returnNote), respnse.getInt(MessageKey.endOfReturnNote),
-                            respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW),respnse.getInt(MessageKey.branchId));
+                            respnse.getString(MessageKey.CCUN), respnse.getString(MessageKey.CCPW),respnse.getInt(MessageKey.branchId),respnse.getString(MessageKey.currencyCode),
+                            respnse.getString(MessageKey.currencySymbol),respnse.getString(MessageKey.country));
                     settingsDBAdapter.close();
                     break;
                 //end
+
+
+                case MessageType.UPDATE_COMPANY_LICENSE:
+                    LincessDBAdapter lincessDBAdapter=new LincessDBAdapter(this);
+                    lincessDBAdapter.open();
+                    if (SETTINGS.statusLincess==null){
+                      boolean getStatusLincess= lincessDBAdapter.GetLincess();
+                    }
+                    JSONObject respnseLincess = new JSONObject(msgData);
+                    long idLincess=lincessDBAdapter.GetLincessID().getId();
+
+                   String   activationDate =respnseLincess.getString(MessageKey.activationDate);
+                   String  dueDate=respnseLincess.getString(MessageKey.dueDate);
+
+
+                    Timestamp dueDateTimeSt =new Timestamp(Long.parseLong(dueDate));
+                    Timestamp activationDateTimeS=new Timestamp(Long.parseLong(activationDate));
+                    Log.d("activationDateSync",dueDateTimeSt +" "+activationDateTimeS);
+
+                    lincessDBAdapter.updateEntry(idLincess,SETTINGS.statusLincess,activationDateTimeS,dueDateTimeSt,
+                            respnseLincess.getString(MessageKey.branchId),respnseLincess.getString(MessageKey.companyId),respnseLincess.getString(MessageKey.note));
+
+                    break;
+
+
 
                 case MessageType.ADD_OFFER_CATEGORY:
                     OfferCategory offerCategory = null;
@@ -1156,7 +1233,6 @@ public class SyncMessage extends Service {
                 case MessageType.ADD_POS_SETTING:
                     PosSetting posSetting = null;
                     posSetting = objectMapper.readValue(msgData, PosSetting.class);
-
                     PosSettingDbAdapter posSettingDbAdapter = new PosSettingDbAdapter(this);
                     posSettingDbAdapter.open();
                     rID = posSettingDbAdapter.insertEntry(posSetting);
@@ -1189,6 +1265,7 @@ public class SyncMessage extends Service {
         String res = "";
         String msgType = jsonObject.getString(MessageKey.MessageType);
         String msgData = jsonObject.getString(MessageKey.Data);
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
 
         if (msgData.startsWith("[")) {
             try {
@@ -1312,17 +1389,29 @@ public class SyncMessage extends Service {
                     List<String> jsonList = new ArrayList<>();
                     List<CreditCardPayment> creditCardPaymentList = new ArrayList<CreditCardPayment>();
                     List<Check> checkList = new ArrayList<Check>();
+                    List<PayPoint> payPointList = new ArrayList<PayPoint>();
+                    PayPointDBAdapter payPointDBAdapter = new PayPointDBAdapter(getApplicationContext());
+                    payPointDBAdapter.open();
+                    payPointList=payPointDBAdapter.getPaymentBySaleID(orderId);
+                    payPointDBAdapter.close();
                     CashPaymentDBAdapter cashPaymentDBAdapter = new CashPaymentDBAdapter(getApplicationContext());
                     cashPaymentDBAdapter.open();
                     cashPaymentList = cashPaymentDBAdapter.getPaymentBySaleID(orderId);
+                    cashPaymentDBAdapter.close();
                     if(cashPaymentList.size()>0){
                         for(int i=0;i<cashPaymentList.size();i++){
                             jsonList.add(cashPaymentList.get(i).toString());
                         }
                     }
+                    if(payPointList.size()>0){
+                        for(int i=0;i<payPointList.size();i++){
+                            jsonList.add(payPointList.get(i).toString());
+                        }
+                    }
                     CreditCardPaymentDBAdapter creditCardPaymentDBAdapter = new CreditCardPaymentDBAdapter(getApplicationContext());
                     creditCardPaymentDBAdapter.open();
                     creditCardPaymentList = creditCardPaymentDBAdapter.getPaymentByOrderID(orderId);
+                    creditCardPaymentDBAdapter.close();
                     if(creditCardPaymentList.size()>0) {
                         for(int i=0;i<creditCardPaymentList.size();i++){
                             jsonList.add(creditCardPaymentList.get(i).toString());
@@ -1333,6 +1422,7 @@ public class SyncMessage extends Service {
                     ChecksDBAdapter checksDBAdapter = new ChecksDBAdapter(getApplicationContext());
                     checksDBAdapter.open();
                     checkList = checksDBAdapter.getPaymentBySaleID(orderId);
+                    checksDBAdapter.close();
                     if(checkList.size()>0) {
                         for(int i=0;i<checkList.size();i++){
                             jsonList.add(checkList.get(i).toString());
@@ -1478,7 +1568,7 @@ public class SyncMessage extends Service {
             case MessageType.UPDATE_USED_POINT:
                 UsedPoint usedPoint =null;
                 usedPoint=objectMapper.readValue(msgData, UsedPoint.class);
-                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token,usedPoint.getUsedPointId());
+                res = messageTransmit.authPut(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token,usedPoint.getId());
                 break;
             case MessageType.DELETE_USED_POINT:
                 res = messageTransmit.authDelete(ApiURL.UsedPoint, jsonObject.getString(MessageKey.Data), token);
@@ -1809,50 +1899,119 @@ public class SyncMessage extends Service {
         Log.i(TAG, "Service onDestroy");
     }
     public void updateCurrency() throws JSONException, IOException {
+
         CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
         currencyTypeDBAdapter.open();
-        List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        List<CurrencyType> currencyTypesList=null;
+        try {
+            currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            Log.d("ExceptionUpdate",e.toString());
+        }
+
         currencyTypeDBAdapter.close();
         CurrencyDBAdapter currencyDBAdapter =new CurrencyDBAdapter(this);
         currencyDBAdapter.open();
-        Currency lastCurrency =currencyDBAdapter.getLastCurrency();
+        messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+        Currency lastCurrency = null;
+        try {
+            lastCurrency = currencyDBAdapter.getLastCurrency();
+            Log.d("lastCurrency",lastCurrency.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("Exception",e.toString());
+        }
         Timestamp timestamp =new Timestamp(System.currentTimeMillis());
-        if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
+        if (lastCurrency!=null){
+       if (DateConverter.toDate(lastCurrency.getLastUpdate().getTime()).equals(DateConverter.toDate(timestamp.getTime()))) {
             //do nothing
         }else {
             String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
-            Log.i("Currency", currencyRes);
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             objectMapper.setDateFormat(dateFormat);
             JSONObject jsonObject = null;
-            Log.i("Currency", currencyRes);
+          //  Log.i("Currency", currencyRes);
 
             jsonObject = new JSONObject(currencyRes);
             try {
                 String msgData = jsonObject.getString(MessageKey.responseBody);
 
-                if (msgData.startsWith("[")) {
+
                     try {
                         JSONArray jsonArray = new JSONArray(msgData);
-
-                        for (int i = 0; i < jsonArray.length() - 1; i++) {
+                        currencyDBAdapter.deleteOldRate(currencyTypesList);
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             msgData = jsonArray.getJSONObject(i).toString();
                             Currency currency = null;
                             currency = objectMapper.readValue(msgData, Currency.class);
+                            //
+                         //   currencyDBAdapter.deleteCurrencyList();
                             currencyDBAdapter.insertEntry(currency);
+                          //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
                         }
                     } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("ExceptionDeleteOldRate",e.toString());
                     }
 
-                }
+
 
             } catch (JSONException e) {
-
+                e.printStackTrace();
+                Log.d("JSONException",e.toString());
             }
-            currencyDBAdapter.deleteOldRate(currencyTypesList);
+
+
 
 
         }
+
+
+  }
+        else {
+            String currencyRes = messageTransmit.getCurrency(ApiURL.Currencies,SESSION.token);
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            objectMapper.setDateFormat(dateFormat);
+            JSONObject jsonObject = null;
+           // Log.i("Currency", currencyRes);
+
+            jsonObject = new JSONObject(currencyRes);
+            try {
+                String msgData = jsonObject.getString(MessageKey.responseBody);
+
+
+                try {
+                    JSONArray jsonArray = new JSONArray(msgData);
+                    currencyDBAdapter.deleteCurrencyList();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        Log.d("i",i+" ");
+                        msgData = jsonArray.getJSONObject(i).toString();
+                        Currency currency = null;
+                        currency = objectMapper.readValue(msgData, Currency.class);
+                       // currencyDBAdapter.deleteCurrencyList();
+                        currencyDBAdapter.insertEntry(currency);
+                        //  currencyTypeDBAdapter.insertEntry(currency.getCurrencyCode());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("Exception",e.toString());
+                }
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("JSONException",e.toString());
+
+            }
+        }
+
+
+        currencyDBAdapter.close();
+
     }
 }

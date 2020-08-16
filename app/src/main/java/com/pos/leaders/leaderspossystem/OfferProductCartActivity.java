@@ -138,20 +138,23 @@ public class OfferProductCartActivity extends Activity {
                 }
                 ProductCatalogGridViewAdapter adapter = new ProductCatalogGridViewAdapter(getApplicationContext(), filter_productsList);
                 gvProducts.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
         });
 
         productDBAdapter = new ProductDBAdapter(this);
         productDBAdapter.open();
-
         productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
+        productDBAdapter.close();
         filter_productsList = productsList;
         adapter = new ProductCatalogGridViewAdapter(this, productsList);
         productSelectedAdapter=new ProductCatalogGridViewAdapter(this, selectedProductsList);
 
         lvProducts.setAdapter(productSelectedAdapter);
-
         gvProducts.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        productSelectedAdapter.notifyDataSetChanged();
+
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,6 +212,7 @@ public class OfferProductCartActivity extends Activity {
         btDepartmentProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                productDBAdapter.open();
                 //if all tap hs been selected
                 if(prseedButtonDepartments.getId()<1)
                     return;//do nothing
@@ -238,6 +242,7 @@ public class OfferProductCartActivity extends Activity {
                         dialog.cancel();
                     }
                 }.execute();
+                productDBAdapter.close();
             }
         });
 
@@ -263,12 +268,16 @@ public class OfferProductCartActivity extends Activity {
                     prseedButtonDepartments = v;
 
                     Log.i("starting time",new Date().toString());
+                    productDBAdapter.open();
                     productsList = productDBAdapter.getAllProductsByCategory(departmentID,productLoadItemOffset,productCountLoad);
+                    productDBAdapter.close();
                     Log.i("Ending time",new Date().toString());
                     filter_productsList = productsList;
 
                     adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                     gvProducts.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+
 
                 }
             });
@@ -293,14 +302,17 @@ public class OfferProductCartActivity extends Activity {
                 v.setPressed(true);
 
                 prseedButtonDepartments = v;
-
+                productDBAdapter.open();
                 filter_productsList = productDBAdapter.getTopProducts(productLoadItemOffset,productCountLoad);
+                productDBAdapter.close();
                 productsList = filter_productsList;
                 adapter = new ProductCatalogGridViewAdapter(getBaseContext(), productsList);
                 gvProducts.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
                 return true;
             }
         });
+
 
         //endregion
 
@@ -309,6 +321,7 @@ public class OfferProductCartActivity extends Activity {
     }
 
     protected void LoadMoreProducts(){
+        productDBAdapter.open();
         productLoadItemOffset+=productCountLoad;
         final int id=prseedButtonDepartments.getId();
         final ProgressDialog dialog=new ProgressDialog(OfferProductCartActivity.this);
@@ -340,7 +353,7 @@ public class OfferProductCartActivity extends Activity {
             }
         }.execute();
 
-
+        productDBAdapter.close();
 
     }
 

@@ -26,6 +26,14 @@
 
         android:title="@string/back_up" />
 
+    <header
+        android:fragment="com.pos.leaders.leaderspossystem.Settings.SettingsActivity$CompanyStatusPreferenceFragment"
+
+        android:title="@string/company_status" />
+
+
+
+
     <!--
     android:icon="@drawable/ic_info_black_24dp"
     android:icon="@drawable/ic_notifications_black_24dp"

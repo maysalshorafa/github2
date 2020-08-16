@@ -20,6 +20,7 @@ import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.SettingActivity;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -48,6 +49,8 @@ public class GeneralSettings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context=getContext();
+        ThisApp.setCurrentActivity(getActivity());
+
         View v= inflater.inflate(R.layout.general_setting_fragment, container, false);
         etCompanyName = (TextView) v.findViewById(R.id.settings_etCompanyName);
         etCompanyName.setEnabled(false);
@@ -104,14 +107,25 @@ public class GeneralSettings extends Fragment {
                                     final String TerminalPassword = jsonObject.getString(MessageKey.CCPW);
                                     final int InvoiceNote = jsonObject.getInt(MessageKey.endOfReturnNote);
                                     final String ReturnNote = jsonObject.getString(MessageKey.returnNote);
+                                    if (SETTINGS.company.equals("BO_EXEMPT_DEALER")){
+                                        s = getContext().getString(R.string.company_name) + ":" + CompanyName + "\n"
+                                                + getContext().getString(R.string.privet_company_status) + ":" + PrivateCompany + "\n" +
+                                                getContext().getString(R.string.invoice_note) + ":" + InvoiceNote  +  "\n"
+                                                +"Return Note" + ":" + ReturnNote + "\n"+
+                                                getContext().getString(R.string.tax) + ":" + Tax + "\n"
+                                                + getContext().getString(R.string.terminal_number) + ":" + TerminalNumber + "\n"+
+                                                getContext().getString(R.string.terminal_password) + ":" + TerminalPassword + "\n" ;
+                                    }
+                                   else {
+                                        s = getContext().getString(R.string.company_name) + ":" + CompanyName + "\n"
+                                                + getContext().getString(R.string.private_company) + ":" + PrivateCompany + "\n" +
+                                                getContext().getString(R.string.invoice_note) + ":" + InvoiceNote  +  "\n"
+                                                +"Return Note" + ":" + ReturnNote + "\n"+
+                                                getContext().getString(R.string.tax) + ":" + Tax + "\n"
+                                                + getContext().getString(R.string.terminal_number) + ":" + TerminalNumber + "\n"+
+                                                getContext().getString(R.string.terminal_password) + ":" + TerminalPassword + "\n" ;
+                                    }
 
-                                    s = getContext().getString(R.string.company_name) + ":" + CompanyName + "\n"
-                                            + getContext().getString(R.string.private_company) + ":" + PrivateCompany + "\n" +
-                                             getContext().getString(R.string.invoice_note) + ":" + InvoiceNote  +  "\n"
-                                            +"Return Note" + ":" + ReturnNote + "\n"+
-                                            getContext().getString(R.string.tax) + ":" + Tax + "\n"
-                                            + getContext().getString(R.string.terminal_number) + ":" + TerminalNumber + "\n"+
-                                             getContext().getString(R.string.terminal_password) + ":" + TerminalPassword + "\n" ;
                                     new AlertDialog.Builder(getContext())
                                             .setTitle(getString(R.string.update_general_setting))
                                             .setMessage(getString(R.string.if_you_want_to_update_general_setting_click_ok) + "\n" + s)
@@ -173,6 +187,7 @@ public class GeneralSettings extends Fragment {
         JSONObject jsonObject = null;
         MessageTransmit messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
         try {
+
             String res = messageTransmit.authGet(ApiURL.CompanyCredentials, token);
             jsonObject = new JSONObject(res);
             try {
@@ -193,7 +208,7 @@ public class GeneralSettings extends Fragment {
             }
 
         } catch (IOException e1) {
-            e1.printStackTrace();
+        e1.printStackTrace();
         }
 
 

@@ -26,8 +26,10 @@
     <string name="products">منتوجات</string>
     <string name="qty">كمية</string>
     <string name="refresh">تحديث</string>
+    <string name="test">فحص</string>
+
     <string name="returned">باقي</string>
-    <string name="total_price">السعر الكلي</string>
+    <string name="total_price">مجمل المبيعات</string>
     <string name="total_saved">وفر</string>
     <string name="transfer_credit_card">مرر البطاقة الممغنطة</string>
     <string name="try_again">حاول مرة اخرى</string>
@@ -100,7 +102,8 @@
     <string name="receipt">وصل</string>
     <string name="order_document">طلبية</string>
     <string name="CustomerLedger">حساب الزبون</string>
-
+    <string name="amount_want_to_pay">المبلغ المراد دفعه</string>
+    <string name="amount_of_dept">بلغ الدين</string>
 
     <!--DashBord String-->
     <string name="main_screen">شاشة المبيعات</string>
@@ -367,6 +370,7 @@
     <string name="valid_ID">الرجاء ادخال رقم الهوية</string>
     <string name="valid_expired_card">الرجاء ادخال تاريخ الصلاحية</string>
     <string name="total_sales">المجموع الكلي</string>
+    <string name="minus_general_item">Minus general item</string>
     <string name="total_discount">مجموع التخفيضات</string>
     <string name="title_zreports_activity">تقرير z</string>
     <string name="title_user_attendance_report_activity">تقارير الموظفين</string>
@@ -530,6 +534,32 @@
         <item>WINTEC_BUILDIN</item>
 
     </string-array>
+    <string-array name="currency_code_list_preference">
+        <item>USD</item>
+        <item>GBP</item>
+        <item>JPY</item>
+        <item>EUR</item>
+        <item>AUD</item>
+
+        <item>CAD</item>
+        <item>DKK</item>
+        <item>NOK</item>
+        <item>SEK</item>
+        <item>CHF</item>
+
+        <item>JOD</item>
+        <item>ZAR</item>
+        <item>LBP</item>
+        <item>EGP</item>
+
+    </string-array>
+
+    <string-array name="Company_status_list_preference">
+        <item>BO_COMPANY</item>
+        <item>BO_AUTHORIZED_DEALER</item>
+        <item>BO_EXEMPT_DEALER</item>
+    </string-array>
+
     <string-array name="float_point_list_preference">
         <item>0</item>
         <item>1</item>
@@ -550,7 +580,7 @@
     <string name="printer_connect_error">الرجاء فحص توصيلات الطابعة ونوعها.</string>
     <string name="a_report">A تقرير</string>
     <string name="display_name">اسم العرض</string>
-    <string name="manage_stock">ادارة المخزون</string>
+    <string name="manage_stock"> عدم ادارة المخزون</string>
     <string name="stock_quantity">كمية المخزون</string>
     <string name="insert_product_dispaly_name">الرجاء ادخال اسم للعرض</string>
     <string name="insert_product_sku">الرجاء ادخال رقم تعريف المنتوج</string>
@@ -659,9 +689,39 @@
     <string name="SelectServer">اختر السيرفر</string>
     <string name="product_count">  كمية المنتجات : </string>
     <string name="accounting_information">المعلومات المحاسبية</string>
-    <string name="Sales_With_tax">اسعار المنتوجات شامل الضريبة</string>
-    <string name="Sales_Without_tax">اسعار المنتوجات الغير شاملة الضريبة</string>
+    <string name="Sales_With_tax">مبيعات ملزمة بالضريبة</string>
+    <string name="Sales_Without_tax">مبيعات معافاه من الضريبة</string>
     <string name="plzwait"> الرجاء الانتظار</string>
     <string name="loadingdata">جاري تحميل البيانات</string>
+
+    <!--SetUp Managment Activity-->
+    <string name="company_status">Company Status</string>
+    <string name="exempt_dealer">exempt dealer</string>
+    <string name="company">company</string>
+    <string name="authorized_dealer">Authorized dealer</string>
+    <string name="currency_code">Currency Code</string>
+    <string name="currency_Symbol">Symbol Currency</string>
+
+
+    <string name="invoice_recipte_company_status">فاتورة وصل</string>
+    <string name="invoice_company_status">الفواتير</string>
+    <string name="privet_company_status" >رقم معرف الشركة</string>
+    <string name="credit_invoice_doc_company_status">انشاء وصل ارجاع</string>
+
+
+    <string name="date_end_zreport">تاريخ اغلاق تقرير z</string>
+
+    <string name="due_date">تاريخ انتهاء الصلاحية</string>
+    <string name="text_dialog_lincess">انتهى تاريخ الليسنز, يرجى الاتصال بالشركة للتفعيل</string>
+    <string name="please_choose_three_currencies">يرجى اختيار ثلاث عملات</string>
+    <string name="there_are_no_currencies">لا يوجد عملات</string>
+
+
+    <string name="price_with_tax">السعر شامل الضريبة</string>
+    <string name="price_with_out_tax">السعر قبل الضريبة</string>
+
+    <string name="select_all">تحديد الكل</string>
+    <string name="select_partial">دفع جزئي</string>
+    <string name="invoice_number">رقم الفاتورة</string>
 </resources>
 

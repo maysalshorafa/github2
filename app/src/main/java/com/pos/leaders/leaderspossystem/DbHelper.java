@@ -1,6 +1,7 @@
 package com.pos.leaders.leaderspossystem;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,6 +35,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.GroupsResourceDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.IdsCounterDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.InvoiceDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.LincessDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferRuleDBAdapter;
@@ -41,6 +43,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
@@ -84,13 +87,14 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 11;
 
     protected static final String DATABASE_NAME = "POSDB.db";
 
     Context context;
 
     public static boolean DATABASE_ENABEL_ALTER_COLUMN = false;
+    public static boolean DATABASE_ENABEL_POS_SETTING= false;
     public DbHelper(Context context)
     {
         super(context, DATABASE_NAME ,null,DATABASE_VERSION);
@@ -161,7 +165,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(InvoiceDBAdapter.DATABASE_CREATE);
         db.execSQL(PosInvoiceDBAdapter.DATABASE_CREATE);
         db.execSQL(ZReportCountDbAdapter.DATABASE_CREATE);
-        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0',0);");
+        db.execSQL("insert into " + SettingsDBAdapter.SETTINGS_TABLE_NAME + "  values (1,'','','',0,'',0,'0','0',0,'','','');");
         db.execSQL(EmployeeDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (1,'user1','user','user','"+new Timestamp(System.currentTimeMillis())+"','1234',0,046316969,20,35,0);");
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (2,'master','master','master','"+new Timestamp(System.currentTimeMillis())+"','123456',0,046316969,20,35,0);");
@@ -202,6 +206,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(ProductInventoryDbAdapter.DATABASE_CREATE);
         db.execSQL(DrawerDepositAndPullReportDbAdapter.DATABASE_CREATE);
         db.execSQL(DepositAndPullReportDetailsDbAdapter.DATABASE_CREATE);
+        db.execSQL(LincessDBAdapter.DATABASE_CREATE);
 
 
         // Currency Statment
@@ -209,26 +214,26 @@ public class DbHelper extends SQLiteOpenHelper {
         Date date=new Date();
 
 
-        db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel Shekel',1,'"+new Timestamp(System.currentTimeMillis())+"');");
+    /*   db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel Shekel',1,'"+new Timestamp(System.currentTimeMillis())+"');");
         db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (1 , 'Dollar','USD','USA',3.491,'"+new Timestamp(System.currentTimeMillis())+"');");
         db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (2 , 'Pound','GBP','Great Britain',4.5974,'"+new Timestamp(System.currentTimeMillis())+"');");
-        db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (3 , 'Euro','EUR','Euro Member Countries',4.1002,'"+new Timestamp(System.currentTimeMillis())+"');");
+        db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (3 , 'Euro','EUR','Euro Member Countries',4.1002,'"+new Timestamp(System.currentTimeMillis())+"');");*/
 
         //Currency Type
-        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
+        /*db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (1 , 'USD');");
         db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (2 , 'GBP');");
-        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");
+        db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (3 , 'EUR');");*/
 
         db.execSQL("insert into "+ValueOfPointDB.ValueOfPoint_TABLE_NAME+"  values (1,.5,'"+new Timestamp(System.currentTimeMillis())+"');");
 //        db.execSQL("insert into "+CustomerDBAdapter.CUSTOMER_TABLE_NAME+"  values (1,'test1','test1','female','11/8/1994','example@gmail.com','coder','123',0,'1',1,1,'1',1,'1',0.0,0.0,0.0);");
 
-
+        db.execSQL(PayPointDBAdapter.DATABASE_CREATE);
         db.execSQL("insert into "+CityDbAdapter.City_TABLE_NAME+"  values (0,'Hifa');");
 
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'General','General',0,0,0,0,0,0);");
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'Sever','Sever',1,.2,0,0,0,0);");
-        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'Golden','Golden',2,0,50,200,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (0,'General','General',0,0,0,0,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (1,'Sever','Sever',1,.2,0,0,0,0,0);");
+        db.execSQL("insert into "+ ClubAdapter.Group_TABLE_NAME+"  values (2,'Golden','Golden',2,0,50,200,0,0,1);");
         db.execSQL("insert into "+ EmployeeDBAdapter.EMPLOYEE_TABLE_NAME +"  values (4,'test1','test1','test1','"+new Timestamp(System.currentTimeMillis())+"','12',0,046316969,20,35,0);");
 
         db.execSQL(CustomerMeasurementDBAdapter.DATABASE_CREATE);
@@ -408,12 +413,13 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(ZReportDBAdapter.addColumnReal("salesBeforeTaxReport"));
                     db.execSQL(ZReportDBAdapter.addColumnReal("salesWithTaxReport"));
                     db.execSQL(ZReportDBAdapter.addColumnReal("totalTaxReport"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
                     db.execSQL("insert into "+PermissionsDBAdapter.PERMISSIONS_TABLE_NAME+"  values (12 , 'inventoryManagement');");
                     db.execSQL("insert into "+ EmployeePermissionsDBAdapter.USERPERMISSIONS_TABLE_NAME+" values(13,2,12);");
                     ClearSync clearSync3 = new ClearSync(context);
                     clearSync3.execute(context);
 
-                break;
+                    break;
                 case 6:
                     db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPull"));
                     db.execSQL(IdsCounterDBAdapter.addColumn("depositAndPullDetails"));
@@ -426,6 +432,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(XReportDBAdapter.addColumnReal("salesWithTaxReport"));
                     db.execSQL(XReportDBAdapter.addColumnReal("totalTaxReport"));
                     db.execSQL(OrderDetailsDBAdapter.addColumnText("SerialNo"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
                     break;
                 case 7:
                     db.execSQL(OrderDBAdapter.addColumnReal("salesBeforeTax"));
@@ -437,12 +444,98 @@ public class DbHelper extends SQLiteOpenHelper {
                     db.execSQL(XReportDBAdapter.addColumnReal("salesWithTaxReport"));
                     db.execSQL(XReportDBAdapter.addColumnReal("totalTaxReport"));
                     db.execSQL(OrderDetailsDBAdapter.addColumnText("SerialNo"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
                     break;
 
+                case 8:
+                    db.execSQL(PosSettingDbAdapter.addColumnText("companyStatus"));
+                    break;
+
+                case 9:
+                    db.execSQL(LincessDBAdapter.DATABASE_CREATE);
+                    db.execSQL(IdsCounterDBAdapter.addColumn(LincessDBAdapter.POS_LINCESS_TABLE_NAME));
+                    db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
+                    db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
+                    db.execSQL(ZReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
+
+                    db.execSQL(XReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
+                    db.execSQL(XReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
+                    db.execSQL(XReportDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
+
+                    db.execSQL(ZReportCountDbAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
+                    db.execSQL(ZReportCountDbAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
+                    db.execSQL(ZReportCountDbAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
 
 
+                    db.execSQL("drop table Currency;");
+                    db.execSQL(CurrencyDBAdapter.DATABASE_CREATE);
+                    db.execSQL("insert into "+ CurrencyDBAdapter.CURRENCY_TABLE_NAME +"  values (0 , 'Shekel','ILS','Israel',1,'"+new Timestamp(System.currentTimeMillis())+"');");
+                    db.execSQL("drop table CurrencyType;");
+                    db.execSQL(CurrencyTypeDBAdapter.DATABASE_CREATE);
+                    db.execSQL("insert into "+CurrencyTypeDBAdapter.CurrencyType_TABLE_NAME+"  values (0 , 'ILS');");
+                    db.execSQL("update products set currencyType='ILS' where currencyType ='0';");
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
+                    db.execSQL(PosSettingDbAdapter.addColumnText("country"));
+                    db.execSQL(PosSettingDbAdapter.addColumnInteger("duplicateInvoice"));
+                    db.execSQL("update PosSetting set currencyCode='ILS';");
+                    db.execSQL("update PosSetting set currencySymbol='₪';");
+                    db.execSQL("update PosSetting set country='Israel';");
+                    db.execSQL("update PosSetting set duplicateInvoice='0';");
+                    db.execSQL(SettingsDBAdapter.addColumnText("currency_code"));
+                    db.execSQL(SettingsDBAdapter.addColumnText("currency_symbol"));
+                    db.execSQL(SettingsDBAdapter.addColumnText("country"));
+                    db.execSQL("update tbl_settings set currency_code='ILS';");
+                    db.execSQL("update tbl_settings set currency_symbol='₪';");
+                    db.execSQL("update tbl_settings set country='Israel';");
+                    SharedPreferences cSharedPreferences = context.getSharedPreferences("POS_Management", context.MODE_PRIVATE);
+                    final SharedPreferences.Editor editor = cSharedPreferences.edit();
+                    if (cSharedPreferences != null) {
+                        if (cSharedPreferences.contains(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY)) {
+                            editor.putBoolean(SetUpManagement.LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY, false);
+                            editor.apply();
+                            SETTINGS.enableCurrencies = false;
+                            db.execSQL("update PosSetting set enableCurrency='0';");
+                        }
+                    }
+
+                    db.execSQL(OrderDBAdapter.addColumnReal("salesTotalSaved"));
+
+                 /*   db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
+
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);*/
+                    break;
+                case 10:
+                    if (!PosSettingDbAdapter.existsColumnInTable(db,"PosSetting","currencyCode")){
+                        db.execSQL(PosSettingDbAdapter.addColumnText("currencyCode"));
+                        db.execSQL("update PosSetting set currencyCode='ILS';");}
+
+                    if (!PosSettingDbAdapter.existsColumnInTable(db,"PosSetting","currencySymbol")){
+                        db.execSQL(PosSettingDbAdapter.addColumnText("currencySymbol"));
+                        db.execSQL("update PosSetting set currencySymbol='₪';");}
+
+                    if (!PosSettingDbAdapter.existsColumnInTable(db,"PosSetting","country")){
+                        db.execSQL(PosSettingDbAdapter.addColumnText("country"));
+                        db.execSQL("update PosSetting set country='Israel';");}
+
+
+                    db.execSQL("update PosSetting set companyStatus='BO_COMPANY';");
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[0]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[1]);
+                    db.execSQL(ProductDBAdapter.DATABASE_UPDATE_FROM_V1_TO_V2[2]);
+
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[0]);
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[1]);
+                    db.execSQL(OrderDetailsDBAdapter.DATABASE_UPDATE_FROM_V9_TO_V10[2]);
+                    break;
 
             }
+
         } catch (SQLException e) {
             Log.i("onUpgrade", e.getMessage(), e);
         }

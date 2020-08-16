@@ -34,6 +34,7 @@ import com.pos.leaders.leaderspossystem.Tools.CustomerCatalogGridViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.InvoiceManagementListViewAdapter;
 import com.pos.leaders.leaderspossystem.Tools.SESSION;
 import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.ThisApp;
 import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
 import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
@@ -76,6 +77,7 @@ public class ViewCreditInvoiceActivity extends AppCompatActivity {
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_view_credit_invoice);
+        ThisApp.setCurrentActivity(this);
         TitleBar.setTitleBar(this);
         Log.d("token", SESSION.token+"");
         context=this;
@@ -109,7 +111,7 @@ public class ViewCreditInvoiceActivity extends AppCompatActivity {
                             RandomAccessFile f = new RandomAccessFile(file, "r");
                             byte[] data = new byte[(int)f.length()];
                             f.readFully(data);
-                            pdfLoadImages(data,context);
+                            pdfLoadImages(data,context,"");
                         }
                         catch(Exception ignored)
                         {
@@ -277,6 +279,7 @@ class StartGetCreditInvoiceConnection extends AsyncTask<String,Void,String> {
         String customerId=args[0];
         try {
             String url = ApiURL.Documents+"/CreditInvoicesForCustomer/"+customerId;
+
             String invoiceRes = messageTransmit.authGet(url,SESSION.token);
             JSONObject jsonObject = new JSONObject(invoiceRes);
             String msgData = jsonObject.getString(MessageKey.responseBody);

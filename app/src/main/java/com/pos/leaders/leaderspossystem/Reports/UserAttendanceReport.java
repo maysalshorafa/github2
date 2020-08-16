@@ -1,10 +1,13 @@
 package com.pos.leaders.leaderspossystem.Reports;
 
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -17,9 +20,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ScheduleWorkersDBAdapter;
 import com.pos.leaders.leaderspossystem.Models.ScheduleWorkers;
@@ -27,12 +33,21 @@ import com.pos.leaders.leaderspossystem.PdfUA;
 import com.pos.leaders.leaderspossystem.Printer.PrintTools;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.DateConverter;
-import com.pos.leaders.leaderspossystem.Tools.TitleBar;
 import com.pos.leaders.leaderspossystem.Tools.EmployeeAttendanceReportListViewAdapter;
+import com.pos.leaders.leaderspossystem.Tools.SESSION;
+import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
+import com.pos.leaders.leaderspossystem.Tools.SendLog;
+import com.pos.leaders.leaderspossystem.Tools.TitleBar;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.ApiURL;
+import com.pos.leaders.leaderspossystem.syncposservice.Enums.MessageKey;
+import com.pos.leaders.leaderspossystem.syncposservice.MessageTransmit;
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
 
 import net.sf.andpdf.nio.ByteBuffer;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,7 +69,8 @@ public class UserAttendanceReport extends AppCompatActivity {
 	TextView etFromDate, etToDate;
 	TextView tvTotalHour;
 	ListView lvReport;
-	Button print;
+	Button print ,btSendToEmail;
+	static Context context;
 	ScheduleWorkersDBAdapter scheduleWorkersDBAdapter;
 	List<ScheduleWorkers> scheduleWorkersList, _scheduleWorkersList;
 	Date from, to;
@@ -73,11 +89,13 @@ public class UserAttendanceReport extends AppCompatActivity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.attendance_report_user);
 		TitleBar.setTitleBar(this);
+		context=getApplicationContext();
 		etFromDate = (TextView) findViewById(R.id.userAttendanceReport_ETFrom);
 		etToDate = (TextView) findViewById(R.id.userAttendanceReport_ETTo);
 		tvTotalHour = (TextView) findViewById(R.id.userAttendanceReport_TVTotalHourlyWork);
 		lvReport = (ListView) findViewById(R.id.userAttendanceReport_LVReport);
 		print=(Button)findViewById(R.id.attendance_report_print);
+		btSendToEmail =(Button)findViewById(R.id.attendance_report_email);
 		print.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -88,6 +106,29 @@ public class UserAttendanceReport extends AppCompatActivity {
 					pt.PrintReport(bitmapList.get(i));
 
 				}
+			}
+		});
+		btSendToEmail.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final Dialog customerDialog = new Dialog(UserAttendanceReport.this);
+				customerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				customerDialog.show();
+				customerDialog.setContentView(R.layout.customer_email_layout);
+				final EditText customer_email = (EditText) customerDialog.findViewById(R.id.customer_email);
+				((Button) customerDialog.findViewById(R.id.done))
+						.setOnClickListener(new View.OnClickListener() {
+
+							@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+							public void onClick(View arg0) {
+								if(customer_email.getText().toString()!=""){
+									SendLog.sendListFile(customer_email.getText().toString(),getPackageName(),"randompdf.pdf",getApplicationContext());
+
+
+									customerDialog.dismiss();
+								}
+							}
+						});
 			}
 		});
 		//region Date
@@ -137,6 +178,8 @@ public class UserAttendanceReport extends AppCompatActivity {
 
 		scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(this);
 		scheduleWorkersDBAdapter.open();
+		StartConnectionForWorker startConnectionForWorker = new StartConnectionForWorker();
+		startConnectionForWorker.execute("s");
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			userID = extras.getLong("employeeId");
@@ -225,7 +268,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 			String s = mYear + "-" + mMonth+ "-" + mDay;
 			etFromDate.setText(s);
 			SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
-			String currentDateTimeString = df2.format(new Date());
+			String currentDateTimeString = df2.format(new Date().getTime());
 			from = DateConverter.stringToDate(s + " "+currentDateTimeString);
 			setReportDate();
 		}
@@ -239,7 +282,7 @@ public class UserAttendanceReport extends AppCompatActivity {
 			String s = mYear + "-" + mMonth+ "-" + mDay;
 			etToDate.setText(s);
 			SimpleDateFormat df2 = new SimpleDateFormat("HH:mm:ss");
-			String currentDateTimeString = df2.format(new Date());
+			String currentDateTimeString = df2.format(new Date().getTime());
 			to = DateConverter.stringToDate(s + " "+currentDateTimeString);
 			setReportDate();
 		}
@@ -310,3 +353,72 @@ public class UserAttendanceReport extends AppCompatActivity {
 		}
 	}
 }
+class StartConnectionForWorker extends AsyncTask<String,Void,String> {
+	private MessageTransmit messageTransmit;
+
+	StartConnectionForWorker() {
+		messageTransmit = new MessageTransmit(SETTINGS.BO_SERVER_URL);
+	}
+
+	final ProgressDialog progressDialog = new ProgressDialog(UserAttendanceReport.context);
+	final ProgressDialog progressDialog2 =new ProgressDialog(UserAttendanceReport.context);
+
+	@Override
+	protected void onPreExecute() {
+		progressDialog.setTitle("Please Wait");
+		progressDialog2.setTitle("Please Wait");
+//        progressDialog.show();
+	}
+
+	@Override
+	protected String doInBackground(String... args) {//args{key,uuid}
+		String productRes = "";
+		ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		try {
+			String url = ApiURL.Sync+"/scheduleWorker/";
+
+			productRes = messageTransmit.authGetNormal(url, SESSION.token);
+			Log.d("iiiii",productRes);
+
+			if (productRes.startsWith("[")) {
+
+				try {
+
+					JSONArray jsonArray = new JSONArray(productRes);
+					for (int i = 0; i <= jsonArray.length() - 1; i++) {
+						JSONObject msgDataJson =  jsonArray.getJSONObject(i);
+						ScheduleWorkers p = null;
+						String msgData = msgDataJson.getString(MessageKey.Data);
+						p = objectMapper.readValue(msgData.toString(), ScheduleWorkers.class);
+						ScheduleWorkersDBAdapter scheduleWorkersDBAdapter = new ScheduleWorkersDBAdapter(UserAttendanceReport.context);
+						scheduleWorkersDBAdapter.open();
+						try {
+							scheduleWorkersDBAdapter.insertEntry(p);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+
+					}
+
+				} catch (Exception e) {
+					Log.d("exception1", e.toString());
+				}
+			}
+
+
+		} catch (IOException e) {
+			Log.d("exception3", e.toString());
+
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	@Override
+	protected void onPostExecute(String s) {
+
+
+		//endregion
+
+
+	}}

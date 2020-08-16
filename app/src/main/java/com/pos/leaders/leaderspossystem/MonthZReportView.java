@@ -166,6 +166,8 @@ public class MonthZReportView extends AppCompatActivity {
             double salesBeforeTax = 0;
             double salesWithTax = 0;
             double totalTax = 0;
+            double payPointTotal=0;
+            double minusGeneralItem=0;
 
             int cashTotalC = 0;
             int checkTotalC = 0;
@@ -177,7 +179,9 @@ public class MonthZReportView extends AppCompatActivity {
             int usdAmountC = 0;
             int eurAmountC = 0;
             int gbpAmountC = 0;
+            int minusGeneralItemC=0;
             int invoiceReceiptAmountC = 0;
+            int payPointCount=0;
 
             zReportDBAdapter.open();
             zReportList = new ArrayList<>();
@@ -199,11 +203,12 @@ public class MonthZReportView extends AppCompatActivity {
                     creditTotalC += zReportCountList.get(i).getCreditCount();
                     invoiceAmountC += zReportCountList.get(i).getInvoiceCount();
                     creditInvoiceAmountC += zReportCountList.get(i).getCreditInvoiceCount();
-                    shekelAmountC += zReportCountList.get(i).getShekelCount();
-                    usdAmountC += zReportCountList.get(i).getUsdCount();
-                    eurAmountC += zReportCountList.get(i).getEurCount();
-                    gbpAmountC += zReportCountList.get(i).getGbpCount();
+                    shekelAmountC += zReportCountList.get(i).getFirstTYpeCount();
+                    usdAmountC += zReportCountList.get(i).getSecondTypeCount();
+                    eurAmountC += zReportCountList.get(i).getThirdTypeCount();
+                    gbpAmountC += zReportCountList.get(i).getFourthTypeCount();
                     invoiceReceiptAmountC += zReportCountList.get(i).getInvoiceReceiptCount();
+                    payPointCount+=zReportCountList.get(i).getPayPointCount();
                 }
             }
             Log.d("ZreportList", zReportList.toString());
@@ -214,18 +219,20 @@ public class MonthZReportView extends AppCompatActivity {
                 for (int i = 0; i < zReportList.size(); i++) {
                     totalAmount += zReportList.get(i).getTotalAmount();
                     cashTotal += zReportList.get(i).getCashTotal();
+                    payPointTotal+=zReportList.get(i).getTotalPayPoint();
                     checkTotal += zReportList.get(i).getCheckTotal();
                     creditTotal += zReportList.get(i).getCreditTotal();
                     totalPosSales += zReportList.get(i).getTotalPosSales();
                     invoiceAmount += zReportList.get(i).getInvoiceAmount();
                     creditInvoiceAmount += zReportList.get(i).getCreditInvoiceAmount();
-                    shekelAmount += zReportList.get(i).getShekelAmount();
-                    usdAmount += zReportList.get(i).getUsdAmount();
-                    eurAmount += zReportList.get(i).getEurAmount();
-                    gbpAmount += zReportList.get(i).getGbpAmount();
+                    shekelAmount += zReportList.get(i).getFirstTypeAmount();
+                    usdAmount += zReportList.get(i).getSecondTypeAmount();
+                    eurAmount += zReportList.get(i).getThirdTypeAmount();
+                    gbpAmount += zReportList.get(i).getFourthTypeAmount();
                     salesBeforeTax += zReportList.get(i).getSalesBeforeTax();
                     salesWithTax += zReportList.get(i).getSalesWithTax();
                     totalTax += zReportList.get(i).getTotalTax();
+
 
 
                     invoiceReceiptAmount += zReportList.get(i).getInvoiceReceiptAmount();
@@ -233,12 +240,12 @@ public class MonthZReportView extends AppCompatActivity {
                 }
                 totalSales = invoiceReceiptAmount + invoiceAmount + creditInvoiceAmount;
 
-                zReport = new ZReport(0, new Timestamp(System.currentTimeMillis()), zReportList.get(0).getByUser(), 0, 0, totalAmount, totalSales, cashTotal, checkTotal, creditTotal, totalPosSales, zReportList.get(0).getTax(), invoiceAmount, creditInvoiceAmount, shekelAmount, usdAmount, eurAmount, gbpAmount, invoiceReceiptAmount, 0, 0, "close", salesBeforeTax, salesWithTax, totalTax);
-                Log.d("zReportList", zReport.toString());
+                zReport = new ZReport(0, new Timestamp(System.currentTimeMillis()), zReportList.get(0).getByUser(), 0, 0, totalAmount, totalSales, cashTotal, checkTotal, creditTotal, totalPosSales, zReportList.get(0).getTax(), invoiceAmount, creditInvoiceAmount, shekelAmount, usdAmount, eurAmount, gbpAmount, invoiceReceiptAmount, 0, 0, "close", salesBeforeTax, salesWithTax, totalTax,payPointTotal);
+                Log.d("MonthzReportList", zReport.toString());
 
 
-                zReportCount = new ZReportCount(0, cashTotalC, checkTotalC, creditTotalC, invoiceAmountC, creditInvoiceAmountC, shekelAmountC, usdAmountC, eurAmountC, gbpAmountC, invoiceReceiptAmountC, 0);
-                zReport = new ZReport(0, new Timestamp(System.currentTimeMillis()), zReportList.get(0).getByUser(), 0, 0, totalAmount, totalSales, cashTotal, checkTotal, creditTotal, zReportList.get(zReportList.size() - 1).getTotalPosSales(), zReportList.get(0).getTax(), invoiceAmount, creditInvoiceAmount, shekelAmount, usdAmount, eurAmount, gbpAmount, invoiceReceiptAmount, 0, 0, "close", salesBeforeTax, salesWithTax, totalTax);
+                zReportCount = new ZReportCount(0, cashTotalC, checkTotalC, creditTotalC, invoiceAmountC, creditInvoiceAmountC, shekelAmountC, usdAmountC, eurAmountC, gbpAmountC, invoiceReceiptAmountC, 0,payPointCount);
+                zReport = new ZReport(0, new Timestamp(System.currentTimeMillis()), zReportList.get(0).getByUser(), 0, 0, totalAmount, totalSales, cashTotal, checkTotal, creditTotal, zReportList.get(zReportList.size() - 1).getTotalPosSales(), zReportList.get(0).getTax(), invoiceAmount, creditInvoiceAmount, shekelAmount, usdAmount, eurAmount, gbpAmount, invoiceReceiptAmount, 0, 0, "close", salesBeforeTax, salesWithTax, totalTax,payPointTotal);
 
 
                 PdfUA pdfUA = new PdfUA();
@@ -331,8 +338,15 @@ public class MonthZReportView extends AppCompatActivity {
                     if(newBitmap!=null){
                     newBitmap= Util.removeMargins2(newBitmap, Color.WHITE);
                     }
-                    newBitmap= combineImageIntoOne(bitmapList);
-                    imageView.setImageBitmap(newBitmap);
+
+                    imageView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                          newBitmap= combineImageIntoOne(bitmapList);
+                            imageView.setImageBitmap(newBitmap);
+                        }
+                    });
+                   // imageView.setImageBitmap(newBitmap);
 
                     //after async close progress dialog
                     progressDialog.dismiss();
@@ -396,7 +410,12 @@ public class MonthZReportView extends AppCompatActivity {
         }
     }
     private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
-        int w = 0, h = 0;
+       int w = 0, h = 0;
+
+        /*Display display = getWindowManager().getDefaultDisplay();
+        int w = display.getWidth();  // deprecated
+        int h = display.getHeight();
+*/
         for (int i = 0; i < bitmap.size(); i++) {
             if (i < bitmap.size() - 1) {
                 w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();

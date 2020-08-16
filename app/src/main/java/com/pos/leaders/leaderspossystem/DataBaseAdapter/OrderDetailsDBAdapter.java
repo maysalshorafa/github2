@@ -43,11 +43,18 @@ public class OrderDetailsDBAdapter {
 
 
 	public static final String DATABASE_CREATE = "CREATE TABLE `OrderDetails` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `userOffer` REAL , `product_id` INTEGER," +
-			" `quantity` INTEGER, `order_id` INTEGER, " +
+			" `quantity` REAL, `order_id` INTEGER, " +
 			" '" + ORDER_DETAILS_COLUMN_PAID_AMOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_UNIT_PRICE + "' REAL, '" + ORDER_DETAILES_COLUMN_DISCOUNT + "' REAL , '" + ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID + "' INTEGER , " +
 			ORDER_DETAILES_COLUMN_KEY + " TEXT , " +	ORDER_DETAILES_COLUMN_PRICE_AFTER_DISCOUNT + " REAL DEFAULT 0.0, " +ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER + " INTEGER DEFAULT 0, " +ORDER_DETAILS_COLUMN_SERIAL_NUMBER + " TEXT DEFAULT 0, " +ORDER_DETAILES_COLUMN_OFFER_ID + " INTEGER DEFAULT 0, '" +ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX + "' REAL, " +
 			"FOREIGN KEY(`product_id`) REFERENCES `products.id`, FOREIGN KEY(`order_id`) REFERENCES `_Order.id` )";
-    // Variable to hold the database instance
+
+	public static final String DATABASE_UPDATE_FROM_V9_TO_V10[] = {"alter table OrderDetails rename to OrderDetails_v;", DATABASE_CREATE + "; ",
+			"insert into OrderDetails (id,product_id,quantity,userOffer,order_id,paid_amount,unit_price,discount,custmerAssestID,key,price_after_discount,offerId" +
+					",productSerialNo,paid_amount_after_tax,SerialNo)" +
+					"select id,product_id,quantity,userOffer,order_id,paid_amount,unit_price,discount,custmerAssestID,key,price_after_discount,offerId" +
+					",productSerialNo,paid_amount_after_tax,SerialNo from OrderDetails_v;"};
+
+	// Variable to hold the database instance
 	private SQLiteDatabase db;
 	// Context of the application using the database.
 	private final Context context;
@@ -144,8 +151,48 @@ public class OrderDetailsDBAdapter {
 			return 0;
 		}
 	}
+	public long insertEntryCancel(OrderDetails o){
+		if(db.isOpen()){
 
-	public long insertEntry(long productId, int counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
+		}else {
+			try {
+				open();
+			}
+			catch (SQLException ex) {
+				Log.d("Exception",ex.toString());
+			}
+		}
+		ContentValues val = new ContentValues();
+		long orderDetialsId= Util.idHealth(this.db, ORDER_DETAILS_TABLE_NAME, ORDER_DETAILS_COLUMN_ID);
+		val.put(ORDER_DETAILS_COLUMN_ID, orderDetialsId);
+		val.put(ORDER_DETAILES_COLUMN_PRODUCTID, o.getProductId());
+		val.put(ORDER_DETAILS_COLUMN_QUANTITY, o.getQuantity());
+		val.put(ORDER_DETAILES_COLUMN_USEROFFER, o.getUserOffer());
+		val.put(ORDER_DETAILS_COLUMN_ORDER_ID, o.getOrderId());
+		val.put(ORDER_DETAILS_COLUMN_PAID_AMOUNT, o.getPaidAmount());
+		val.put(ORDER_DETAILS_COLUMN_UNIT_PRICE, o.getUnitPrice());
+		val.put(ORDER_DETAILES_COLUMN_DISCOUNT, o.getDiscount());
+		val.put(ORDER_DETAILS_COLUMN_CUSTMER_ASSEST_ID,o.getCustomer_assistance_id());
+		val.put(ORDER_DETAILES_COLUMN_KEY,o.getOrderKey());
+		val.put(ORDER_DETAILS_COLUMN_PRODUCT_SERIAL_NUMBER,o.getProductSerialNumber());
+		val.put(ORDER_DETAILS_COLUMN_PRODUCT_PRICE_AFTER_TAX,o.getPaidAmountAfterTax());
+		val.put(ORDER_DETAILS_COLUMN_SERIAL_NUMBER,o.getSerialNumber());
+
+		try {
+			Log.d("orderGenerate",orderDetialsId+"");
+			Log.d("orderDetialsCancleB",o.getOrderDetailsId()+"najla");
+			Log.d("orderDetialsCancle",o.getOrderId()+"najla");
+			o.setOrderDetailsId(orderDetialsId);
+			Log.d("orderDetialsCancleAft",o.getOrderDetailsId()+"najla");
+			sendToBroker(MessageType.ADD_ORDER_DETAILS, o, this.context);
+			return db.insert(ORDER_DETAILS_TABLE_NAME, null, val);
+		} catch (SQLException ex) {
+			Log.e("ORDER_DETAILS DB insert", "inserting Entry at " + ORDER_DETAILS_TABLE_NAME + ": " + ex.getMessage());
+			return 0;
+		}
+	}
+
+	public long insertEntry(long productId, double counter, double userOffer, long saleId, double price, double original_price, double discount,long custmerAssestID , String orderDetailsKey,long offerId,long productSerialNumber,double paidAmountAfterTax,String serialNo) {
 		if(db.isOpen()){
 
 		}else {

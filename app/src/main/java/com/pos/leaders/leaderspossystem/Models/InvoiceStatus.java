@@ -8,8 +8,8 @@ public enum InvoiceStatus{
     DRAFT ("draft "),
     SENT("sent"),
     VIEWED("viewed"),
-    PARTIALLY_PAID("partially_paid")
-    ,PAID("paid"),
+    PARTIALLY_PAID("PARTIALLY_PAID")
+    ,PAID("PAID"),
     UNPAID("unpaid"),
     CANCELED("canceled"),
     OVERDUE("overdue");

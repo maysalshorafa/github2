@@ -14,12 +14,15 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.text.format.Time;
@@ -30,11 +33,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pos.leaders.leaderspossystem.BackupActivity;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.SettingsDBAdapter;
 import com.pos.leaders.leaderspossystem.DbHelper;
 import com.pos.leaders.leaderspossystem.LogInActivity;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.R;
 import com.pos.leaders.leaderspossystem.Tools.Clock;
 import com.pos.leaders.leaderspossystem.Tools.OnClockTickListner;
@@ -43,8 +50,12 @@ import com.pos.leaders.leaderspossystem.Tools.SETTINGS;
 import com.pos.leaders.leaderspossystem.Tools.Util;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static com.pos.leaders.leaderspossystem.SettingsTab.BOPOSVersionSettings.BO_SETTING;
 import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PREFERENCES;
@@ -62,6 +73,7 @@ import static com.pos.leaders.leaderspossystem.SettingsTab.PinpadTap.PINPAD_PREF
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     public final static String POS_Management = "POS_Management";
+    public final static String POS_Company_status="Company_Status";
     private ActionBar actionBar;
     private static Clock clock=null;
     private static ImageView ivInternet;
@@ -299,7 +311,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
                 || POSManagmentPreferenceFragment.class.getName().equals(fragmentName)
-                || PinPadPreferenceFragment.class.getName().equals(fragmentName) || BackUpPreferenceFragment.class.getName().equals(fragmentName);
+                || PinPadPreferenceFragment.class.getName().equals(fragmentName) || BackUpPreferenceFragment.class.getName().equals(fragmentName)
+                || CompanyStatusPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -325,8 +338,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             findPreference("private_company").setSummary(SETTINGS.companyID);
             findPreference("tax").setSummary(Util.makePrice(SETTINGS.tax) + " %");
             findPreference("terminal_number").setSummary(getString(R.string.terminal_number) + " " + SETTINGS.posID);
-
             findPreference("invoice_note").setSummary(SETTINGS.returnNote);
+            findPreference("currency_code").setSummary(SETTINGS.currencyCode);
+            findPreference("currency_symbol").setSummary(SETTINGS.currencySymbol);
+            findPreference("country").setSummary(SETTINGS.country);
         }
 
         @Override
@@ -363,10 +378,173 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
             }
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
+          final   PosSettingDbAdapter posSettingDbAdapter=new PosSettingDbAdapter(getContext());
+            posSettingDbAdapter.open();
+            SwitchPreference enableDuplicateInvoice= (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_DUPLICATE_INVOICE");
+
+            enableDuplicateInvoice.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    //   if (newValue.toString().equals("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY")) {
+                    boolean test = (Boolean) newValue;
+                    if (test) {
+                        long idPosSetting=posSettingDbAdapter.getPosSettingID().getPosSettingId();
+                        SETTINGS.enableDuplicateInvoice=true;
+                        posSettingDbAdapter.updateDuplicateInvoice(SETTINGS.enableDuplicateInvoice,idPosSetting);
+
+                    } else {
+                        long idPosSetting=posSettingDbAdapter.getPosSettingID().getPosSettingId();
+                        SETTINGS.enableDuplicateInvoice=false;
+                        posSettingDbAdapter.updateDuplicateInvoice(SETTINGS.enableDuplicateInvoice,idPosSetting);
+                    }
+
+                    // }
+                    return true;
+                }
+            });
+
+            SwitchPreference enableFoodStamp= (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_FOOd_STAMP");
+
+            enableFoodStamp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    //   if (newValue.toString().equals("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY")) {
+                    boolean test = (Boolean) newValue;
+                    if (test) {
+                        SETTINGS.enableFoodStamp=true;
+
+                    } else {
+                        SETTINGS.enableFoodStamp=false;
+                    }
+
+
+
+
+                    // }
+                    return true;
+                }
+            });
+            EditTextPreference emailText= (EditTextPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL");
+
+            emailText.setOnPreferenceChangeListener(
+                    new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object o) {
+                            Log.e("", "New value is: " + o.toString());
+                            String s = (String) o;
+                            if(!s.isEmpty()){
+                                SETTINGS.CustomerEmail=s;
+                            }
+
+                            // True to update the state of the Preference with the new value.
+                            return true;
+                        }
+                    });
+
+            EditTextPreference emailTextPassWord= (EditTextPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_CUSTOMER_EMAIL_PassWord");
+
+            emailTextPassWord.setOnPreferenceChangeListener(
+                    new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object o) {
+                            Log.e("", "New value is: " + o.toString());
+                            String s = (String) o;
+                            if(!s.isEmpty()){
+                                SETTINGS.CustomerEmailPassword=s;
+                            }
+
+                            // True to update the state of the Preference with the new value.
+                            return true;
+                        }
+                    });
+
+            final MultiSelectListPreference multiSelectListPreference=(MultiSelectListPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY_CODE_LIST");
+
+            SwitchPreference enabledCurrency= (SwitchPreference) findPreference("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY");
+           final Set<Set<String>> entries=null;
+
+           if (enabledCurrency.isChecked()){
+               multiSelectListPreference.setEnabled(false);
+           }
+           else {
+               multiSelectListPreference.setEnabled(false);
+           }
+
+
+            enabledCurrency.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                 //   if (newValue.toString().equals("LEAD_POS_RESULT_INTENT_SET_UP_MANAGEMENT_ACTIVITY_ENABLE_CURRENCY")) {
+                        boolean test = (Boolean) newValue;
+                        if (test) {
+                            multiSelectListPreference.setEnabled(true);
+
+                        } else {
+                            multiSelectListPreference.setEnabled(false);
+                            ;
+                        }
+
+                   // }
+                    return true;
+                }
+            });
+           final CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(getContext());
+            currencyTypeDBAdapter.open();
+            List<CurrencyType> currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+            final List<String> currenciesNames;
+
+            currenciesNames = new ArrayList<String>();
+
+            for (int i = 0; i < currencyTypesList.size(); i++) {
+                currenciesNames.add(currencyTypesList.get(i).getType());
+            }
+
+            final int[] correct = {0};
+
+            multiSelectListPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                  List<String>  list=convertObjectToList(newValue);
+
+                    if (list.size()==3){
+                        List<String>  currenciesChoose=new ArrayList<String>();
+                        currenciesChoose.add(SETTINGS.currencyCode);
+                        for (int i=0;i<list.size();i++)  {
+                            if (list.get(i).equals(SETTINGS.currencyCode)) {
+
+                            }
+                            else {
+                                   currenciesChoose.add(list.get(i));
+                            }
+                        }
+
+                             currencyTypeDBAdapter.delete();
+
+                       Log.d("currencirsChoose",currenciesChoose.toString());
+                        multiSelectListPreference.setEnabled(false);
+
+                   }
+                   else {
+                       Toast.makeText(getContext(), R.string.please_choose_three_currencies, Toast.LENGTH_SHORT).show();
+                   }
+                   return false;
+               }
+            });
+
+
+
+        }
+        public static List<String> convertObjectToList(Object obj) {
+            List<?> list = new ArrayList<>();
+            if (obj.getClass().isArray()) {
+                list = Arrays.asList((Object[])obj);
+            } else if (obj instanceof Collection) {
+                list = new ArrayList<>((Collection<?>)obj);
+            }
+            return (List<String>) list;
         }
 
         @Override
@@ -457,6 +635,35 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class CompanyStatusPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            getPreferenceManager().setSharedPreferencesName(POS_Company_status);
+            addPreferencesFromResource(R.xml.pref_pos_company_status);
+            setHasOptionsMenu(true);
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+        }
+
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class BackUpPreferenceFragment extends PreferenceFragment {
         @Override

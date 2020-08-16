@@ -17,6 +17,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.ClosingReportDetailsDBAd
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CashPaymentDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyOperationDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyReturnsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.Currency.CurrencyTypeDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OpiningReportDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
@@ -26,10 +27,12 @@ import com.pos.leaders.leaderspossystem.Models.ClosingReportDetails;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyOperation;
 import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyReturns;
+import com.pos.leaders.leaderspossystem.Models.Currency.CurrencyType;
 import com.pos.leaders.leaderspossystem.Models.OpiningReport;
 import com.pos.leaders.leaderspossystem.Models.Order;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
+import com.pos.leaders.leaderspossystem.Payment.PaymentMethod;
 import com.pos.leaders.leaderspossystem.Printer.SUNMI_T1.AidlUtil;
 import com.pos.leaders.leaderspossystem.Tools.CONSTANT;
 import com.pos.leaders.leaderspossystem.Tools.PrinterType;
@@ -49,13 +52,15 @@ import HPRTAndroidSDK.HPRTPrinterHelper;
 import static com.pos.leaders.leaderspossystem.Tools.SendLog.sendLogFile;
 
 public class ClosingReportActivity extends AppCompatActivity {
-    EditText  checkActualValue ,creditActualValue ,shekelActualValue ,usdActualValue , eurActualValue , gbpActualValue ;
-    TextView  checkExpectedValue ,creditExpectedValue ,shekelExpectedValue ,usdExpectedValue , eurAExpectedValue , gbpExpectedValue ;
-    TextView   checkDifferentValue ,creditDifferentValue ,shekelDifferentValue ,usdDifferentValue , eurDifferentValue , gbpDifferentValue ;
+    EditText  checkActualValue ,creditActualValue ,actualFirstTypeValue ,actualSecondTypeValue , actualTirdTypeValue , actualFourthTypeValue,actualPayPointValue ;
+    TextView  checkExpectedValue ,creditExpectedValue ,expectedFirstTypeValue ,expectedSecondTypeValue , expectedThirdTypeValue , expectedFourthTypeValue , expactedPayPointValue;
+    TextView   checkDifferentValue ,creditDifferentValue ,differentFirstTypeValue ,differentSecondTypeValue , differentThirdTypeValue , differentFourthTypeValue
+            ,firstType,secondType,thirdType,fourthType , diffrentPayPointValue;
     Button calculate , print ;
-    double  expectedOpining=0, expectedCheck=0 ,expectedCredit=0 , expectedShekel=0 , expectedUsd=0 , expectedEur=0 , expectedGbp=0 , expectedTotal=0,expectedOpiningShekel=0,expectedOpiningUsd=0,expectedOpiningEur=0,expectedOpiningGbp=0;
-    double actualOpining=0 , actualCheck=0 , actualCredit=0 , actualShekel=0 , actualUsd=0 , actualEur=0 , actualGbp=0 ,actualTotal=0,cashReceipt=0 , checkReceipt=0;
+    double  expectedOpining=0, expectedCheck=0 ,expectedCredit=0 , expectedFirstType=0 , expectedSecondType=0 , expectedTirdType=0 , expectedFourthType=0 , expectedTotal=0,expectedOpiningShekel=0,expectedOpiningUsd=0,expectedOpiningEur=0,expectedOpiningGbp=0,expectedPayPointValue;
+    double actualOpining=0 , actualCheck=0 , actualCredit=0 , actualFirstType=0 , actualSecondType=0 , actualThirdType=0 , actualFourthType=0 ,actualTotal=0,cashReceipt=0 , checkReceipt=0 , actualPayPoint=0;
     OpiningReport opiningReport = null;
+    private List<CurrencyType> currencyTypesList = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +72,14 @@ public class ClosingReportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_closing_report);
 
         TitleBar.setTitleBar(this);
+
+        //Getting default currencies name and values
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(this);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
+
+
         final ClosingReportDBAdapter closingReportDBAdapter = new ClosingReportDBAdapter(getApplicationContext());
         closingReportDBAdapter.open();
         final ClosingReportDetailsDBAdapter closingReportDetailsDBAdapter = new ClosingReportDetailsDBAdapter(getApplicationContext());
@@ -78,26 +91,40 @@ public class ClosingReportActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        actualPayPointValue=(EditText)findViewById(R.id.actualPayPointValue);
         checkActualValue = (EditText) findViewById(R.id.actualCheckValue);
         creditActualValue = (EditText) findViewById(R.id.actualCreditValue);
-        shekelActualValue = (EditText) findViewById(R.id.actualShekelValue);
-        usdActualValue = (EditText) findViewById(R.id.actualUsdValue);
-        eurActualValue = (EditText) findViewById(R.id.actualEurValue);
-        gbpActualValue = (EditText) findViewById(R.id.actualGbpValue);
+        actualFirstTypeValue = (EditText) findViewById(R.id.actualFirstTypeValue);
+        actualSecondTypeValue = (EditText) findViewById(R.id.actualSecondTypeValue);
+        actualTirdTypeValue = (EditText) findViewById(R.id.actualTirdTypeValue);
+        actualFourthTypeValue = (EditText) findViewById(R.id.actualFourthTypeValue);
+        expactedPayPointValue=(TextView)findViewById(R.id.expectedPayPointValue);
         checkExpectedValue =(TextView)findViewById(R.id.expectedCheckValue);
         creditExpectedValue =(TextView)findViewById(R.id.expectedCreditValue);
-        shekelExpectedValue =(TextView)findViewById(R.id.expectedShekelValue);
-        usdExpectedValue =(TextView)findViewById(R.id.expectedUsdValue);
-        eurAExpectedValue =(TextView)findViewById(R.id.expectedEurValue);
-        gbpExpectedValue =(TextView)findViewById(R.id.expectedGbpValue);
+        expectedFirstTypeValue =(TextView)findViewById(R.id.expectedFirstTypeValue);
+        expectedSecondTypeValue =(TextView)findViewById(R.id.expectedSecondTypeValue);
+        expectedThirdTypeValue =(TextView)findViewById(R.id.expectedThirdTypeValue);
+        expectedFourthTypeValue =(TextView)findViewById(R.id.expectedFourthTypeValue);
         checkDifferentValue =(TextView)findViewById(R.id.differentCheckValue);
         creditDifferentValue=(TextView)findViewById(R.id.differentCreditValue);
-        shekelDifferentValue =(TextView)findViewById(R.id.differentShekelValue);
-        usdDifferentValue =(TextView)findViewById(R.id.differentUsdValue);
-        eurDifferentValue =(TextView)findViewById(R.id.differentEurValue);
-        gbpDifferentValue =(TextView)findViewById(R.id.differentGbpValue);
+        differentFirstTypeValue =(TextView)findViewById(R.id.differentFirstTypeValue);
+        differentSecondTypeValue =(TextView)findViewById(R.id.differentSecondTypeValue);
+        differentThirdTypeValue =(TextView)findViewById(R.id.differentThirdTypeValue);
+        differentFourthTypeValue =(TextView)findViewById(R.id.differentFourthTypeValue);
+        diffrentPayPointValue=(TextView)findViewById(R.id.differentPayPoint);
+
+
+        firstType=(TextView) findViewById(R.id.firstType);
+        secondType=(TextView) findViewById(R.id.secondType);
+        thirdType=(TextView) findViewById(R.id.thirdType);
+        fourthType=(TextView) findViewById(R.id.fourthType);
+
         calculate = (Button)findViewById(R.id.closingReportBtnCalculate);
         print=(Button)findViewById(R.id.closingReportBtnPrint);
+
+
+
+
         try {
             calculateActualAmount();
         } catch (Exception e) {
@@ -128,44 +155,50 @@ public class ClosingReportActivity extends AppCompatActivity {
                                                     OrderDBAdapter orderDBAdapter = new OrderDBAdapter(getApplicationContext());
                                                     orderDBAdapter.open();
                                                     Order order = orderDBAdapter.getLast();
-                                                    actualTotal=actualShekel+actualUsd+actualEur+actualGbp;
+                                                    actualTotal=actualFirstType+actualSecondType+actualThirdType+actualFourthType;
                                               long i =  closingReportDBAdapter.insertEntry(actualTotal,expectedTotal,expectedTotal,new Timestamp(System.currentTimeMillis()),opiningReport.getOpiningReportId(),order.getOrderId(), SESSION._EMPLOYEE.getEmployeeId());
                                                if(i>0){
-                                                   if(actualUsd==0&&expectedUsd==0){
+                                                   if(actualSecondType==0&&expectedSecondType==0){
 
                                                    }else {
-                                                       closingReportDetailsDBAdapter.insertEntry(i,actualUsd,expectedUsd,actualUsd-expectedUsd,CONSTANT.CASH,"USD");
+                                                       closingReportDetailsDBAdapter.insertEntry(i,actualSecondType,expectedSecondType,actualSecondType-expectedSecondType,CONSTANT.CASH,currencyTypesList.get(1).getType());
 
                                                    }
-                                                   if(actualEur==0&&expectedEur==0){
+                                                   if(actualThirdType==0&&expectedSecondType==0){
 
                                                    }else {
-                                                       closingReportDetailsDBAdapter.insertEntry(i,actualEur,expectedEur,actualEur-expectedEur,CONSTANT.CASH,"EUR");
+                                                       closingReportDetailsDBAdapter.insertEntry(i,actualThirdType,expectedTirdType,actualThirdType-expectedTirdType,CONSTANT.CASH,currencyTypesList.get(2).getType());
 
                                                    }
-                                                   if(actualGbp==0&&expectedGbp==0){
+                                                   if(actualFourthType==0&&expectedFourthType==0){
 
                                                    }else {
-                                                       closingReportDetailsDBAdapter.insertEntry(i,actualGbp,expectedGbp,actualGbp-expectedGbp,CONSTANT.CASH,"GBP");
+                                                       closingReportDetailsDBAdapter.insertEntry(i,actualFourthType,expectedFourthType,actualFourthType-expectedFourthType,CONSTANT.CASH,currencyTypesList.get(3).getType());
 
                                                    }
-                                                   closingReportDetailsDBAdapter.insertEntry(i,actualCheck,expectedCheck,actualCheck-expectedCheck,CONSTANT.CHECKS,"Shekel");
-                                                   closingReportDetailsDBAdapter.insertEntry(i,actualCredit,expectedCredit,actualCredit-expectedCredit,CONSTANT.CREDIT_CARD,"Shekel");
-                                                   closingReportDetailsDBAdapter.insertEntry(i,actualShekel,expectedShekel,actualShekel-expectedShekel,CONSTANT.CASH,"Shekel");
+                                                   closingReportDetailsDBAdapter.insertEntry(i,actualCheck,expectedCheck,actualCheck-expectedCheck,CONSTANT.CHECKS,currencyTypesList.get(0).getType());
+                                                   closingReportDetailsDBAdapter.insertEntry(i,actualCredit,expectedCredit,actualCredit-expectedCredit,CONSTANT.CREDIT_CARD,currencyTypesList.get(0).getType());
+                                                   closingReportDetailsDBAdapter.insertEntry(i,actualFirstType,expectedFirstType,actualFirstType-expectedFirstType,CONSTANT.CASH,currencyTypesList.get(0).getType());
+                                                   closingReportDetailsDBAdapter.insertEntry(i,actualPayPoint,expectedPayPointValue,actualPayPoint-expectedPayPointValue, PaymentMethod.PAY_POINT,currencyTypesList.get(0).getType());
+
                                                    //print report
                                                    JSONObject res = new JSONObject();
                                                    res.put("actualCheck",actualCheck);
                                                    res.put("actualCredit",actualCredit);
-                                                   res.put("actualShekel",actualShekel);
-                                                   res.put("actualUsd",actualUsd);
-                                                   res.put("actualEur",actualEur);
-                                                   res.put("actualGbp",actualGbp);
+                                                   res.put("actualFirstType",actualFirstType);
+                                                   res.put("actualSecondType",actualSecondType);
+                                                   res.put("actualThirdType",actualThirdType);
+                                                   res.put("actualFourthType",actualFourthType);
                                                    res.put("expectedCheck",expectedCheck);
                                                    res.put("expectedCredit",expectedCredit);
-                                                   res.put("expectedShekel",expectedShekel);
-                                                   res.put("expectedUsd",expectedUsd);
-                                                   res.put("expectedEur",expectedEur);
-                                                   res.put("expectedGbp",expectedGbp);
+                                                   res.put("expectedFirstType",expectedFirstType);
+                                                   res.put("expectedSecondType",expectedSecondType);
+                                                   res.put("expectedTirdType",expectedTirdType);
+                                                   res.put("actualPayPoint",actualPayPoint);
+                                                   res.put("expectedPayPointValue",expectedPayPointValue);
+
+
+                                                   res.put("expectedFourthType",expectedFourthType);
                                                   int result = Util.sendClosingReport(ClosingReportActivity.this,res.toString());
 
                                                }
@@ -212,15 +245,29 @@ public class ClosingReportActivity extends AppCompatActivity {
         closingReportDetailsDBAdapter.open();
         ZReport lastZReport=null;
 
+
+        List<CurrencyType> currencyTypesList = null;
+        CurrencyTypeDBAdapter currencyTypeDBAdapter = new CurrencyTypeDBAdapter(ClosingReportActivity.this);
+        currencyTypeDBAdapter.open();
+        currencyTypesList = currencyTypeDBAdapter.getAllCurrencyType();
+        currencyTypeDBAdapter.close();
+
+
         try {
             double totalZReportAmount=0;
             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(ClosingReportActivity.this);
             zReportDBAdapter.open();
             lastZReport = Util.getLastZReport(ClosingReportActivity.this);
+            Log.d("kooooo","jojo");
+            Log.d("lastZReportClosingReport",lastZReport.toString());
             opiningReportList=opiningReportDBAdapter.getListByLastZReport(lastZReport.getzReportId());
+            Log.d("opiningReportListClosing",opiningReportList.toString());
             if(closingReportDBAdapter.getLastRow()==null){
+                Log.d("closingRe","nulll");
 
             }else {
+             Log.d("clod",closingReportDBAdapter.getLastRow().toString());
+                Log.d("closingReportListID",opiningReportList.get(0).getOpiningReportId()+"");
                 closingReportList = closingReportDBAdapter.getClosingReportByOpiningID(opiningReportList.get(0).getOpiningReportId());
                 Log.d("testClosingReportList",closingReportList.toString());
                 for(int i =0 ;i<closingReportList.size();i++){
@@ -235,21 +282,25 @@ public class ClosingReportActivity extends AppCompatActivity {
                         if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CREDIT_CARD)) {
                             lastZReport.setCreditTotal(lastZReport.getCreditTotal() - closingReportDetails.getExpectedValue());
                         }
-                        if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CASH)&& closingReportDetails.getCurrencyType().equalsIgnoreCase("Shekel")) {
-                            lastZReport.setShekelAmount(lastZReport.getShekelAmount() - closingReportDetails.getExpectedValue());
+                        if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CASH)&& closingReportDetails.getCurrencyType().equalsIgnoreCase(currencyTypesList.get(0).getType())) {
+                           Log.d("jjjh","jjjjj");
+                            Log.d("gghgh",lastZReport.getFirstTypeAmount()+"");
+                            Log.d("gkkkkghgh",closingReportDetails.getExpectedValue()+"");
+                            lastZReport.setFirstTypeAmount(lastZReport.getFirstTypeAmount() - closingReportDetails.getExpectedValue());
                         }
-                        if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CASH)&& closingReportDetails.getCurrencyType().equalsIgnoreCase("USD")) {
-                            lastZReport.setUsdAmount(lastZReport.getUsdAmount() - closingReportDetails.getExpectedValue());
+                        if (SETTINGS.enableCurrencies){
+                        if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CASH)&& closingReportDetails.getCurrencyType().equalsIgnoreCase(currencyTypesList.get(1).getType())) {
+                            lastZReport.setSecondTypeAmount(lastZReport.getSecondTypeAmount() - closingReportDetails.getExpectedValue());
                         }
-                        if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CASH)&& closingReportDetails.getCurrencyType().equalsIgnoreCase("EUR")) {
+                        if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CASH)&& closingReportDetails.getCurrencyType().equalsIgnoreCase(currencyTypesList.get(2).getType())) {
 
-                            lastZReport.setEurAmount(lastZReport.getEurAmount() - closingReportDetails.getExpectedValue());
+                            lastZReport.setThirdTypeAmount(lastZReport.getThirdTypeAmount() - closingReportDetails.getExpectedValue());
                         }
-                        if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CASH)&& closingReportDetails.getCurrencyType().equalsIgnoreCase("GBP")) {
-                            lastZReport.setGbpAmount(lastZReport.getGbpAmount() - closingReportDetails.getExpectedValue());
+                        if(closingReportDetails.getType().equalsIgnoreCase(CONSTANT.CASH)&& closingReportDetails.getCurrencyType().equalsIgnoreCase(currencyTypesList.get(3).getType())) {
+                            lastZReport.setFourthTypeAmount(lastZReport.getFourthTypeAmount() - closingReportDetails.getExpectedValue());
                         }
 
-                    }
+                    }}
                 }
             }
 
@@ -460,18 +511,58 @@ public class ClosingReportActivity extends AppCompatActivity {
             expectedTotal+=cashReceipt;
             expectedCheck=lastZReport.getCheckTotal();
             expectedCredit=lastZReport.getCreditTotal();
-            expectedShekel=lastZReport.getShekelAmount();
-
-            expectedUsd=lastZReport.getUsdAmount();
-            expectedEur=lastZReport.getEurAmount();
-            expectedGbp=lastZReport.getGbpAmount();
+            expectedFirstType=lastZReport.getFirstTypeAmount();
+            expectedSecondType=lastZReport.getSecondTypeAmount();
+            expectedTirdType=lastZReport.getThirdTypeAmount();
+            expectedFourthType=lastZReport.getFourthTypeAmount();
             checkExpectedValue.setText(Util.makePrice(expectedCheck));
             creditExpectedValue.setText(Util.makePrice(expectedCredit));
-            shekelExpectedValue.setText(Util.makePrice(expectedShekel));
+            expectedPayPointValue=lastZReport.getTotalPayPoint();
+            expactedPayPointValue.setText(Util.makePrice(expectedPayPointValue));
 
-            usdExpectedValue.setText(Util.makePrice(expectedUsd));
-            eurAExpectedValue.setText(Util.makePrice(expectedEur));
-            gbpExpectedValue.setText(Util.makePrice(expectedGbp));
+
+            Log.d("zreportLast",lastZReport.toString());
+
+            firstType.setText(currencyTypesList.get(0).getType());
+            Log.d("shsus",currencyTypesList.get(0).getType());
+            expectedFirstTypeValue.setText(Util.makePrice(expectedFirstType));
+
+
+
+            if (SETTINGS.enableCurrencies){
+                visibleIfGone(secondType,currencyTypesList.get(1).getType());
+                visibleIfGone(thirdType,currencyTypesList.get(2).getType());
+                visibleIfGone(fourthType,currencyTypesList.get(3).getType());
+                visibleIfGone(expectedSecondTypeValue,Util.makePrice(expectedSecondType));
+                visibleIfGone(expectedThirdTypeValue,Util.makePrice(expectedTirdType));
+                visibleIfGone(expectedFourthTypeValue,Util.makePrice(expectedFourthType));
+
+                /*
+                firstType.setText(currencyTypesList.get(0).getType());
+                secondType.setText(currencyTypesList.get(1).getType());
+                thirdType.setText(currencyTypesList.get(2).getType());
+                fourthType.setText(currencyTypesList.get(3).getType());
+                expectedFirstTypeValue.setText(Util.makePrice(expectedFirstType));
+            expectedSecondTypeValue.setText(Util.makePrice(expectedSecondType));
+            expectedThirdTypeValue.setText(Util.makePrice(expectedTirdType));
+            expectedFourthTypeValue.setText(Util.makePrice(expectedFourthType));*/
+            }
+            else {
+                goneIfVisible(secondType);
+                goneIfVisible(thirdType);
+                goneIfVisible(fourthType);
+                goneIfVisible(expectedSecondTypeValue);
+                goneIfVisible(expectedThirdTypeValue);
+                goneIfVisible(expectedFourthTypeValue);
+
+                /*firstType.setVisibility(View.GONE);
+                secondType.setVisibility(View.GONE);
+                thirdType.setVisibility(View.GONE);
+                fourthType.setVisibility(View.GONE);
+                expectedSecondTypeValue.setVisibility(View.GONE);
+                expectedThirdTypeValue.setVisibility(View.GONE);
+                expectedFourthTypeValue.setVisibility(View.GONE);*/
+            }
         } catch (Exception e) {
             Log.d("exceeeption",e.toString());
             e.printStackTrace();
@@ -480,31 +571,77 @@ public class ClosingReportActivity extends AppCompatActivity {
 
 
     }
+    public static void visibleIfGone (View v,String text)
+    {
+        if (v.getVisibility() == View.INVISIBLE){
+            v.setVisibility(View.VISIBLE);
+            ((TextView)v).setText(text);
+        }
+        else {
+            ((TextView)v).setText(text);
+        }
+    }
+
+    public static void goneIfVisible (View v)
+    {
+        if (v.getVisibility() == View.VISIBLE)
+            v.setVisibility(View.INVISIBLE);
+    }
     private void calculateMethodAmount() throws Exception {
+
+
+
       if(!checkActualValue.getText().toString().equals("")){
           actualCheck= Double.parseDouble(checkActualValue.getText().toString());
       }
+        if(!actualPayPointValue.getText().toString().equals("")){
+            actualPayPoint= Double.parseDouble(actualPayPointValue.getText().toString());
+        }
       if(!creditActualValue.getText().toString().equals("")){
           actualCredit= Double.parseDouble(creditActualValue.getText().toString());
       }
-      if(!shekelActualValue.getText().toString().equals("")){
-          actualShekel= Double.parseDouble(shekelActualValue.getText().toString());
+      if(!actualFirstTypeValue.getText().toString().equals("")){
+          actualFirstType= Double.parseDouble(actualFirstTypeValue.getText().toString());
       }
-      if(!usdActualValue.getText().toString().equals("")){
-          actualUsd= Double.parseDouble(usdActualValue.getText().toString());
-      }
-      if(!eurActualValue.getText().toString().equals("")){
-          actualEur= Double.parseDouble(eurActualValue.getText().toString());
-      }
-      if(!gbpActualValue.getText().toString().equals("")){
-          actualGbp= Double.parseDouble(gbpActualValue.getText().toString());
-      }
+      if(!actualSecondTypeValue.getText().toString().equals("")){
+            actualSecondType= Double.parseDouble(actualSecondTypeValue.getText().toString());
+        }
+
+        if(!actualTirdTypeValue.getText().toString().equals("")){
+            actualThirdType= Double.parseDouble(actualTirdTypeValue.getText().toString());
+        }
+        if(!actualFourthTypeValue.getText().toString().equals("")){
+            actualFourthType= Double.parseDouble(actualFourthTypeValue.getText().toString());
+        }
+
       checkDifferentValue.setText(Util.makePrice(actualCheck-expectedCheck));
+        diffrentPayPointValue.setText(Util.makePrice(actualPayPoint-expectedPayPointValue));
       creditDifferentValue.setText(Util.makePrice(actualCredit-expectedCredit));
-      shekelDifferentValue.setText(Util.makePrice(actualShekel-expectedShekel));
-      usdDifferentValue.setText(Util.makePrice(actualUsd-expectedUsd));
-      eurDifferentValue.setText(Util.makePrice(actualEur-expectedEur));
-      gbpDifferentValue.setText(Util.makePrice(actualGbp-expectedGbp));
+        differentFirstTypeValue.setText(Util.makePrice(actualFirstType-expectedFirstType));
+
+
+       if (SETTINGS.enableCurrencies){
+
+           visibleIfGone(differentSecondTypeValue,Util.makePrice(actualSecondType-expectedSecondType));
+           visibleIfGone(differentThirdTypeValue,Util.makePrice(actualThirdType-expectedTirdType));
+           visibleIfGone(differentFourthTypeValue,Util.makePrice(actualFourthType-expectedFourthType));
+          /* differentFirstTypeValue.setText(Util.makePrice(actualFirstType-expectedFirstType));
+            differentSecondTypeValue.setText(Util.makePrice(actualSecondType-expectedSecondType));
+            differentThirdTypeValue.setText(Util.makePrice(actualThirdType-expectedTirdType));
+            differentFourthTypeValue.setText(Util.makePrice(actualFourthType-expectedFourthType));*/
+        }
+        else {
+          // goneIfVisible(differentFirstTypeValue);
+           goneIfVisible(differentSecondTypeValue);
+           goneIfVisible(differentThirdTypeValue);
+           goneIfVisible(differentFourthTypeValue);
+          /* differentFirstTypeValue.setText(Util.makePrice(actualFirstType-expectedFirstType));
+            differentSecondTypeValue.setVisibility(View.INVISIBLE);
+            differentThirdTypeValue.setVisibility(View.INVISIBLE);
+            differentFourthTypeValue.setVisibility(View.INVISIBLE);*/
+
+        }
+
   }
     // get Payment List
     public List<Payment> paymentList(List<Order> sales) {
