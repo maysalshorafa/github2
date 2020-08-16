@@ -352,7 +352,7 @@ public class ReportsManagementActivity  extends AppCompatActivity {
                                 startActivity(intent2);
                                 break;
                             case 3:
-                                Intent intent3 = new Intent(ReportsManagementActivity.this, CreateCreditInvoiceActivity.class);
+                                Intent intent3 = new Intent(ReportsManagementActivity.this, CreditInvoiceActivity.class);
                                 startActivity(intent3);
                                 break;
                             case 4:

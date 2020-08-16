@@ -3079,6 +3079,50 @@ public class SalesCartActivity extends AppCompatActivity {
                  e.printStackTrace();
              }
          }}
+         if (extras.containsKey("creditInvoiceJson")) {
+             if(!extras.getString("creditInvoiceJson").equals("")){
+                 try {
+
+                     orderDocumentFlag=true;
+                     clearCart();
+                     Log.d("creditInvoiceJson",extras.getString("creditInvoiceJson"));
+                     final JSONObject orderDocJsonObj =new JSONObject(extras.getString("creditInvoiceJson"));
+                     orderDocNum = orderDocJsonObj.getString("docNum");
+                     final JSONObject jsonObject = new JSONObject(String.valueOf(orderDocJsonObj.getJSONObject("documentsData")));
+                     Log.d("documentsData",jsonObject.toString());
+                     SETTINGS.orderDocument=orderDocJsonObj;
+                     JSONArray items = jsonObject.getJSONArray("cartDetailsList");
+                     final JSONObject customerJson = orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer");
+                     JSONObject a =  orderDocJsonObj.getJSONObject("documentsData").getJSONObject("user");
+                     Order order = new Order(a.getLong("employeeId"),new Timestamp(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getString("date"))),0,false,orderDocJsonObj.getJSONObject("documentsData").getDouble("total"),0);
+                     SESSION._EMPLOYEE.setEmployeeId(a.getLong("employeeId"));
+                     Customer customer = customerDBAdapter.getCustomerByID(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer").getString("customerId")));
+                     order.setCustomer(customer);
+                     SESSION._ORDERS=order;
+                     Log.d("iiitems",items.toString());
+                     for (int i=0;i<items.length();i++){
+                         Product p = null;
+                         JSONObject orderDetailsJson =items.getJSONObject(i);
+                         if(Long.parseLong(orderDetailsJson.getString("productId"))==-1){
+                             p=new Product(Long.parseLong(String.valueOf(-1)),"General","General",orderDetailsJson.getDouble("unitPrice"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1)));
+                         }else {
+                             p = productDBAdapter.getProductByID(Long.parseLong(orderDetailsJson.getString("productId")));
+                         }
+                         if(p!=null){
+                         OrderDetails orderDetails= new OrderDetails(orderDetailsJson.getInt("quantity"),orderDetailsJson.getDouble("userOffer"),p,orderDetailsJson.getDouble("amount"),orderDetailsJson.getDouble("unitPrice"),orderDetailsJson.getDouble("discount"));
+                         SESSION._ORDER_DETAILES.add(orderDetails);
+                     }}
+
+                     saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
+                     lvOrder.setAdapter(saleDetailsListViewAdapter);
+                     if (SESSION._ORDERS.getCustomer() != null)
+                         setCustomer(SESSION._ORDERS.getCustomer());
+                     refreshCart();
+                     getIntent().removeExtra("orderJson");
+                 } catch (JSONException e) {
+                     e.printStackTrace();
+                 }
+             }}
 
         /* else  if (extras.containsKey("FROM_ACTIVITY")) {
 

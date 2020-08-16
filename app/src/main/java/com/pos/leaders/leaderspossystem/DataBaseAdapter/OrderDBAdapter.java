@@ -349,6 +349,15 @@ public class OrderDBAdapter {
 		}
 		return userSaleList;
 	}
+	public List<Order> getAllCustomerSales(long customerId) {
+		List<Order> customerSaleList = new ArrayList<Order>();
+		List<Order> saleList = getAllSales();
+		for (Order d : saleList) {
+			if (d.getCustomerId() == customerId)
+				customerSaleList.add(d);
+		}
+		return customerSaleList;
+	}
 
 	public List<Order> getBetween(long from, long to){
 		List<Order> saleList = new ArrayList<Order>();
