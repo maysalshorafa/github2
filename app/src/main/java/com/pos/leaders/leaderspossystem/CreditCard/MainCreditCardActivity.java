@@ -82,7 +82,6 @@ public class MainCreditCardActivity extends AppCompatActivity {
     private MSCardService sendservice;
     ServiceConnection serviceConnection;
     msCardReaderCallBack msCardReaderCallback=new msCardReaderCallBack();
-    boolean doneButtonLock = false;
     @Override
     protected void onDestroy() {
         unbindService(serviceConnection);
@@ -361,8 +360,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
         btDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!doneButtonLock) {
-                    doneButtonLock=true;
+                  btDone.setClickable(false);
                     dialog_connection.setTitle(getBaseContext().getString(R.string.wait_for_accept));
                     dialog_connection.show();
                     String creditCardNumber = etCCValue.getText().toString();
@@ -371,7 +369,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                         //input is empty
                         dialog_connection.dismiss();
                         Toast.makeText(MainCreditCardActivity.this, getString(R.string.transfer_credit_card), Toast.LENGTH_SHORT).show();
-                        doneButtonLock = false;
+                        btDone.setClickable(true);
                         return;
                     }
                     String str = creditCardNumber;
@@ -406,7 +404,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                         } catch (NumberFormatException nfe) {
                             Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
                             dialog_connection.dismiss();
-                            doneButtonLock = false;
+                            btDone.setClickable(true);
                             return;
                         }
                         //check valid number
@@ -425,7 +423,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                             //out of maximum payment number
                             Toast.makeText(MainCreditCardActivity.this, getString(R.string.invalid_payments_number), Toast.LENGTH_LONG).show();
                             dialog_connection.dismiss();
-                            doneButtonLock = false;
+                            btDone.setClickable(true);
                             return;
                         }
                     } else {
@@ -435,7 +433,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
 
                     dialog_connection.dismiss();
                 }
-            }
+
         });
 
         etCCValue.setOnKeyListener(new View.OnKeyListener() {
@@ -541,8 +539,6 @@ public class MainCreditCardActivity extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                btDone.setClickable(false);
-                doneButtonLock = true;
             }
 
             @Override
@@ -550,9 +546,8 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 if(dialog_connection.isShowing()){
                     dialog_connection.dismiss();
                 }
-                doneButtonLock = false;
-                btDone.setClickable(true);
                 returnTo(aVoid);
+
                 super.onPostExecute(aVoid);
             }
             @Override
@@ -584,6 +579,7 @@ public class MainCreditCardActivity extends AppCompatActivity {
                 //soap.getProperty("MerchantNote").toString().equals("anyType{}");
                 if(creditReceipt){
                     SESSION._TEMP_CREDITCARD_PAYMNET = creditCardPayment;
+                    btDone.setClickable(true);
 
                    //
                     // DocumentControl.sendReciptDoc(MainCreditCardActivity.this,invoice, CONSTANT.CREDIT_CARD,totalPrice, soap.getProperty("MerchantNote").toString());
