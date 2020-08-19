@@ -159,7 +159,8 @@
                     android:layout_height="match_parent"
                     android:layout_margin="16dp"
                     android:verticalSpacing="16dp"
-                    android:horizontalSpacing="16dp"/>
+                    android:horizontalSpacing="16dp"
+                    android:choiceMode="multipleChoice"/>
 
                 />
             </LinearLayout>

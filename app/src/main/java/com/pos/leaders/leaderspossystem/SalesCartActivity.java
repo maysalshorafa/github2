@@ -86,7 +86,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OrderDetailsDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
-import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosDocumentTableDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductInventoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductOfferDBAdapter;
@@ -122,7 +122,6 @@ import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.ProductUnit;
 import com.pos.leaders.leaderspossystem.Models.SumPoint;
-import com.pos.leaders.leaderspossystem.Models.UsedPoint;
 import com.pos.leaders.leaderspossystem.Models.ZReport;
 import com.pos.leaders.leaderspossystem.Models.ZReportCount;
 import com.pos.leaders.leaderspossystem.Offers.OfferController;
@@ -350,7 +349,7 @@ public class SalesCartActivity extends AppCompatActivity {
     //Cart Discount View
     private LinearLayout llCartDiscount,customerPointLayOut;
     private TextView tvCartDiscountValue,tvTotalPriceBeforeCartDiscount ,customerPointTv;
-    String invoiceNum;
+    long invoiceNum;
     double  customerGeneralLedger=0.0;
     boolean orderDocumentFlag=false;
     String orderDocNum ="";
@@ -2284,22 +2283,22 @@ public class SalesCartActivity extends AppCompatActivity {
                                             }
                                             @Override
                                             protected void onPostExecute(Void aVoid) {
-                                                try {
-                                                    HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
-                                                    if(invoiceJsonObject.getString("status").equals("200")) {
-                                                        Log.d("testOrder",SESSION._ORDER_DETAILES.toString());
-                                                        String s =(tvTotalSaved.getText().toString());
+                                                HashMap<String,Integer>productHashMap=new HashMap<String, Integer>();
+                                                //    if(invoiceJsonObject.getString("status").equals("200")) {
+                                                Log.d("testOrder",SESSION._ORDER_DETAILES.toString());
+                                                String s =(tvTotalSaved.getText().toString());
 
-                                                        if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == SETTINGS.currencySymbol.charAt(0)) {
-                                                            s = s.substring(0, s.length() - 1);
-                                                        }
-                                                        SESSION._ORDERS.setTotalSaved(Double.parseDouble(s));
-                                                        Log.d("invoiceSessionOrderDetial",SESSION._ORDER_DETAILES.toString());
-                                                        Log.d("invoiceSessionOrder",SESSION._ORDERS.toString());
-                                                        print(invoiceImg.Invoice(SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, invoiceNum, customerGeneralLedger));
-                                                        clearCart();
+                                                if (s != null && s.length() > 0 && s.charAt(s.length() - 1) == SETTINGS.currencySymbol.charAt(0)) {
+                                                    s = s.substring(0, s.length() - 1);
+                                                }
+                                                SESSION._ORDERS.setTotalSaved(Double.parseDouble(s));
+                                                Log.d("invoiceSessionOrder",SESSION._ORDER_DETAILES.toString());
+                                                Log.d("invoiceSessionOrder",SESSION._ORDERS.toString());
+                                                String No ="IN"+invoiceNum;
+                                                print(invoiceImg.Invoice(SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE, No, customerGeneralLedger));
+                                                clearCart();
 
-                                                    }else if(invoiceJsonObject.getString("message").equals("Maximum allowed credit amount is 2000.0")){
+                                                    /*}else if(invoiceJsonObject.getString("message").equals("Maximum allowed credit amount is 2000.0")){
                                                         Toast.makeText(SalesCartActivity.this,"Maximum allowed credit amount is 2000.0",Toast.LENGTH_LONG).show();
                                                     }
                                                     else if(invoiceJsonObject.getString("message").equals("Customer  not found with id :")){
@@ -2342,10 +2341,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                                                     .show();
                                                         }
-                                                    }
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
+                                                    }*/
 
                                             }
                                             @Override
@@ -2503,67 +2499,79 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     BoInvoice invoice = new BoInvoice(DocumentType.INVOICE,docJson,"");
                                                     Log.d("Invoice log",invoice.toString());
                                                     String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
-                                                    invoiceJsonObject = new JSONObject(res);
-                                                    String msgData = invoiceJsonObject.getString(MessageKey.responseBody);
-                                                    JSONObject msgDataJson = new JSONObject(msgData);
-                                                    JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
-                                                    invoiceNum = msgDataJson.getString("docNum");
-                                                    Log.d("Invoice log res", res+"");
-                                                    customerGeneralLedger=jsonObject1.getDouble("customerGeneralLedger");
-                                                    Log.d("Invoice log res", customerGeneralLedger+"");
-                                                    Log.d("Invoice Num", invoiceNum);
-                                                    String status = invoiceJsonObject.getString("status");
-                                                    if(status.equals("200")){
-                                                        ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
-                                                        zReportDBAdapter.open();
-                                                        ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(SalesCartActivity.this);
-                                                        zReportCountDbAdapter.open();
-                                                        ZReport zReport =null;
-                                                        ZReportCount zReportCount =null;
-
-                                                        try {
-                                                            zReportCount=zReportCountDbAdapter.getLastRow();
-                                                            zReport = zReportDBAdapter.getLastRow();
-                                                            Log.d("zReport",zReport.toString());
-                                                            PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(SalesCartActivity.this);
-                                                            posInvoiceDBAdapter.open();
-                                                            posInvoiceDBAdapter.insertEntry(SESSION._ORDERS.getTotalPrice(),zReport.getzReportId(),DocumentType.INVOICE.getValue(),InvoiceStatus.UNPAID.getValue(),invoiceNum, CONSTANT.CASH);
-                                                            zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
-                                                            zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
-                                                            zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
-                                                            zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() + (SalesWithoutTax))));
-                                                            zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() + (SalesWitheTax))));
-                                                            Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
-                                                            zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+(salesaftertax - SalesWitheTax))));
-
-                                                            Log.d("getTotalPos",zReport.getTotalPosSales()+"poss");
-                                                            zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
-
-                                                            zReportDBAdapter.updateEntry(zReport);
-                                                            zReportCountDbAdapter.updateEntry(zReportCount);
-
-                                                        } catch (Exception e) {
-                                                            PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(SalesCartActivity.this);
-                                                            posInvoiceDBAdapter.open();
-                                                            posInvoiceDBAdapter.insertEntry(SESSION._ORDERS.getTotalPrice(),-1,DocumentType.INVOICE.getValue(),InvoiceStatus.UNPAID.getValue(),invoiceNum, CONSTANT.CASH);
-                                                            zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
-                                                            zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
-                                                            zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
-                                                            zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() + (SalesWithoutTax))));
-                                                            zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() + (SalesWitheTax))));
-                                                            zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+(salesaftertax - SalesWitheTax))));
-                                                            zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
-                                                            zReportDBAdapter.updateEntry(zReport);
-                                                            zReportCountDbAdapter.updateEntry(zReportCount);
-                                                            e.printStackTrace();
-                                                        }
-
-                                                        try {
-                                                            Thread.sleep(100);
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                        }
+                                                    String status="";
+                                                    JSONObject msgDataJson=new JSONObject();
+                                                    Log.d("testRes",res.toString()+"jiooioo");
+                                                    if(!res.isEmpty()){
+                                                        invoiceJsonObject = new JSONObject(res);
+                                                        status = invoiceJsonObject.getString("status");
+                                                        String msgData = invoiceJsonObject.getString(MessageKey.responseBody);
+                                                        msgDataJson = new JSONObject(msgData);
+                                                        JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
+                                                        //invoiceNum = msgDataJson.getString("docNum");
+                                                        Log.d("Invoice log res", res+"");
+                                                        customerGeneralLedger=jsonObject1.getDouble("customerGeneralLedger");
+                                                        Log.d("Invoice log res", customerGeneralLedger+"");
                                                     }
+                                                    PosDocumentTableDbAdapter posDocumentTableDbAdapter = new PosDocumentTableDbAdapter(SalesCartActivity.this);
+                                                    posDocumentTableDbAdapter.open();
+                                                    if(status.equals("200")){
+                                                        invoiceNum= posDocumentTableDbAdapter.insertEntryWithOnLine(msgDataJson.getString("docNum"),DocumentType.INVOICE.getValue(),invoice.toString());
+
+                                                    }else {
+                                                        invoiceNum= posDocumentTableDbAdapter.insertEntryWithOffLine("",DocumentType.INVOICE.getValue(),invoice.toString());
+
+                                                    }
+
+
+                                                    // Log.d("Invoice Num", invoiceNum);
+
+                                                    //    if(status.equals("200")){
+                                                    ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(SalesCartActivity.this);
+                                                    zReportDBAdapter.open();
+                                                    ZReportCountDbAdapter zReportCountDbAdapter = new ZReportCountDbAdapter(SalesCartActivity.this);
+                                                    zReportCountDbAdapter.open();
+                                                    ZReport zReport =null;
+                                                    ZReportCount zReportCount =null;
+
+                                                    try {
+                                                        zReportCount=zReportCountDbAdapter.getLastRow();
+                                                        zReport = zReportDBAdapter.getLastRow();
+                                                        Log.d("zReport",zReport.toString());
+
+                                                        zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() + (SalesWithoutTax))));
+                                                        zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() + (SalesWitheTax))));
+                                                        Log.d("setSalesWithTaxReport",zReport.getSalesWithTax()+"");
+                                                        zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+(salesaftertax - SalesWitheTax))));
+
+                                                        Log.d("getTotalPos",zReport.getTotalPosSales()+"poss");
+                                                        zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
+
+                                                        zReportDBAdapter.updateEntry(zReport);
+                                                        zReportCountDbAdapter.updateEntry(zReportCount);
+
+                                                    } catch (Exception e) {
+                                                        zReport.setInvoiceAmount(zReport.getInvoiceAmount()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setTotalSales(zReport.getTotalSales()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setTotalPosSales(zReport.getTotalPosSales()+SESSION._ORDERS.getTotalPrice());
+                                                        zReport.setSalesBeforeTax(Double.parseDouble(Util.makePrice(zReport.getSalesBeforeTax() + (SalesWithoutTax))));
+                                                        zReport.setSalesWithTax(Double.parseDouble(Util.makePrice(zReport.getSalesWithTax() + (SalesWitheTax))));
+                                                        zReport.setTotalTax(Double.parseDouble(Util.makePrice(zReport.getTotalTax()+(salesaftertax - SalesWitheTax))));
+                                                        zReportCount.setInvoiceCount(zReportCount.getInvoiceCount()+1);
+                                                        zReportDBAdapter.updateEntry(zReport);
+                                                        zReportCountDbAdapter.updateEntry(zReportCount);
+                                                        e.printStackTrace();
+                                                    }
+
+                                                    try {
+                                                        Thread.sleep(100);
+                                                    } catch (InterruptedException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    //      }
 
                                                 } catch (IOException e) {
                                                     e.printStackTrace();
@@ -2614,13 +2622,12 @@ public class SalesCartActivity extends AppCompatActivity {
                                             }
                                             @Override
                                             protected void onPostExecute(Void aVoid) {
-                                                try {
-                                                    if(invoiceJsonObject.getString("status").equals("200")) {
+                                                //   if(invoiceJsonObject.getString("status").equals("200")) {
 
-                                                        print(invoiceImg1.OrderDocument( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,invoiceNum));
-                                                        clearCart();
+                                                print(invoiceImg1.OrderDocument( SESSION._ORDER_DETAILES, SESSION._ORDERS, false, SESSION._EMPLOYEE,"OR"+invoiceNum));
+                                                clearCart();
 
-                                                    }
+                                                  /*  }
                                                     else {
                                                         if (SETTINGS.company.name().equals("BO_EXEMPT_DEALER")) {
                                                             new android.support.v7.app.AlertDialog.Builder(SalesCartActivity.this)
@@ -2658,10 +2665,7 @@ public class SalesCartActivity extends AppCompatActivity {
                                                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                                                     .show();
                                                         }
-                                                    }
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
+                                                    }*/
 
                                             }
                                             @Override
@@ -2695,14 +2699,30 @@ public class SalesCartActivity extends AppCompatActivity {
                                                     BoInvoice invoice = new BoInvoice(DocumentType.ORDER_DOCUMENT,docJson,"");
                                                     Log.d("Invoice log",invoice.toString());
                                                     String res=transmit.authPost(ApiURL.Documents,invoice.toString(), SESSION.token);
-                                                    JSONObject jsonObject = new JSONObject(res);
-                                                    String msgData = jsonObject.getString(MessageKey.responseBody);
-                                                    invoiceJsonObject=jsonObject;
-                                                    JSONObject msgDataJson = new JSONObject(msgData);
-                                                    JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
-                                                    invoiceNum = msgDataJson.getString("docNum");
+                                                    String status="";
+                                                    JSONObject msgDataJson=new JSONObject();
+                                                    Log.d("testRes",res.toString()+"jiooioo");
+                                                    if(!res.isEmpty()){
+                                                        invoiceJsonObject = new JSONObject(res);
+                                                        status = invoiceJsonObject.getString("status");
+                                                        String msgData = invoiceJsonObject.getString(MessageKey.responseBody);
+                                                        msgDataJson = new JSONObject(msgData);
+                                                        JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
+                                                        //invoiceNum = msgDataJson.getString("docNum");
+                                                        Log.d("Invoice log res", res+"");
+
+                                                    }
+                                                    PosDocumentTableDbAdapter posDocumentTableDbAdapter = new PosDocumentTableDbAdapter(SalesCartActivity.this);
+                                                    posDocumentTableDbAdapter.open();
+                                                    if(status.equals("200")){
+                                                        invoiceNum= posDocumentTableDbAdapter.insertEntryWithOnLine(msgDataJson.getString("docNum"),DocumentType.ORDER_DOCUMENT.getValue(),invoice.toString());
+
+                                                    }else {
+                                                        invoiceNum= posDocumentTableDbAdapter.insertEntryWithOffLine("",DocumentType.ORDER_DOCUMENT.getValue(),invoice.toString());
+
+                                                    }
+
                                                     Log.d("Invoice log res", res+"");
-                                                    Log.d("Invoice Num", invoiceNum);
 
                                                     try {
                                                         Thread.sleep(100);
@@ -3059,8 +3079,7 @@ public class SalesCartActivity extends AppCompatActivity {
                     DocumentControl.sendReciptDoc(SalesCartActivity.this, invoiceList, CONSTANT.CREDIT_CARD, totalPrice, creditCardResult, customerJsonM);
 
                 }
-
-
+                getIntent().removeExtra("MultiRecipt");
 
             }
             if (extras.containsKey("orderJson")) {
@@ -3099,50 +3118,6 @@ public class SalesCartActivity extends AppCompatActivity {
                             OrderDetails orderDetails= new OrderDetails(orderDetailsJson.getInt("quantity"),orderDetailsJson.getDouble("userOffer"),p,orderDetailsJson.getDouble("amount"),orderDetailsJson.getDouble("unitPrice"),orderDetailsJson.getDouble("discount"));
                             SESSION._ORDER_DETAILES.add(orderDetails);
                         }
-                        saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
-                        lvOrder.setAdapter(saleDetailsListViewAdapter);
-                        if (SESSION._ORDERS.getCustomer() != null)
-                            setCustomer(SESSION._ORDERS.getCustomer());
-                        refreshCart();
-                        getIntent().removeExtra("orderJson");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }}
-            if (extras.containsKey("creditInvoiceJson")) {
-                if(!extras.getString("creditInvoiceJson").equals("")){
-                    try {
-
-                        orderDocumentFlag=true;
-                        clearCart();
-                        Log.d("creditInvoiceJson",extras.getString("creditInvoiceJson"));
-                        final JSONObject orderDocJsonObj =new JSONObject(extras.getString("creditInvoiceJson"));
-                        orderDocNum = orderDocJsonObj.getString("docNum");
-                        final JSONObject jsonObject = new JSONObject(String.valueOf(orderDocJsonObj.getJSONObject("documentsData")));
-                        Log.d("documentsData",jsonObject.toString());
-                        SETTINGS.orderDocument=orderDocJsonObj;
-                        JSONArray items = jsonObject.getJSONArray("cartDetailsList");
-                        final JSONObject customerJson = orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer");
-                        JSONObject a =  orderDocJsonObj.getJSONObject("documentsData").getJSONObject("user");
-                        Order order = new Order(a.getLong("employeeId"),new Timestamp(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getString("date"))),0,false,orderDocJsonObj.getJSONObject("documentsData").getDouble("total"),0);
-                        SESSION._EMPLOYEE.setEmployeeId(a.getLong("employeeId"));
-                        Customer customer = customerDBAdapter.getCustomerByID(Long.parseLong(orderDocJsonObj.getJSONObject("documentsData").getJSONObject("customer").getString("customerId")));
-                        order.setCustomer(customer);
-                        SESSION._ORDERS=order;
-                        Log.d("iiitems",items.toString());
-                        for (int i=0;i<items.length();i++){
-                            Product p = null;
-                            JSONObject orderDetailsJson =items.getJSONObject(i);
-                            if(Long.parseLong(orderDetailsJson.getString("productId"))==-1){
-                                p=new Product(Long.parseLong(String.valueOf(-1)),"General","General",orderDetailsJson.getDouble("unitPrice"),"0","0",Long.parseLong(String.valueOf(1)),Long.parseLong(String.valueOf(1)));
-                            }else {
-                                p = productDBAdapter.getProductByID(Long.parseLong(orderDetailsJson.getString("productId")));
-                            }
-                            if(p!=null){
-                                OrderDetails orderDetails= new OrderDetails(orderDetailsJson.getInt("quantity"),orderDetailsJson.getDouble("userOffer"),p,orderDetailsJson.getDouble("amount"),orderDetailsJson.getDouble("unitPrice"),orderDetailsJson.getDouble("discount"));
-                                SESSION._ORDER_DETAILES.add(orderDetails);
-                            }}
-
                         saleDetailsListViewAdapter = new SaleDetailsListViewAdapter(getApplicationContext(), R.layout.list_adapter_row_main_screen_sales_details, SESSION._ORDER_DETAILES);
                         lvOrder.setAdapter(saleDetailsListViewAdapter);
                         if (SESSION._ORDERS.getCustomer() != null)

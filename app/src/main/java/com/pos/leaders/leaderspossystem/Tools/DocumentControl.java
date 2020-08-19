@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.DocumentException;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ChecksDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PaymentDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosDocumentTableDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosInvoiceDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportCountDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ZReportDBAdapter;
@@ -23,7 +24,6 @@ import com.pos.leaders.leaderspossystem.Models.BoInvoice;
 import com.pos.leaders.leaderspossystem.Models.Check;
 import com.pos.leaders.leaderspossystem.Models.CreditCardPayment;
 import com.pos.leaders.leaderspossystem.Models.Currency.CashPayment;
-import com.pos.leaders.leaderspossystem.Models.Customer;
 import com.pos.leaders.leaderspossystem.Models.InvoiceStatus;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.PosInvoice;
@@ -62,7 +62,7 @@ import static com.pos.leaders.leaderspossystem.Tools.CONSTANT.CASH;
 
 public class DocumentControl {
     public static Locale locale = new Locale("en");
-    static String invoiceNum;
+    static long invoiceNum;
     static JSONObject receiptJsonObject = new JSONObject();
     static Bitmap newBitmap =null;
 
@@ -652,11 +652,30 @@ public class DocumentControl {
                         BoInvoice invoiceA = new BoInvoice(DocumentType.RECEIPT,docJson,"");
                         Log.d("Receipt log",invoiceA.toString());
                         String res=transmit.authPost(ApiURL.Documents,invoiceA.toString(), SESSION.token);
-                        receiptJsonObject = new JSONObject(res);
-                        String msgData = receiptJsonObject.getString(MessageKey.responseBody);
+                        String status="";
+                        JSONObject msgDataJson=new JSONObject();
+                        Log.d("testRes",res.toString()+"jiooioo");
+                        if(!res.isEmpty()){
+                            msgDataJson = new JSONObject(res);
+                            status = msgDataJson.getString("status");
+                            String msgData = msgDataJson.getString(MessageKey.responseBody);
+                            msgDataJson = new JSONObject(msgData);
+                            JSONObject jsonObject1=msgDataJson.getJSONObject("documentsData");
+                            //invoiceNum = msgDataJson.getString("docNum");
+                            Log.d("Invoice log res", res+"");
 
+                        }
+                        PosDocumentTableDbAdapter posDocumentTableDbAdapter = new PosDocumentTableDbAdapter(context);
+                        posDocumentTableDbAdapter.open();
+                        if(status.equals("200")){
+                            invoiceNum= posDocumentTableDbAdapter.insertEntryWithOnLine(msgDataJson.getString("docNum"),DocumentType.RECEIPT.getValue(),invoiceA.toString());
+                            invoiceA.setDocNum(msgDataJson.getString("docNum"));
+
+                        }else {
+                            invoiceNum= posDocumentTableDbAdapter.insertEntryWithOffLine("",DocumentType.RECEIPT.getValue(),invoiceA.toString());
+
+                        }
                         Log.d("receiptResult",res);
-                        if(receiptJsonObject.get("status").equals("200")){
                             ZReportDBAdapter zReportDBAdapter = new ZReportDBAdapter(context);
                             zReportDBAdapter.open();
                             ZReportCountDbAdapter zReportCountDbAdapter =new ZReportCountDbAdapter(context);
@@ -666,13 +685,6 @@ public class DocumentControl {
                             try {
                                 zReport = zReportDBAdapter.getLastRow();
                                 zReportCount=zReportCountDbAdapter.getLastRow();
-                                PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
-                                posInvoiceDBAdapter.open();
-                                if (paymentWays.equals(CASH)) {
-                                    posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId() - 1, DocumentType.RECEIPT.getValue(), "", invoiceNum, CONSTANT.CASH);
-                                } else {
-                                    posInvoiceDBAdapter.insertEntry(totalPaid, zReport.getzReportId() - 1, DocumentType.RECEIPT.getValue(), "", invoiceNum, CONSTANT.CHECKS);
-                                }
                                 if (paymentWays.equals(CASH)){
                                     zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() + totalPaid);
                                     zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
@@ -686,14 +698,6 @@ public class DocumentControl {
                                     zReportCountDbAdapter.updateEntry(zReportCount);
                                 }
                             } catch (Exception e) {
-                                PosInvoiceDBAdapter posInvoiceDBAdapter = new PosInvoiceDBAdapter(context);
-                                posInvoiceDBAdapter.open();
-                                if(paymentWays.equals(CASH)) {
-                                    posInvoiceDBAdapter.insertEntry(totalPaid,-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CASH);
-                                }else {
-                                    posInvoiceDBAdapter.insertEntry(totalPaid,-1,DocumentType.RECEIPT.getValue(),"",invoiceNum,CONSTANT.CHECKS);
-
-                                }
                                 if (paymentWays.equals(CASH)){
                                     zReport.setFirstTypeAmount(zReport.getFirstTypeAmount() + totalPaid);
                                     zReport.setTotalAmount(zReport.getTotalAmount() + totalPaid);
@@ -708,7 +712,7 @@ public class DocumentControl {
                                 }
 
                                 e.printStackTrace();
-                            }
+
                             for (int i=0;i<invoiceList.size();i++){
                                 BoInvoice invoice1 = invoiceList.get(i);
                                 String upDataInvoiceRes=transmit.authPutInvoice(ApiURL.Documents,invoice1.toString(), SESSION.token,invoiceList.get(i).getDocNum());
@@ -729,14 +733,14 @@ public class DocumentControl {
                             PdfUA pdfUA = new PdfUA();
 
                             try {
-                                pdfUA.printReceiptReport(context,msgData,mainmer,invoiceList);
-                            } catch (DocumentException e) {
-                                e.printStackTrace();
+                                pdfUA.printReceiptReport(context,invoiceA.toString(),mainmer,invoiceList);
+                            } catch (DocumentException e1) {
+                                e1.printStackTrace();
                             }
                             try {
                                 Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                            } catch (InterruptedException e2) {
+                                e2.printStackTrace();
                             }
 
                         }

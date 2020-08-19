@@ -187,4 +187,7 @@ public interface MessageType{
 
     String UPDATE_COMPANY_LICENSE="UpdateCompanyLicense";
 
+    String ADD_POS_DOCUMENT = "AddPosDocument";
+    String UPDATE_POS_DOCUMENT= "UpdatePosDocument";
+    String DELETE_POS_DOCUMENT = "DeletePosDocument";
 }
