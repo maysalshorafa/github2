@@ -43,6 +43,7 @@ import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferCategoryDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.OfferDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PayPointDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PermissionsDBAdapter;
+import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosDocumentTableDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.PosSettingDbAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProductDBAdapter;
 import com.pos.leaders.leaderspossystem.DataBaseAdapter.ProviderDbAdapter;
@@ -81,6 +82,7 @@ import com.pos.leaders.leaderspossystem.Models.PayPoint;
 import com.pos.leaders.leaderspossystem.Models.Payment;
 import com.pos.leaders.leaderspossystem.Models.Permission.EmployeesPermissions;
 import com.pos.leaders.leaderspossystem.Models.Permission.Permissions;
+import com.pos.leaders.leaderspossystem.Models.PosDocument;
 import com.pos.leaders.leaderspossystem.Models.PosSetting;
 import com.pos.leaders.leaderspossystem.Models.Product;
 import com.pos.leaders.leaderspossystem.Models.Provider;
@@ -1644,6 +1646,32 @@ public class SyncMessage extends Service {
                 res = messageTransmit.authDelete(ApiURL.Product, newDeleteProductJson.getString("productId"), token);
                 break;
 
+
+            case MessageType.ADD_POS_DOCUMENT:
+               PosDocument posD=objectMapper.readValue(jsonObject.getJSONObject("data").toString(), PosDocument.class);
+
+                res = messageTransmit.authPost(ApiURL.Documents, posD.getDocumentData().toString(), token);
+               JSONObject invoiceJsonObject = new JSONObject(res);
+                String msgDataN = invoiceJsonObject.getString(MessageKey.responseBody);
+                JSONObject msgDataJson = new JSONObject(msgDataN);
+                JSONObject jsonObjectDoc=msgDataJson.getJSONObject("documentsData");
+                String invoiceNum = msgDataJson.getString("docNum");
+                PosDocumentTableDbAdapter posDocumentTableDbAdapter = new PosDocumentTableDbAdapter(this);
+                posDocumentTableDbAdapter.open();
+                posDocumentTableDbAdapter.updateEntryBo(posD.getPosDocumentId(),invoiceNum);
+
+                break;
+            case MessageType.UPDATE_POS_DOCUMENT:
+                PosDocument posDocument=null;
+                JSONObject newPosDocumentJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                newPosDocumentJson.remove("createdAt");
+                posDocument=objectMapper.readValue(newPosDocumentJson.toString(), PosDocument.class);
+                res = messageTransmit.authPut(ApiURL.PosDocument, newPosDocumentJson.toString(), token,posDocument.getPosDocumentId());
+                break;
+            case MessageType.DELETE_POS_DOCUMENT:
+                JSONObject newDeletePosDocumentJson = new JSONObject(jsonObject.getString(MessageKey.Data));
+                res = messageTransmit.authDelete(ApiURL.PosDocument, newDeletePosDocumentJson.getString("posDocumentId"), token);
+                break;
 
             case MessageType.ADD_EMPLOYEE:
                 res = messageTransmit.authPost(ApiURL.Employee, jsonObject.getString(MessageKey.Data), token);
